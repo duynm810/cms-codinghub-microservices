@@ -1,0 +1,42 @@
+#services
+services:
+  ##database section
+  categorydb:
+    image: mysql:latest
+  
+  ##infrastructure section
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+  
+  portainer:
+    image: portainer/portainer-ce
+  
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
+  
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.0.0
+  
+  ##microservices api section
+  category.api:
+    image: ${DOCKER_REGISTRY-}category-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Category/Category.API/Dockerfile
+
+#network
+networks:
+  default:
+    name: coding_hub_microservices
+    external: true
+
+#volumes
+volumes:
+  mysql_data:
+    name: mysql_data
+  rabbitmq_data:
+    name: rabbitmq_data
+  portainer_data:
+    name: portainer_data
+  elasticsearch_data:
+    name: elasticsearch_data

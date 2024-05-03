@@ -1,0 +1,75 @@
+#services:
+services:
+  ##database section
+  #categorydb: mysql
+  categorydb:
+    container_name: categorydb
+    environment:
+      MYSQL_ROOT_PASSWORD: Passw0rd!
+      MYSQL_DATABASE: CategoryCodingHubDB
+    restart: always
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+  
+  ##infrastructure section
+  rabbitmq:
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    hostname: rabbitmq
+  
+  portainer:
+    container_name: portainer
+    restart: always
+    ports:
+      - "8082:8000"
+      - "9002:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+  
+  elasticsearch:
+    container_name: elasticsearch
+    environment:
+      - xpack.monitoring.enabled=true
+      - xpack.watcher.enabled=false
+      - xpack.security.enabled=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
+      - ELASTIC_USERNAME=elastic #default username is elastic
+      - ELASTIC_PASSWORD=admin
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+  
+  kibana:
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=admin
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+  
+  ##microservices api sections
+  category.api:
+    container_name: category.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=categorydb;Port=3306;Database=CategoryCodingHubDB;Uid=root;Pwd=Passw0rd!"
+    depends_on:
+      - categorydb
+    ports:
+      - "6002:80"
+    restart: always
+  

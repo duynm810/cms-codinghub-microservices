@@ -8,7 +8,7 @@ using Shared.Utilities;
 
 namespace Category.API.Services;
 
-public class CategoryService(ICategoryRepository categoryRepository, IMapperBase mapper) : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
 {
     public async Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories()
     {
