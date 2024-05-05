@@ -1,4 +1,5 @@
 using Category.API.Extensions;
+using Category.API.Persistence;
 using Logging;
 using Serilog;
 
@@ -17,13 +18,14 @@ try
 
     // Config JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     var app = builder.Build();
-    
+
     // Config pipeline
     app.ConfigurePipeline();
-    
-    app.Run();
+
+    await app.MigrateDatabase<CategoryContext>((context, _) => { CategorySeedData.CategorySeedAsync(context).Wait(); })
+        .RunAsync();
 }
 catch (Exception ex)
 {

@@ -1,21 +1,48 @@
+using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 namespace Category.API.Extensions;
 
-public static class ConfigureHostExtensions
+public static class HostExtensions
 {
-    /// <summary>
-    /// Extends the WebApplicationBuilder to add application configuration from JSON files and environment variables.
-    /// This method simplifies setting up configuration by consolidating the addition of JSON files and environment variables into one extension method.
-    /// </summary>
-    /// <param name="builder">The WebApplicationBuilder to configure.</param>
-    /// <returns>The same WebApplicationBuilder instance for chaining.</returns>
-    public static void AddAppConfiguration(this WebApplicationBuilder builder)
+    public static IHost MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder)
+        where TContext : DbContext
     {
-        // Add configuration from a JSON file named 'appsettings.json'. This file is mandatory (optional: false).
-        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true);
-        
-        // Add configuration from environment variables.
-        // This includes variables set in the system and potentially, specific deployment settings.
-        builder.Configuration.AddEnvironmentVariables();
+        using var scope = host.Services.CreateScope();
+
+        var services = scope.ServiceProvider;
+        var context = services.GetService<TContext>();
+
+        try
+        {
+            if (context == null)
+            {
+                throw new Exception(
+                    "Database context not found. Ensure the database context is registered and configured correctly.");
+            }
+
+            Log.Information("Migrating MySQL database");
+            ExcuteMigrations(context);
+
+            Log.Information("Migrated MySQL database");
+            InvokeSeeder(seeder!, context, services);
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "An error occurred while migrating the MySQL database");
+        }
+
+        return host;
+    }
+
+    private static void ExcuteMigrations<TContext>(TContext context) where TContext : DbContext
+    {
+        context.Database.Migrate();
+    }
+
+    private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context,
+        IServiceProvider services) where TContext : DbContext?
+    {
+        seeder(context, services);
     }
 }

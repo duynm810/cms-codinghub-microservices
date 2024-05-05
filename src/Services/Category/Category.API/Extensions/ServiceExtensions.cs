@@ -108,6 +108,7 @@ public static class ServiceExtensions
 
     private static void ConfigureOtherServices(this IServiceCollection services)
     {
+        services.AddControllers();
         services.AddEndpointsApiExplorer();
     }
 }

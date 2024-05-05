@@ -7,12 +7,12 @@ public class ApiResult<T> : BaseApiResult
     // Default constructor
     public ApiResult()
     {
-        Messages = new List<string>();
+        Messages = [];
         IsSuccess = false;
     }
 
-    // Constructor used for successes where data is returned
-    private ApiResult(T? data, string title = "Success")
+    // Static helper method for success
+    public void Success(T data, string title = "Success")
     {
         IsSuccess = true;
         StatusCode = 200;
@@ -20,25 +20,13 @@ public class ApiResult<T> : BaseApiResult
         Title = title;
     }
 
-    // Constructor used for failures where no data is to be returned
-    private ApiResult(int statusCode, List<string> messages, string title = "Error")
+    // Static helper method for failure
+    public void Failure(int statusCode, List<string> messages, string title = "Error")
     {
         IsSuccess = false;
         StatusCode = statusCode;
         Messages = messages;
         Data = default;
         Title = title;
-    }
-
-    // Static helper method for success
-    public ApiResult<T?> Success(T data)
-    {
-        return new ApiResult<T?>(data);
-    }
-
-    // Static helper method for failure
-    public ApiResult<T> Failure(int statusCode, List<string> messages, string title = "Error")
-    {
-        return new ApiResult<T>(statusCode, messages, title);
     }
 }
