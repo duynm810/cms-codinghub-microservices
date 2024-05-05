@@ -31,9 +31,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [HttpDelete("{id:guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> DeleteCategory([FromRoute, Required] Guid id)
+    public async Task<IActionResult> DeleteCategory([FromRoute, Required] Guid[] ids)
     {
-        var result = await categoryService.DeleteCategory(id);
+        var result = await categoryService.DeleteCategory(ids);
         return Ok(result);
     }
     
@@ -47,7 +47,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(result);
     }
     
-    [HttpGet("{id:guid}")]
+    [HttpGet("{ids:guid}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]

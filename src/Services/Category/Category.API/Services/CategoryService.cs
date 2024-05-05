@@ -11,7 +11,9 @@ namespace Category.API.Services;
 
 public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
 {
-    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
+    #region CRUD
+
+      public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
 
@@ -48,6 +50,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
             if (category == null)
             {
                 result.Messages.Add("Category not found");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
@@ -67,23 +70,27 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> DeleteCategory(Guid id)
+    public async Task<ApiResult<CategoryDto>> DeleteCategory(Guid[] ids)
     {
         var result = new ApiResult<CategoryDto>();
 
         try
         {
-            var category = await categoryRepository.GetCategoryById(id);
-            if (category == null)
+            foreach (var id in ids)
             {
-                result.Messages.Add("Category not found");
-                return result;
+                var category = await categoryRepository.GetCategoryById(id);
+                if (category == null)
+                {
+                    result.Messages.Add("Category not found");
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                    return result;
+                }
+
+                await categoryRepository.DeleteCategory(category);
+
+                var data = mapper.Map<CategoryDto>(category);
+                result.Success(data);
             }
-
-            await categoryRepository.DeleteCategory(category);
-
-            var data = mapper.Map<CategoryDto>(category);
-            result.Success(data);
         }
         catch (Exception e)
         {
@@ -128,6 +135,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
             if (category == null)
             {
                 result.Messages.Add("Category not found");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
@@ -143,4 +151,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
 
         return result;
     }
+
+    #endregion
+  
 }
