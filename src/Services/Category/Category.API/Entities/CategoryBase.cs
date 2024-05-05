@@ -18,7 +18,7 @@ public class CategoryBase : EntityAuditBase<Guid>
     [MaxLength(150)] 
     public string? SeoDescription { get; set; }
 
-    public Guid ParentId { get; set; }
+    public Guid? ParentId { get; set; }
 
     public int SortOrder { get; set; }
 

@@ -42,7 +42,7 @@ namespace Category.API.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("varchar(250)");
 
-                    b.Property<Guid>("ParentId")
+                    b.Property<Guid?>("ParentId")
                         .HasColumnType("char(36)");
 
                     b.Property<string>("SeoDescription")
