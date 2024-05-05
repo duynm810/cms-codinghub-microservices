@@ -42,6 +42,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApps.HealthCheck", "src\WebApps\HealthCheck\WebApps.HealthCheck\WebApps.HealthCheck.csproj", "{6E789577-FE07-462B-8492-883FEC438F2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,7 @@ Global
 		{838E15ED-0DA6-466E-BE26-F36CC20EDB31} = {3AB39D2F-C764-4B0E-846C-C3EE72E48F8F}
 		{28C05027-E1C1-4718-AE4F-325366B70325} = {4B38CAB5-F6B4-4B76-99BC-9DD678D5237E}
 		{33C9B90D-9514-4196-B13C-7C4B5C4BC527} = {2E2D0FEE-83F2-4104-A2BD-D1D3111AB76E}
+		{6E789577-FE07-462B-8492-883FEC438F2A} = {C3690F88-DCF3-4BBB-A9A2-7EA299F883BF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6BE2F78C-CF10-4B5C-9099-FEFDAD14947F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -90,5 +93,9 @@ Global
 		{33C9B90D-9514-4196-B13C-7C4B5C4BC527}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33C9B90D-9514-4196-B13C-7C4B5C4BC527}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33C9B90D-9514-4196-B13C-7C4B5C4BC527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E789577-FE07-462B-8492-883FEC438F2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E789577-FE07-462B-8492-883FEC438F2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E789577-FE07-462B-8492-883FEC438F2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E789577-FE07-462B-8492-883FEC438F2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

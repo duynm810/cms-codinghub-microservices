@@ -23,12 +23,18 @@ services:
     build:
       context: .
       dockerfile: Services/Category/Category.API/Dockerfile
+      
+  healthcheck:
+    image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
 
 #network
 networks:
   default:
     name: coding_hub_microservices
-    external: true
+    driver: bridge
 
 #volumes
 volumes:

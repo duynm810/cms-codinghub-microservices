@@ -63,8 +63,8 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
     [ProducesResponseType((int)HttpStatusCode.NotFound)]
     public async Task<IActionResult> GetCategoriesPaging(
-        [FromQuery, Required] int pageNumber,
-        [FromQuery] int pageSize)
+        [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
     {
         var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
         return Ok(result);
