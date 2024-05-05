@@ -26,7 +26,7 @@ public static class CategorySeedData
                 Name = "Home",
                 Slug = "home",
                 SeoDescription = "Welcome to Coding Hub, your ultimate guide to the world of programming and tech trends.",
-                ParentId = Guid.Empty, // No parent
+                ParentId = null, // No parent
                 SortOrder = 1,
                 IsActive = true
             },
@@ -36,7 +36,7 @@ public static class CategorySeedData
                 Name = "Language Tutorials",
                 Slug = "language-tutorials",
                 SeoDescription = "Explore detailed tutorials on popular programming languages to boost your coding skills.",
-                ParentId = Guid.Empty, // No parent
+                ParentId = null, // No parent
                 SortOrder = 2,
                 IsActive = true
             },
@@ -46,7 +46,7 @@ public static class CategorySeedData
                 Name = "Development",
                 Slug = "development",
                 SeoDescription = "Discover the latest development techniques and trends to stay ahead in the tech industry.",
-                ParentId = Guid.Empty, // No parent
+                ParentId = null, // No parent
                 SortOrder = 3,
                 IsActive = true
             },
@@ -56,7 +56,7 @@ public static class CategorySeedData
                 Name = "About Me",
                 Slug = "about-me",
                 SeoDescription = "Learn more about the face behind Coding Hub and my journey in the world of software development.",
-                ParentId = Guid.Empty, // No parent
+                ParentId = null, // No parent
                 SortOrder = 4,
                 IsActive = true
             },
@@ -66,7 +66,7 @@ public static class CategorySeedData
                 Name = "Contact",
                 Slug = "contact",
                 SeoDescription = "Get in touch to discuss potential collaborations, or ask me anything about programming and tech.",
-                ParentId = Guid.Empty, // No parent
+                ParentId = null, // No parent
                 SortOrder = 4,
                 IsActive = true
             }
