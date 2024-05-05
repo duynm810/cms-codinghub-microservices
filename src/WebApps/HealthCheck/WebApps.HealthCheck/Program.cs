@@ -1,4 +1,8 @@
+using WebApps.HealthCheck.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddAppConfiguration();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
