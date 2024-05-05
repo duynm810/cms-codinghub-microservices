@@ -72,4 +72,13 @@ services:
     ports:
       - "6002:80"
     restart: always
-  
+    
+  healthcheck:
+    container_name: healthcheck
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - HealthChecksUI__HealthChecks__0__Name=Category Health Check
+      - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
+    ports:
+      - "6010:80"
