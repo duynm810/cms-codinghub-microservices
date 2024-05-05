@@ -64,7 +64,7 @@ services:
   category.api:
     container_name: category.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=CategoryCodingHubDB;Uid=root;Pwd=Passw0rd!"
     depends_on:
