@@ -153,5 +153,33 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
     }
 
     #endregion
-  
+
+    #region OTHERS
+
+    public async Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize)
+    {
+        var result = new ApiResult<PagedResponse<CategoryDto>>();
+        
+        try
+        {
+            var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
+            var data = new PagedResponse<CategoryDto>()
+            {
+                Items = mapper.Map<List<CategoryDto>>(categories.Items),
+                MetaData = categories.MetaData
+            };
+
+            result.Success(data);
+        }
+        catch (Exception e)
+        {
+            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    #endregion
 }
