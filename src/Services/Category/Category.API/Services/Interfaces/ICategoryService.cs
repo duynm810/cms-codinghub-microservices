@@ -18,5 +18,11 @@ public interface ICategoryService
     Task<ApiResult<CategoryDto>> GetCategoryById(Guid id);
 
     #endregion
-    
+
+    #region OTHERS
+
+    Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize);
+
+    #endregion
+
 }

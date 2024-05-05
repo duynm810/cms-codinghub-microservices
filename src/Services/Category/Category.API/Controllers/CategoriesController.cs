@@ -18,16 +18,17 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var result = await categoryService.CreateCategory(categoryDto);
         return Ok(result);
     }
-    
+
     [HttpPut("{id:guid}")]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-    public async Task<IActionResult> UpdateCategory([FromRoute, Required] Guid id, [FromBody] UpdateCategoryDto categoryDto)
+    public async Task<IActionResult> UpdateCategory([FromRoute, Required] Guid id,
+        [FromBody] UpdateCategoryDto categoryDto)
     {
         var result = await categoryService.UpdateCategory(id, categoryDto);
         return Ok(result);
     }
-    
+
     [HttpDelete]
     [ProducesResponseType((int)HttpStatusCode.NoContent)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -36,7 +37,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var result = await categoryService.DeleteCategory(ids);
         return Ok(result);
     }
-    
+
     [HttpGet]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -46,7 +47,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var result = await categoryService.GetCategories();
         return Ok(result);
     }
-    
+
     [HttpGet("{id:guid}")]
     [ProducesResponseType((int)HttpStatusCode.OK)]
     [ProducesResponseType((int)HttpStatusCode.BadRequest)]
@@ -54,6 +55,18 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     public async Task<IActionResult> GetCategory([FromRoute, Required] Guid id)
     {
         var result = await categoryService.GetCategoryById(id);
+        return Ok(result);
+    }
+
+    [HttpGet("paging")]
+    [ProducesResponseType((int)HttpStatusCode.OK)]
+    [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+    [ProducesResponseType((int)HttpStatusCode.NotFound)]
+    public async Task<IActionResult> GetCategoriesPaging(
+        [FromQuery, Required] int pageNumber,
+        [FromQuery] int pageSize)
+    {
+        var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
         return Ok(result);
     }
 }
