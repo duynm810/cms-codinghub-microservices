@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Exceptions\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
     </ItemGroup>

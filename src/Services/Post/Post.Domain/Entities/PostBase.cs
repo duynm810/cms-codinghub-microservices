@@ -8,7 +8,7 @@ namespace Post.Domain.Entities;
 
 [Table("Posts")]
 [Index(nameof(Slug), IsUnique = true)]
-public class Post : EntityAuditBase<Guid>
+public class PostBase : EntityAuditBase<Guid>
 {
     /// <summary>
     /// Tiêu đề bài viết
@@ -73,7 +73,7 @@ public class Post : EntityAuditBase<Guid>
     /// Số tiền hoa hồng kiếm được từ bài viết nếu có
     /// </summary>
     public double RoyaltyAmount  { get; set; }
-    
+
     /// <summary>
     /// Trạng thái của bài viết, ví dụ: Nháp, Chờ duyệt,..
     /// </summary>
