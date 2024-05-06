@@ -1,12 +1,11 @@
 using Contracts.Domains.Interfaces;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Infrastructure.EntityConfigurations;
 
 namespace Post.Infrastructure.Persitence;
 
-public class PostContext(DbContextOptions<PostContext> options, IMediator mediator) : DbContext(options)
+public class PostContext(DbContextOptions<PostContext> options) : DbContext(options)
 {
     public DbSet<PostBase> Posts { get; set; }
 

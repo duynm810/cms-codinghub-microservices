@@ -1,17 +1,17 @@
 using Category.API.Entities;
-using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Category.API.Persistence;
 
 public static class CategorySeedData
 {
-    public static async Task CategorySeedAsync(CategoryContext categoryDbContext)
+    public static async Task CategorySeedAsync(CategoryContext categoryDbContext, ILogger logger)
     {
         if (!categoryDbContext.Categories.Any())
         {
             categoryDbContext.AddRange(GetCategories());
             await categoryDbContext.SaveChangesAsync();
-            Log.Information("Seeded data for Category DB associated with context {DbContextName}",
+            logger.Information("Seeded data for Category DB associated with context {DbContextName}",
                 nameof(CategoryContext));
         }
     }

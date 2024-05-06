@@ -1,44 +1,73 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Post.API.Extensions;
+using Post.Application;
+using Post.Infrastructure;
+using Serilog;
+
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationName);
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    //Config JSON files and environment variables
+    builder.AddAppConfiguration();
 
-app.UseHttpsRedirection();
+    // Extracts configuration settings from appsettings.json and registers them with the service collection
+    builder.Services.ConfigureSettings(configuration);
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    // Configure health checks
+    builder.Services.ConfigureHealthChecks(configuration);
 
-app.MapGet("/weatherforecast", () =>
+    // Config infrastructure services in Post.Infrastructure
+    builder.Services.AddInfrastructureServices(configuration);
+
+    // Config application services in Post.Application
+    builder.Services.AddApplicationServices();
+
+    // Add services to the container.
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Category API");
+            c.DisplayOperationId(); // Show function name in swagger
+            c.DisplayRequestDuration();
+        });
+    }
 
-app.Run();
+    //app.UseHttpsRedirection();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    app.MapHealthChecks("/hc", new HealthCheckOptions()
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
+
+    app.MapDefaultControllerRoute();
+
+    app.Run();
+}
+catch (Exception e)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var type = e.GetType().Name;
+    if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
+
+    Log.Fatal(e, $"Unhandled exception: {e.Message}");
+}
+finally
+{
+    Log.Information($"Shut down {builder.Environment.ApplicationName} complete");
+    Log.CloseAndFlush();
 }

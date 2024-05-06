@@ -3,6 +3,9 @@ services:
   ##database section
   categorydb:
     image: mysql:latest
+    
+  postdb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
   
   ##infrastructure section
   rabbitmq:
@@ -24,6 +27,12 @@ services:
       context: .
       dockerfile: Services/Category/Category.API/Dockerfile
       
+  post.api:
+    image: ${DOCKER_REGISTRY-}post-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Post/Post.API/Dockerfile
+      
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -40,6 +49,8 @@ networks:
 volumes:
   mysql_data:
     name: mysql_data
+  sqlserver_data:
+    name: sqlserver_data
   rabbitmq_data:
     name: rabbitmq_data
   portainer_data:

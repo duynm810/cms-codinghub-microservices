@@ -12,19 +12,19 @@ Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationNam
 try
 {
     builder.Host.UseSerilog(Serilogger.Configure);
+    
+    // Config JSON files and environment variables
+    builder.AddAppConfiguration();
 
     // Register services
     builder.Services.AddInfrastructureServices(configuration);
-
-    // Config JSON files and environment variables
-    builder.AddAppConfiguration();
 
     var app = builder.Build();
 
     // Config pipeline
     app.ConfigurePipeline();
 
-    await app.MigrateDatabase<CategoryContext>((context, _) => { CategorySeedData.CategorySeedAsync(context).Wait(); })
+    await app.MigrateDatabase<CategoryContext>((context, _) => { CategorySeedData.CategorySeedAsync(context, Log.Logger).Wait(); })
         .RunAsync();
 }
 catch (Exception ex)

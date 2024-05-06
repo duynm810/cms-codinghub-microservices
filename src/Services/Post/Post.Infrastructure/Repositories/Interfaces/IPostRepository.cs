@@ -3,7 +3,7 @@ using Post.Domain.Entities;
 
 namespace Post.Infrastructure.Repositories.Interfaces;
 
-public interface IPostCategory : IRepositoryCommandBase<PostBase, Guid>
+public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 {
     #region CRUD
 

@@ -8,7 +8,7 @@ using Post.Infrastructure.Repositories.Interfaces;
 namespace Post.Infrastructure.Repositories;
 
 public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unitOfWork) 
-    : RepositoryCommandBase<PostBase, Guid, PostContext>(dbContext, unitOfWork),  IPostCategory
+    : RepositoryCommandBase<PostBase, Guid, PostContext>(dbContext, unitOfWork),  IPostRepository
 {
     #region CRUD
 
