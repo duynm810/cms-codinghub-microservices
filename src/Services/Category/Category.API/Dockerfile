@@ -1,0 +1,25 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY ["Services/Category/Category.API/Category.API.csproj", "Services/Category/Category.API/"]
+COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
+COPY ["BuildingBlocks/Contracts/Contracts.csproj", "BuildingBlocks/Contracts/"]
+COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Infrastructure/"]
+COPY ["BuildingBlocks/Shared/Shared.csproj", "BuildingBlocks/Shared/"]
+
+RUN dotnet restore "Services/Category/Category.API/Category.API.csproj"
+COPY . .
+WORKDIR "/src/Services/Category/Category.API"
+RUN dotnet build "Category.API.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Category.API.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Category.API.dll"]

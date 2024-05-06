@@ -7,6 +7,7 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Shared.Configurations;
@@ -43,6 +44,9 @@ public static class ServiceExtensions
 
         // Configures swagger services
         services.ConfigureSwaggerServices();
+
+        // Configure health checks
+        services.ConfigureHealthChecks(configuration);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -108,6 +112,18 @@ public static class ServiceExtensions
 
     private static void ConfigureOtherServices(this IServiceCollection services)
     {
+        services.AddControllers();
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         services.AddEndpointsApiExplorer();
+    }
+
+    private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString, name: "MySql Health",
+            failureStatus: HealthStatus.Degraded);
     }
 }
