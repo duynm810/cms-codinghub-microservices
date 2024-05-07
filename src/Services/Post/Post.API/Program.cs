@@ -78,7 +78,7 @@ try
 catch (Exception e)
 {
     var type = e.GetType().Name;
-    if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
+    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
     Log.Fatal(e, $"Unhandled exception: {e.Message}");
 }
