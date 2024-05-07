@@ -15,4 +15,13 @@
       <ProjectReference Include="..\Post.Domain\Post.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Migrations\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Migrations\20240507041542_Initial.cs" />
+      <Compile Remove="Migrations\20240507041542_Initial.Designer.cs" />
+    </ItemGroup>
+
 </Project>

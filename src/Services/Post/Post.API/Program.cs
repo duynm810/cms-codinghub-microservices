@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Post.API.Extensions;
 using Post.Application;
@@ -13,12 +14,17 @@ Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationNam
 
 try
 {
-    // Extracts configuration settings from appsettings.json and registers them with the service collection
-    builder.Services.ConfigureSettings(configuration);
-
+    builder.Host.UseSerilog(Serilogger.Configure);
+    
     //Config JSON files and environment variables
     builder.AddAppConfiguration();
     
+    // Extracts configuration settings from appsettings.json and registers them with the service collection
+    builder.Services.ConfigureSettings(configuration);
+    
+    // Configure health checks
+    builder.Services.ConfigureHealthChecks(configuration);
+
     // Config application services in Post.Application
     builder.Services.AddApplicationServices();
 
@@ -31,9 +37,6 @@ try
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
-
-    // Configure health checks
-    builder.Services.ConfigureHealthChecks(configuration);
     
     var app = builder.Build();
 

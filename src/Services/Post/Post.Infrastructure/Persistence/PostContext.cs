@@ -7,7 +7,7 @@ namespace Post.Infrastructure.Persistence;
 
 public class PostContext(DbContextOptions<PostContext> options) : DbContext(options)
 {
-    public DbSet<PostBase> Posts { get; set; }
+    public required DbSet<PostBase> Posts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

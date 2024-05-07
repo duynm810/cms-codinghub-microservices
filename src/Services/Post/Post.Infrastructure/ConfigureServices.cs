@@ -16,9 +16,6 @@ public static class ConfigureServices
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
-        services.ConfigureDatabaseSettings(configuration);
-        
         // Configures and registers the database context with the service collection
         services.ConfigureDbContext(configuration);
 
@@ -30,15 +27,6 @@ public static class ConfigureServices
 
         // Configures and registers repository and services
         services.ConfigureRepositoryServices();
-    }
-
-    private static void ConfigureDatabaseSettings(this IServiceCollection services, IConfiguration configuration)
-    {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
-                                   $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddSingleton(databaseSettings);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
