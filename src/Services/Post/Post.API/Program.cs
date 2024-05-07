@@ -58,6 +58,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
+            c.DocumentTitle = "Post Swagger UI";
             c.SwaggerEndpoint("PostAPI/swagger.json", $"{builder.Environment.ApplicationName} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();

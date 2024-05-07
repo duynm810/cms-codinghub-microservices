@@ -16,7 +16,7 @@ namespace Post.API.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class PostController(IMediator mediator, IMapper mapper) : ControllerBase
+public class PostsController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<long>), (int)HttpStatusCode.OK)]
