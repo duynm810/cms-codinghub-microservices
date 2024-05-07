@@ -13,26 +13,28 @@ Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationNam
 
 try
 {
-    //Config JSON files and environment variables
-    builder.AddAppConfiguration();
-
     // Extracts configuration settings from appsettings.json and registers them with the service collection
     builder.Services.ConfigureSettings(configuration);
 
-    // Configure health checks
-    builder.Services.ConfigureHealthChecks(configuration);
-
-    // Config infrastructure services in Post.Infrastructure
-    builder.Services.AddInfrastructureServices(configuration);
-
+    //Config JSON files and environment variables
+    builder.AddAppConfiguration();
+    
     // Config application services in Post.Application
     builder.Services.AddApplicationServices();
 
+    // Config infrastructure services in Post.Infrastructure
+    builder.Services.AddInfrastructureServices(configuration);
+  
     // Add services to the container.
+    builder.Services.AddControllers();
+    
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
+    // Configure health checks
+    builder.Services.ConfigureHealthChecks(configuration);
+    
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.

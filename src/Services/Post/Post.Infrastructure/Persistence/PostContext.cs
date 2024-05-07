@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Infrastructure.EntityConfigurations;
 
-namespace Post.Infrastructure.Persitence;
+namespace Post.Infrastructure.Persistence;
 
 public class PostContext(DbContextOptions<PostContext> options) : DbContext(options)
 {

@@ -4,6 +4,7 @@ using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Persitence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Repositories.Interfaces;
@@ -22,7 +23,7 @@ public static class ConfigureServices
         services.ConfigureDbContext(configuration);
 
         // Configures and registers to seed post data
-        services.ConfigureSeedData();
+        //services.ConfigureSeedData();
 
         // Configures and registers core services
         services.ConfigureCoreServices();
