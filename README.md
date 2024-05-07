@@ -9,6 +9,34 @@
 dotnet tool install --global dotnet-ef
 ```
 
+```Powershell
+dotnet tool update --global dotnet-ef
+```
+
+---
+
+## How to migration the project (Development)
+
+Category API
+
+```Powershell
+dotnet ef migrations "Initial"
+```
+
+```Powershell
+dotnet ef database update
+```
+
+Post API
+
+```Powershell
+ dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.API
+```
+
+```Powershell
+ dotnet ef database update --project Post.Infrastructure --startup-project Post.API
+```
+
 ---
 
 ## How to run the project
