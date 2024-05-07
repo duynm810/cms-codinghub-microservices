@@ -25,7 +25,7 @@ try
     builder.Services.ConfigureSettings(configuration);
     
     // Configure health checks
-    builder.Services.ConfigureHealthChecks(configuration);
+    //builder.Services.ConfigureHealthChecks(configuration);
 
     // Config application services in Post.Application
     builder.Services.AddApplicationServices();
@@ -74,13 +74,13 @@ try
     //app.UseHttpsRedirection();
     app.UseRouting();
 
-    app.MapHealthChecks("/hc", new HealthCheckOptions()
+    /*app.MapHealthChecks("/hc", new HealthCheckOptions()
     {
         Predicate = _ => true,
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
 
-    app.MapDefaultControllerRoute();
+    app.MapDefaultControllerRoute();*/
 
     app.Run();
 }

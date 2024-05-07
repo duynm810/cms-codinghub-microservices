@@ -89,7 +89,7 @@ services:
   post.api:
     container_name: post.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
     depends_on:
@@ -105,7 +105,5 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - HealthChecksUI__HealthChecks__0__Name=Category Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
-      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
-      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
     ports:
       - "6010:80"
