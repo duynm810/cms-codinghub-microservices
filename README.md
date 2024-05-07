@@ -15,9 +15,19 @@ dotnet tool update --global dotnet-ef
 
 ---
 
+## Connection string (database)
+
+- Category API (MySQL)
+
+```Powershell
+jdbc:mysql://localhost:3307/xxx?user=root&password=Passw0rd!
+```
+- **xxx: database name**
+---
+
 ## How to migration the project (Development)
 
-Category API
+- Category API
 
 ```Powershell
 dotnet ef migrations "Initial"
@@ -27,7 +37,7 @@ dotnet ef migrations "Initial"
 dotnet ef database update
 ```
 
-Post API
+- Post API
 
 ```Powershell
  dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.API
@@ -41,7 +51,7 @@ Post API
 
 ## How to run the project
 
-Run command for build project
+- Run command for build project
 
 ```Powershell
 dotnet build
@@ -51,13 +61,13 @@ Go to folder contain file `docker-compose`
 
 1. Using docker-compose
 
-- Only **run**
+- **RUN**
 
 ```Powershell (Only run)
 docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
 ```
 
-- Using **build and re-run**
+- **BUILD and RE-RUN**
 
 ```Powershell (Build and run)
 docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build --remove-orphans

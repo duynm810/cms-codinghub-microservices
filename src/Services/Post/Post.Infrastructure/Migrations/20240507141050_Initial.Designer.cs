@@ -12,7 +12,7 @@ using Post.Infrastructure.Persistence;
 namespace Post.Infrastructure.Migrations
 {
     [DbContext(typeof(PostContext))]
-    [Migration("20240507043111_Initial")]
+    [Migration("20240507141050_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -34,8 +34,8 @@ namespace Post.Infrastructure.Migrations
                     b.Property<Guid>("AuthorUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Content")
                         .HasMaxLength(1000)

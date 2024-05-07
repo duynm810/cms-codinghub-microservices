@@ -59,7 +59,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.Draft,
-                    CategoryId = Guid.NewGuid(),
+                    CategoryId = 1,
                     AuthorUserId = Guid.NewGuid()
                 },
                 new()
@@ -77,7 +77,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 100.00,
                     Status = PostStatusEnum.Published,
-                    CategoryId = Guid.NewGuid(),
+                    CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.Now,
                 },
@@ -96,7 +96,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.WaitingForApproval,
-                    CategoryId = Guid.NewGuid(),
+                    CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 }
             };
