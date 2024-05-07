@@ -4,7 +4,7 @@ using Shared.Responses;
 
 namespace Category.API.Repositories.Interfaces;
 
-public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, Guid>
+public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long>
 {
     #region CRUD
 
@@ -16,7 +16,7 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, Guid
     
     Task<IEnumerable<CategoryBase>> GetCategories();
 
-    Task<CategoryBase?> GetCategoryById(Guid id);
+    Task<CategoryBase?> GetCategoryById(long id);
 
     #endregion
 

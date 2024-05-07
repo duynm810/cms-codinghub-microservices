@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Commons\Models\"/>
+        <Folder Include="Commons\Mappings\" />
         <Folder Include="Features\V1\Posts\Commands\CreatePost\" />
         <Folder Include="Features\V1\Posts\Commands\DeletePost\" />
         <Folder Include="Features\V1\Posts\Commands\UpdatePost\" />

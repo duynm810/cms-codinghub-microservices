@@ -1,9 +1,9 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Infrastructure.Repositories.Interfaces;
+using Post.Application.Commons.Models;
+using Post.Domain.Interfaces;
 using Serilog;
-using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 

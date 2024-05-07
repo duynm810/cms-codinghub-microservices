@@ -1,5 +1,5 @@
 using MediatR;
-using Shared.Dtos.Post;
+using Post.Application.Commons.Models;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostById;

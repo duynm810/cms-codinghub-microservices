@@ -10,7 +10,7 @@ using Shared.Responses;
 namespace Category.API.Repositories;
 
 public class CategoryRepository(CategoryContext dbContext, IUnitOfWork<CategoryContext> unitOfWork)
-    : RepositoryCommandBase<CategoryBase, Guid, CategoryContext>(dbContext, unitOfWork), ICategoryRepository
+    : RepositoryCommandBase<CategoryBase, long, CategoryContext>(dbContext, unitOfWork), ICategoryRepository
 {
     #region CRUD
 
@@ -22,7 +22,7 @@ public class CategoryRepository(CategoryContext dbContext, IUnitOfWork<CategoryC
 
     public async Task<IEnumerable<CategoryBase>> GetCategories() => await FindAll().ToListAsync();
 
-    public async Task<CategoryBase?> GetCategoryById(Guid id) => await GetByIdAsync(id) ?? null;
+    public async Task<CategoryBase?> GetCategoryById(long id) => await GetByIdAsync(id) ?? null;
 
     #endregion
 

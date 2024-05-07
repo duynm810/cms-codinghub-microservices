@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Post.Application.Commons.Models;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
-using Shared.Dtos.Post;
 using Shared.Responses;
 
 namespace Post.API.Controllers;

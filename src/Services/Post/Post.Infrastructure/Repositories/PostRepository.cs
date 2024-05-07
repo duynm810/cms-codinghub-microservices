@@ -2,8 +2,8 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
+using Post.Domain.Interfaces;
 using Post.Infrastructure.Persistence;
-using Post.Infrastructure.Repositories.Interfaces;
 
 namespace Post.Infrastructure.Repositories;
 

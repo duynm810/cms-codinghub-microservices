@@ -4,9 +4,9 @@ using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Post.Domain.Interfaces;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
-using Post.Infrastructure.Repositories.Interfaces;
 using Shared.Configurations;
 
 namespace Post.Infrastructure;
@@ -47,7 +47,7 @@ public static class ConfigureServices
 
     private static void ConfigureSeedData(this IServiceCollection services)
     {
-        services.AddScoped<PostSeedData>();
+        services.AddScoped<IDatabaseSeeder, PostSeedData>();
     }
 
     private static void ConfigureCoreServices(this IServiceCollection services)

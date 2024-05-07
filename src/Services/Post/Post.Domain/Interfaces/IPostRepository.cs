@@ -1,7 +1,7 @@
 using Contracts.Domains.Repositories;
 using Post.Domain.Entities;
 
-namespace Post.Infrastructure.Repositories.Interfaces;
+namespace Post.Domain.Interfaces;
 
 public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 {

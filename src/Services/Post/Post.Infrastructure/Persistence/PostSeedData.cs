@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
+using Post.Domain.Interfaces;
 using Serilog;
 using Shared.Enums;
 
 namespace Post.Infrastructure.Persistence;
 
-public class PostSeedData(PostContext context, ILogger logger)
+public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
 {
     public async Task InitialiseAsync()
     {
@@ -102,6 +103,9 @@ public class PostSeedData(PostContext context, ILogger logger)
 
             await context.Posts.AddRangeAsync(posts);
             await context.SaveChangesAsync();
+            
+            logger.Information("Seeded data for Post database associated with context {DbContextName}",
+                nameof(PostContext));
         }
     }
 }

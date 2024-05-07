@@ -7,7 +7,7 @@ namespace Category.API.Entities;
 
 [Table("Categories")]
 [Index(nameof(Slug), IsUnique = true)]
-public class CategoryBase : EntityAuditBase<Guid>
+public class CategoryBase : EntityAuditBase<long>
 {
     /// <summary>
     /// Tên danh mục
