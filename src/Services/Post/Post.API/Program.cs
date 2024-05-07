@@ -5,6 +5,7 @@ using Post.API.Extensions;
 using Post.Application;
 using Post.Infrastructure;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -36,7 +37,17 @@ try
     
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
+        c.SwaggerDoc("PostAPI", new Microsoft.OpenApi.Models.OpenApiInfo
+        {
+            Version = "v1",
+            Title = "Post API for Administrators",
+            Description =
+                "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
+        });
+    });
     
     var app = builder.Build();
 
@@ -46,7 +57,7 @@ try
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", "Category API");
+            c.SwaggerEndpoint("PostAPI/swagger.json", "Post API");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
