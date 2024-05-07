@@ -3,7 +3,6 @@ using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Infrastructure.Persistence;
-using Post.Infrastructure.Persitence;
 using Post.Infrastructure.Repositories.Interfaces;
 
 namespace Post.Infrastructure.Repositories;
