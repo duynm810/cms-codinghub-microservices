@@ -6,7 +6,7 @@ services:
     container_name: categorydb
     environment:
       MYSQL_ROOT_PASSWORD: "Passw0rd!"
-      MYSQL_DATABASE: "CategoryCodingHubDB"
+      MYSQL_DATABASE: "category_service_db"
     restart: always
     volumes:
       - mysql_data:/var/lib/mysql
@@ -78,7 +78,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=CategoryCodingHubDB;Uid=root;Pwd=Passw0rd!"
+      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
     depends_on:
       - categorydb
     ports:
@@ -88,9 +88,9 @@ services:
   post.api:
     container_name: post.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DatabaseSettings:ConnectionString=Server=postdb,1435;Database=PostCodingHubDB;User Id=sa;Password=Passw0rd!;Trusted_Connection=True;Multipleactiveresultsets=true"
+      - "DatabaseSettings:ConnectionString=Server=postdb,1435;Database=post_service_db;User Id=sa;Password=Passw0rd!;MultipleActiveResultSets=true"
     depends_on:
       - postdb
     ports:

@@ -40,7 +40,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> UpdateCategory(Guid id, UpdateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
 
@@ -70,7 +70,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<bool>> DeleteCategory(Guid[] ids)
+    public async Task<ApiResult<bool>> DeleteCategory(long[] ids)
     {
         var result = new ApiResult<bool>();
 
@@ -123,7 +123,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> GetCategoryById(Guid id)
+    public async Task<ApiResult<CategoryDto>> GetCategoryById(long id)
     {
         var result = new ApiResult<CategoryDto>();
 

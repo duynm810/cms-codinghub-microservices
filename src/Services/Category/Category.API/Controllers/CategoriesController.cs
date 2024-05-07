@@ -19,9 +19,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(result);
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpPut("{id:long}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.NoContent)]
-    public async Task<IActionResult> UpdateCategory([FromRoute, Required] Guid id,
+    public async Task<IActionResult> UpdateCategory([FromRoute, Required] long id,
         [FromBody] UpdateCategoryDto categoryDto)
     {
         var result = await categoryService.UpdateCategory(id, categoryDto);
@@ -30,7 +30,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpDelete]
     [ProducesResponseType(typeof(NoContentResult), (int)HttpStatusCode.NoContent)]
-    public async Task<IActionResult> DeleteCategory([FromRoute, Required] Guid[] ids)
+    public async Task<IActionResult> DeleteCategory([FromRoute, Required] long[] ids)
     {
         var result = await categoryService.DeleteCategory(ids);
         return Ok(result);
@@ -44,9 +44,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         return Ok(result);
     }
 
-    [HttpGet("{id:guid}")]
+    [HttpGet("{id:long}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetCategory([FromRoute, Required] Guid id)
+    public async Task<IActionResult> GetCategory([FromRoute, Required] long id)
     {
         var result = await categoryService.GetCategoryById(id);
         return Ok(result);

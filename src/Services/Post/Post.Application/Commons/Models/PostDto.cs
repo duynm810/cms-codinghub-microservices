@@ -1,12 +1,13 @@
-using AutoMapper;
 using Post.Application.Commons.Mappings;
 using Post.Domain.Entities;
 using Shared.Enums;
 
-namespace Post.Application.Features.V1.Posts.Commons;
+namespace Post.Application.Commons.Models;
 
-public class CreateOrUpdateCommand : IMapFrom<PostBase>
+public class PostDto : IMapFrom<PostBase>
 {
+    public Guid Id { get; set; }
+    
     public required string Name { get; set; }
 
     public required string Slug { get; set; }
@@ -36,9 +37,4 @@ public class CreateOrUpdateCommand : IMapFrom<PostBase>
     public Guid AuthorUserId { get; set; }
 
     public DateTime? PaidDate { get; set; }
-    
-    public void Mapping(Profile profile)
-    {
-        profile.CreateMap<CreateOrUpdateCommand, PostBase>();
-    }
 }

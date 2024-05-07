@@ -31,8 +31,8 @@ namespace Post.Infrastructure.Migrations
                     b.Property<Guid>("AuthorUserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<long>("CategoryId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Content")
                         .HasMaxLength(1000)

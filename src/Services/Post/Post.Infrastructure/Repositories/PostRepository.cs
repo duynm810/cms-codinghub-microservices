@@ -2,9 +2,8 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
+using Post.Domain.Interfaces;
 using Post.Infrastructure.Persistence;
-using Post.Infrastructure.Persitence;
-using Post.Infrastructure.Repositories.Interfaces;
 
 namespace Post.Infrastructure.Repositories;
 
@@ -13,7 +12,11 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 {
     #region CRUD
 
-    public async Task CreatePost(PostBase post) => await CreateAsync(post);
+    public Guid CreatePost(PostBase post)
+    {
+        Create(post);
+        return post.Id;
+    }
 
     public async Task<PostBase> UpdatePost(PostBase post)
     {

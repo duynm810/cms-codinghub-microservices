@@ -1,20 +1,18 @@
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Models;
 using Post.Domain.Interfaces;
 using Serilog;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
+namespace Post.Application.Features.V1.Posts.Commands.DeletePost;
 
-public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
-    : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
+public class DeletePostCommandHandler(IPostRepository postRepository, ILogger logger)
+    : IRequestHandler<DeletePostCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDto>();
+        var result = new ApiResult<bool>();
 
         try
         {
@@ -26,12 +24,12 @@ public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper map
                 return result;
             }
 
-            var data = mapper.Map<PostDto>(post);
-            result.Success(data);
+            await postRepository.DeletePost(post);
+            result.Success(true);
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetPostByIdQuery), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeletePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

@@ -84,7 +84,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// Khóa ngoại đến danh mục của bài viết
     /// </summary>
     [Required]
-    public Guid CategoryId { get; set; }
+    public long CategoryId { get; set; }
 
     /// <summary>
     /// Khóa ngoại đến thông tin tác giả bài viết

@@ -7,12 +7,12 @@ using Serilog;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
+namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
-    : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
+public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDto>();
 
@@ -26,12 +26,15 @@ public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper map
                 return result;
             }
 
-            var data = mapper.Map<PostDto>(post);
+            var updatePost = mapper.Map(request, post);
+            await postRepository.UpdatePost(updatePost);
+
+            var data = mapper.Map<PostDto>(updatePost);
             result.Success(data);
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetPostByIdQuery), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(UpdatePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

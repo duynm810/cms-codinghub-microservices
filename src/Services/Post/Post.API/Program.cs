@@ -3,6 +3,7 @@ using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Post.API.Extensions;
 using Post.Application;
+using Post.Domain.Interfaces;
 using Post.Infrastructure;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -57,11 +58,18 @@ try
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.SwaggerEndpoint("PostAPI/swagger.json", "Post API");
+            c.DocumentTitle = "Post Swagger UI";
+            c.SwaggerEndpoint("PostAPI/swagger.json", $"{builder.Environment.ApplicationName} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
     }
+    
+    // Initialise and seed database
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+    await seeder.InitialiseAsync();
+    await seeder.SeedAsync();
 
     //app.UseHttpsRedirection();
 

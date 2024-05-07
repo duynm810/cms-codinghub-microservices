@@ -28,7 +28,7 @@ namespace Post.Infrastructure.Migrations
                     IsPaid = table.Column<bool>(type: "bit", nullable: false),
                     RoyaltyAmount = table.Column<double>(type: "float", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CategoryId = table.Column<long>(type: "bigint", nullable: false),
                     AuthorUserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     PaidDate = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
