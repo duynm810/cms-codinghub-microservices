@@ -12,7 +12,11 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 {
     #region CRUD
 
-    public async Task CreatePost(PostBase post) => await CreateAsync(post);
+    public Guid CreatePost(PostBase post)
+    {
+        Create(post);
+        return post.Id;
+    }
 
     public async Task<PostBase> UpdatePost(PostBase post)
     {

@@ -7,7 +7,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 {
     #region CRUD
 
-    Task CreatePost(PostBase post);
+    Guid CreatePost(PostBase post);
     
     Task<PostBase> UpdatePost(PostBase post);
     
