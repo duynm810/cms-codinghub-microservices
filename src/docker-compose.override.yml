@@ -13,6 +13,18 @@ services:
     ports:
       - "3307:3306"
   
+  #postdb: sqlserver
+  postdb:
+    container_name: postdb
+    environment:
+      SA_PASSWORD: "Passw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+    ports:
+      - "1435:1433"
+  
   ##infrastructure section
   rabbitmq:
     container_name: rabbitmq
@@ -72,7 +84,19 @@ services:
     ports:
       - "6002:80"
     restart: always
-    
+  
+  post.api:
+    container_name: post.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=postdb,1435;Database=PostCodingHubDB;User Id=sa;Password=Passw0rd!;Trusted_Connection=True;Multipleactiveresultsets=true"
+    depends_on:
+      - postdb
+    ports:
+      - "6005:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
@@ -80,5 +104,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - HealthChecksUI__HealthChecks__0__Name=Category Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
+      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
+      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
     ports:
       - "6010:80"

@@ -11,7 +11,7 @@ public interface ICategoryService
 
     Task<ApiResult<CategoryDto>> UpdateCategory(Guid id, UpdateCategoryDto model);
 
-    Task<ApiResult<CategoryDto>> DeleteCategory(Guid[] ids);
+    Task<ApiResult<bool>> DeleteCategory(Guid[] ids);
     
     Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories();
     

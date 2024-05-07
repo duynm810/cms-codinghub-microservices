@@ -6,4 +6,19 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <ProjectReference Include="..\Post.Infrastructure\Post.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Folder Include="Commons\Models\"/>
+        <Folder Include="Features\V1\Posts\Commands\CreatePost\" />
+        <Folder Include="Features\V1\Posts\Commands\DeletePost\" />
+        <Folder Include="Features\V1\Posts\Commands\UpdatePost\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.9.1"/>
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    </ItemGroup>
 </Project>

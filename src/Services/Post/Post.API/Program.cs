@@ -1,44 +1,89 @@
+using HealthChecks.UI.Client;
+using Logging;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Post.API.Extensions;
+using Post.Application;
+using Post.Infrastructure;
+using Serilog;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationName);
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    builder.Host.UseSerilog(Serilogger.Configure);
+    
+    //Config JSON files and environment variables
+    builder.AddAppConfiguration();
+    
+    // Extracts configuration settings from appsettings.json and registers them with the service collection
+    builder.Services.ConfigureSettings(configuration);
+    
+    // Configure health checks
+    builder.Services.ConfigureHealthChecks(configuration);
 
-app.UseHttpsRedirection();
+    // Config application services in Post.Application
+    builder.Services.AddApplicationServices();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
+    // Config infrastructure services in Post.Infrastructure
+    builder.Services.AddInfrastructureServices(configuration);
+  
+    // Add services to the container.
+    builder.Services.AddControllers();
+    
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(c =>
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast")
-    .WithOpenApi();
+        c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
+        c.SwaggerDoc("PostAPI", new Microsoft.OpenApi.Models.OpenApiInfo
+        {
+            Version = "v1",
+            Title = "Post API for Administrators",
+            Description =
+                "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
+        });
+    });
+    
+    var app = builder.Build();
 
-app.Run();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.SwaggerEndpoint("PostAPI/swagger.json", "Post API");
+            c.DisplayOperationId(); // Show function name in swagger
+            c.DisplayRequestDuration();
+        });
+    }
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
+    //app.UseHttpsRedirection();
+
+    app.MapHealthChecks("/hc", new HealthCheckOptions()
+    {
+        Predicate = _ => true,
+        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+    });
+
+    app.MapDefaultControllerRoute();
+
+    app.Run();
+}
+catch (Exception e)
 {
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    var type = e.GetType().Name;
+    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
+
+    Log.Fatal(e, $"Unhandled exception: {e.Message}");
+}
+finally
+{
+    Log.Information($"Shut down {builder.Environment.ApplicationName} complete");
+    Log.CloseAndFlush();
 }

@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Serilog;
 
 namespace Category.API.Extensions;
 
@@ -11,6 +10,7 @@ public static class HostExtensions
         using var scope = host.Services.CreateScope();
 
         var services = scope.ServiceProvider;
+        var logger = services.GetRequiredService<ILogger<TContext>>();
         var context = services.GetService<TContext>();
 
         try
@@ -21,15 +21,15 @@ public static class HostExtensions
                     "Database context not found. Ensure the database context is registered and configured correctly.");
             }
 
-            Log.Information("Migrating MySQL database");
+            logger.LogInformation("Migrating MySQL database");
             ExcuteMigrations(context);
 
-            Log.Information("Migrated MySQL database");
-            InvokeSeeder(seeder!, context, services);
+            logger.LogInformation("Migrated MySQL database");
+            InvokeSeeder(seeder, context, services);
         }
         catch (Exception e)
         {
-            Log.Error(e, "An error occurred while migrating the MySQL database");
+            logger.LogError(e, "An error occurred while migrating the MySQL database");
         }
 
         return host;
