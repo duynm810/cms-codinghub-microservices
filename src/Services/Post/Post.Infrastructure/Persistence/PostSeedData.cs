@@ -12,7 +12,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
     {
         try
         {
-            if (context.Database.IsSqlServer())
+            if (context.Database.IsNpgsql())
             {
                 await context.Database.MigrateAsync();
             }

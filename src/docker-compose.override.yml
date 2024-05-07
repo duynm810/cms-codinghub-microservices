@@ -13,17 +13,18 @@ services:
     ports:
       - "3307:3306"
   
-  #postdb: sqlserver
+  #postdb: postgresql
   postdb:
     container_name: postdb
     environment:
-      SA_PASSWORD: "Passw0rd!"
-      ACCEPT_EULA: "Y"
-    volumes:
-      - sqlserver_data:/var/opt/mssql
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_service_db
     restart: always
     ports:
-      - "1435:1433"
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   
   ##infrastructure section
   rabbitmq:
@@ -88,9 +89,9 @@ services:
   post.api:
     container_name: post.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://+:80
-      - "DatabaseSettings:ConnectionString=Server=postdb,1435;Database=post_service_db;User Id=sa;Password=Passw0rd!;MultipleActiveResultSets=true"
+      - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
     depends_on:
       - postdb
     ports:

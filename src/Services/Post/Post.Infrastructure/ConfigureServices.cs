@@ -15,6 +15,9 @@ public static class ConfigureServices
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        services.ConfigureDatabaseSettings(configuration);
+        
         // Configures and registers the database context with the service collection
         services.ConfigureDbContext(configuration);
 
@@ -27,6 +30,15 @@ public static class ConfigureServices
         // Configures and registers repository and services
         services.ConfigureRepositoryServices();
     }
+    
+    private static void ConfigureDatabaseSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton(databaseSettings);
+    }
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
@@ -37,11 +49,16 @@ public static class ConfigureServices
                 $"{nameof(DatabaseSettings)} is not configured properly");
         }
 
-        services.AddDbContext<PostContext>(options =>
+        services.AddDbContextPool<PostContext>(opts =>
         {
-            options.UseSqlServer(databaseSettings.ConnectionString,
-                builder =>
-                    builder.MigrationsAssembly(typeof(PostContext).Assembly.FullName));
+            opts.UseNpgsql(databaseSettings.ConnectionString, optionsBuilder =>
+            {
+                optionsBuilder.UseNodaTime();
+                optionsBuilder.MigrationsAssembly(typeof(PostContext).Assembly.FullName);
+                optionsBuilder.EnableRetryOnFailure();
+                optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); // If query have multiple include entities, using split query separate SQL query
+            });
+            opts.UseSnakeCaseNamingConvention();
         });
     }
 

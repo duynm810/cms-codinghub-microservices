@@ -5,7 +5,7 @@ services:
     image: mysql:latest
     
   postdb:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: postgres:alpine3.16
   
   ##infrastructure section
   rabbitmq:
@@ -49,8 +49,8 @@ networks:
 volumes:
   mysql_data:
     name: mysql_data
-  sqlserver_data:
-    name: sqlserver_data
+  postgres_data:
+    name: postgres_data
   rabbitmq_data:
     name: rabbitmq_data
   portainer_data:

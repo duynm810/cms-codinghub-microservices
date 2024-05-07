@@ -66,12 +66,13 @@ try
     }
     
     // Initialise and seed database
-    using var scope = app.Services.CreateScope();
+    /*using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await seeder.InitialiseAsync();
-    await seeder.SeedAsync();
+    await seeder.SeedAsync();*/
 
     //app.UseHttpsRedirection();
+    app.UseRouting();
 
     app.MapHealthChecks("/hc", new HealthCheckOptions()
     {
