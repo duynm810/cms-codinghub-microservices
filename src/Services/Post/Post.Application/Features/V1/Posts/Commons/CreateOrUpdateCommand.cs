@@ -36,7 +36,7 @@ public class CreateOrUpdateCommand : IMapFrom<PostBase>
     public Guid AuthorUserId { get; set; }
 
     public DateTime? PaidDate { get; set; }
-
+    
     public void Mapping(Profile profile)
     {
         profile.CreateMap<CreateOrUpdateCommand, PostBase>();
