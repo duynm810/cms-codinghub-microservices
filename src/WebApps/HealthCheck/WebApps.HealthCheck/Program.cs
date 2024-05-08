@@ -10,6 +10,8 @@ builder.Services.AddControllersWithViews();
 // Registers health check UI
 builder.Services.AddHealthChecksUI().AddInMemoryStorage();
 
+builder.WebHost.UseWebRoot("wwwroot");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
