@@ -2,9 +2,9 @@ namespace Shared.Configurations;
 
 public class DatabaseSettings
 {
-    public required string DbProvider { get; set; }
+    public string DbProvider { get; set; } = default!;
 
-    public required string ConnectionString { get; set; }
+    public string ConnectionString { get; set; } = default!;
 
-    public required string DatabaseName { get; set; }
+    public string DatabaseName { get; set; } = default!;
 }

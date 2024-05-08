@@ -2,5 +2,5 @@ namespace Shared.Configurations;
 
 public class GrpcSettings
 {
-    public required string CategoryUrl { get; set; }
+    public string CategoryUrl { get; set; } = default!;
 }

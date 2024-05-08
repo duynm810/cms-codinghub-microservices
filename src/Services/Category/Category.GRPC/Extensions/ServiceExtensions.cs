@@ -3,6 +3,7 @@ using Category.GRPC.Repositories;
 using Category.GRPC.Repositories.Interfaces;
 using Category.GRPC.Services.BackgroundServices;
 using Grpc.HealthCheck;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
@@ -39,11 +40,9 @@ public static class ServiceExtensions
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
-        if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
-        {
-            throw new ArgumentNullException($"{nameof(DatabaseSettings)} ConnectionString is not configured properly");
-        }
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
 
         var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
         services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
@@ -61,8 +60,8 @@ public static class ServiceExtensions
 
     private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton<HealthServiceImpl>();

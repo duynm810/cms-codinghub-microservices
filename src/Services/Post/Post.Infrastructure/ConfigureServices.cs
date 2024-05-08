@@ -2,6 +2,7 @@ using Category.GRPC.Protos;
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -52,12 +53,9 @@ public static class ConfigureServices
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
-        if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
-        {
-            throw new ArgumentNullException(
-                $"{nameof(DatabaseSettings)} is not configured properly");
-        }
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddDbContextPool<PostContext>(opts =>
         {
@@ -94,8 +92,9 @@ public static class ConfigureServices
     
     private static void ConfigureGrpcServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
-                           ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
+        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
+                           throw new ArgumentNullException(
+                               $"{nameof(GrpcSettings)} is not configured properly");
         
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
