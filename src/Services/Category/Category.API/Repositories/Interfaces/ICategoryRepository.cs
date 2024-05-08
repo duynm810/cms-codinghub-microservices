@@ -9,11 +9,11 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long
     #region CRUD
 
     Task CreateCategory(CategoryBase category);
-    
+
     Task UpdateCategory(CategoryBase category);
-    
+
     Task DeleteCategory(CategoryBase category);
-    
+
     Task<IEnumerable<CategoryBase>> GetCategories();
 
     Task<CategoryBase?> GetCategoryById(long id);
@@ -21,7 +21,7 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long
     #endregion
 
     #region OTHERS
-    
+
     Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber, int pageSize);
 
     #endregion

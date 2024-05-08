@@ -12,9 +12,9 @@ public interface ICategoryService
     Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model);
 
     Task<ApiResult<bool>> DeleteCategory(long[] ids);
-    
+
     Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories();
-    
+
     Task<ApiResult<CategoryDto>> GetCategoryById(long id);
 
     #endregion
@@ -24,5 +24,4 @@ public interface ICategoryService
     Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize);
 
     #endregion
-
 }

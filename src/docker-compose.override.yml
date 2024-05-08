@@ -85,6 +85,18 @@ services:
     ports:
       - "6002:80"
     restart: always
+    
+  category.grpc:
+    container_name: category.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
+    depends_on:
+      - categorydb
+    ports:
+      - "6003:80"
+    restart: always
   
   post.api:
     container_name: post.api
@@ -92,6 +104,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+      - "GrpcSettings:CategoryUrl=http://category.grpc"
     depends_on:
       - postdb
     ports:
@@ -103,9 +116,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - HealthChecksUI__HealthChecks__0__Name=Category Health Check
+      - HealthChecksUI__HealthChecks__0__Name=Category API Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
-      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
-      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
+      - HealthChecksUI__HealthChecks__2__Name=Post API Health Check
+      - HealthChecksUI__HealthChecks__2__Uri=http://post.api/hc
     ports:
       - "6010:80"

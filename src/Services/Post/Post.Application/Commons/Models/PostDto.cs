@@ -7,7 +7,7 @@ namespace Post.Application.Commons.Models;
 public class PostDto : IMapFrom<PostBase>
 {
     public Guid Id { get; set; }
-    
+
     public required string Name { get; set; }
 
     public required string Slug { get; set; }

@@ -103,7 +103,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
 
             await context.Posts.AddRangeAsync(posts);
             await context.SaveChangesAsync();
-            
+
             logger.Information("Seeded data for Post database associated with context {DbContextName}",
                 nameof(PostContext));
         }

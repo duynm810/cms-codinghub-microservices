@@ -7,7 +7,8 @@ namespace Infrastructure.Domains.Repositories;
 
 public class RepositoryQueryBase<T, TK> where T : EntityBase<TK>;
 
-public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext) : RepositoryQueryBase<T, TK>, IRepositoryQueryBase<T, TK, TContext>
+public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
+    : RepositoryQueryBase<T, TK>, IRepositoryQueryBase<T, TK, TContext>
     where T : EntityBase<TK>
     where TContext : DbContext
 {

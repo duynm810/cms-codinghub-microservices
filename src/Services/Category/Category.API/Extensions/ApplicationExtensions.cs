@@ -33,7 +33,7 @@ public static class ApplicationExtensions
                 Predicate = _ => true,
                 ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
             });
-            
+
             endpoints.MapDefaultControllerRoute();
         });
     }

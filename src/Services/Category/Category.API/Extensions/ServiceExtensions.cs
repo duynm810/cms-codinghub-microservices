@@ -6,6 +6,7 @@ using Category.API.Services.Interfaces;
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
+using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
@@ -49,13 +50,20 @@ public static class ServiceExtensions
         services.ConfigureHealthChecks(configuration);
     }
 
+    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton(databaseSettings);
+    }
+
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
-        if (databaseSettings == null || string.IsNullOrEmpty(databaseSettings.ConnectionString))
-        {
-            throw new ArgumentNullException($"{nameof(DatabaseSettings)} ConnectionString is not configured properly");
-        }
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
 
         var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
         services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
@@ -64,15 +72,6 @@ public static class ServiceExtensions
                 e.MigrationsAssembly("Category.API");
                 e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
             }));
-    }
-
-    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
-    {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
-                                   $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddSingleton(databaseSettings);
     }
 
     private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -113,17 +112,18 @@ public static class ServiceExtensions
     private static void ConfigureOtherServices(this IServiceCollection services)
     {
         services.AddControllers();
-        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         services.AddEndpointsApiExplorer();
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
     private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
-        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString, name: "MySql Health",
+        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
+            name: "MySQL Health",
             failureStatus: HealthStatus.Degraded);
     }
 }

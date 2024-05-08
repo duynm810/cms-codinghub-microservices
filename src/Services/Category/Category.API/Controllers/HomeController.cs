@@ -8,4 +8,4 @@ public class HomeController : ControllerBase
     {
         return Redirect("~/swagger");
     }
-}   
+}

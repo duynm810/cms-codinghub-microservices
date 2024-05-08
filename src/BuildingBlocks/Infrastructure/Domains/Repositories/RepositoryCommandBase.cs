@@ -7,12 +7,15 @@ namespace Infrastructure.Domains.Repositories;
 
 public class RepositoryCommandBase<T, TK> : RepositoryQueryBase<T, TK> where T : EntityBase<TK>;
 
-public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfWork<TContext> unitOfWork) : RepositoryQueryBase<T, TK, TContext>(dbContext), IRepositoryCommandBase<T, TK, TContext>
+public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfWork<TContext> unitOfWork)
+    : RepositoryQueryBase<T, TK, TContext>(dbContext), IRepositoryCommandBase<T, TK, TContext>
     where T : EntityBase<TK>
     where TContext : DbContext
 {
     private readonly TContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    private readonly IUnitOfWork<TContext> _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
+    private readonly IUnitOfWork<TContext> _unitOfWork =
+        unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
 
     #region Async
 

@@ -45,7 +45,8 @@ public class MappingProfile : Profile
 
                 if (interfaces.Count <= 0) continue;
 
-                foreach (var interfaceMethodInfo in interfaces.Select(@interface => @interface.GetMethod(mappingMethodName, argumentTypes)))
+                foreach (var interfaceMethodInfo in interfaces.Select(@interface =>
+                             @interface.GetMethod(mappingMethodName, argumentTypes)))
                 {
                     interfaceMethodInfo?.Invoke(instance, new object[] { this });
                 }

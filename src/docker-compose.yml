@@ -3,7 +3,7 @@ services:
   ##database section
   categorydb:
     image: mysql:latest
-    
+  
   postdb:
     image: postgres:alpine3.16
   
@@ -26,13 +26,19 @@ services:
     build:
       context: .
       dockerfile: Services/Category/Category.API/Dockerfile
-      
+  
+  category.grpc:
+    image: ${DOCKER_REGISTRY-}category-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Category/Category.GRPC/Dockerfile
+  
   post.api:
     image: ${DOCKER_REGISTRY-}post-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Post/Post.API/Dockerfile
-      
+  
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
     build:

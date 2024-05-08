@@ -9,7 +9,7 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.CreatePost;
 
-public class CreatePostCommandHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
     : IRequestHandler<CreatePostCommand, ApiResult<Guid>>
 {
     public async Task<ApiResult<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
@@ -18,6 +18,15 @@ public class CreatePostCommandHandler(IPostRepository postRepository, IMapper ma
 
         try
         {
+            // Check valid category id
+            var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
+            if (category == null)
+            {
+                result.Messages.Add("Category not found");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+            
             var post = mapper.Map<PostBase>(request);
             var id = postRepository.CreatePost(post);
             await postRepository.SaveChangesAsync();
