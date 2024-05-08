@@ -11,7 +11,7 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
     {
         try
         {
-            var categoryRequest = new GetCategoryRequest() { Id = id };
+            var categoryRequest = new GetCategoryRequest { Id = id };
             var result =  await categoryProtoServiceClient.GetCategoryByIdAsync(categoryRequest);
             if (result != null)
             {
