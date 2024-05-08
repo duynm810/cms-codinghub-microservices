@@ -1,5 +1,6 @@
 using Category.GRPC.Extensions;
 using Category.GRPC.Services;
+using Logging;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +10,8 @@ Log.Information("Start {EnvironmentApplicationName} up", builder.Environment.App
 
 try
 {
+    builder.Host.UseSerilog(Serilogger.Configure);
+    
     // Config JSON files and environment variables
     builder.AddAppConfiguration();
 
