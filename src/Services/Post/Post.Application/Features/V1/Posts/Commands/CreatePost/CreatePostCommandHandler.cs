@@ -18,7 +18,7 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
 
         try
         {
-            // Check valid category id when create post
+            // Check valid category id
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
             if (category == null)
             {

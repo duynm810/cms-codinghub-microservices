@@ -9,7 +9,7 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
     : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
 {
     public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
@@ -22,6 +22,15 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper ma
             if (post == null)
             {
                 result.Messages.Add("Post not found");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            // Check valid category id
+            var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
+            if (category == null)
+            {
+                result.Messages.Add("Category not found");
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
