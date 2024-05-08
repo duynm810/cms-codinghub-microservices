@@ -116,9 +116,9 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - HealthChecksUI__HealthChecks__0__Name=Category Health Check
+      - HealthChecksUI__HealthChecks__0__Name=Category API Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
-      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
-      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
+      - HealthChecksUI__HealthChecks__2__Name=Post API Health Check
+      - HealthChecksUI__HealthChecks__2__Uri=http://post.api/hc
     ports:
       - "6010:80"

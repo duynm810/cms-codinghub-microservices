@@ -1,7 +1,10 @@
 using Category.GRPC.Persistence;
 using Category.GRPC.Repositories;
 using Category.GRPC.Repositories.Interfaces;
+using Category.GRPC.Services.BackgroundServices;
+using Grpc.HealthCheck;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Shared.Configurations;
@@ -20,6 +23,9 @@ public static class ServiceExtensions
 
         // Configures and registers repository and services
         services.ConfigureRepositoryServices();
+
+        // Configures health checks
+        services.ConfigureHealthChecks(configuration);
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -51,5 +57,20 @@ public static class ServiceExtensions
     private static void ConfigureRepositoryServices(this IServiceCollection services)
     {
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+    }
+
+    private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton<HealthServiceImpl>();
+        services.AddHostedService<StatusService>();
+
+        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
+                name: "Category MySQL Health",
+                failureStatus: HealthStatus.Degraded)
+            .AddCheck("Category gRPC Health", () => HealthCheckResult.Healthy());
     }
 }

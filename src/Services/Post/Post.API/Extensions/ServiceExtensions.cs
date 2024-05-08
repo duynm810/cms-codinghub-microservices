@@ -23,7 +23,7 @@ public static class ServiceExtensions
 
         services.AddHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
-                name: "PostgreSQL Health",
+                name: "Post PostgreSQL Health",
                 failureStatus: HealthStatus.Degraded);
     }
 }

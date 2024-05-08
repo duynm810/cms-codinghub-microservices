@@ -123,7 +123,7 @@ public static class ServiceExtensions
                                ?? throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
-        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString, name: "MySql Health",
+        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString, name: "Category MySQL Health",
             failureStatus: HealthStatus.Degraded);
     }
 }
