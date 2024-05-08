@@ -36,5 +36,5 @@ public class PostDto : IMapFrom<PostBase>
 
     public Guid AuthorUserId { get; set; }
 
-    public DateTime? PaidDate { get; set; }
+    public DateTimeOffset? PaidDate { get; set; }
 }
