@@ -30,7 +30,7 @@ namespace Post.Infrastructure.Migrations
                     status = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     category_id = table.Column<long>(type: "bigint", nullable: false),
                     author_user_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    paid_date = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    paid_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
                     created_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     last_modified_date = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true)
                 },

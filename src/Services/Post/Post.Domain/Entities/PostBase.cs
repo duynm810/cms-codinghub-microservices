@@ -95,5 +95,5 @@ public class PostBase : EntityAuditBase<Guid>
     /// <summary>
     /// Ngày thanh toán cho bài viết, nếu là bài viết do người khác đăng
     /// </summary>
-    public DateTime? PaidDate { get; set; }
+    public DateTimeOffset? PaidDate { get; set; }
 }

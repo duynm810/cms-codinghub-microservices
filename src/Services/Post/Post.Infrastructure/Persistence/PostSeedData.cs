@@ -79,7 +79,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Status = PostStatusEnum.Published,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
-                    PaidDate = DateTime.Now,
+                    PaidDate = DateTime.UtcNow,
                 },
                 new()
                 {

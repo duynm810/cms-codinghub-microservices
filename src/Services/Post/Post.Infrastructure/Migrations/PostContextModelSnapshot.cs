@@ -65,7 +65,7 @@ namespace Post.Infrastructure.Migrations
                         .HasColumnType("character varying(250)")
                         .HasColumnName("name");
 
-                    b.Property<DateTime?>("PaidDate")
+                    b.Property<DateTimeOffset?>("PaidDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("paid_date");
 
