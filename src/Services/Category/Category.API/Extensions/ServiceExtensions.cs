@@ -113,8 +113,8 @@ public static class ServiceExtensions
     private static void ConfigureOtherServices(this IServiceCollection services)
     {
         services.AddControllers();
-        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
         services.AddEndpointsApiExplorer();
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
     private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
