@@ -51,36 +51,16 @@ try
     });
     
     var app = builder.Build();
-
-    // Configure the HTTP request pipeline.
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DocumentTitle = "Post Swagger UI";
-            c.SwaggerEndpoint("PostAPI/swagger.json", $"{builder.Environment.ApplicationName} v1");
-            c.DisplayOperationId(); // Show function name in swagger
-            c.DisplayRequestDuration();
-        });
-    }
+    
+    // Config pipeline
+    app.ConfigurePipeline();
     
     // Initialise and seed database
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await seeder.InitialiseAsync();
     await seeder.SeedAsync();
-
-    //app.UseHttpsRedirection();
-
-    app.MapHealthChecks("/hc", new HealthCheckOptions()
-    {
-        Predicate = _ => true,
-        ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-    });
-
-    app.MapDefaultControllerRoute();
-
+    
     app.Run();
 }
 catch (Exception e)
