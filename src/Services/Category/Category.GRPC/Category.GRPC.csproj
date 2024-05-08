@@ -7,11 +7,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\greet.proto" GrpcServices="Server"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
+      <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
+      <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
     </ItemGroup>
 
 </Project>
