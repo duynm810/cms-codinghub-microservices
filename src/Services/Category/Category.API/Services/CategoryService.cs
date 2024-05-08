@@ -2,18 +2,18 @@ using AutoMapper;
 using Category.API.Entities;
 using Category.API.Repositories.Interfaces;
 using Category.API.Services.Interfaces;
-using Serilog;
 using Shared.Dtos.Category;
 using Shared.Responses;
 using Shared.Utilities;
+using ILogger = Serilog.ILogger;
 
 namespace Category.API.Services;
 
-public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper) : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ILogger logger) : ICategoryService
 {
     #region CRUD
 
-      public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
 
@@ -32,7 +32,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -40,7 +40,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> UpdateCategory(Guid id, UpdateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
 
@@ -62,7 +62,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -70,9 +70,9 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> DeleteCategory(Guid[] ids)
+    public async Task<ApiResult<bool>> DeleteCategory(long[] ids)
     {
-        var result = new ApiResult<CategoryDto>();
+        var result = new ApiResult<bool>();
 
         try
         {
@@ -87,14 +87,12 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
                 }
 
                 await categoryRepository.DeleteCategory(category);
-
-                var data = mapper.Map<CategoryDto>(category);
-                result.Success(data);
+                result.Success(true);
             }
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -117,15 +115,15 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
 
         return result;
     }
-    
-    public async Task<ApiResult<CategoryDto>> GetCategoryById(Guid id)
+
+    public async Task<ApiResult<CategoryDto>> GetCategoryById(long id)
     {
         var result = new ApiResult<CategoryDto>();
 
@@ -144,7 +142,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -159,7 +157,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
     public async Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize)
     {
         var result = new ApiResult<PagedResponse<CategoryDto>>();
-        
+
         try
         {
             var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
@@ -173,7 +171,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            Log.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
+            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

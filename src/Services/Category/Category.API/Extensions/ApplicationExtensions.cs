@@ -15,6 +15,7 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
+            c.DocumentTitle = "Category Swagger UI";
             c.SwaggerEndpoint("CategoryAPI/swagger.json", "Category API");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();

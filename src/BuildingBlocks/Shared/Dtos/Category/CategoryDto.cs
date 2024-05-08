@@ -2,7 +2,7 @@ namespace Shared.Dtos.Category;
 
 public class CategoryDto
 {
-    public Guid Id { get; set; }
+    public long Id { get; set; }
     
     public required string Name { get; set; }
 

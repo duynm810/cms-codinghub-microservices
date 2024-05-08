@@ -1,17 +1,17 @@
 using Category.API.Entities;
-using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Category.API.Persistence;
 
 public static class CategorySeedData
 {
-    public static async Task CategorySeedAsync(CategoryContext categoryDbContext)
+    public static async Task CategorySeedAsync(CategoryContext categoryDbContext, ILogger logger)
     {
         if (!categoryDbContext.Categories.Any())
         {
             categoryDbContext.AddRange(GetCategories());
             await categoryDbContext.SaveChangesAsync();
-            Log.Information("Seeded data for Category DB associated with context {DbContextName}",
+            logger.Information("Seeded data for Category database associated with context {DbContextName}",
                 nameof(CategoryContext));
         }
     }
@@ -22,7 +22,7 @@ public static class CategorySeedData
         {
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = 1,
                 Name = "Home",
                 Slug = "home",
                 SeoDescription = "Welcome to Coding Hub, your ultimate guide to the world of programming and tech trends.",
@@ -32,7 +32,7 @@ public static class CategorySeedData
             },
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = 2,
                 Name = "Language Tutorials",
                 Slug = "language-tutorials",
                 SeoDescription = "Explore detailed tutorials on popular programming languages to boost your coding skills.",
@@ -42,7 +42,7 @@ public static class CategorySeedData
             },
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = 3,
                 Name = "Development",
                 Slug = "development",
                 SeoDescription = "Discover the latest development techniques and trends to stay ahead in the tech industry.",
@@ -52,7 +52,7 @@ public static class CategorySeedData
             },
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = 4,
                 Name = "About Me",
                 Slug = "about-me",
                 SeoDescription = "Learn more about the face behind Coding Hub and my journey in the world of software development.",
@@ -62,7 +62,7 @@ public static class CategorySeedData
             },
             new()
             {
-                Id = Guid.NewGuid(),
+                Id = 5,
                 Name = "Contact",
                 Slug = "contact",
                 SeoDescription = "Get in touch to discuss potential collaborations, or ask me anything about programming and tech.",

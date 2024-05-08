@@ -12,25 +12,25 @@ Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationNam
 try
 {
     builder.Host.UseSerilog(Serilogger.Configure);
+    
+    // Config JSON files and environment variables
+    builder.AddAppConfiguration();
 
     // Register services
     builder.Services.AddInfrastructureServices(configuration);
-
-    // Config JSON files and environment variables
-    builder.AddAppConfiguration();
 
     var app = builder.Build();
 
     // Config pipeline
     app.ConfigurePipeline();
 
-    await app.MigrateDatabase<CategoryContext>((context, _) => { CategorySeedData.CategorySeedAsync(context).Wait(); })
+    await app.MigrateDatabase<CategoryContext>((context, _) => { CategorySeedData.CategorySeedAsync(context, Log.Logger).Wait(); })
         .RunAsync();
 }
 catch (Exception ex)
 {
     var type = ex.GetType().Name;
-    if (type.Equals("StopTheHostException", StringComparison.Ordinal)) throw;
+    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
     Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
 }

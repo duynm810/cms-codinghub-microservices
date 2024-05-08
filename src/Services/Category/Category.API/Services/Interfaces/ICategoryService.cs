@@ -9,13 +9,13 @@ public interface ICategoryService
 
     Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model);
 
-    Task<ApiResult<CategoryDto>> UpdateCategory(Guid id, UpdateCategoryDto model);
+    Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model);
 
-    Task<ApiResult<CategoryDto>> DeleteCategory(Guid[] ids);
+    Task<ApiResult<bool>> DeleteCategory(long[] ids);
     
     Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories();
     
-    Task<ApiResult<CategoryDto>> GetCategoryById(Guid id);
+    Task<ApiResult<CategoryDto>> GetCategoryById(long id);
 
     #endregion
 

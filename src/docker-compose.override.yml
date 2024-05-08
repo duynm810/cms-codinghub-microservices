@@ -6,12 +6,25 @@ services:
     container_name: categorydb
     environment:
       MYSQL_ROOT_PASSWORD: "Passw0rd!"
-      MYSQL_DATABASE: "CategoryCodingHubDB"
+      MYSQL_DATABASE: "category_service_db"
     restart: always
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
       - "3307:3306"
+  
+  #postdb: postgresql
+  postdb:
+    container_name: postdb
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_service_db
+    restart: always
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
   
   ##infrastructure section
   rabbitmq:
@@ -66,13 +79,25 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=CategoryCodingHubDB;Uid=root;Pwd=Passw0rd!"
+      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
     depends_on:
       - categorydb
     ports:
       - "6002:80"
     restart: always
-    
+  
+  post.api:
+    container_name: post.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+    depends_on:
+      - postdb
+    ports:
+      - "6005:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
@@ -80,5 +105,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - HealthChecksUI__HealthChecks__0__Name=Category Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
+      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
+      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
     ports:
       - "6010:80"
