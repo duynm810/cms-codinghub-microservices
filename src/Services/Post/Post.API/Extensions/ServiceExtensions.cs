@@ -23,8 +23,8 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddHealthChecks()
-            .AddSqlServer(databaseSettings.ConnectionString,
-                name: "SqlServer Health",
+            .AddNpgSql(databaseSettings.ConnectionString,
+                name: "PostgreSQL Health",
                 failureStatus: HealthStatus.Degraded);
 
         return services;
