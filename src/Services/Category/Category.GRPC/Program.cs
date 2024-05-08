@@ -14,7 +14,7 @@ try
 
     // Register services
     builder.Services.AddInfrastructureServices(builder.Configuration);
-    
+
     // Add services to the container.
     builder.Services.AddGrpc();
 

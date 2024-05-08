@@ -6,5 +6,5 @@ namespace Category.GRPC.Repositories.Interfaces;
 
 public interface ICategoryRepository : IRepositoryQueryBase<CategoryBase, long, CategoryContext>
 {
-    Task<bool> HasPost(long categoryId);
+    Task<CategoryBase?> GetCategoryById(long id);
 }

@@ -17,13 +17,13 @@ Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationNam
 try
 {
     builder.Host.UseSerilog(Serilogger.Configure);
-    
+
     //Config JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     // Extracts configuration settings from appsettings.json and registers them with the service collection
     builder.Services.ConfigureSettings(configuration);
-    
+
     // Configure health checks
     builder.Services.ConfigureHealthChecks(configuration);
 
@@ -32,13 +32,13 @@ try
 
     // Config infrastructure services in Post.Infrastructure
     builder.Services.AddInfrastructureServices(configuration);
-  
+
     // Add services to the container.
     builder.Services.AddControllers();
-    
+
     // Another services
     builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-    
+
     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(c =>
@@ -52,18 +52,18 @@ try
                 "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
         });
     });
-    
+
     var app = builder.Build();
-    
+
     // Config pipeline
     app.ConfigurePipeline();
-    
+
     // Initialise and seed database
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await seeder.InitialiseAsync();
     await seeder.SeedAsync();
-    
+
     app.Run();
 }
 catch (Exception e)

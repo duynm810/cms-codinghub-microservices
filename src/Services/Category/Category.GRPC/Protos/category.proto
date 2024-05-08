@@ -2,14 +2,16 @@ syntax = "proto3";
 
 option csharp_namespace = "Category.GRPC.Protos";
 
-service CategoryService {
-  rpc HasPost(HasPostRequest) returns (CategoryModel);
+service CategoryProtoService {
+  rpc GetCategoryById(GetCategoryRequest) returns (CategoryModel);
 }
 
-message HasPostRequest {
-  int32 id = 1;
+message GetCategoryRequest {
+  int64 id = 1;
 }
 
 message CategoryModel {
-  bool exists = 1;
+  int64 id = 1;
+  string name = 2;
+  string slug = 3;
 }

@@ -7,8 +7,8 @@ using Post.Infrastructure.Persistence;
 
 namespace Post.Infrastructure.Repositories;
 
-public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unitOfWork) 
-    : RepositoryCommandBase<PostBase, Guid, PostContext>(dbContext, unitOfWork),  IPostRepository
+public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unitOfWork)
+    : RepositoryCommandBase<PostBase, Guid, PostContext>(dbContext, unitOfWork), IPostRepository
 {
     #region CRUD
 

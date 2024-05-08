@@ -17,7 +17,7 @@ public static class ConfigureServices
     {
         // Extracts configuration settings from appsettings.json and registers them with the service collection
         services.ConfigureDatabaseSettings(configuration);
-        
+
         // Configures and registers the database context with the service collection
         services.ConfigureDbContext(configuration);
 
@@ -30,7 +30,7 @@ public static class ConfigureServices
         // Configures and registers repository and services
         services.ConfigureRepositoryServices();
     }
-    
+
     private static void ConfigureDatabaseSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
@@ -56,7 +56,8 @@ public static class ConfigureServices
                 optionsBuilder.UseNodaTime();
                 optionsBuilder.MigrationsAssembly(typeof(PostContext).Assembly.FullName);
                 optionsBuilder.EnableRetryOnFailure();
-                optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery); // If query have multiple include entities, using split query separate SQL query
+                optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior
+                    .SplitQuery); // If query have multiple include entities, using split query separate SQL query
             });
             opts.UseSnakeCaseNamingConvention();
         });

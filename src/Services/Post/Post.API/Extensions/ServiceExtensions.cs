@@ -16,7 +16,8 @@ public static class ServiceExtensions
         return services;
     }
 
-    public static IServiceCollection ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection ConfigureHealthChecks(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
                                ?? throw new ArgumentNullException(

@@ -12,19 +12,19 @@ public class CategoryBase : EntityAuditBase<long>
     /// <summary>
     /// Tên danh mục
     /// </summary>
-    [MaxLength(250)] 
+    [MaxLength(250)]
     public required string Name { get; set; }
 
     /// <summary>
     /// Đường dẫn tĩnh (SEO-friendly URL) của danh mục
     /// </summary>
-    [Column(TypeName = "varchar(250)")] 
+    [Column(TypeName = "varchar(250)")]
     public required string Slug { get; set; }
 
     /// <summary>
     /// Mô tả SEO, dùng cho meta description
     /// </summary>
-    [MaxLength(150)] 
+    [MaxLength(150)]
     public string? SeoDescription { get; set; }
 
     /// <summary>
