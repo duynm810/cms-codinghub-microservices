@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\greet.proto" GrpcServices="Server"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
@@ -25,6 +21,24 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
       <ProjectReference Include="..\Post.Application\Post.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Protos\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Protos\post.proto" />
+        <Protobuf Include="Protos\post.proto">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <GrpcServices>Server</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot />
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug/net8.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
 </Project>

@@ -18,10 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Protos\category.proto" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
