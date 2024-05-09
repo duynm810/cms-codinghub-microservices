@@ -22,7 +22,7 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long
 
     #region OTHERS
 
-    Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber, int pageSize);
+    Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber = 1, int pageSize = 10);
 
     #endregion
 }

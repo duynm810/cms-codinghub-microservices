@@ -22,7 +22,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     #region OTHERS
 
-    Task<PagedResponse<PostBase>> GetPostsPaging(int pageNumber, int pageSize);
+    Task<PagedResponse<PostBase>> GetPostsPaging(int pageNumber = 1, int pageSize = 10);
 
     Task<bool> SlugExists(string slug, Guid? currentId = null);
 

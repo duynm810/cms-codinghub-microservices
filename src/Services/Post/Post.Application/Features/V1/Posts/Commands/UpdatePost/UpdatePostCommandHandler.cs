@@ -39,12 +39,16 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
             if (category == null)
             {
-                result.Messages.Add("Category not found");
+                result.Messages.Add("Invalid category ID");
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
             var updatePost = mapper.Map(request, post);
+
+            // Set category id get by categories services
+            updatePost.CategoryId = category.Id;
+            
             await postRepository.UpdatePost(updatePost);
 
             var data = mapper.Map<PostDto>(updatePost);

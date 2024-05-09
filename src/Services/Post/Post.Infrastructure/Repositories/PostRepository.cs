@@ -53,7 +53,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<bool> SlugExists(string slug, Guid? currentId = null)
     {
-        return await FindByCondition(x => x.Slug == slug && (currentId == null || x.Id != currentId.Value)).AnyAsync();
+        return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value)).AnyAsync();
     }
 
     #endregion

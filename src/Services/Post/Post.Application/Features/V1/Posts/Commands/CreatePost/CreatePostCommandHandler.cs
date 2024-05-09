@@ -31,12 +31,16 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
             if (category == null)
             {
-                result.Messages.Add("Category not found");
+                result.Messages.Add("Invalid category ID");
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
             
             var post = mapper.Map<PostBase>(request);
+            
+            // Set category id get by categories services
+            post.CategoryId = category.Id;
+            
             var id = postRepository.CreatePost(post);
             await postRepository.SaveChangesAsync();
             result.Success(id);
