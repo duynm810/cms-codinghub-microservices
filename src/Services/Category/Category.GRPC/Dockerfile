@@ -16,7 +16,6 @@ WORKDIR "/src/Services/Category/Category.GRPC"
 RUN dotnet build "Category.GRPC.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Category.GRPC.csproj" -c Release -o /app/publish
 
 FROM base AS final

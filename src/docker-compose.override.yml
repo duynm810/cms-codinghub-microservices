@@ -80,6 +80,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
+      - "GrpcSettings:PostUrl=http://post.grpc"
     depends_on:
       - categorydb
     ports:
@@ -96,6 +97,18 @@ services:
       - categorydb
     ports:
       - "6003:80"
+    restart: always
+    
+  post.grpc:
+    container_name: post.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+    depends_on:
+      - postdb
+    ports:
+      - "6004:80"
     restart: always
   
   post.api:
