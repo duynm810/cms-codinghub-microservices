@@ -25,6 +25,15 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
+            
+            // Check slug exists
+            var slugExists = await postRepository.SlugExists(request.Slug, request.Id);
+            if (slugExists)
+            {
+                result.Messages.Add("Slug is exists");
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
 
             // Check valid category id
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
