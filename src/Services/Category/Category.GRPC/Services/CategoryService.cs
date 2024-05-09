@@ -39,7 +39,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
             return null;
         }
     }
@@ -75,7 +75,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e.Message);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e.Message);
         }
 
         return result;

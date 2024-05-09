@@ -27,7 +27,7 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
             return null;
         }
     }
@@ -50,7 +50,7 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
         }
 
         return [];

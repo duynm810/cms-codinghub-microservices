@@ -18,6 +18,15 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
 
         try
         {
+            // Check slug exists
+            var slugExists = await postRepository.SlugExists(request.Slug);
+            if (slugExists)
+            {
+                result.Messages.Add("Slug is exists");
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+            
             // Check valid category id
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
             if (category == null)
@@ -34,7 +43,7 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(CreatePostCommand), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreatePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

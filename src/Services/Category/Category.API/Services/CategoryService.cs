@@ -32,7 +32,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -62,7 +62,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -92,7 +92,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -115,7 +115,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -142,7 +142,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -171,7 +171,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
