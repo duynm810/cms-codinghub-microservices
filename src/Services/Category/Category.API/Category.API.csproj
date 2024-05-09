@@ -34,6 +34,14 @@
     </ItemGroup>
 
     <ItemGroup>
+        <None Remove="Protos\post.proto"/>
+        <Protobuf Include="..\..\Post\Post.GRPC\Protos\post.proto">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <GrpcServices>Client</GrpcServices>
+        </Protobuf>
+    </ItemGroup>
+    
+    <ItemGroup>
       <Folder Include="Migrations\" />
     </ItemGroup>
 

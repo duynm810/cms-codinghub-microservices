@@ -44,11 +44,6 @@ public static class ConfigureServices
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
-        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
-                           ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
-        
-        services.AddSingleton(grpcSettings);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)

@@ -12,11 +12,17 @@ public class PostService(IPostRepository postRepository, ILogger logger) : PostP
     {
         const string methodName = nameof(HasPostsInCategory);
 
-        var result = new HasPostsInCategoryResponse() { Exists = false };
+        var result = new HasPostsInCategoryResponse();
 
         try
         {
+            logger.Information("{MethodName} - Beginning to checking post belongs to the category id: {CategoryId}", methodName,
+                request.CategoryId);
+            
             result.Exists = await postRepository.HasPostsInCategory(request.CategoryId);
+            
+            logger.Information("{MethodName} - Successfully checking post belongs to category id {CategoryId} with result {Result}.", methodName,
+                request.CategoryId, result.Exists);
         }
         catch (Exception e)
         {

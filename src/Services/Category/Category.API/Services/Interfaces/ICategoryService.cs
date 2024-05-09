@@ -11,7 +11,7 @@ public interface ICategoryService
 
     Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model);
 
-    Task<ApiResult<bool>> DeleteCategory(long[] ids);
+    Task<ApiResult<bool>> DeleteCategory(List<long> ids);
 
     Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories();
 

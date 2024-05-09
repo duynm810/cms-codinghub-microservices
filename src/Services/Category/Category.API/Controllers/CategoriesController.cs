@@ -30,7 +30,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpDelete]
     [ProducesResponseType(typeof(NoContentResult), (int)HttpStatusCode.NoContent)]
-    public async Task<IActionResult> DeleteCategory([FromRoute, Required] long[] ids)
+    public async Task<IActionResult> DeleteCategory([FromQuery, Required] List<long> ids)
     {
         var result = await categoryService.DeleteCategory(ids);
         return Ok(result);
