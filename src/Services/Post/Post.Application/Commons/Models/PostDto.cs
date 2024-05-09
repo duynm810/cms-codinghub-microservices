@@ -33,6 +33,8 @@ public class PostDto : IMapFrom<PostBase>
     public PostStatusEnum Status { get; set; }
 
     public long CategoryId { get; set; }
+    
+    public string? CategoryName { get; set; }
 
     public Guid AuthorUserId { get; set; }
 

@@ -21,7 +21,7 @@ public interface ICategoryService
 
     #region OTHERS
 
-    Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize);
+    Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber = 1, int pageSize = 10);
 
     #endregion
 }

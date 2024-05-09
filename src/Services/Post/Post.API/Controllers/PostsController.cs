@@ -9,6 +9,7 @@ using Post.Application.Features.V1.Posts.Commands.DeletePost;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
+using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
 using Shared.Responses;
 
@@ -59,6 +60,17 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<ActionResult<PostDto>> GetPostById([Required] Guid id)
     {
         var query = new GetPostByIdQuery(id);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("paging")]
+    [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetPostsPaging(
+        [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetPostsPagingQuery(pageNumber, pageSize);
         var result = await mediator.Send(query);
         return Ok(result);
     }

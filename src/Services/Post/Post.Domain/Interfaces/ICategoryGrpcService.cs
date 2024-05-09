@@ -5,4 +5,6 @@ namespace Post.Domain.Interfaces;
 public interface ICategoryGrpcService
 {
     Task<CategoryDto?> GetCategoryById(long id);
+    
+    Task<IEnumerable<CategoryDto>> GetCategoriesByIds(long[] ids);
 }
