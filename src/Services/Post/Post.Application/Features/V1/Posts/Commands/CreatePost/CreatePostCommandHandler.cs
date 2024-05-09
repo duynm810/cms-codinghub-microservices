@@ -34,7 +34,7 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(CreatePostCommand), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreatePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

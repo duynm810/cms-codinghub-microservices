@@ -29,7 +29,7 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ILogger lo
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeletePostCommand), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeletePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

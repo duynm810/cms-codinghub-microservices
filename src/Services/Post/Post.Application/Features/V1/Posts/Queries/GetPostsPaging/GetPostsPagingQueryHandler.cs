@@ -45,7 +45,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetPostsPagingQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsPagingQuery), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

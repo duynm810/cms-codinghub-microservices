@@ -28,7 +28,7 @@ public class GetPostsQueryHandler(IPostRepository postRepository, IMapper mapper
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
