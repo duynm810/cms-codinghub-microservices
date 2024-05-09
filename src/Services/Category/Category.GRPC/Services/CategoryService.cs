@@ -15,12 +15,12 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
 
         try
         {
-            logger.Information("BEGIN {ServiceMethod} - Getting category by ID: {CategoryId}", methodName, request.Id);
+            logger.Information("BEGIN {MethodName} - Getting category by ID: {CategoryId}", methodName, request.Id);
 
             var category = await categoryRepository.GetCategoryById(request.Id);
             if (category == null)
             {
-                logger.Warning("{ServiceMethod} - Category not found for ID: {CategoryId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Category not found for ID: {CategoryId}", methodName, request.Id);
                 return null;
             }
 
@@ -32,7 +32,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
             };
 
             logger.Information(
-                "END {ServiceMethod} - Success: Retrieved Category {CategoryId} - Name: {CategoryName} - Slug: {CategorySlug}",
+                "END {MethodName} - Success: Retrieved Category {CategoryId} - Name: {CategoryName} - Slug: {CategorySlug}",
                 methodName, data.Id, data.Name, data.Slug);
 
             return data;
@@ -55,7 +55,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
         {
             var categoryIds = request.Ids.ToArray();
 
-            logger.Information("{ServiceMethod} - Beginning to retrieve categories for IDs: {CategoryIds}", methodName,
+            logger.Information("{MethodName} - Beginning to retrieve categories for IDs: {CategoryIds}", methodName,
                 categoryIds);
 
             var categories = await categoryRepository.GetCategoryByIds(categoryIds);
@@ -70,7 +70,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
                 });
             }
 
-            logger.Information("{ServiceMethod} - Successfully retrieved {Count} categories.", methodName,
+            logger.Information("{MethodName} - Successfully retrieved {Count} categories.", methodName,
                 result.Category.Count);
         }
         catch (Exception e)

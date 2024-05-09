@@ -6,5 +6,5 @@ public interface ICategoryGrpcService
 {
     Task<CategoryDto?> GetCategoryById(long id);
     
-    Task<IEnumerable<CategoryDto>> GetCategoriesByIds(long[] ids);
+    Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids);
 }

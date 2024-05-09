@@ -32,7 +32,7 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
         }
     }
 
-    public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(long[] ids)
+    public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids)
     {
         try
         {

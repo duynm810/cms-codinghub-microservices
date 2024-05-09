@@ -21,7 +21,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
 
             if (posts.Items != null && posts.Items.Count != 0)
             {
-                var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToArray();
+                var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
                 
