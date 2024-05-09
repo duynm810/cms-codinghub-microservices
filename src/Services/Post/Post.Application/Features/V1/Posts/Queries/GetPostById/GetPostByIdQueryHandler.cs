@@ -9,7 +9,7 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
 
-public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+public class GetPostByIdQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
     : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
 {
     public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
@@ -25,8 +25,15 @@ public class GetPostByIdQueryHandler(IPostRepository postRepository, IMapper map
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-
+            
             var data = mapper.Map<PostDto>(post);
+            
+            var category = await categoryGrpcService.GetCategoryById(post.CategoryId);
+            if (category != null)
+            {
+                data.CategoryName = category.Name;
+            }
+            
             result.Success(data);
         }
         catch (Exception e)
