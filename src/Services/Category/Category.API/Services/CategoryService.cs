@@ -1,5 +1,6 @@
 using AutoMapper;
 using Category.API.Entities;
+using Category.API.GrpcServices.Interfaces;
 using Category.API.Repositories.Interfaces;
 using Category.API.Services.Interfaces;
 using Shared.Dtos.Category;
@@ -9,7 +10,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Category.API.Services;
 
-public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ILogger logger) : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcService postGrpcService, IMapper mapper, ILogger logger) : ICategoryService
 {
     #region CRUD
 
@@ -70,7 +71,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<bool>> DeleteCategory(long[] ids)
+    public async Task<ApiResult<bool>> DeleteCategory(List<long> ids)
     {
         var result = new ApiResult<bool>();
 
@@ -83,6 +84,14 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
                 {
                     result.Messages.Add("Category not found");
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                    return result;
+                }
+
+                var existedPost = await postGrpcService.HasPostsInCategory(id);
+                if (existedPost)
+                {
+                    result.Messages.Add("The category contains post, cannot be deleted!");
+                    result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                     return result;
                 }
 

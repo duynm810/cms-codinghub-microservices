@@ -56,5 +56,10 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value)).AnyAsync();
     }
 
+    public async Task<bool> HasPostsInCategory(long categoryId)
+    {
+        return await FindByCondition(x => x.CategoryId == categoryId).AnyAsync();
+    }
+
     #endregion
 }

@@ -26,5 +26,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<bool> SlugExists(string slug, Guid? currentId = null);
 
+    Task<bool> HasPostsInCategory(long categoryId);
+
     #endregion
 }

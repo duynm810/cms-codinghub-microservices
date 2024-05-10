@@ -8,16 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.1" />
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
         <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.4" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Grpc.AspNetCore.HealthChecks" Version="2.62.0" />
+        <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.62.0" />
+        <PackageReference Include="Grpc.HealthCheck" Version="2.62.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -25,24 +21,31 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
+      <ProjectReference Include="..\Post.Application\Post.Application.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Protos\" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Protos\post.proto" />
+        <Protobuf Include="Protos\post.proto">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <GrpcServices>Server</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot />
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug/net8.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Protos\post.proto"/>
-        <Protobuf Include="..\..\Post\Post.GRPC\Protos\post.proto">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <GrpcServices>Client</GrpcServices>
-        </Protobuf>
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>

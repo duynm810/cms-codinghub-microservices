@@ -1,3 +1,5 @@
+using Category.API.GrpcServices;
+using Category.API.GrpcServices.Interfaces;
 using Category.API.Persistence;
 using Category.API.Repositories;
 using Category.API.Repositories.Interfaces;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Post.GRPC.Protos;
 using Shared.Configurations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -48,6 +51,9 @@ public static class ServiceExtensions
 
         // Configure health checks
         services.ConfigureHealthChecks(configuration);
+        
+        // Configures and registers grpc services
+        services.ConfigureGrpcServices(configuration);
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -57,6 +63,11 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
+                           ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
+        
+        services.AddSingleton(grpcSettings);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
@@ -125,5 +136,17 @@ public static class ServiceExtensions
         services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
             name: "MySQL Health",
             failureStatus: HealthStatus.Degraded);
+    }
+    
+    private static void ConfigureGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
+                           throw new ArgumentNullException(
+                               $"{nameof(GrpcSettings)} is not configured properly");
+        
+        services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostUrl));
+        
+        services.AddScoped<IPostGrpcService, PostGrpcService>();
     }
 }

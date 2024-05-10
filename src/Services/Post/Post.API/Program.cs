@@ -1,6 +1,4 @@
-using HealthChecks.UI.Client;
 using Logging;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Post.API.Extensions;
 using Post.Application;
 using Post.Domain.Interfaces;
