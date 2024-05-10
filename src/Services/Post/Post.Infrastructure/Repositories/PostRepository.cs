@@ -3,7 +3,7 @@ using Infrastructure.Domains.Repositories;
 using Infrastructure.Paged;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
 using Shared.Responses;
 

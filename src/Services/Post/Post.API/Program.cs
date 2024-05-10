@@ -23,7 +23,7 @@ try
     builder.Services.ConfigureSettings(configuration);
 
     // Configure health checks
-    builder.Services.ConfigureHealthChecks(configuration);
+    builder.Services.ConfigureHealthChecks();
 
     // Config application services in Post.Application
     builder.Services.AddApplicationServices();

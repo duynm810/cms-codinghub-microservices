@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Post.Infrastructure.GrpcServices;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
@@ -22,7 +24,7 @@ public static class ConfigureServices
         services.ConfigureSettings(configuration);
 
         // Configures and registers the database context with the service collection
-        services.ConfigureDbContext(configuration);
+        services.ConfigureDbContext();
 
         // Configures and registers to seed post data
         services.ConfigureSeedData();
@@ -34,7 +36,7 @@ public static class ConfigureServices
         services.ConfigureRepositoryServices();
 
         // Configures and registers grpc services
-        services.ConfigureGrpcServices(configuration);
+        services.ConfigureGrpcServices();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -46,7 +48,7 @@ public static class ConfigureServices
         services.AddSingleton(databaseSettings);
     }
 
-    private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureDbContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -82,10 +84,11 @@ public static class ConfigureServices
     private static void ConfigureRepositoryServices(this IServiceCollection services)
     {
         services.AddScoped<IPostRepository, PostRepository>()
+            .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>();
     }
     
-    private static void ConfigureGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureGrpcServices(this IServiceCollection services)
     {
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(
