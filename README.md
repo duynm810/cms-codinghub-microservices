@@ -40,11 +40,11 @@ dotnet ef database update
 - Post API
 
 ```Powershell
- dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.API
+ dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ```Powershell
- dotnet ef database update --project Post.Infrastructure --startup-project Post.API
+ dotnet ef database update --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ---

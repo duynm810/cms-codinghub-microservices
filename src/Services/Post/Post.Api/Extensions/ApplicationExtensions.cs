@@ -1,7 +1,7 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
-namespace Post.API.Extensions;
+namespace Post.Api.Extensions;
 
 public static class ApplicationExtensions
 {

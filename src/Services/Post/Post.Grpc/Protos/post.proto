@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "Post.GRPC.Protos";
+option csharp_namespace = "Post.Grpc.Protos";
 
 service PostProtoService {
   rpc HasPostsInCategory(HasPostsInCategoryRequest) returns (HasPostsInCategoryResponse);

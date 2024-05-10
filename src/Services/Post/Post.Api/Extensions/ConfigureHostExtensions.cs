@@ -1,4 +1,4 @@
-namespace Post.API.Extensions;
+namespace Post.Api.Extensions;
 
 public static class ConfigureHostExtensions
 {

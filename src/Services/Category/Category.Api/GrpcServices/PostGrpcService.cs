@@ -1,5 +1,5 @@
 using Category.Api.GrpcServices.Interfaces;
-using Post.GRPC.Protos;
+using Post.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
 namespace Category.Api.GrpcServices;

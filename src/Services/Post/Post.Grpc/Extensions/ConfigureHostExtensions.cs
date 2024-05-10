@@ -1,4 +1,4 @@
-namespace Post.GRPC.Extensions;
+namespace Post.Grpc.Extensions;
 
 public static class ConfigureHostExtensions
 {

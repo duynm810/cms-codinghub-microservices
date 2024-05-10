@@ -13,7 +13,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
 using Shared.Responses;
 
-namespace Post.API.Controllers;
+namespace Post.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

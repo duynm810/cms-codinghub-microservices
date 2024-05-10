@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Post.Application.Commons.Models;
 using Post.Application.Features.V1.PostActivityLogs.Queries.GetPostActivityLogs;
 
-namespace Post.API.Controllers;
+namespace Post.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

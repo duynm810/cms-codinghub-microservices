@@ -44,7 +44,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApps.HealthCheck", "src\WebApps\HealthCheck\WebApps.HealthCheck\WebApps.HealthCheck.csproj", "{6E789577-FE07-462B-8492-883FEC438F2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.API", "src\Services\Post\Post.API\Post.API.csproj", "{21A56ADE-4B1E-4411-9EC5-7B48A1D8E6E4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Api", "src\Services\Post\Post.Api\Post.Api.csproj", "{21A56ADE-4B1E-4411-9EC5-7B48A1D8E6E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Application", "src\Services\Post\Post.Application\Post.Application.csproj", "{D0C54643-2A0B-4F39-96F6-A465C386D51A}"
 EndProject
@@ -54,7 +54,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Infrastructure", "src\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.Grpc", "src\Services\Category\Category.Grpc\Category.Grpc.csproj", "{AAEF3178-5CEB-40AC-8EA4-E6856B5719CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.GRPC", "src\Services\Post\Post.GRPC\Post.GRPC.csproj", "{75997FBC-438F-46D4-A80F-AE7D41F62377}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Grpc", "src\Services\Post\Post.Grpc\Post.Grpc.csproj", "{75997FBC-438F-46D4-A80F-AE7D41F62377}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,5 +1,5 @@
 using Logging;
-using Post.API.Extensions;
+using Post.Api.Extensions;
 using Post.Application;
 using Post.Domain.Interfaces;
 using Post.Infrastructure;

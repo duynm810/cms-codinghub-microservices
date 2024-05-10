@@ -1,9 +1,9 @@
 using Grpc.Core;
 using Post.Domain.Repositories;
-using Post.GRPC.Protos;
+using Post.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
-namespace Post.GRPC.Services;
+namespace Post.Grpc.Services;
 
 public class PostService(IPostRepository postRepository, ILogger logger) : PostProtoService.PostProtoServiceBase
 {

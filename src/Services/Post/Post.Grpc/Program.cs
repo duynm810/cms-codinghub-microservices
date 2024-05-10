@@ -2,8 +2,8 @@ using HealthChecks.UI.Client;
 using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Post.Application;
-using Post.GRPC.Extensions;
-using Post.GRPC.Services;
+using Post.Grpc.Extensions;
+using Post.Grpc.Services;
 using Post.Infrastructure;
 using Serilog;
 

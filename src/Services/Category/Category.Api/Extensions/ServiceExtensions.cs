@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Post.GRPC.Protos;
+using Post.Grpc.Protos;
 using Shared.Configurations;
 using Swashbuckle.AspNetCore.SwaggerGen;
 

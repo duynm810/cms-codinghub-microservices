@@ -8,20 +8,20 @@ COPY ["BuildingBlocks/Contracts/Contracts.csproj", "BuildingBlocks/Contracts/"]
 COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Infrastructure/"]
 COPY ["BuildingBlocks/Shared/Shared.csproj", "BuildingBlocks/Shared/"]
 COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
-COPY ["Services/Post/Post.GRPC/Post.GRPC.csproj", "Services/Post/Post.GRPC/"]
+COPY ["Services/Post/Post.Grpc/Post.Grpc.csproj", "Services/Post/Post.Grpc/"]
 COPY ["Services/Post/Post.Application/Post.Application.csproj", "Services/Post/Post.Application/"]
 COPY ["Services/Post/Post.Infrastructure/Post.Infrastructure.csproj", "Services/Post/Post.Infrastructure/"]
 COPY ["Services/Post/Post.Domain/Post.Domain.csproj", "Services/Post/Post.Domain/"]
 
-RUN dotnet restore "Services/Post/Post.GRPC/Post.GRPC.csproj"
+RUN dotnet restore "Services/Post/Post.Grpc/Post.Grpc.csproj"
 COPY . .
-WORKDIR "/src/Services/Post/Post.GRPC"
-RUN dotnet build "Post.GRPC.csproj" -c Release -o /app/build
+WORKDIR "/src/Services/Post/Post.Grpc"
+RUN dotnet build "Post.Grpc.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "Post.GRPC.csproj" -c Release -o /app/publish
+RUN dotnet publish "Post.Grpc.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Post.GRPC.dll"]
+ENTRYPOINT ["dotnet", "Post.Grpc.dll"]
