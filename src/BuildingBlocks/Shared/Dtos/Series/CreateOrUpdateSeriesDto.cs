@@ -1,9 +1,7 @@
 namespace Shared.Dtos.Series;
 
-public class SeriesDto
+public class CreateOrUpdateSeriesDto
 {
-    public Guid Id { get; set; }
-    
     public required string Name { get; set; }
 
     public required string Slug { get; set; }

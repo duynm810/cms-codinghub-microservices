@@ -1,3 +1,11 @@
+using Contracts.Domains.Repositories;
+using Infrastructure.Domains;
+using Infrastructure.Domains.Repositories;
+using Series.Api.Repositories;
+using Series.Api.Repositories.Interfaces;
+using Series.Api.Services;
+using Series.Api.Services.Interfaces;
+using Shared.Configurations;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -35,23 +43,24 @@ public static class ServiceExtensions
 
         // Configure health checks
         services.ConfigureHealthChecks();
-        
-        // Configures and registers grpc services
-        services.ConfigureGrpcServices();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
     {
-       
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton(databaseSettings);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services)
     {
-       
     }
 
     private static void ConfigureAutoMapper(this IServiceCollection services)
     {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
     private static void ConfigureSwaggerServices(this IServiceCollection services)
@@ -71,12 +80,17 @@ public static class ServiceExtensions
 
     private static void ConfigureCoreServices(this IServiceCollection services)
     {
-        
+        services
+            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
+            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
+            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
     private static void ConfigureRepositoryServices(this IServiceCollection services)
     {
-       
+        services
+            .AddScoped<ISeriesRepository, SeriesRepository>()
+            .AddScoped<ISeriesService, SeriesService>();
     }
 
     private static void ConfigureOtherServices(this IServiceCollection services)
@@ -88,11 +102,5 @@ public static class ServiceExtensions
 
     private static void ConfigureHealthChecks(this IServiceCollection services)
     {
-        
-    }
-    
-    private static void ConfigureGrpcServices(this IServiceCollection services)
-    {
-       
     }
 }
