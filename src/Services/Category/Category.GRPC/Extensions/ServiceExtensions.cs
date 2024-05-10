@@ -20,13 +20,13 @@ public static class ServiceExtensions
         services.ConfigureSettings(configuration);
 
         // Configures and registers the database context with the service collection
-        services.ConfigureDbContext(configuration);
+        services.ConfigureDbContext();
 
         // Configures and registers repository and services
         services.ConfigureRepositoryServices();
 
         // Configures health checks
-        services.ConfigureHealthChecks(configuration);
+        services.ConfigureHealthChecks();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -38,7 +38,7 @@ public static class ServiceExtensions
         services.AddSingleton(databaseSettings);
     }
 
-    private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureDbContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -58,7 +58,7 @@ public static class ServiceExtensions
         services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
 
-    private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(

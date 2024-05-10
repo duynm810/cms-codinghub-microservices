@@ -1,5 +1,5 @@
 using Grpc.Core;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
 using Post.GRPC.Protos;
 using ILogger = Serilog.ILogger;
 

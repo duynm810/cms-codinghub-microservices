@@ -2,7 +2,7 @@ using Contracts.Domains.Repositories;
 using Post.Domain.Entities;
 using Shared.Responses;
 
-namespace Post.Domain.Interfaces;
+namespace Post.Domain.Repositories;
 
 public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 {

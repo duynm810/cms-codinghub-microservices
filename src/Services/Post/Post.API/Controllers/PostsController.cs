@@ -74,4 +74,6 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
+    
+    
 }

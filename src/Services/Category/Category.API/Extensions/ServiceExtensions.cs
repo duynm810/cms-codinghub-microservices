@@ -32,7 +32,7 @@ public static class ServiceExtensions
         services.ConfigureSettings(configuration);
 
         // Configures and registers the database context with the service collection
-        services.ConfigureDbContext(configuration);
+        services.ConfigureDbContext();
 
         // Configures and registers core services
         services.ConfigureCoreServices();
@@ -50,10 +50,10 @@ public static class ServiceExtensions
         services.ConfigureSwaggerServices();
 
         // Configure health checks
-        services.ConfigureHealthChecks(configuration);
+        services.ConfigureHealthChecks();
         
         // Configures and registers grpc services
-        services.ConfigureGrpcServices(configuration);
+        services.ConfigureGrpcServices();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -70,7 +70,7 @@ public static class ServiceExtensions
         services.AddSingleton(grpcSettings);
     }
 
-    private static void ConfigureDbContext(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureDbContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -127,7 +127,7 @@ public static class ServiceExtensions
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
-    private static void ConfigureHealthChecks(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -138,7 +138,7 @@ public static class ServiceExtensions
             failureStatus: HealthStatus.Degraded);
     }
     
-    private static void ConfigureGrpcServices(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureGrpcServices(this IServiceCollection services)
     {
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(

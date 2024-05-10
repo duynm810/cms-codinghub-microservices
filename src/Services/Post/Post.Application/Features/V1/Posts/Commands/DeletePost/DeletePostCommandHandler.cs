@@ -1,6 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
 using Serilog;
 using Shared.Responses;
 using Shared.Utilities;

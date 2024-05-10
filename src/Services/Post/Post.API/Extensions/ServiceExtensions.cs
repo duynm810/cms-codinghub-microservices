@@ -20,8 +20,7 @@ public static class ServiceExtensions
         services.AddSingleton(grpcSettings);
     }
 
-    public static void ConfigureHealthChecks(this IServiceCollection services,
-        IConfiguration configuration)
+    public static void ConfigureHealthChecks(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
