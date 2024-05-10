@@ -26,6 +26,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
+  seriesdb:
+    container_name: seriesdb
+    environment:
+      SA_PASSWORD: "Passw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+    ports:
+      - "1435:1433"
+  
   ##infrastructure section
   rabbitmq:
     container_name: rabbitmq
@@ -86,7 +97,7 @@ services:
     ports:
       - "6002:80"
     restart: always
-    
+  
   category.grpc:
     container_name: category.grpc
     environment:
@@ -98,7 +109,7 @@ services:
     ports:
       - "6003:80"
     restart: always
-    
+  
   post.grpc:
     container_name: post.grpc
     environment:
