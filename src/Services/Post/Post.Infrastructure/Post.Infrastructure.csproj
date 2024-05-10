@@ -25,10 +25,19 @@
 
     <ItemGroup>
         <None Remove="Protos\category.proto"/>
-        <Protobuf Include="..\..\Category\Category.GRPC\Protos\category.proto" Link="Protos\category.proto">
-            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-            <GrpcServices>Client</GrpcServices>
-        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
+        <GrpcServices>Client</GrpcServices>
+        <Access>Public</Access>
+        <ProtoCompile>True</ProtoCompile>
+        <CompileOutputs>True</CompileOutputs>
+        <OutputDir>obj\Debug\net8.0\</OutputDir>
+        <Generator>MSBuild:Compile</Generator>
+        <Link>Protos\category.proto</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Protobuf>
     </ItemGroup>
 
 </Project>

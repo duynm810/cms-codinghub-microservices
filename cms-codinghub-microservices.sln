@@ -32,7 +32,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\BuildingBloc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot", "src\ApiGateways\Ocelot\Ocelot.csproj", "{28C05027-E1C1-4718-AE4F-325366B70325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.API", "src\Services\Category\Category.API\Category.API.csproj", "{33C9B90D-9514-4196-B13C-7C4B5C4BC527}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.Api", "src\Services\Category\Category.Api\Category.Api.csproj", "{33C9B90D-9514-4196-B13C-7C4B5C4BC527}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution items", "{E7479EF2-6D2E-494F-9BBA-5F03EEE5F9DC}"
 	ProjectSection(SolutionItems) = preProject
@@ -52,7 +52,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Domain", "src\Services
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.Infrastructure", "src\Services\Post\Post.Infrastructure\Post.Infrastructure.csproj", "{FC71337D-44C1-4BF1-AD1B-9207D53F6898}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.GRPC", "src\Services\Category\Category.GRPC\Category.GRPC.csproj", "{AAEF3178-5CEB-40AC-8EA4-E6856B5719CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.Grpc", "src\Services\Category\Category.Grpc\Category.Grpc.csproj", "{AAEF3178-5CEB-40AC-8EA4-E6856B5719CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Post.GRPC", "src\Services\Post\Post.GRPC\Post.GRPC.csproj", "{75997FBC-438F-46D4-A80F-AE7D41F62377}"
 EndProject

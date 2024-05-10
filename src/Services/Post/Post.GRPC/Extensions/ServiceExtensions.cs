@@ -1,4 +1,4 @@
-using Category.GRPC.Services.BackgroundServices;
+using Category.Grpc.Services.BackgroundServices;
 using Grpc.HealthCheck;
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
