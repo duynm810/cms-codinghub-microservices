@@ -2,7 +2,7 @@ using Grpc.Health.V1;
 using Grpc.HealthCheck;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Category.Grpc.Services.BackgroundServices;
+namespace Post.Grpc.Services.BackgroundServices;
 
 public class StatusService(HealthServiceImpl healthService, HealthCheckService healthCheckService)
     : BackgroundService
