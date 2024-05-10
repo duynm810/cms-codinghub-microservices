@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Post.Grpc.Protos";
+
+service PostProtoService {
+  rpc HasPostsInCategory(HasPostsInCategoryRequest) returns (HasPostsInCategoryResponse);
+}
+
+message HasPostsInCategoryRequest {
+  int64 categoryId = 1;
+}
+
+message HasPostsInCategoryResponse {
+  bool exists = 1;
+}

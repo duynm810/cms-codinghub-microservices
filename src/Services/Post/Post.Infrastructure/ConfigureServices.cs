@@ -1,4 +1,4 @@
-using Category.GRPC.Protos;
+using Category.Grpc.Protos;
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;

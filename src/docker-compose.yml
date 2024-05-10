@@ -25,25 +25,25 @@ services:
     image: ${DOCKER_REGISTRY-}category-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Category/Category.API/Dockerfile
+      dockerfile: Services/Category/Category.Api/Dockerfile
   
   category.grpc:
     image: ${DOCKER_REGISTRY-}category-grpc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Category/Category.GRPC/Dockerfile
+      dockerfile: Services/Category/Category.Grpc/Dockerfile
   
   post.api:
     image: ${DOCKER_REGISTRY-}post-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Post/Post.API/Dockerfile
+      dockerfile: Services/Post/Post.Api/Dockerfile
   
   post.grpc:
     image: ${DOCKER_REGISTRY-}post-grpc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: Services/Post/Post.GRPC/Dockerfile
+      dockerfile: Services/Post/Post.Grpc/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}

@@ -1,4 +1,4 @@
-using Category.GRPC.Protos;
+using Category.Grpc.Protos;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Dtos.Category;
