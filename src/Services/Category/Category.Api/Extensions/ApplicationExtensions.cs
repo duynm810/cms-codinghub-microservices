@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Shared.Constants;
 
 namespace Category.Api.Extensions;
 
@@ -16,7 +17,7 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = "Category Swagger UI";
-            c.SwaggerEndpoint("CategoryAPI/swagger.json", "Category API");
+            c.SwaggerEndpoint($"{SystemConsts.CategoryApi}/swagger.json", SystemConsts.CategoryApi);
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });

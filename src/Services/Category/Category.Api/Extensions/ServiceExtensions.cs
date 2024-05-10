@@ -15,6 +15,7 @@ using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
+using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Category.Api.Extensions;
@@ -80,7 +81,7 @@ public static class ServiceExtensions
         services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
             ServerVersion.AutoDetect(builder.ConnectionString), e =>
             {
-                e.MigrationsAssembly("Category.Api");
+                e.MigrationsAssembly(SystemConsts.CategoryApi);
                 e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
             }));
     }
@@ -95,10 +96,10 @@ public static class ServiceExtensions
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("CategoryAPI", new Microsoft.OpenApi.Models.OpenApiInfo
+            c.SwaggerDoc(SystemConsts.CategoryApi, new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Version = "v1",
-                Title = "Category API for Administrators",
+                Title = "Category Api for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
