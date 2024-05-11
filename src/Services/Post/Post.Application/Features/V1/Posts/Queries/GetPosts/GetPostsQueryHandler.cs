@@ -2,14 +2,15 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Models;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 
-public class GetPostsQueryHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+public class GetPostsQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
     public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
@@ -20,15 +21,29 @@ public class GetPostsQueryHandler(IPostRepository postRepository, IMapper mapper
         try
         {
             var posts = await postRepository.GetPosts();
-            if (posts.IsNotNullOrEmpty())
+
+            var postBases = posts.ToList();
+            if (postBases.IsNotNullOrEmpty())
             {
-                var data = mapper.Map<IEnumerable<PostDto>>(posts);
+                var categoryIds = postBases.Select(p => p.CategoryId).Distinct().ToList();
+                var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
+                
+                var data = mapper.Map<List<PostDto>>(posts);
+                foreach (var post in data)
+                {
+                    if (categoryDictionary.TryGetValue(post.CategoryId, out var value))
+                    {
+                        post.CategoryName = value;
+                    }
+                }
+
                 result.Success(data);
             }
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

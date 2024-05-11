@@ -2,14 +2,16 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Models;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
+using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper mapper, ILogger logger)
+public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
     : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
 {
     public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
@@ -21,12 +23,34 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper ma
             var post = await postRepository.GetPostById(request.Id);
             if (post == null)
             {
-                result.Messages.Add("Post not found");
+                result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+            
+            // Check slug exists
+            var slugExists = await postRepository.SlugExists(request.Slug, request.Id);
+            if (slugExists)
+            {
+                result.Messages.Add(ErrorMessageConsts.Post.SlugExists);
+                result.Failure(StatusCodes.Status409Conflict, result.Messages);
+                return result;
+            }
+
+            // Check valid category id
+            var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
+            if (category == null)
+            {
+                result.Messages.Add(ErrorMessageConsts.Category.InvalidCategoryId);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
             var updatePost = mapper.Map(request, post);
+
+            // Set category id get by categories services
+            updatePost.CategoryId = category.Id;
+            
             await postRepository.UpdatePost(updatePost);
 
             var data = mapper.Map<PostDto>(updatePost);
@@ -34,7 +58,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, IMapper ma
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(UpdatePostCommand), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(UpdatePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

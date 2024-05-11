@@ -3,7 +3,7 @@ namespace Shared.Dtos.Category;
 public class CategoryDto
 {
     public long Id { get; set; }
-    
+
     public required string Name { get; set; }
 
     public required string Slug { get; set; }

@@ -1,7 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Domain.Interfaces;
+using Post.Domain.Repositories;
 using Serilog;
+using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -19,7 +20,7 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ILogger lo
             var post = await postRepository.GetPostById(request.Id);
             if (post == null)
             {
-                result.Messages.Add("Post not found");
+                result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -29,7 +30,7 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ILogger lo
         }
         catch (Exception e)
         {
-            logger.Error("Method: {MethodName}. Message: {ErrorMessage}", nameof(DeletePostCommand), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeletePostCommand), e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

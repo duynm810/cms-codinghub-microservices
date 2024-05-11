@@ -22,6 +22,51 @@ namespace Post.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Post.Domain.Entities.PostActivityLog", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<DateTimeOffset>("CreatedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_date");
+
+                    b.Property<int>("FromStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("from_status");
+
+                    b.Property<DateTimeOffset?>("LastModifiedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("last_modified_date");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("note");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("post_id");
+
+                    b.Property<int>("ToStatus")
+                        .HasColumnType("integer")
+                        .HasColumnName("to_status");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("user_id");
+
+                    b.HasKey("Id")
+                        .HasName("pk_post_activity_logs");
+
+                    b.HasIndex("PostId")
+                        .HasDatabaseName("ix_post_activity_logs_post_id");
+
+                    b.ToTable("PostActivityLogs");
+                });
+
             modelBuilder.Entity("Post.Domain.Entities.PostBase", b =>
                 {
                     b.Property<Guid>("Id")
@@ -116,6 +161,16 @@ namespace Post.Infrastructure.Migrations
                         .HasDatabaseName("ix_posts_slug");
 
                     b.ToTable("Posts");
+                });
+
+            modelBuilder.Entity("Post.Domain.Entities.PostActivityLog", b =>
+                {
+                    b.HasOne("Post.Domain.Entities.PostBase", null)
+                        .WithMany()
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_post_activity_logs_posts_post_id");
                 });
 #pragma warning restore 612, 618
         }

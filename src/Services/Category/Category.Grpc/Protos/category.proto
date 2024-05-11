@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option csharp_namespace = "Category.Grpc.Protos";
+
+service CategoryProtoService {
+  rpc GetCategoryById(GetCategoryByIdRequest) returns (CategoryModel);
+  rpc GetCategoriesByIds(GetCategoriesByIdsRequest) returns (GetCategoriesByIdsResponse);
+}
+
+message GetCategoryByIdRequest {
+  int64 id = 1;
+}
+
+message GetCategoriesByIdsRequest {
+  repeated int64 ids = 1;
+}
+
+message CategoryModel {
+  int64 id = 1;
+  string name = 2;
+  string slug = 3;
+}
+
+message GetCategoriesByIdsResponse {
+  repeated CategoryModel category = 1;
+}

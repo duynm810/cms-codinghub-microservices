@@ -8,6 +8,8 @@ namespace Post.Infrastructure.Persistence;
 public class PostContext(DbContextOptions<PostContext> options) : DbContext(options)
 {
     public required DbSet<PostBase> Posts { get; set; }
+    
+    public required DbSet<PostActivityLog> PostActivityLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -15,6 +17,7 @@ public class PostContext(DbContextOptions<PostContext> options) : DbContext(opti
 
         // Config column property in database (using Fluent API)
         modelBuilder.ApplyConfiguration(new PostConfiguration());
+        modelBuilder.ApplyConfiguration(new PostActivityLogConfiguration());
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

@@ -7,7 +7,7 @@ namespace Post.Application.Commons.Models;
 public class PostDto : IMapFrom<PostBase>
 {
     public Guid Id { get; set; }
-    
+
     public required string Name { get; set; }
 
     public required string Slug { get; set; }
@@ -33,6 +33,8 @@ public class PostDto : IMapFrom<PostBase>
     public PostStatusEnum Status { get; set; }
 
     public long CategoryId { get; set; }
+    
+    public string? CategoryName { get; set; }
 
     public Guid AuthorUserId { get; set; }
 

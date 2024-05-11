@@ -11,6 +11,7 @@
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.2" />
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.14"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,6 +21,23 @@
     <ItemGroup>
       <Compile Remove="Migrations\20240507041542_Initial.cs" />
       <Compile Remove="Migrations\20240507041542_Initial.Designer.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="Protos\category.proto"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
+        <GrpcServices>Client</GrpcServices>
+        <Access>Public</Access>
+        <ProtoCompile>True</ProtoCompile>
+        <CompileOutputs>True</CompileOutputs>
+        <OutputDir>obj\Debug\net8.0\</OutputDir>
+        <Generator>MSBuild:Compile</Generator>
+        <Link>Protos\category.proto</Link>
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Protobuf>
     </ItemGroup>
 
 </Project>

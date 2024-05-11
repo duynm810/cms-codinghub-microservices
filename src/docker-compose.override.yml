@@ -26,6 +26,17 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
+  seriesdb:
+    container_name: seriesdb
+    environment:
+      SA_PASSWORD: "Passw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: always
+    ports:
+      - "1435:1433"
+  
   ##infrastructure section
   rabbitmq:
     container_name: rabbitmq
@@ -80,10 +91,35 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
+      - "GrpcSettings:PostUrl=http://post.grpc"
     depends_on:
       - categorydb
     ports:
       - "6002:80"
+    restart: always
+  
+  category.grpc:
+    container_name: category.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
+    depends_on:
+      - categorydb
+    ports:
+      - "6003:80"
+    restart: always
+  
+  post.grpc:
+    container_name: post.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+    depends_on:
+      - postdb
+    ports:
+      - "6004:80"
     restart: always
   
   post.api:
@@ -92,10 +128,23 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+      - "GrpcSettings:CategoryUrl=http://category.grpc"
     depends_on:
       - postdb
     ports:
       - "6005:80"
+    restart: always
+  
+  series.api:
+    container_name: series.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
+    depends_on:
+      - seriesdb
+    ports:
+      - "6006:80"
     restart: always
   
   healthcheck:
@@ -103,9 +152,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - HealthChecksUI__HealthChecks__0__Name=Category Health Check
+      - HealthChecksUI__HealthChecks__0__Name=Category API Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
-      - HealthChecksUI__HealthChecks__1__Name=Post Health Check
+      - HealthChecksUI__HealthChecks__1__Name=Post API Health Check
       - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
+      - HealthChecksUI__HealthChecks__2__Name=Series API Health Check
+      - HealthChecksUI__HealthChecks__2__Uri=http://series.api/hc
     ports:
       - "6010:80"
