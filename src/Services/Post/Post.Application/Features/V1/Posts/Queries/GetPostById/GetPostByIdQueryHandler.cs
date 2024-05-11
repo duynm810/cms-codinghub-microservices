@@ -5,6 +5,7 @@ using Post.Application.Commons.Models;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
+using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -22,7 +23,7 @@ public class GetPostByIdQueryHandler(IPostRepository postRepository, ICategoryGr
             var post = await postRepository.GetPostById(request.Id);
             if (post == null)
             {
-                result.Messages.Add("Post not found");
+                result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }

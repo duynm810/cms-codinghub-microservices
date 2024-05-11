@@ -2,6 +2,7 @@ using AutoMapper;
 using Series.Api.Entities;
 using Series.Api.Repositories.Interfaces;
 using Series.Api.Services.Interfaces;
+using Shared.Constants;
 using Shared.Dtos.Series;
 using Shared.Responses;
 using Shared.Utilities;
@@ -49,7 +50,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             var series = await seriesRepository.GetSeriesById(id);
             if (series == null)
             {
-                result.Messages.Add("Series not found");
+                result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -81,7 +82,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
                 var series = await seriesRepository.GetSeriesById(id);
                 if (series == null)
                 {
-                    result.Messages.Add("Series not found");
+                    result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
@@ -132,7 +133,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             var series = await seriesRepository.GetSeriesById(id);
             if (series == null)
             {
-                result.Messages.Add("Series not found");
+                result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }

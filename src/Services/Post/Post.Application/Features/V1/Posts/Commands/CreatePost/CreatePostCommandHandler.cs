@@ -5,6 +5,7 @@ using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
+using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -23,8 +24,8 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
             var slugExists = await postRepository.SlugExists(request.Slug);
             if (slugExists)
             {
-                result.Messages.Add("Slug is exists");
-                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                result.Messages.Add(ErrorMessageConsts.Post.SlugExists);
+                result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
             }
             
@@ -32,8 +33,8 @@ public class CreatePostCommandHandler(IPostRepository postRepository, ICategoryG
             var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
             if (category == null)
             {
-                result.Messages.Add("Invalid category ID");
-                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                result.Messages.Add(ErrorMessageConsts.Category.InvalidCategoryId);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
             

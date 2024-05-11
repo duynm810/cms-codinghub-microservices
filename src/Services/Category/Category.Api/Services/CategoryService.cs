@@ -3,6 +3,7 @@ using Category.Api.Entities;
 using Category.Api.GrpcServices.Interfaces;
 using Category.Api.Repositories.Interfaces;
 using Category.Api.Services.Interfaces;
+using Shared.Constants;
 using Shared.Dtos.Category;
 using Shared.Responses;
 using Shared.Utilities;
@@ -50,7 +51,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
-                result.Messages.Add("Category not found");
+                result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -82,7 +83,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
                 var category = await categoryRepository.GetCategoryById(id);
                 if (category == null)
                 {
-                    result.Messages.Add("Category not found");
+                    result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
@@ -90,7 +91,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
                 var existedPost = await postGrpcService.HasPostsInCategory(id);
                 if (existedPost)
                 {
-                    result.Messages.Add("The category contains post, cannot be deleted!");
+                    result.Messages.Add(ErrorMessageConsts.Category.CategoryContainsPost);
                     result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                     return result;
                 }
@@ -141,7 +142,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
-                result.Messages.Add("Category not found");
+                result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
