@@ -53,6 +53,12 @@ services:
     build:
       context: .
       dockerfile: Services/Series/Series.Api/Dockerfile
+      
+  series.grpc:
+    image: ${DOCKER_REGISTRY-}series-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Series/Series.Grpc/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
