@@ -147,6 +147,18 @@ services:
       - "6006:80"
     restart: always
   
+  series.grpc:
+    container_name: series.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
+    depends_on:
+      - seriesdb
+    ports:
+      - "6007:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
