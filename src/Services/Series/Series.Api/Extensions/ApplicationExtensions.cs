@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 
 namespace Series.Api.Extensions;
@@ -24,5 +26,16 @@ public static class ApplicationExtensions
         app.UseRouting();
 
         //app.UseHttpsRedirection();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
+            {
+                Predicate = _ => true,
+                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+            });
+
+            endpoints.MapDefaultControllerRoute();
+        });
     }
 }

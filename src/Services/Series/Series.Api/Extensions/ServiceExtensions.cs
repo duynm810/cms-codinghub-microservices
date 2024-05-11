@@ -1,6 +1,10 @@
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
+using Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Series.Api.Persistence;
 using Series.Api.Repositories;
 using Series.Api.Repositories.Interfaces;
 using Series.Api.Services;
@@ -56,6 +60,16 @@ public static class ServiceExtensions
 
     private static void ConfigureDbContext(this IServiceCollection services)
     {
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddDbContext<SeriesContext>(options =>
+        {
+            options.UseSqlServer(databaseSettings.ConnectionString,
+                builder =>
+                    builder.MigrationsAssembly(typeof(SeriesContext).Assembly.FullName));
+        });
     }
 
     private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -102,5 +116,10 @@ public static class ServiceExtensions
 
     private static void ConfigureHealthChecks(this IServiceCollection services)
     {
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+        services.AddHealthChecks()
+            .AddSqlServer(databaseSettings.ConnectionString,
+                name: "SqlServer Health",
+                failureStatus: HealthStatus.Degraded);
     }
 }
