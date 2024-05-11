@@ -135,6 +135,18 @@ services:
       - "6005:80"
     restart: always
   
+  series.api:
+    container_name: series.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
+    depends_on:
+      - seriesdb
+    ports:
+      - "6006:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
@@ -142,7 +154,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - HealthChecksUI__HealthChecks__0__Name=Category API Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
-      - HealthChecksUI__HealthChecks__2__Name=Post API Health Check
-      - HealthChecksUI__HealthChecks__2__Uri=http://post.api/hc
+      - HealthChecksUI__HealthChecks__1__Name=Post API Health Check
+      - HealthChecksUI__HealthChecks__1__Uri=http://post.api/hc
+      - HealthChecksUI__HealthChecks__2__Name=Series API Health Check
+      - HealthChecksUI__HealthChecks__2__Uri=http://series.api/hc
     ports:
       - "6010:80"
