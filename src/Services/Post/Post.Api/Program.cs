@@ -4,6 +4,7 @@ using Post.Application;
 using Post.Domain.Interfaces;
 using Post.Infrastructure;
 using Serilog;
+using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,10 +43,10 @@ try
     builder.Services.AddSwaggerGen(c =>
     {
         c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-        c.SwaggerDoc("PostAPI", new Microsoft.OpenApi.Models.OpenApiInfo
+        c.SwaggerDoc(SystemConsts.PostApi, new Microsoft.OpenApi.Models.OpenApiInfo
         {
             Version = "v1",
-            Title = "Post API for Administrators",
+            Title = "Post Api for Administrators",
             Description =
                 "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
         });

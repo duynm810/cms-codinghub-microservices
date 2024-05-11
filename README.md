@@ -37,7 +37,7 @@ dotnet ef migrations "Initial"
 dotnet ef database update
 ```
 
-- Post API
+- Post Api
 
 ```Powershell
  dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.Api

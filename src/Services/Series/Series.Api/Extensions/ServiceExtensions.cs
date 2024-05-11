@@ -1,24 +1,19 @@
-using Category.Api.GrpcServices;
-using Category.Api.GrpcServices.Interfaces;
-using Category.Api.Persistence;
-using Category.Api.Repositories;
-using Category.Api.Repositories.Interfaces;
-using Category.Api.Services;
-using Category.Api.Services.Interfaces;
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using MySqlConnector;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Post.Grpc.Protos;
+using Series.Api.Persistence;
+using Series.Api.Repositories;
+using Series.Api.Repositories.Interfaces;
+using Series.Api.Services;
+using Series.Api.Services.Interfaces;
 using Shared.Configurations;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
-namespace Category.Api.Extensions;
+namespace Series.Api.Extensions;
 
 public static class ServiceExtensions
 {
@@ -52,9 +47,6 @@ public static class ServiceExtensions
 
         // Configure health checks
         services.ConfigureHealthChecks();
-        
-        // Configures and registers grpc services
-        services.ConfigureGrpcServices();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
@@ -64,11 +56,6 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
-        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
-                           ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
-        
-        services.AddSingleton(grpcSettings);
     }
 
     private static void ConfigureDbContext(this IServiceCollection services)
@@ -77,13 +64,12 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
-        var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
-        services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
-            ServerVersion.AutoDetect(builder.ConnectionString), e =>
-            {
-                e.MigrationsAssembly(SystemConsts.CategoryApi);
-                e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
-            }));
+        services.AddDbContext<SeriesContext>(options =>
+        {
+            options.UseSqlServer(databaseSettings.ConnectionString,
+                builder =>
+                    builder.MigrationsAssembly(typeof(SeriesContext).Assembly.FullName));
+        });
     }
 
     private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -96,10 +82,10 @@ public static class ServiceExtensions
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc(SystemConsts.CategoryApi, new Microsoft.OpenApi.Models.OpenApiInfo
+            c.SwaggerDoc(SystemConsts.SeriesApi, new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Version = "v1",
-                Title = "Category Api for Administrators",
+                Title = "Series API for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
@@ -117,8 +103,8 @@ public static class ServiceExtensions
     private static void ConfigureRepositoryServices(this IServiceCollection services)
     {
         services
-            .AddScoped<ICategoryRepository, CategoryRepository>()
-            .AddScoped<ICategoryService, CategoryService>();
+            .AddScoped<ISeriesRepository, SeriesRepository>()
+            .AddScoped<ISeriesService, SeriesService>();
     }
 
     private static void ConfigureOtherServices(this IServiceCollection services)
@@ -130,24 +116,10 @@ public static class ServiceExtensions
 
     private static void ConfigureHealthChecks(this IServiceCollection services)
     {
-        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
-                               throw new ArgumentNullException(
-                                   $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
-            name: "MySQL Health",
-            failureStatus: HealthStatus.Degraded);
-    }
-    
-    private static void ConfigureGrpcServices(this IServiceCollection services)
-    {
-        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
-                           throw new ArgumentNullException(
-                               $"{nameof(GrpcSettings)} is not configured properly");
-        
-        services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
-            x.Address = new Uri(grpcSettings.PostUrl));
-        
-        services.AddScoped<IPostGrpcService, PostGrpcService>();
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+        services.AddHealthChecks()
+            .AddSqlServer(databaseSettings.ConnectionString,
+                name: "SqlServer Health",
+                failureStatus: HealthStatus.Degraded);
     }
 }

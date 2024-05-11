@@ -2,7 +2,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 
-namespace Post.Api.Extensions;
+namespace Series.Api.Extensions;
 
 public static class ApplicationExtensions
 {
@@ -16,8 +16,8 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Post Swagger UI";
-            c.SwaggerEndpoint($"{SystemConsts.PostApi}/swagger.json", SystemConsts.PostApi);
+            c.DocumentTitle = "Series Swagger UI";
+            c.SwaggerEndpoint($"{SystemConsts.SeriesApi}/swagger.json", SystemConsts.SeriesApi);
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
