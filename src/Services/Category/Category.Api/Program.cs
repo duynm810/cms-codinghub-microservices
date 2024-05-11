@@ -2,28 +2,32 @@ using Category.Api.Extensions;
 using Category.Api.Persistence;
 using Logging;
 using Serilog;
+using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
-Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationName);
+Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
 
 try
 {
+    // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
 
-    // Config JSON files and environment variables
+    // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Register services
+    // Add infrastructure services like database contexts and repositories
     builder.Services.AddInfrastructureServices(configuration);
 
     var app = builder.Build();
 
-    // Config pipeline
+    // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
+    // Seed database with initial data and start the application
     await app.MigrateDatabase<CategoryContext>((context, _) =>
         {
             CategorySeedData.CategorySeedAsync(context, Log.Logger).Wait();
@@ -35,10 +39,11 @@ catch (Exception ex)
     var type = ex.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(ex, $"Unhandled exception: {ex.Message}");
+    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
 }
 finally
 {
-    Log.Information($"Shutdown {builder.Environment.ApplicationName} complete");
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
     Log.CloseAndFlush();
 }

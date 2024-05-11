@@ -4,30 +4,31 @@ using HealthChecks.UI.Client;
 using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
+using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
-Log.Information("Start {EnvironmentApplicationName} up", builder.Environment.ApplicationName);
+Log.Information("Starting up {EnvironmentApplicationName}", builder.Environment.ApplicationName);
 
 try
 {
+    // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
-    
-    // Config JSON files and environment variables
+
+    // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Register services
+    // Add infrastructure services like database contexts and repositories
     builder.Services.AddInfrastructureServices(builder.Configuration);
 
-    // Add services to the container.
+    // Add grpc services
     builder.Services.AddGrpc();
-    
     builder.Services.AddGrpcReflection();
 
     var app = builder.Build();
-    
-    // Configure the HTTP request pipeline.
+
     app.MapGrpcService<CategoryService>();
     app.MapGet("/",
         () =>
@@ -38,19 +39,19 @@ try
         Predicate = _ => true,
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
-    
+
     app.MapGrpcHealthChecksService();
-    
     app.MapGrpcReflectionService();
-    
+
     app.Run();
 }
 catch (Exception e)
 {
-    Log.Fatal(e, "Unhandled exception: {EMessage}", e.Message);
+    Log.Fatal(e, $"{ErrorMessageConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {
-    Log.Information("Shut down {EnvironmentApplicationName} down", builder.Environment.ApplicationName);
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
     Log.CloseAndFlush();
 }

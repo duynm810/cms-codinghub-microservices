@@ -6,35 +6,37 @@ using Post.Grpc.Extensions;
 using Post.Grpc.Services;
 using Post.Infrastructure;
 using Serilog;
+using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
-Log.Information("Start {EnvironmentApplicationName} up", builder.Environment.ApplicationName);
+Log.Information("Starting up {EnvironmentApplicationName}", builder.Environment.ApplicationName);
 
 try
 {
+    // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
-    
-    // Config JSON files and environment variables
+
+    // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Extracts configuration settings from appsettings.json and registers them with the service collection
+    // Add configure settings get in appsettings
     builder.Services.ConfigureSettings(configuration);
 
-    // Configure health checks
+    // Add health checks to checks database
     builder.Services.ConfigureHealthChecks();
 
-    // Config application services in Post.Application
+    // Add application services in Post.Application
     builder.Services.AddApplicationServices();
 
-    // Config infrastructure services in Post.Infrastructure
+    // Add infrastructure services in Post.Infrastructure
     builder.Services.AddInfrastructureServices(configuration);
-    
-    // Add services to the container.
+
+    // Add grpc services
     builder.Services.AddGrpc();
-    
     builder.Services.AddGrpcReflection();
 
     var app = builder.Build();
@@ -50,19 +52,20 @@ try
         Predicate = _ => true,
         ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
     });
-    
+
     app.MapGrpcHealthChecksService();
-    
+
     app.MapGrpcReflectionService();
-    
+
     app.Run();
 }
 catch (Exception e)
 {
-    Log.Fatal(e, "Unhandled exception: {EMessage}", e.Message);
+    Log.Fatal(e, $"{ErrorMessageConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {
-    Log.Information("Shut down {EnvironmentApplicationName} down", builder.Environment.ApplicationName);
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
     Log.CloseAndFlush();
 }

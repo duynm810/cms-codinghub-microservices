@@ -10,29 +10,30 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+// Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 Log.Information("Start {ApplicationName} up", builder.Environment.ApplicationName);
 
 try
 {
+    // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
 
-    //Config JSON files and environment variables
+    // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Extracts configuration settings from appsettings.json and registers them with the service collection
+    // Add configure settings get in appsettings
     builder.Services.ConfigureSettings(configuration);
 
-    // Configure health checks
+    // Add health checks
     builder.Services.ConfigureHealthChecks();
 
-    // Config application services in Post.Application
+    // Add application services in Post.Application
     builder.Services.AddApplicationServices();
 
-    // Config infrastructure services in Post.Infrastructure
+    // Add infrastructure services in Post.Infrastructure
     builder.Services.AddInfrastructureServices(configuration);
 
-    // Add services to the container.
     builder.Services.AddControllers();
 
     // Another services
@@ -54,10 +55,10 @@ try
 
     var app = builder.Build();
 
-    // Config pipeline
+    // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    // Initialise and seed database
+    // Seed database with initial data and start the application
     using var scope = app.Services.CreateScope();
     var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
     await seeder.InitialiseAsync();
@@ -70,10 +71,11 @@ catch (Exception e)
     var type = e.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(e, $"Unhandled exception: {e.Message}");
+    Log.Fatal(e, $"{ErrorMessageConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {
-    Log.Information($"Shut down {builder.Environment.ApplicationName} complete");
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
     Log.CloseAndFlush();
 }

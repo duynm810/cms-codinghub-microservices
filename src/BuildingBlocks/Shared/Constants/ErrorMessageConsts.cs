@@ -2,6 +2,11 @@ namespace Shared.Constants;
 
 public static class ErrorMessageConsts
 {
+    public static class Common
+    {
+        public const string UnhandledException = "Unhandled exception";
+    }
+    
     public static class Category
     {
         public const string CategoryNotFound = "Category not found";
