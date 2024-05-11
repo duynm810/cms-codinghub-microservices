@@ -1,5 +1,6 @@
 using Logging;
 using Series.Api.Extensions;
+using Series.Api.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,9 @@ try
 
     // Config pipeline
     app.ConfigurePipeline();
+    
+    // Seed sample data
+    app.SeedData().Run();
 
     app.Run();
 }

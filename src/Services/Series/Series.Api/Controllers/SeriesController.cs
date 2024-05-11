@@ -7,6 +7,8 @@ using Shared.Responses;
 
 namespace Series.Api.Controllers;
 
+[ApiController]
+[Route("api/[controller]")]
 public class SeriesController(ISeriesService seriesService) : ControllerBase
 {
     [HttpPost]
