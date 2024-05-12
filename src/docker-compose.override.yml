@@ -167,6 +167,20 @@ services:
       - "6007:80"
     restart: always
   
+  postinseries.api:
+    container_name: postinseries.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings:ConnectionString=postinseriesdb:6379"
+      - "GrpcSettings:PostUrl=http://post.grpc"
+      - "GrpcSettings:SeriesUrl=http://series.grpc"
+    depends_on:
+      - postinseriesdb
+    ports:
+      - "6008:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
