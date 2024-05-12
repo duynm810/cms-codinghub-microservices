@@ -11,7 +11,7 @@ public class CategoryRepository(CategoryContext dbContext)
 {
     public async Task<CategoryBase?> GetCategoryById(long id) => await GetByIdAsync(id);
 
-    public async Task<IEnumerable<CategoryBase>> GetCategoryByIds(long[] ids)
+    public async Task<IEnumerable<CategoryBase>> GetCategoriesByIds(long[] ids)
     {
         var categories = await FindByCondition(c => ids.Contains(c.Id)).Select(c => new CategoryBase()
             {

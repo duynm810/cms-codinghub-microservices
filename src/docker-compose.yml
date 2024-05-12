@@ -9,6 +9,9 @@ services:
   
   seriesdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    
+  postinseriesdb:
+    image: redis:alpine
   
   ##infrastructure section
   rabbitmq:
@@ -59,6 +62,12 @@ services:
     build:
       context: .
       dockerfile: Services/Series/Series.Grpc/Dockerfile
+      
+  postinseries.api:
+    image: ${DOCKER_REGISTRY-}postinseries-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}

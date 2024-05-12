@@ -26,6 +26,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
+  #seriesdb: sqlserver
   seriesdb:
     container_name: seriesdb
     environment:
@@ -36,6 +37,13 @@ services:
     restart: always
     ports:
       - "1435:1433"
+  
+  #postinseriesdb: redis
+  postinseriesdb:
+    container_name: postinseriesdb
+    restart: always
+    ports:
+      - "6379:6379"
   
   ##infrastructure section
   rabbitmq:
@@ -157,6 +165,20 @@ services:
       - seriesdb
     ports:
       - "6007:80"
+    restart: always
+  
+  postinseries.api:
+    container_name: postinseries.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings:ConnectionString=postinseriesdb:6379"
+      - "GrpcSettings:PostUrl=http://post.grpc"
+      - "GrpcSettings:SeriesUrl=http://series.grpc"
+    depends_on:
+      - postinseriesdb
+    ports:
+      - "6008:80"
     restart: always
   
   healthcheck:

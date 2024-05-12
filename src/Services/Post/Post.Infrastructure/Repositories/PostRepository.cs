@@ -53,12 +53,18 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<bool> SlugExists(string slug, Guid? currentId = null)
     {
-        return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value)).AnyAsync();
+        return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value))
+            .AnyAsync();
     }
 
     public async Task<bool> HasPostsInCategory(long categoryId)
     {
         return await FindByCondition(x => x.CategoryId == categoryId).AnyAsync();
+    }
+
+    public async Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids)
+    {
+        return await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
     }
 
     #endregion
