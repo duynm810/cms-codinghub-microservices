@@ -58,11 +58,11 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
             logger.Information("{MethodName} - Beginning to retrieve categories for IDs: {CategoryIds}", methodName,
                 categoryIds);
 
-            var categories = await categoryRepository.GetCategoryByIds(categoryIds);
+            var categories = await categoryRepository.GetCategoriesByIds(categoryIds);
 
             foreach (var category in categories)
             {
-                result.Category.Add(new CategoryModel()
+                result.Categories.Add(new CategoryModel()
                 {
                     Id = category.Id,
                     Name = category.Name,
@@ -71,7 +71,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
             }
 
             logger.Information("{MethodName} - Successfully retrieved {Count} categories.", methodName,
-                result.Category.Count);
+                result.Categories.Count);
         }
         catch (Exception e)
         {

@@ -12,6 +12,7 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.2"/>
         <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="8.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,4 +22,22 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Remove="Protos\series.proto"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\..\Series\Series.Grpc\Protos\series.proto">
+            <GrpcServices>Client</GrpcServices>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
+            <GrpcServices>Client</GrpcServices>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+    
 </Project>

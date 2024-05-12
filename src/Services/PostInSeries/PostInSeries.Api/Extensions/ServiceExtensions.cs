@@ -1,12 +1,18 @@
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Post.Grpc.Protos;
+using PostInSeries.Api.GrpcServices;
+using PostInSeries.Api.GrpcServices.Interfaces;
 using PostInSeries.Api.Repositories;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services;
 using PostInSeries.Api.Services.Interfaces;
+using Series.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -45,16 +51,13 @@ public static class ServiceExtensions
 
         // Configure health checks
         services.ConfigureHealthChecks();
+        
+        // Configures and registers grpc services
+        services.ConfigureGrpcServices();
     }
 
     private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
     {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
-                                   $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddSingleton(databaseSettings);
-
         var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
                             ?? throw new ArgumentNullException(
                                 $"{nameof(CacheSettings)} is not configured properly");
@@ -103,7 +106,8 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<IPostInSeriesRepository, PostInSeriesRepository>()
-            .AddScoped<IPostInSeriesService, PostInSeriesService>();
+            .AddScoped<IPostInSeriesService, PostInSeriesService>()
+            .AddScoped<ISerializeService, SerializeService>();
     }
 
     private static void ConfigureOtherServices(this IServiceCollection services)
@@ -122,5 +126,22 @@ public static class ServiceExtensions
             .AddRedis(cacheSettings.ConnectionString,
                 "Redis Health",
                 HealthStatus.Degraded);
+    }
+
+    private static void ConfigureGrpcServices(this IServiceCollection services)
+    {
+        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
+                           throw new ArgumentNullException(
+                               $"{nameof(GrpcSettings)} is not configured properly");
+
+        services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostUrl));
+        
+        services.AddScoped<IPostGrpcService, PostGrpcService>();
+
+        services.AddGrpcClient<SeriesProtoService.SeriesProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.SeriesUrl));
+
+        services.AddScoped<ISeriesGrpcService, SeriesGrpcService>();
     }
 }

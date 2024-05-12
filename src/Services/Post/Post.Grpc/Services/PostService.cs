@@ -32,4 +32,40 @@ public class PostService(IPostRepository postRepository, ILogger logger) : PostP
 
         return result;
     }
+
+    public override async Task<GetPostsByIdsResponse> GetPostsByIds(GetPostsByIdsRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetPostsByIds);
+        
+        var result = new GetPostsByIdsResponse();
+        
+        try
+        {
+            var postIds = request.Ids.Select(Guid.Parse).ToArray();
+            
+            logger.Information("{MethodName} - Beginning to retrieve posts for IDs: {PostIds}", methodName,
+                postIds);
+
+            var posts = await postRepository.GetPostsByIds(postIds);
+            
+            foreach (var post in posts)
+            {
+                result.Posts.Add(new PostModel
+                {
+                    Id = post.Id.ToString(),
+                    Name = post.Name,
+                    Slug = post.Slug
+                });
+            }
+            
+            logger.Information("{MethodName} - Successfully retrieved {Count} posts.", methodName,
+                result.Posts.Count);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+        }
+
+        return result;
+    }
 }

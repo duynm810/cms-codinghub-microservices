@@ -27,6 +27,7 @@ public class SeriesService(ISeriesRepository seriesRepository, ILogger logger)
             {
                 Id = series.Id.ToString(),
                 Name = series.Name,
+                Slug = series.Slug
             };
 
             logger.Information(

@@ -1,3 +1,4 @@
+using Logging;
 using PostInSeries.Api.Extensions;
 using Serilog;
 using Shared.Constants;
@@ -11,6 +12,9 @@ Log.Information("Starting up {ApplicationName}", builder.Environment.Application
 
 try
 {
+    // Configure Serilog as the logging provider
+    builder.Host.UseSerilog(Serilogger.Configure);
+
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 

@@ -24,4 +24,10 @@ public static class ErrorMessageConsts
     {
         public const string SeriesNotFound = "Series not found";
     }
+
+    public static class PostInSeries
+    {
+        public const string PostIdsNotFound = "Post Ids not found";
+        public const string PostNotFoundInSeries = "No posts found in this series";
+    }
 }
