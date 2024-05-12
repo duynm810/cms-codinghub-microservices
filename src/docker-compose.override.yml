@@ -26,6 +26,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
   
+  #seriesdb: sqlserver
   seriesdb:
     container_name: seriesdb
     environment:
@@ -36,6 +37,13 @@ services:
     restart: always
     ports:
       - "1435:1433"
+  
+  #postinseriesdb: redis
+  postinseriesdb:
+    container_name: postinseriesdb
+    restart: always
+    ports:
+      - "6379:6379"
   
   ##infrastructure section
   rabbitmq:

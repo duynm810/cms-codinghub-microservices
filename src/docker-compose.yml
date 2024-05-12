@@ -9,6 +9,9 @@ services:
   
   seriesdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    
+  postinseriesdb:
+    image: redis:alpine
   
   ##infrastructure section
   rabbitmq:
