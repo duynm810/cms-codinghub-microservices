@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option csharp_namespace = "Series.Grpc.Protos";
+
+service SeriesProtoService {
+  rpc GetSeriesById(GetSeriesByIdRequest) returns (SeriesModel);
+}
+
+message GetSeriesByIdRequest {
+  string id = 1;
+}
+
+message SeriesModel {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+}

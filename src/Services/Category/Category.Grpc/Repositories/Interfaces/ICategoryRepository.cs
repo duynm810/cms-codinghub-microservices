@@ -8,5 +8,5 @@ public interface ICategoryRepository : IRepositoryQueryBase<CategoryBase, long, 
 {
     Task<CategoryBase?> GetCategoryById(long id);
 
-    Task<IEnumerable<CategoryBase>> GetCategoryByIds(long[] ids);
+    Task<IEnumerable<CategoryBase>> GetCategoriesByIds(long[] ids);
 }

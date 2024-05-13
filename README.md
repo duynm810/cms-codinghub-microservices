@@ -78,13 +78,21 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --buil
 ## Application URLs - DEVELOPMENT Environment:
 
 - Category API: http://localhost:5002/swagger/index.html
-
+- Category GRPC: http://localhost:5003/swagger/index.html
+- Post GRPC: http://localhost:5004/swagger/index.html
+- Post API: http://localhost:5005/swagger/index.html
+- Series API: http://localhost:5006/swagger/index.html
+- Series GRPC: http://localhost:5007/swagger/index.html
 ---
 
 ## Application URLs - LOCAL Environment (Docker Container):
 
 - Category API: http://localhost:6002/swagger/index.html
-
+- Category GRPC: http://localhost:6003/swagger/index.html
+- Post GRPC: http://localhost:6004/swagger/index.html
+- Post API: http://localhost:6005/swagger/index.html
+- Series API: http://localhost:6006/swagger/index.html
+- Series GRPC: http://localhost:6007/swagger/index.html
 ---
 
 ## Docker Application URLs - LOCAL Environment (Docker Container):

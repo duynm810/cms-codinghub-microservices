@@ -4,6 +4,13 @@ option csharp_namespace = "Post.Grpc.Protos";
 
 service PostProtoService {
   rpc HasPostsInCategory(HasPostsInCategoryRequest) returns (HasPostsInCategoryResponse);
+  rpc GetPostsByIds(GetPostsByIdsRequest) returns (GetPostsByIdsResponse);
+}
+
+message PostModel {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
 }
 
 message HasPostsInCategoryRequest {
@@ -12,4 +19,19 @@ message HasPostsInCategoryRequest {
 
 message HasPostsInCategoryResponse {
   bool exists = 1;
+}
+
+message GetPostsByIdsRequest {
+  repeated string ids = 1;
+}
+
+message GetPostsByIdsResponse {
+  repeated PostModel posts = 1;
+}
+
+enum PostStatusEnum {
+  Draft = 0;
+  WaitingForApproval = 1;
+  Rejected = 2;
+  Published = 3;
 }

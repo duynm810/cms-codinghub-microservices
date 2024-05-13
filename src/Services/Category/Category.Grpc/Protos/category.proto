@@ -7,6 +7,12 @@ service CategoryProtoService {
   rpc GetCategoriesByIds(GetCategoriesByIdsRequest) returns (GetCategoriesByIdsResponse);
 }
 
+message CategoryModel {
+  int64 id = 1;
+  string name = 2;
+  string slug = 3;
+}
+
 message GetCategoryByIdRequest {
   int64 id = 1;
 }
@@ -15,12 +21,6 @@ message GetCategoriesByIdsRequest {
   repeated int64 ids = 1;
 }
 
-message CategoryModel {
-  int64 id = 1;
-  string name = 2;
-  string slug = 3;
-}
-
 message GetCategoriesByIdsResponse {
-  repeated CategoryModel category = 1;
+  repeated CategoryModel categories = 1;
 }

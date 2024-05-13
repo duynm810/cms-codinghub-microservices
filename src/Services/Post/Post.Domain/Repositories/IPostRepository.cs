@@ -28,5 +28,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<bool> HasPostsInCategory(long categoryId);
 
+    Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
+
     #endregion
 }

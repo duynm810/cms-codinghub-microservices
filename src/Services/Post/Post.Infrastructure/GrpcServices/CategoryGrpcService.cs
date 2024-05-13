@@ -40,7 +40,7 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             if (result != null)
             {
-                return result.Category.Select(c => new CategoryDto
+                return result.Categories.Select(c => new CategoryDto
                 {
                     Id = c.Id,
                     Name = c.Name,
