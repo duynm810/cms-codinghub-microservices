@@ -25,8 +25,6 @@ public static class ApplicationExtensions
         // Enables routing in the application.
         app.UseRouting();
 
-        //app.UseHttpsRedirection();
-
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapHealthChecks("/hc", new HealthCheckOptions()

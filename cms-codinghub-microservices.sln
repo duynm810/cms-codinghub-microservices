@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\BuildingBlock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\BuildingBlocks\Logging\Logging.csproj", "{838E15ED-0DA6-466E-BE26-F36CC20EDB31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot", "src\ApiGateways\Ocelot\Ocelot.csproj", "{28C05027-E1C1-4718-AE4F-325366B70325}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Gw", "src\ApiGateways\Ocelot.Gw\Ocelot.Gw.csproj", "{28C05027-E1C1-4718-AE4F-325366B70325}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.Api", "src\Services\Category\Category.Api\Category.Api.csproj", "{33C9B90D-9514-4196-B13C-7C4B5C4BC527}"
 EndProject
