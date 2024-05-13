@@ -68,6 +68,12 @@ services:
     build:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
+      
+  apigw.ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/Ocelot.Gw/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}

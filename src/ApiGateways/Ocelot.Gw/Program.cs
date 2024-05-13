@@ -1,10 +1,12 @@
+using Infrastructure.Middlewares;
 using Logging;
-using PostInSeries.Api.Extensions;
+using Ocelot.Gw.Extensions;
+using Ocelot.Middleware;
 using Serilog;
-using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
+
 
 // Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
@@ -18,31 +20,41 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Add infrastructure services like database contexts and repositories
     builder.Services.AddInfrastructureServices(configuration);
 
     var app = builder.Build();
-    
+
     if (app.Environment.IsProduction())
     {
         app.UseHttpsRedirection();
     }
 
-    // Set up middleware and request handling pipeline
-    app.ConfigurePipeline();
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
+        $"{builder.Environment.ApplicationName} v1"));
+
+    app.UseCors("CorsPolicy");
+
+    app.UseMiddleware<ErrorWrappingMiddleware>();
+
+    app.UseAuthentication();
+    
+    app.UseRouting();
+    
+    app.UseAuthorization();
+
+    app.MapGet("/", context =>
+    {
+        context.Response.Redirect("swagger/index.html");
+        return Task.CompletedTask;
+    });
+
+    await app.UseOcelot();
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception e)
 {
-    var type = ex.GetType().Name;
-    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
-
-    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
-}
-finally
-{
-    // Ensure proper closure of application and flush logs
-    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
-    Log.CloseAndFlush();
+    Console.WriteLine(e);
+    throw;
 }

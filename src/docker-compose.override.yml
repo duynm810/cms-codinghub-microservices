@@ -181,6 +181,21 @@ services:
       - "6008:80"
     restart: always
   
+  apigw.ocelot:
+    container_name: apigw.ocelot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+      - GlobalConfiguration:BaseUrl=http://apigw.ocelot
+    depends_on:
+      - category.api
+      - post.api
+      - series.api
+      - postinseries.api
+    ports:
+      - "6001:80"
+    restart: always
+  
   healthcheck:
     container_name: healthcheck
     environment:
