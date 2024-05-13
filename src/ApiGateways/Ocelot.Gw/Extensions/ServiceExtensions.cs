@@ -16,14 +16,11 @@ public static class ServiceExtensions
         // Configures and registers ocelot services
         services.ConfigureOcelot(configuration);
 
-        // Configures and registers ocelot swagger (using instead UI)
-        services.ConfigureOcelotSwaggerServices(configuration);
-        
         // Configures and registers Cors Origin (CORS) services
         services.ConfigureCorsOrigin(configuration);
         
         // Configures swagger services
-        //services.ConfigureSwaggerServices();
+        services.ConfigureSwaggerServices();
         
         // Configures and registers essential services
         services.ConfigureOtherServices();
@@ -60,10 +57,5 @@ public static class ServiceExtensions
     private static void ConfigureSwaggerServices(this IServiceCollection services)
     {
         services.AddSwaggerGen();
-    }
-
-    private static void ConfigureOcelotSwaggerServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddSwaggerForOcelot(configuration, x => { x.GenerateDocsForGatewayItSelf = false; });
     }
 }

@@ -21,12 +21,20 @@ public class ApiResult<T> : BaseApiResult
     }
 
     // Static helper method for failure
-    public void Failure(int statusCode, List<string> messages, string title = "Error")
+    public void Failure(int statusCode, List<string> messages, string title = "Failed")
     {
         IsSuccess = false;
         StatusCode = statusCode;
         Messages = messages;
         Data = default;
+        Title = title;
+    }
+    
+    public void Error(string message, string title = "Error")
+    {
+        IsSuccess = false;
+        Messages = [message];
+        Data = default(T);
         Title = title;
     }
 }

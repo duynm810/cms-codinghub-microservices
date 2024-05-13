@@ -1,3 +1,4 @@
+using Infrastructure.Middlewares;
 using Logging;
 using Ocelot.Gw.Extensions;
 using Ocelot.Middleware;
@@ -15,22 +16,41 @@ try
 {
     // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
-    
+
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     builder.Services.AddInfrastructureServices(configuration);
-    
+
     var app = builder.Build();
 
     if (app.Environment.IsProduction())
     {
         app.UseHttpsRedirection();
     }
+
+    app.UseSwagger();
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
+        $"{builder.Environment.ApplicationName} v1"));
+
+    app.UseCors("CorsPolicy");
+
+    app.UseMiddleware<ErrorWrappingMiddleware>();
+
+    app.UseAuthentication();
     
-    // Set up middleware and request handling pipeline
-    app.ConfigurePipeline();
+    app.UseRouting();
     
+    app.UseAuthorization();
+
+    app.MapGet("/", context =>
+    {
+        context.Response.Redirect("swagger/index.html");
+        return Task.CompletedTask;
+    });
+
+    await app.UseOcelot();
+
     app.Run();
 }
 catch (Exception e)

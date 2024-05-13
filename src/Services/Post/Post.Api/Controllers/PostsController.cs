@@ -63,7 +63,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
     [HttpGet("paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetPostsPaging(
@@ -74,6 +74,4 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
-    
 }
