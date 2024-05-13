@@ -38,4 +38,19 @@ public class PagedList<T> : List<T>
 
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
+
+    public static PagedList<T> ToPagedList(IEnumerable<T> source, int pageNumber, int pageSize, Func<T, object> orderBy)
+    {
+        var sourceList = source.ToList();
+
+        var ordered = sourceList.OrderBy(orderBy).ToList();
+
+        var count = ordered.Count;
+        var items = ordered
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToList();
+
+        return new PagedList<T>(items, count, pageNumber, pageSize);
+    }
 }

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 using PostInSeries.Api.Services.Interfaces;
 
@@ -21,10 +22,18 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
-    [HttpGet("paging")]
-    public async Task<IActionResult> GetPostInSeriesPaging(Guid seriesId)
+    [HttpGet]
+    public async Task<IActionResult> GetPostInSeries(Guid seriesId)
     {
-        var result = await postInSeriesService.GetPostsInSeriesPaging(seriesId);
+        var result = await postInSeriesService.GetPostsInSeries(seriesId);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+
+    [HttpGet("paging")]
+    public async Task<IActionResult> GetPostInSeriesPaging(Guid seriesId, [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var result = await postInSeriesService.GetPostsInSeriesPaging(seriesId, pageNumber, pageSize);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }
