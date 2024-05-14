@@ -1,3 +1,5 @@
+using Ocelot.DependencyInjection;
+using Serilog;
 
 namespace Ocelot.Gw.Extensions;
 
@@ -11,13 +13,38 @@ public static class ConfigureHostExtensions
     /// <returns>The same WebApplicationBuilder instance for chaining.</returns>
     public static void AddAppConfiguration(this WebApplicationBuilder builder)
     {
-        // Add configuration from a JSON file named 'appsettings.json'. This file is mandatory (optional: false).
-        builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true,
-                reloadOnChange: true);
+        // Add base path for configuration
+        builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+            .AddEnvironmentVariables();
+
+        // Calculate the correct path to the Swagger endpoints configuration based on the environment
+        var swaggerEndpointsConfigPath = GetSwaggerEndpointsConfigPath(builder.Environment.EnvironmentName);
+
+        // Validate if the Swagger endpoints configuration file exists
+        ValidateSwaggerEndpointsConfigPath(swaggerEndpointsConfigPath);
+
+        // Add Swagger endpoints configuration file
+        builder.Configuration.AddJsonFile(swaggerEndpointsConfigPath, optional: false, reloadOnChange: true);
+
+        // Add Ocelot configuration
+        builder.Configuration.AddOcelot("Routes", builder.Environment);
+    }
+
+    private static string GetSwaggerEndpointsConfigPath(string environmentName)
+    {
+        return Path.Combine("Routes", environmentName, $"ocelot.SwaggerEndPoints.{environmentName}.json");
+    }
+
+    private static void ValidateSwaggerEndpointsConfigPath(string swaggerEndpointsConfigPath)
+    {
+        if (File.Exists(swaggerEndpointsConfigPath))
+        {
+            return;
+        }
         
-        // Add configuration from environment variables.
-        // This includes variables set in the system and potentially, specific deployment settings.
-        builder.Configuration.AddEnvironmentVariables();
+        Log.Fatal("Swagger endpoints configuration file '{FileName}' not found.", swaggerEndpointsConfigPath);
+        throw new FileNotFoundException($"Configuration file '{swaggerEndpointsConfigPath}' not found.");
     }
 }
