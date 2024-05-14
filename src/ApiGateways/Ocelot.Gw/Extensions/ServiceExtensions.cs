@@ -13,6 +13,17 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Configure Ocelot services
+        services.ConfigureOcelot(configuration);
+
+        // Configure Ocelot with Swagger support
+        services.ConfigureOcelotSwaggerServices(configuration);
+
+        // Configure CORS services
+        services.ConfigureCorsServices(configuration);
+
+        // Configure other necessary services
+        services.ConfigureOtherServices();
     }
 
     private static void ConfigureOcelot(this IServiceCollection services, IConfiguration configuration)
@@ -22,9 +33,15 @@ public static class ServiceExtensions
             .AddCacheManager(x => x.WithDictionaryHandle());
     }
 
-    private static void ConfigureCorsOrigin(this IServiceCollection services, IConfiguration configuration)
+    private static void ConfigureOcelotSwaggerServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSwaggerForOcelot(configuration); // Add this line to register SwaggerForOcelot services
+    }
+
+    private static void ConfigureCorsServices(this IServiceCollection services, IConfiguration configuration)
     {
         var origins = configuration["AllowOrigins"];
+
         services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", buider =>
@@ -41,15 +58,6 @@ public static class ServiceExtensions
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
-    }
-
-    private static void ConfigureSwaggerServices(this IServiceCollection services)
-    {
         services.AddSwaggerGen();
-    }
-
-    private static void ConfigureOcelotWithSwagger(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddSwaggerForOcelot(configuration);
     }
 }
