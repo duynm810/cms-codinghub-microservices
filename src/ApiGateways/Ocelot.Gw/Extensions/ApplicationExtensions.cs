@@ -20,7 +20,7 @@ public static class ApplicationExtensions
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
+        
         app.UseSwaggerForOcelotUI(options =>
         {
             options.PathToSwaggerGenerator = "/swagger/docs";
