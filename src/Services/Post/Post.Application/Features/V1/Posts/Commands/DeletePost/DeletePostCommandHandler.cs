@@ -14,12 +14,16 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ILogger lo
     public async Task<ApiResult<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
+        const string methodName = nameof(Handle);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Deleting post with ID: {PostId}", methodName, request.Id);
+
             var post = await postRepository.GetPostById(request.Id);
             if (post == null)
             {
+                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
                 result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -27,6 +31,8 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ILogger lo
 
             await postRepository.DeletePost(post);
             result.Success(true);
+            
+            logger.Information("END {MethodName} - Post with ID {PostId} deleted successfully", methodName, request.Id);
         }
         catch (Exception e)
         {

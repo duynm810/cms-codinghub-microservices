@@ -39,7 +39,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            logger.Error(e, "{MethodName}. Error occurred while getting category by ID: {CategoryId}. Message: {ErrorMessage}", methodName, request.Id, e.Message);
             return null;
         }
     }
@@ -75,7 +75,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e.Message);
+            logger.Error(e, "{MethodName}. Error occurred while getting categories by IDs: {CategoryIds}. Message: {ErrorMessage}", methodName, request.Ids, e.Message);
         }
 
         return result;
