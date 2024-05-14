@@ -1,6 +1,6 @@
 namespace Shared.Constants;
 
-public static class SystemConsts
+public static class SwaggerConsts
 {
     public const string CategoryApi = "Category.Api";
     public const string PostApi = "Post.Api";

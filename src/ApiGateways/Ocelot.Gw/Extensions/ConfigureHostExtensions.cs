@@ -1,3 +1,4 @@
+
 namespace Ocelot.Gw.Extensions;
 
 public static class ConfigureHostExtensions
@@ -13,8 +14,7 @@ public static class ConfigureHostExtensions
         // Add configuration from a JSON file named 'appsettings.json'. This file is mandatory (optional: false).
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true,
-                reloadOnChange: true)
-            .AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true);
+                reloadOnChange: true);
 
         // Add configuration from environment variables.
         // This includes variables set in the system and potentially, specific deployment settings.

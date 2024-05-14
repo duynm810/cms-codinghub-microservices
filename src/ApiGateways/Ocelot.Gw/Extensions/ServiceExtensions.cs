@@ -13,17 +13,6 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configures and registers ocelot services
-        services.ConfigureOcelot(configuration);
-
-        // Configures and registers Cors Origin (CORS) services
-        services.ConfigureCorsOrigin(configuration);
-        
-        // Configures swagger services
-        services.ConfigureSwaggerServices();
-        
-        // Configures and registers essential services
-        services.ConfigureOtherServices();
     }
 
     private static void ConfigureOcelot(this IServiceCollection services, IConfiguration configuration)
@@ -57,5 +46,10 @@ public static class ServiceExtensions
     private static void ConfigureSwaggerServices(this IServiceCollection services)
     {
         services.AddSwaggerGen();
+    }
+
+    private static void ConfigureOcelotWithSwagger(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddSwaggerForOcelot(configuration);
     }
 }

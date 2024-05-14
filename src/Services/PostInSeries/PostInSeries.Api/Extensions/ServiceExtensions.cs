@@ -84,10 +84,10 @@ public static class ServiceExtensions
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc(SystemConsts.PostInSeriesApi, new Microsoft.OpenApi.Models.OpenApiInfo
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Version = "v1",
-                Title = "Post In Series Api for Administrators",
+                Title = $"{SwaggerConsts.PostInSeriesApi} for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
