@@ -15,6 +15,38 @@ dotnet tool update --global dotnet-ef
 
 ---
 
+## How to run the project
+
+- Run command for build project
+
+```Powershell
+dotnet build
+```
+
+Go to folder contain file `docker-compose`
+
+1. Using docker-compose
+
+- **RUN**
+
+```Powershell (Only run)
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
+```
+
+- **BUILD and RE-RUN**
+
+```Powershell (Build and run)
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build --remove-orphans
+```
+
+- **BUILD and RE-RUN IMAGE ONLY**
+
+```Powershell (Build and run)
+docker-compose up -d --build [service-name]
+```
+
+---
+
 ## Connection string (database)
 
 - Category API (MySQL)
@@ -45,32 +77,6 @@ dotnet ef database update
 
 ```Powershell
  dotnet ef database update --project Post.Infrastructure --startup-project Post.Api
-```
-
----
-
-## How to run the project
-
-- Run command for build project
-
-```Powershell
-dotnet build
-```
-
-Go to folder contain file `docker-compose`
-
-1. Using docker-compose
-
-- **RUN**
-
-```Powershell (Only run)
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
-```
-
-- **BUILD and RE-RUN**
-
-```Powershell (Build and run)
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build --remove-orphans
 ```
 
 ---

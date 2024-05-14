@@ -21,4 +21,5 @@ RUN dotnet publish "Ocelot.Gw.csproj" -c Release -o /app/publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+COPY ["ApiGateways/Ocelot.Gw/Routes", "./Routes"]
 ENTRYPOINT ["dotnet", "Ocelot.Gw.dll"]

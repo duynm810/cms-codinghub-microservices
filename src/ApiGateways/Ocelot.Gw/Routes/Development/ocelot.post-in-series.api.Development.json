@@ -1,0 +1,36 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/post-in-series",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/postinseries",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5008
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/postinseries/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5008
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    }
+  ]
+}

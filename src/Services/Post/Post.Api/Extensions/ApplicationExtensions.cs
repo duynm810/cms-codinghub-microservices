@@ -17,7 +17,7 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = "Post Swagger UI";
-            c.SwaggerEndpoint($"{SystemConsts.PostApi}/swagger.json", SystemConsts.PostApi);
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.PostApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });

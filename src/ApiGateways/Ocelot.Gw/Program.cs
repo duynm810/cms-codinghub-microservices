@@ -1,12 +1,19 @@
-using Infrastructure.Middlewares;
 using Logging;
+using MMLib.SwaggerForOcelot.DependencyInjection;
+using Ocelot.Cache.CacheManager;
+using Ocelot.DependencyInjection;
+using Ocelot.Gw.Configs;
 using Ocelot.Gw.Extensions;
 using Ocelot.Middleware;
+using Ocelot.Provider.Polly;
 using Serilog;
+using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
+var routes = builder.Environment.EnvironmentName == "Development" ? "Routes/Development" : "Routes/Local";
+var origins = configuration["AllowOrigins"];
 
 // Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
@@ -20,7 +27,45 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    builder.Services.AddInfrastructureServices(configuration);
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("CorsPolicy", buider =>
+        {
+            if (origins != null)
+                buider.WithOrigins(origins)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+        });
+    });
+    
+    builder.Services.AddSwaggerForOcelot(configuration); // Add this line to register SwaggerForOcelot services
+
+    configuration.AddOcelotWithSwaggerSupport(options => { options.Folder = routes; });
+
+    builder.Services.AddOcelot(configuration)
+        .AddPolly()
+        .AddCacheManager(x => x.WithDictionaryHandle());
+    
+    // Calculate the correct path to the Swagger endpoints configuration based on the environment
+    var swaggerEndpointsConfigPath = Path.Combine("Routes", builder.Environment.EnvironmentName, $"ocelot.SwaggerEndPoints.{builder.Environment.EnvironmentName}.json");
+
+    // Check if the file exists at the specified path and log an error if it does not
+    if (!File.Exists(swaggerEndpointsConfigPath))
+    {
+        Log.Fatal("Swagger endpoints configuration file '{FileName}' not found.", swaggerEndpointsConfigPath);
+        throw new FileNotFoundException($"Configuration file '{swaggerEndpointsConfigPath}' not found.");
+    }
+
+    builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
+        .AddJsonFile(swaggerEndpointsConfigPath, optional: false, reloadOnChange: true)
+        .AddOcelot("Routes", builder.Environment)
+        .AddEnvironmentVariables();
+
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+
+    // Swagger for ocelot
+    builder.Services.AddSwaggerGen();
 
     var app = builder.Build();
 
@@ -29,32 +74,36 @@ try
         app.UseHttpsRedirection();
     }
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json",
-        $"{builder.Environment.ApplicationName} v1"));
+    app.UseRouting();
 
     app.UseCors("CorsPolicy");
 
-    app.UseMiddleware<ErrorWrappingMiddleware>();
+    app.UseSwagger();
 
-    app.UseAuthentication();
-    
-    app.UseRouting();
-    
+    app.UseHttpsRedirection();
+
     app.UseAuthorization();
 
-    app.MapGet("/", context =>
+    app.UseSwaggerForOcelotUI(options =>
     {
-        context.Response.Redirect("swagger/index.html");
-        return Task.CompletedTask;
-    });
+        options.PathToSwaggerGenerator = "/swagger/docs";
+        options.ReConfigureUpstreamSwaggerJson = AlterUpstream.AlterUpstreamSwaggerJson;
+    }).UseOcelot().Wait();
 
-    await app.UseOcelot();
+    app.MapControllers();
 
     app.Run();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    Console.WriteLine(e);
-    throw;
+    var type = ex.GetType().Name;
+    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
+
+    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
+}
+finally
+{
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
+    Log.CloseAndFlush();
 }
