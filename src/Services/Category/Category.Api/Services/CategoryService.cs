@@ -11,16 +11,24 @@ using ILogger = Serilog.ILogger;
 
 namespace Category.Api.Services;
 
-public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcService postGrpcService, IMapper mapper, ILogger logger) : ICategoryService
+public class CategoryService(
+    ICategoryRepository categoryRepository,
+    IPostGrpcService postGrpcService,
+    IMapper mapper,
+    ILogger logger) : ICategoryService
 {
     #region CRUD
 
     public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
+        const string methodName = nameof(CreateCategory);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Creating category with name: {CategoryName}", methodName,
+                model.Name);
+
             if (string.IsNullOrEmpty(model.Slug))
             {
                 model.Slug = Utils.ToUnSignString(model.Name);
@@ -31,6 +39,9 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
+
+            logger.Information("END {MethodName} - Category created successfully with ID {CategoryId}", methodName,
+                data.Id);
         }
         catch (Exception e)
         {
@@ -45,9 +56,12 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
     public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model)
     {
         var result = new ApiResult<CategoryDto>();
+        const string methodName = nameof(UpdateCategory);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Updating category with ID: {CategoryId}", methodName, id);
+
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
@@ -61,6 +75,8 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
 
             var data = mapper.Map<CategoryDto>(updateCategory);
             result.Success(data);
+
+            logger.Information("END {MethodName} - Category with ID {CategoryId} updated successfully", methodName, id);
         }
         catch (Exception e)
         {
@@ -75,9 +91,13 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
     public async Task<ApiResult<bool>> DeleteCategory(List<long> ids)
     {
         var result = new ApiResult<bool>();
+        const string methodName = nameof(DeleteCategory);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Deleting categories with IDs: {CategoryIds}", methodName,
+                string.Join(", ", ids));
+
             foreach (var id in ids)
             {
                 var category = await categoryRepository.GetCategoryById(id);
@@ -98,6 +118,9 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
 
                 await categoryRepository.DeleteCategory(category);
                 result.Success(true);
+
+                logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
+                    methodName, string.Join(", ", ids));
             }
         }
         catch (Exception e)
@@ -113,14 +136,20 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
     public async Task<ApiResult<IEnumerable<CategoryDto>>> GetCategories()
     {
         var result = new ApiResult<IEnumerable<CategoryDto>>();
+        const string methodName = nameof(GetCategories);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
+
             var categories = await categoryRepository.GetCategories();
             if (categories.IsNotNullOrEmpty())
             {
-                var data = mapper.Map<IEnumerable<CategoryDto>>(categories);
+                var data = mapper.Map<List<CategoryDto>>(categories);
                 result.Success(data);
+
+                logger.Information("END {MethodName} - Successfully retrieved {CategoryCount} categories", methodName,
+                    data.Count);
             }
         }
         catch (Exception e)
@@ -136,9 +165,12 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
     public async Task<ApiResult<CategoryDto>> GetCategoryById(long id)
     {
         var result = new ApiResult<CategoryDto>();
+        const string methodName = nameof(GetCategoryById);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Retrieving category with ID: {CategoryId}", methodName, id);
+
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
@@ -149,6 +181,9 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
+
+            logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId}", methodName,
+                id);
         }
         catch (Exception e)
         {
@@ -167,9 +202,14 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
     public async Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize)
     {
         var result = new ApiResult<PagedResponse<CategoryDto>>();
+        const string methodName = nameof(GetCategoriesPaging);
 
         try
         {
+            logger.Information(
+                "BEGIN {MethodName} - Retrieving categories for page {PageNumber} with page size {PageSize}",
+                methodName, pageNumber, pageSize);
+
             var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
             var data = new PagedResponse<CategoryDto>()
             {
@@ -178,6 +218,10 @@ public class CategoryService(ICategoryRepository categoryRepository, IPostGrpcSe
             };
 
             result.Success(data);
+
+            logger.Information(
+                "END {MethodName} - Successfully retrieved {CategoryCount} categories for page {PageNumber} with page size {PageSize}",
+                methodName, data.Items.Count, pageNumber, pageSize);
         }
         catch (Exception e)
         {

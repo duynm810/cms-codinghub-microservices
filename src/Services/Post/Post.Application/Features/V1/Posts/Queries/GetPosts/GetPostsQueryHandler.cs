@@ -10,16 +10,23 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 
-public class GetPostsQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
+public class GetPostsQueryHandler(
+    IPostRepository postRepository,
+    ICategoryGrpcService categoryGrpcService,
+    IMapper mapper,
+    ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
     public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
+        const string methodName = nameof(Handle);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
+
             var posts = await postRepository.GetPosts();
 
             var postBases = posts.ToList();
@@ -28,7 +35,7 @@ public class GetPostsQueryHandler(IPostRepository postRepository, ICategoryGrpcS
                 var categoryIds = postBases.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
-                
+
                 var data = mapper.Map<List<PostDto>>(posts);
                 foreach (var post in data)
                 {
@@ -39,6 +46,9 @@ public class GetPostsQueryHandler(IPostRepository postRepository, ICategoryGrpcS
                 }
 
                 result.Success(data);
+
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts", methodName,
+                    data.Count);
             }
         }
         catch (Exception e)
