@@ -15,7 +15,7 @@ public static class ConfigureHostExtensions
         builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true,
                 reloadOnChange: true);
-
+        
         // Add configuration from environment variables.
         // This includes variables set in the system and potentially, specific deployment settings.
         builder.Configuration.AddEnvironmentVariables();

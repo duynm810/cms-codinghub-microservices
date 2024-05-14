@@ -12,7 +12,7 @@ using Shared.Constants;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-const string routes = "Routes";
+var routes = builder.Environment.EnvironmentName == "Development" ? "Routes/Development" : "Routes/Local";
 var origins = configuration["AllowOrigins"];
 
 // Initialize console logging for application startup
@@ -45,9 +45,20 @@ try
     builder.Services.AddOcelot(configuration)
         .AddPolly()
         .AddCacheManager(x => x.WithDictionaryHandle());
+    
+    // Calculate the correct path to the Swagger endpoints configuration based on the environment
+    var swaggerEndpointsConfigPath = Path.Combine("Routes", builder.Environment.EnvironmentName, $"ocelot.SwaggerEndPoints.{builder.Environment.EnvironmentName}.json");
+
+    // Check if the file exists at the specified path and log an error if it does not
+    if (!File.Exists(swaggerEndpointsConfigPath))
+    {
+        Log.Fatal("Swagger endpoints configuration file '{FileName}' not found.", swaggerEndpointsConfigPath);
+        throw new FileNotFoundException($"Configuration file '{swaggerEndpointsConfigPath}' not found.");
+    }
 
     builder.Configuration.SetBasePath(Directory.GetCurrentDirectory())
-        .AddOcelot(routes, builder.Environment)
+        .AddJsonFile(swaggerEndpointsConfigPath, optional: false, reloadOnChange: true)
+        .AddOcelot("Routes", builder.Environment)
         .AddEnvironmentVariables();
 
     builder.Services.AddControllers();
