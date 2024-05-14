@@ -36,8 +36,6 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    app.MapControllers();
-
     app.Run();
 }
 catch (Exception ex)
