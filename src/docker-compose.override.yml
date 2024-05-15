@@ -98,6 +98,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
       - "GrpcSettings:PostUrl=http://post.grpc"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - categorydb
     ports:
@@ -110,6 +113,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - categorydb
     ports:
@@ -122,6 +128,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - postdb
     ports:
@@ -135,6 +144,9 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
       - "GrpcSettings:CategoryUrl=http://category.grpc"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - postdb
     ports:
@@ -147,6 +159,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - seriesdb
     ports:
@@ -159,6 +174,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - seriesdb
     ports:
@@ -173,6 +191,9 @@ services:
       - "CacheSettings:ConnectionString=postinseriesdb:6379"
       - "GrpcSettings:PostUrl=http://post.grpc"
       - "GrpcSettings:SeriesUrl=http://series.grpc"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - postinseriesdb
     ports:
@@ -184,7 +205,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - GlobalConfiguration:BaseUrl=http://apigw.ocelot
+      - "GlobalConfiguration:BaseUrl=http://apigw.ocelot"
+      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "ElasticConfiguration:Username=elastic"
+      - "ElasticConfiguration:Password=admin"
     depends_on:
       - category.api
       - post.api
