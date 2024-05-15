@@ -12,6 +12,9 @@ services:
     
   postinseriesdb:
     image: redis:alpine
+    
+  hangfiredb:
+    image: mongo
   
   ##infrastructure section
   rabbitmq:
@@ -21,10 +24,10 @@ services:
     image: portainer/portainer-ce
   
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.0.0
-  
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.4
+
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.0.0
+    image: docker.elastic.co/kibana/kibana:8.13.4
   
   ##microservices api section
   category.api:
@@ -68,6 +71,18 @@ services:
     build:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
+      
+  hangfire.api:
+    image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/BackgroundJobs/Hangfire.Api/Dockerfile
+      
+  apigw.ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/Ocelot.Gw/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
@@ -95,3 +110,5 @@ volumes:
     name: portainer_data
   elasticsearch_data:
     name: elasticsearch_data
+  hangfire_mongo_data:
+    name: hangfire_mongo_data

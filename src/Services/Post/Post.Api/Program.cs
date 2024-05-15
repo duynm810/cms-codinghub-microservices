@@ -44,16 +44,21 @@ try
     builder.Services.AddSwaggerGen(c =>
     {
         c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-        c.SwaggerDoc(SystemConsts.PostApi, new Microsoft.OpenApi.Models.OpenApiInfo
+        c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
         {
             Version = "v1",
-            Title = "Post Api for Administrators",
+            Title = $"{SwaggerConsts.PostApi} for Administrators",
             Description =
                 "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
         });
     });
 
     var app = builder.Build();
+    
+    if (app.Environment.IsProduction())
+    {
+        app.UseHttpsRedirection();
+    }
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();

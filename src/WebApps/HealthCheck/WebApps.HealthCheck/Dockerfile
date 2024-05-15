@@ -5,6 +5,8 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["WebApps/HealthCheck/WebApps.HealthCheck/WebApps.HealthCheck.csproj", "WebApps/HealthCheck/WebApps.HealthCheck/"]
+COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
+
 RUN dotnet restore "WebApps/HealthCheck/WebApps.HealthCheck/WebApps.HealthCheck.csproj"
 COPY . .
 WORKDIR "/src/WebApps/HealthCheck/WebApps.HealthCheck"

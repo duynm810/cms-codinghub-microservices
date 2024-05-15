@@ -52,7 +52,7 @@ public static class ServiceExtensions
 
         // Configure health checks
         services.ConfigureHealthChecks();
-        
+
         // Configures and registers grpc services
         services.ConfigureGrpcServices();
     }
@@ -64,10 +64,10 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
-        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
+
+        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>()
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
-        
+
         services.AddSingleton(grpcSettings);
     }
 
@@ -81,7 +81,7 @@ public static class ServiceExtensions
         services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
             ServerVersion.AutoDetect(builder.ConnectionString), e =>
             {
-                e.MigrationsAssembly(SystemConsts.CategoryApi);
+                e.MigrationsAssembly(SwaggerConsts.CategoryApi);
                 e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
             }));
     }
@@ -96,10 +96,10 @@ public static class ServiceExtensions
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc(SystemConsts.CategoryApi, new Microsoft.OpenApi.Models.OpenApiInfo
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
                 Version = "v1",
-                Title = "Category Api for Administrators",
+                Title = $"{SwaggerConsts.CategoryApi} for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
@@ -138,16 +138,16 @@ public static class ServiceExtensions
             name: "MySQL Health",
             failureStatus: HealthStatus.Degraded);
     }
-    
+
     private static void ConfigureGrpcServices(this IServiceCollection services)
     {
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(
                                $"{nameof(GrpcSettings)} is not configured properly");
-        
+
         services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostUrl));
-        
+
         services.AddScoped<IPostGrpcService, PostGrpcService>();
     }
 }

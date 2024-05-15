@@ -15,9 +15,12 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
     public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PagedResponse<PostDto>>();
+        const string methodName = nameof(Handle);
 
         try
         {
+            logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
+
             var posts = await postRepository.GetPostsPaging(request.PageNumber, request.PageSize);
 
             if (posts.Items != null && posts.Items.Count != 0)
@@ -42,6 +45,8 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                 };
                 
                 result.Success(data);
+                
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for page {PageNumber} with page size {PageSize}", methodName, postDtos.Count, request.PageNumber, request.PageSize);
             }
         }
         catch (Exception e)

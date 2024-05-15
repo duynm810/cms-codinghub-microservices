@@ -23,6 +23,11 @@ try
     builder.Services.AddInfrastructureServices(configuration);
 
     var app = builder.Build();
+    
+    if (app.Environment.IsProduction())
+    {
+        app.UseHttpsRedirection();
+    }
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();

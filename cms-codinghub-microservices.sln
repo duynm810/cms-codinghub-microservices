@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "src\BuildingBlock
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logging", "src\BuildingBlocks\Logging\Logging.csproj", "{838E15ED-0DA6-466E-BE26-F36CC20EDB31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot", "src\ApiGateways\Ocelot\Ocelot.csproj", "{28C05027-E1C1-4718-AE4F-325366B70325}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ocelot.Gw", "src\ApiGateways\Ocelot.Gw\Ocelot.Gw.csproj", "{28C05027-E1C1-4718-AE4F-325366B70325}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Category.Api", "src\Services\Category\Category.Api\Category.Api.csproj", "{33C9B90D-9514-4196-B13C-7C4B5C4BC527}"
 EndProject
@@ -63,6 +63,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostInSeries", "PostInSeries", "{FAEF5F04-8222-46AA-B36A-172EEA9CD58F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostInSeries.Api", "src\Services\PostInSeries\PostInSeries.Api\PostInSeries.Api.csproj", "{90A9DDB0-F649-42F2-AE22-B8717A56E95D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BackgroundJobs", "BackgroundJobs", "{771A503F-B4E8-418C-8A9E-AFE3D0AE9876}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hangfire.Api", "src\Services\BackgroundJobs\Hangfire.Api\Hangfire.Api.csproj", "{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,6 +101,8 @@ Global
 		{271CEBBF-0721-4B00-BD2C-B87D0F20A91C} = {D86D3046-98B5-4E43-866A-CFC7F37CF4CA}
 		{FAEF5F04-8222-46AA-B36A-172EEA9CD58F} = {AD0EC799-3DBF-41D8-8A16-41E96170CBA4}
 		{90A9DDB0-F649-42F2-AE22-B8717A56E95D} = {FAEF5F04-8222-46AA-B36A-172EEA9CD58F}
+		{771A503F-B4E8-418C-8A9E-AFE3D0AE9876} = {AD0EC799-3DBF-41D8-8A16-41E96170CBA4}
+		{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D} = {771A503F-B4E8-418C-8A9E-AFE3D0AE9876}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{6BE2F78C-CF10-4B5C-9099-FEFDAD14947F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -163,5 +169,9 @@ Global
 		{90A9DDB0-F649-42F2-AE22-B8717A56E95D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{90A9DDB0-F649-42F2-AE22-B8717A56E95D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{90A9DDB0-F649-42F2-AE22-B8717A56E95D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF19CD65-5AEA-4A04-BBB6-A3AD4E32063D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

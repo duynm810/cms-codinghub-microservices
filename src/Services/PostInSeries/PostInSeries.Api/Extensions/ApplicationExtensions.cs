@@ -17,15 +17,13 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = "Post In Series Swagger UI";
-            c.SwaggerEndpoint($"{SystemConsts.PostInSeriesApi}/swagger.json", SystemConsts.PostInSeriesApi);
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.PostInSeriesApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
 
         // Enables routing in the application.
         app.UseRouting();
-
-        //app.UseHttpsRedirection();
 
         app.UseEndpoints(endpoints =>
         {

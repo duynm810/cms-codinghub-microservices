@@ -15,14 +15,36 @@ dotnet tool update --global dotnet-ef
 
 ---
 
-## Connection string (database)
+## How to run the project
 
-- Category API (MySQL)
+- Run command for build project
 
 ```Powershell
-jdbc:mysql://localhost:3307/xxx?user=root&password=Passw0rd!
+dotnet build
 ```
-- **xxx: database name**
+
+Go to folder contain file `docker-compose`
+
+1. Using docker-compose
+
+- **RUN**
+
+```Powershell (Only run)
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
+```
+
+- **BUILD and RE-RUN**
+
+```Powershell (Build and run)
+docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build --remove-orphans
+```
+
+- **BUILD and RE-RUN IMAGE ONLY**
+
+```Powershell (Build and run)
+docker-compose up -d --build [service-name]
+```
+
 ---
 
 ## How to migration the project (Development)
@@ -49,32 +71,6 @@ dotnet ef database update
 
 ---
 
-## How to run the project
-
-- Run command for build project
-
-```Powershell
-dotnet build
-```
-
-Go to folder contain file `docker-compose`
-
-1. Using docker-compose
-
-- **RUN**
-
-```Powershell (Only run)
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --remove-orphans
-```
-
-- **BUILD and RE-RUN**
-
-```Powershell (Build and run)
-docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --build --remove-orphans
-```
-
----
-
 ## Application URLs - DEVELOPMENT Environment:
 
 - Category API: http://localhost:5002/swagger/index.html
@@ -83,6 +79,8 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --buil
 - Post API: http://localhost:5005/swagger/index.html
 - Series API: http://localhost:5006/swagger/index.html
 - Series GRPC: http://localhost:5007/swagger/index.html
+- Post In Series API: http://localhost:5008/swagger/index.html
+- Hangfire API: http://localhost:5009/swagger/index.html
 ---
 
 ## Application URLs - LOCAL Environment (Docker Container):
@@ -93,6 +91,8 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --buil
 - Post API: http://localhost:6005/swagger/index.html
 - Series API: http://localhost:6006/swagger/index.html
 - Series GRPC: http://localhost:6007/swagger/index.html
+- Post In Series API: http://localhost:6008/swagger/index.html
+- Hangfire API: http://localhost:6009/swagger/index.html
 ---
 
 ## Docker Application URLs - LOCAL Environment (Docker Container):
@@ -100,3 +100,4 @@ docker-compose -f docker-compose.yml -f docker-compose.override.yml up -d --buil
 - Portainer: http://localhost:9000 - username: admin ; pass: "Admin123456@"
 - Kibana: http://localhost:5601 - username: elastic ; pass: admin
 - RabbitMQ: http://localhost:15672 - username: guest ; pass: guest
+- HangfireUI: http://localhost:6009/jobs (docker)
