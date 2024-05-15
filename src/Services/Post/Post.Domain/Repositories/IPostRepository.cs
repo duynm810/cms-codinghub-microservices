@@ -30,5 +30,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
 
+    Task ApprovePost(PostBase post);
+    
     #endregion
 }

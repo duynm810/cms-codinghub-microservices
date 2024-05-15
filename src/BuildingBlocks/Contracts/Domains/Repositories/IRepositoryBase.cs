@@ -63,6 +63,8 @@ public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     Task EndTransactionAsync();
 
     Task RollbackTransactionAsync();
+    
+    IExecutionStrategy CreateExecutionStrategy();
 }
 
 public interface IRepositoryCommandBase<T, TK, TContext> : IRepositoryCommandBase<T, TK>
