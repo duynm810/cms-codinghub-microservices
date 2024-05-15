@@ -7,7 +7,7 @@
         {
           "Name": "Ocelot.Gw",
           "Version": "1.0",
-          "Url": "http://localhost:5001/swagger/v1/swagger.json"
+          "Url": "http://localhost:5020/swagger/v1/swagger.json"
         }
       ]
     },
