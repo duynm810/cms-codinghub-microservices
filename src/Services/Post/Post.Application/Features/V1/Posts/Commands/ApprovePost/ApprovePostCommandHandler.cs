@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
-using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.ScheduledJobs;
 using Shared.Enums;
 using Shared.Responses;
 using Shared.Utilities;
@@ -16,8 +14,6 @@ namespace Post.Application.Features.V1.Posts.Commands.ApprovePost;
 public class ApprovePostCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
-    IBackgroundJobHttpService backgroundJobHttpService,
-    IPostEmailTemplateService postEmailTemplateService,
     ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
