@@ -12,6 +12,9 @@ services:
     
   postinseriesdb:
     image: redis:alpine
+    
+  hangfiredb:
+    image: mongo
   
   ##infrastructure section
   rabbitmq:
@@ -69,6 +72,12 @@ services:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
       
+  hangfire.api:
+    image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/BackgroundJobs/Hangfire.Api/Dockerfile
+      
   apigw.ocelot:
     image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -101,3 +110,5 @@ volumes:
     name: portainer_data
   elasticsearch_data:
     name: elasticsearch_data
+  hangfire_mongo_data:
+    name: hangfire_mongo_data

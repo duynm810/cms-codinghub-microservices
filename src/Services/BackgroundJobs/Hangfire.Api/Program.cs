@@ -29,7 +29,7 @@ try
     }
 
     // Set up middleware and request handling pipeline
-    app.ConfigurePipeline();
+    app.ConfigurePipeline(configuration);
 
     app.Run();
 }

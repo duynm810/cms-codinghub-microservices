@@ -1,5 +1,11 @@
+using Contracts.Scheduled;
+using Contracts.Services.Interfaces;
+using Hangfire.Api.Services;
+using Hangfire.Api.Services.Interfaces;
 using Infrastructure.Configurations;
 using Infrastructure.Extensions;
+using Infrastructure.Scheduled;
+using Infrastructure.Services;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Shared.Configurations;
 using Shared.Constants;
@@ -18,16 +24,19 @@ public static class ServiceExtensions
     {
         // Extracts configuration settings from appsettings.json and registers them with the service collection
         services.ConfigureSettings(configuration);
+        
+        // Configures and registers hangfire services define into infrastructure
+        services.ConfigureHangfireServices();
 
-        // Configures and registers repository and services
-        services.ConfigureRepositoryServices();
+        // Configures and registers core services
+        services.ConfigureCoreServices();
 
         // Configures and registers essential services
         services.ConfigureOtherServices();
 
         // Configures swagger services
         services.ConfigureSwaggerServices();
-        
+
         // Configure health checks
         services.ConfigureHealthChecks();
     }
@@ -62,8 +71,11 @@ public static class ServiceExtensions
         });
     }
 
-    private static void ConfigureRepositoryServices(this IServiceCollection services)
+    private static void ConfigureCoreServices(this IServiceCollection services)
     {
+        services.AddTransient<IScheduledJobService, HangfireService>()
+            .AddScoped<ISmtpEmailService, SmtpEmailService>()
+            .AddScoped<IBackgroundJobService, BackgroundJobService>();
     }
 
     private static void ConfigureOtherServices(this IServiceCollection services)
