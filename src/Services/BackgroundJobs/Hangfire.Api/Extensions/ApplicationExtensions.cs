@@ -42,7 +42,6 @@ public static class ApplicationExtensions
         var configDashboard = configuration.GetSection("HangfireSettings:Dashboard").Get<DashboardOptions>()
                               ?? throw new ArgumentNullException(
                                   $"{nameof(HangfireSettings)} Dashboard is not configured properly");
-        ;
 
         var hangfireSettings = configuration.GetSection("HangfireSettings").Get<HangfireSettings>()
                                ?? throw new ArgumentNullException(

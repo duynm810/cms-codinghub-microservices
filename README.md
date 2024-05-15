@@ -47,16 +47,6 @@ docker-compose up -d --build [service-name]
 
 ---
 
-## Connection string (database)
-
-- Category API (MySQL)
-
-```Powershell
-jdbc:mysql://localhost:3307/xxx?user=root&password=Passw0rd!
-```
-- **xxx: database name**
----
-
 ## How to migration the project (Development)
 
 - Category API
@@ -89,6 +79,8 @@ dotnet ef database update
 - Post API: http://localhost:5005/swagger/index.html
 - Series API: http://localhost:5006/swagger/index.html
 - Series GRPC: http://localhost:5007/swagger/index.html
+- Post In Series API: http://localhost:5008/swagger/index.html
+- Hangfire API: http://localhost:5009/swagger/index.html
 ---
 
 ## Application URLs - LOCAL Environment (Docker Container):
@@ -99,6 +91,8 @@ dotnet ef database update
 - Post API: http://localhost:6005/swagger/index.html
 - Series API: http://localhost:6006/swagger/index.html
 - Series GRPC: http://localhost:6007/swagger/index.html
+- Post In Series API: http://localhost:6008/swagger/index.html
+- Hangfire API: http://localhost:6009/swagger/index.html
 ---
 
 ## Docker Application URLs - LOCAL Environment (Docker Container):
@@ -106,3 +100,4 @@ dotnet ef database update
 - Portainer: http://localhost:9000 - username: admin ; pass: "Admin123456@"
 - Kibana: http://localhost:5601 - username: elastic ; pass: admin
 - RabbitMQ: http://localhost:15672 - username: guest ; pass: guest
+- HangfireUI: http://localhost:6009/jobs (docker)
