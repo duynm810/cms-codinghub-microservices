@@ -105,7 +105,7 @@ services:
   category.api:
     container_name: category.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
       - "GrpcSettings:PostUrl=http://post.grpc"
@@ -119,7 +119,7 @@ services:
   category.grpc:
     container_name: category.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
@@ -132,7 +132,7 @@ services:
   post.grpc:
     container_name: post.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
@@ -145,7 +145,7 @@ services:
   post.api:
     container_name: post.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234"
       - "GrpcSettings:CategoryUrl=http://category.grpc"
@@ -159,7 +159,7 @@ services:
   series.api:
     container_name: series.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
@@ -172,7 +172,7 @@ services:
   series.grpc:
     container_name: series.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "DatabaseSettings:ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
@@ -185,7 +185,7 @@ services:
   postinseries.api:
     container_name: postinseries.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "CacheSettings:ConnectionString=postinseriesdb:6379"
       - "GrpcSettings:PostUrl=http://post.grpc"
@@ -200,7 +200,7 @@ services:
   hangfire.api:
     container_name: hangfire.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "HangfireSettings:Storage:ConnectionString=mongodb://admin:admin@hangfiredb/hangfire-webapi?authSource=admin"
     depends_on:
@@ -212,7 +212,7 @@ services:
   apigw.ocelot:
     container_name: apigw.ocelot
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - "GlobalConfiguration:BaseUrl=http://apigw.ocelot"
       - "ElasticConfiguration:Uri=http://elasticsearch:9200"
@@ -228,7 +228,7 @@ services:
   healthcheck:
     container_name: healthcheck
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
       - HealthChecksUI__HealthChecks__0__Name=Category API Health Check
       - HealthChecksUI__HealthChecks__0__Uri=http://category.api/hc
