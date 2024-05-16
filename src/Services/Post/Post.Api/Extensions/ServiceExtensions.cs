@@ -18,6 +18,11 @@ public static class ServiceExtensions
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
         
         services.AddSingleton(grpcSettings);
+        
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>() 
+                           ?? throw new ArgumentNullException($"{nameof(EventBusSettings)} is not configured properly");
+
+        services.AddSingleton(eventBusSetings);
     }
 
     public static void ConfigureHealthChecks(this IServiceCollection services)

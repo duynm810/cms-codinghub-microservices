@@ -1,3 +1,5 @@
+using EventBus.Events;
+using MassTransit;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -14,6 +16,7 @@ namespace Post.Application.Features.V1.Posts.Commands.ApprovePost;
 public class ApprovePostCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
+    IPublishEndpoint publishEndpoint,
     ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
@@ -53,6 +56,17 @@ public class ApprovePostCommandHandler(
 
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
+                
+                // Publish PostApprovedEvent event
+                var postApprovedEvent = new PostApprovedEvent
+                {
+                    PostId = post.Id,
+                    Name = post.Name,
+                    Content = post.Content,
+                    Description = post.Description
+                };
+
+                await publishEndpoint.Publish(postApprovedEvent, cancellationToken);
 
                 result.Success(true);
             }
@@ -69,4 +83,6 @@ public class ApprovePostCommandHandler(
 
         return result;
     }
+    
+    
 }

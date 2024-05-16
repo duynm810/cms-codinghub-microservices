@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
         <ProjectReference Include="..\Post.Infrastructure\Post.Infrastructure.csproj"/>
     </ItemGroup>
 

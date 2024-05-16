@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using Post.Api.Extensions;
 using Post.Application;
@@ -24,6 +25,9 @@ try
 
     // Add configure settings get in appsettings
     builder.Services.ConfigureSettings(configuration);
+    
+    // Add configure masstransit using rabbitmq message broker
+    builder.Services.ConfigureMassTransitWithRabbitMq();
 
     // Add health checks
     builder.Services.ConfigureHealthChecks();
