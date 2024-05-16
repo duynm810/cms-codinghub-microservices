@@ -27,6 +27,9 @@ public static class ServiceExtensions
         
         // Configures and registers hangfire services define into infrastructure
         services.ConfigureHangfireServices();
+        
+        // Add configure masstransit using rabbitmq message broker
+        services.ConfigureMassTransitWithRabbitMq();
 
         // Configures and registers core services
         services.ConfigureCoreServices();
@@ -54,6 +57,11 @@ public static class ServiceExtensions
                                     $"{nameof(SmtpEmailSettings)} is not configured properly");
 
         services.AddSingleton(smtpEmailSettings);
+        
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>() 
+                              ?? throw new ArgumentNullException($"{nameof(EventBusSettings)} is not configured properly");
+
+        services.AddSingleton(eventBusSetings);
     }
 
     private static void ConfigureSwaggerServices(this IServiceCollection services)
