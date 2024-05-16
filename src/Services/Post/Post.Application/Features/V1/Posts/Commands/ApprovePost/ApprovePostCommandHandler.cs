@@ -56,7 +56,7 @@ public class ApprovePostCommandHandler(
 
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
-                
+
                 // Publish PostApprovedEvent event
                 var postApprovedEvent = new PostApprovedEvent
                 {
@@ -83,6 +83,4 @@ public class ApprovePostCommandHandler(
 
         return result;
     }
-    
-    
 }
