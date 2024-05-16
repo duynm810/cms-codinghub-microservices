@@ -26,4 +26,10 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Templates\post-approved.html">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

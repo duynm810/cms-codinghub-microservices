@@ -15,6 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
       <ProjectReference Include="..\Post.Domain\Post.Domain.csproj" />
     </ItemGroup>
 

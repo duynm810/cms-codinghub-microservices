@@ -1,5 +1,7 @@
 using System.Reflection;
+using Contracts.Services.Interfaces;
 using FluentValidation;
+using Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Post.Application.Commons.Behaviours;
@@ -21,6 +23,9 @@ public static class ConfigureServices
 
         // Configures and registers pipeline (middleware)
         services.ConfigurePipelineBehaviours();
+        
+        // Configures infrastructure services in infrastructure class library
+        services.ConfigureInfrastructureServices();
     }
 
     private static void ConfigureAutoMapper(this IServiceCollection services)
@@ -43,5 +48,10 @@ public static class ConfigureServices
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+    }
+
+    private static void ConfigureInfrastructureServices(this IServiceCollection services)
+    {
+        services.AddSingleton<IEmailTemplateService, EmailTemplateService>();
     }
 }

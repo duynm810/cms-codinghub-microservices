@@ -6,12 +6,14 @@ using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Post.Domain.GrpcServices;
 using Post.Domain.Interfaces;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Post.Infrastructure.GrpcServices;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
+using Post.Infrastructure.Services;
 using Shared.Configurations;
 
 namespace Post.Infrastructure;
@@ -85,7 +87,8 @@ public static class ConfigureServices
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
-            .AddScoped<ICategoryGrpcService, CategoryGrpcService>();
+            .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
+            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>();
     }
     
     private static void ConfigureGrpcServices(this IServiceCollection services)
