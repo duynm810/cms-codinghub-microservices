@@ -110,6 +110,8 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
 
     public Task RollbackTransactionAsync() => _dbContext.Database.RollbackTransactionAsync();
 
+    public IExecutionStrategy CreateExecutionStrategy() => _dbContext.Database.CreateExecutionStrategy();
+
     public Task<int> SaveChangesAsync() => _unitOfWork.CommitAsync();
 
     #endregion

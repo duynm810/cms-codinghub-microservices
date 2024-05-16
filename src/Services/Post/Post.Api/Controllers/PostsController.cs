@@ -4,6 +4,7 @@ using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Post.Application.Commons.Models;
+using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Application.Features.V1.Posts.Commands.CreatePost;
 using Post.Application.Features.V1.Posts.Commands.DeletePost;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
@@ -71,6 +72,15 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         [FromQuery, Required] int pageSize = 10)
     {
         var query = new GetPostsPagingQuery(pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("approve/{id:guid}")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ApprovePost(Guid id)
+    {
+        var query = new ApprovePostCommand(id);
         var result = await mediator.Send(query);
         return Ok(result);
     }

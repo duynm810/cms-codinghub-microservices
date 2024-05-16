@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
+using Shared.Enums;
 using Shared.Responses;
 
 namespace Post.Infrastructure.Repositories;
@@ -65,6 +66,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     public async Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids)
     {
         return await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
+    }
+
+    public async Task ApprovePost(PostBase post)
+    {
+        post.Status = PostStatusEnum.Published;
+        await UpdateAsync(post);
     }
 
     #endregion
