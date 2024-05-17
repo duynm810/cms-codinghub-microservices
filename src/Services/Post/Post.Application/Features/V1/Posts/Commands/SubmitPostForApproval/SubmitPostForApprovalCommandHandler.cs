@@ -59,11 +59,14 @@ public class SubmitPostForApprovalCommandHandler(
 
                 try
                 {
-                    // Send email
+                    // Send email to author
+                    await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Name)
+                        .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {
-                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}", methodName, request.Id, emailEx);
+                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
+                        methodName, request.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;

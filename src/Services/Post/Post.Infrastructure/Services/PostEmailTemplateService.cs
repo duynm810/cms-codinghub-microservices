@@ -17,40 +17,55 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             .Replace("[description]", description)
             .Replace("[postUrl]", $"https://yourwebsite.com/posts/{postId}");
 
-        // Publish SendEmailEvent event
+        // Publish event
         var postApprovedEvent = new PostApprovedEvent
         {
             To = "cranneiffirixu-5288@yopmail.com", // Thay bằng địa chỉ email thật
             Subject = "Your post has been approved",
             EmailContent = emailContent,
-            EnqueueAt = DateTimeOffset.UtcNow // hoặc thời điểm bạn muốn enqueue
+            EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
         };
 
         await publishEndpoint.Publish(postApprovedEvent);
     }
 
-    public async Task SendPostSubmissionForApprovalEmail(Guid postId, string name, string? content, string? description)
+    public async Task SendPostSubmissionForApprovalEmail(Guid postId, string name)
     {
-        var emailTemplate = emailTemplateService.ReadEmailTemplate("post-approved");
+        var emailTemplate = emailTemplateService.ReadEmailTemplate("post-submitted");
 
-        var emailContent = emailTemplate.Replace("[name]", name)
-            .Replace("[content]", content)
-            .Replace("[description]", description)
+        var emailContent = emailTemplate
+            .Replace("[name]", name)
             .Replace("[postUrl]", $"https://yourwebsite.com/posts/{postId}");
 
-        // Publish SendEmailEvent event
-        var postSubmittedForApprovalEvent = new PostSubmittedForApprovalEvent()
+        // Publish event
+        var postSubmittedForApprovalEvent = new PostSubmittedForApprovalEvent
         {
             To = "cranneiffirixu-5288@yopmail.com", // Thay bằng địa chỉ email thật
-            Subject = "Your post has been approved",
+            Subject = "Your post has been approval",
             EmailContent = emailContent,
-            EnqueueAt = DateTimeOffset.UtcNow // hoặc thời điểm bạn muốn enqueue
+            EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
         };
 
         await publishEndpoint.Publish(postSubmittedForApprovalEvent);
     }
 
-    public async Task SendPostRejectionEmail(Guid postId, string name, string? reason, string? note)
+    public async Task SendPostRejectionEmail(string name, string? reason)
     {
+        var emailTemplate = emailTemplateService.ReadEmailTemplate("post-rejected");
+
+        var emailContent = emailTemplate
+            .Replace("[name]", name)
+            .Replace("[reason]", reason);
+
+        // Publish event
+        var postRejectedWithReasonEvent = new PostRejectedWithReasonEvent
+        {
+            To = "cranneiffirixu-5288@yopmail.com", // Thay bằng địa chỉ email thật
+            Subject = "Your post has been rejected",
+            EmailContent = emailContent,
+            EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
+        };
+
+        await publishEndpoint.Publish(postRejectedWithReasonEvent);
     }
 }

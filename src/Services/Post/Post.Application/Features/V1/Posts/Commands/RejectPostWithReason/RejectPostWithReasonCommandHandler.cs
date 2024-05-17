@@ -51,7 +51,7 @@ public class RejectPostWithReasonCommandHandler(
                     ToStatus = PostStatusEnum.Rejected,
                     UserId = Guid.NewGuid(), // TODO: Replace with current user ID
                     PostId = request.Id,
-                    Note = request.Note
+                    Note = request.Reason
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 
@@ -60,11 +60,14 @@ public class RejectPostWithReasonCommandHandler(
 
                 try
                 {
-                    // Send email
+                    // Send email to author
+                    await postEmailTemplateService.SendPostRejectionEmail(post.Name, postActivityLog.Note)
+                        .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {
-                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}", methodName, request.Id, emailEx);
+                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
+                        methodName, request.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;

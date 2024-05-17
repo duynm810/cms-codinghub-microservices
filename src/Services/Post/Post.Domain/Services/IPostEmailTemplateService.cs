@@ -4,7 +4,7 @@ public interface IPostEmailTemplateService
 {
     Task SendApprovedPostEmail(Guid postId, string name, string? content, string? description);
     
-    Task SendPostSubmissionForApprovalEmail(Guid postId, string name, string? content, string? description);
+    Task SendPostSubmissionForApprovalEmail(Guid postId, string name);
     
-    Task SendPostRejectionEmail(Guid postId, string name, string? reason, string? note);
+    Task SendPostRejectionEmail(string name, string? reason);
 }

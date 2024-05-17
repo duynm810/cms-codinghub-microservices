@@ -17,8 +17,7 @@ public class PostApprovedEventConsumer(IBackgroundJobService backgroundJobServic
 
         if (jobId != null)
         {
-            logger.Information("Processed PostApprovedEvent - Event Id: {EventId}, Job Id: {JobId}", emailEvent.Id,
-                jobId);
+            logger.Information("Processed PostApprovedEvent - Event Id: {EventId}, Job Id: {JobId}", emailEvent.Id, jobId);
         }
         else
         {
