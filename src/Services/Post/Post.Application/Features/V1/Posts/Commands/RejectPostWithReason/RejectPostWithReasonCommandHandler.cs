@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
@@ -10,15 +11,15 @@ using Shared.Enums;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Commands.ApprovePost;
+namespace Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
 
-public class ApprovePostCommandHandler(
+public class RejectPostWithReasonCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
-    ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
+    ILogger logger) : IRequestHandler<RejectPostWithReasonCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(RejectPostWithReasonCommand request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(Handle);
@@ -41,15 +42,16 @@ public class ApprovePostCommandHandler(
 
                 // TODO: Implement check current user id
 
-                await postRepository.ApprovePost(post);
+                await postRepository.RejectPostWithReason(post);
 
                 var postActivityLog = new PostActivityLog
                 {
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
-                    ToStatus = PostStatusEnum.Published,
+                    ToStatus = PostStatusEnum.Rejected,
                     UserId = Guid.NewGuid(), // TODO: Replace with current user ID
-                    PostId = request.Id
+                    PostId = request.Id,
+                    Note = request.Reason
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 
@@ -59,11 +61,13 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Description).ConfigureAwait(false);
+                    await postEmailTemplateService.SendPostRejectionEmail(post.Name, postActivityLog.Note)
+                        .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {
-                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}", methodName, request.Id, emailEx);
+                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
+                        methodName, request.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;

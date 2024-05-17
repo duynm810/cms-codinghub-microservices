@@ -12,5 +12,4 @@ public record SendEmailEvent : IntergrationEvent, ISendEmailEvent
     public required string EmailContent { get; set; }
     
     public DateTimeOffset EnqueueAt { get; set; }
-    
 }
