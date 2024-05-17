@@ -62,6 +62,21 @@
         }
       ],
       "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/approve/{id}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/approve/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
     }
   ]
 }

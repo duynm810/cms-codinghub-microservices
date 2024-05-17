@@ -76,7 +76,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpGet("approve/{id:guid}")]
+    [HttpPost("approve/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> ApprovePost(Guid id)
     {

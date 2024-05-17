@@ -62,6 +62,21 @@
         }
       ],
       "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/approve/{id}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/approve/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
     }
   ]
 }
