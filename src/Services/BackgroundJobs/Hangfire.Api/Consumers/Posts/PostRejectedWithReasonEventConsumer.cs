@@ -1,4 +1,4 @@
-using EventBus.IntergrationEvents;
+using EventBus.IntegrationEvents.Interfaces;
 using Hangfire.Api.Services.Interfaces;
 using MassTransit;
 using ILogger = Serilog.ILogger;
@@ -6,9 +6,9 @@ using ILogger = Serilog.ILogger;
 namespace Hangfire.Api.Consumers.Posts;
 
 public class PostRejectedWithReasonEventConsumer(IBackgroundJobService backgroundJobService, ILogger logger)
-    : IConsumer<PostRejectedWithReasonEvent>
+    : IConsumer<IPostRejectedWithReasonEvent>
 {
-    public async Task Consume(ConsumeContext<PostRejectedWithReasonEvent> context)
+    public async Task Consume(ConsumeContext<IPostRejectedWithReasonEvent> context)
     {
         var emailEvent = context.Message;
 

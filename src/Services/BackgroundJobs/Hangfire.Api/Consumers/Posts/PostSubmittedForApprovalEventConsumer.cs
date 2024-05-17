@@ -1,4 +1,4 @@
-using EventBus.IntergrationEvents;
+using EventBus.IntegrationEvents.Interfaces;
 using Hangfire.Api.Services.Interfaces;
 using MassTransit;
 using ILogger = Serilog.ILogger;
@@ -6,9 +6,9 @@ using ILogger = Serilog.ILogger;
 namespace Hangfire.Api.Consumers.Posts;
 
 public class PostSubmittedForApprovalEventConsumer(IBackgroundJobService backgroundJobService, ILogger logger)
-    : IConsumer<PostSubmittedForApprovalEvent>
+    : IConsumer<IPostSubmittedForApprovalEvent>
 {
-    public async Task Consume(ConsumeContext<PostSubmittedForApprovalEvent> context)
+    public async Task Consume(ConsumeContext<IPostSubmittedForApprovalEvent> context)
     {
         var emailEvent = context.Message;
 
@@ -17,7 +17,8 @@ public class PostSubmittedForApprovalEventConsumer(IBackgroundJobService backgro
 
         if (jobId != null)
         {
-            logger.Information("Processed PostSubmittedForApprovalEvent - Event Id: {EventId}, Job Id: {JobId}", emailEvent.Id, jobId);
+            logger.Information("Processed PostSubmittedForApprovalEvent - Event Id: {EventId}, Job Id: {JobId}",
+                emailEvent.Id, jobId);
         }
         else
         {

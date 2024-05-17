@@ -1,5 +1,5 @@
 using Contracts.Services.Interfaces;
-using EventBus.IntergrationEvents;
+using EventBus.IntegrationEvents;
 using MassTransit;
 using Post.Domain.Services;
 
