@@ -1,3 +1,5 @@
+using EventBus.Commons.Interfaces;
+
 namespace EventBus.Commons;
 
 public record IntergrationEvent : IIntergrationEvent

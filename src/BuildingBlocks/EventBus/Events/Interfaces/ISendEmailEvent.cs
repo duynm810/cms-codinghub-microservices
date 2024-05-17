@@ -1,4 +1,5 @@
 using EventBus.Commons;
+using EventBus.Commons.Interfaces;
 
 namespace EventBus.Events.Interfaces;
 

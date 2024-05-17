@@ -1,5 +1,5 @@
 using Contracts.Services.Interfaces;
-using EventBus.Events;
+using EventBus.IntergrationEvents;
 using MassTransit;
 using Post.Domain.Services;
 
@@ -18,7 +18,7 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             .Replace("[postUrl]", $"https://yourwebsite.com/posts/{postId}");
 
         // Publish SendEmailEvent event
-        var sendEmailEvent = new SendEmailEvent
+        var postApprovedEvent = new PostApprovedEvent
         {
             To = "cranneiffirixu-5288@yopmail.com", // Thay bằng địa chỉ email thật
             Subject = "Your post has been approved",
@@ -26,6 +26,6 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             EnqueueAt = DateTimeOffset.UtcNow // hoặc thời điểm bạn muốn enqueue
         };
 
-        await publishEndpoint.Publish(sendEmailEvent);
+        await publishEndpoint.Publish(postApprovedEvent);
     }
 }
