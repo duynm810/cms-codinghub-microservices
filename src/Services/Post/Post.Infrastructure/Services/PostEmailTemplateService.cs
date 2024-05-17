@@ -28,4 +28,29 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
 
         await publishEndpoint.Publish(postApprovedEvent);
     }
+
+    public async Task SendPostSubmissionForApprovalEmail(Guid postId, string name, string? content, string? description)
+    {
+        var emailTemplate = emailTemplateService.ReadEmailTemplate("post-approved");
+
+        var emailContent = emailTemplate.Replace("[name]", name)
+            .Replace("[content]", content)
+            .Replace("[description]", description)
+            .Replace("[postUrl]", $"https://yourwebsite.com/posts/{postId}");
+
+        // Publish SendEmailEvent event
+        var postSubmittedForApprovalEvent = new PostSubmittedForApprovalEvent()
+        {
+            To = "cranneiffirixu-5288@yopmail.com", // Thay bằng địa chỉ email thật
+            Subject = "Your post has been approved",
+            EmailContent = emailContent,
+            EnqueueAt = DateTimeOffset.UtcNow // hoặc thời điểm bạn muốn enqueue
+        };
+
+        await publishEndpoint.Publish(postSubmittedForApprovalEvent);
+    }
+
+    public async Task SendPostRejectionEmail(Guid postId, string name, string? reason, string? note)
+    {
+    }
 }
