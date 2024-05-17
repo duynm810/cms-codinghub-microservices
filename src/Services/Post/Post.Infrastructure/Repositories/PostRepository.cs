@@ -74,5 +74,16 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         await UpdateAsync(post);
     }
 
+    public async Task SubmitPostForApproval(PostBase post)
+    {
+        post.Status = PostStatusEnum.WaitingForApproval;
+        await UpdateAsync(post);
+    }
+
+    public async Task RejectPostWithReason(PostBase post)
+    {
+        post.Status = PostStatusEnum.Rejected;
+        await UpdateAsync(post);
+    }
     #endregion
 }

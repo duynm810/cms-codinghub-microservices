@@ -1,9 +1,6 @@
-using EventBus.Commons;
-using EventBus.Commons.Interfaces;
+namespace EventBus.Commons.Interfaces;
 
-namespace EventBus.Events.Interfaces;
-
-public interface ISendEmailEvent : IIntergrationEvent
+public interface ISendEmailEvent : IIntegrationEvent
 {
     string To { get; set; }
     
