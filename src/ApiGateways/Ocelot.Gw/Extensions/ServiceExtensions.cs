@@ -14,16 +14,16 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Configure Ocelot services
+        // Register Ocelot services
         services.ConfigureOcelot(configuration);
 
-        // Configure Ocelot with Swagger support
+        // Register Ocelot with Swagger support
         services.ConfigureOcelotSwaggerServices(configuration);
 
-        // Configure CORS services
+        // Register CORS services
         services.ConfigureCorsServices(configuration);
 
-        // Configure other necessary services
+        // Register additional necessary services
         services.ConfigureOtherServices();
     }
 

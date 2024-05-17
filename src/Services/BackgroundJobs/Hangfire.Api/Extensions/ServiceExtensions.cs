@@ -22,22 +22,25 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        // Register configuration settings
         services.ConfigureSettings(configuration);
-        
-        // Configures and registers hangfire services define into infrastructure
+    
+        // Register Hangfire services
         services.ConfigureHangfireServices();
+    
+        // Register MassTransit with RabbitMQ
+        services.ConfigureMassTransitWithRabbitMq();
 
-        // Configures and registers core services
+        // Register core services
         services.ConfigureCoreServices();
 
-        // Configures and registers essential services
+        // Register additional services
         services.ConfigureOtherServices();
 
-        // Configures swagger services
+        // Register Swagger services
         services.ConfigureSwaggerServices();
 
-        // Configure health checks
+        // Register health checks
         services.ConfigureHealthChecks();
     }
 
@@ -54,6 +57,11 @@ public static class ServiceExtensions
                                     $"{nameof(SmtpEmailSettings)} is not configured properly");
 
         services.AddSingleton(smtpEmailSettings);
+        
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>() 
+                              ?? throw new ArgumentNullException($"{nameof(EventBusSettings)} is not configured properly");
+
+        services.AddSingleton(eventBusSetings);
     }
 
     private static void ConfigureSwaggerServices(this IServiceCollection services)

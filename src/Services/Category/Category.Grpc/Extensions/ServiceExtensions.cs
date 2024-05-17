@@ -16,16 +16,16 @@ public static class ServiceExtensions
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        // Register configuration settings
         services.ConfigureSettings(configuration);
 
-        // Configures and registers the database context with the service collection
+        // Register database context
         services.ConfigureDbContext();
 
-        // Configures and registers repository and services
+        // Register repository services
         services.ConfigureRepositoryServices();
 
-        // Configures health checks
+        // Register health checks
         services.ConfigureHealthChecks();
     }
 

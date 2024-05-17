@@ -6,12 +6,14 @@ using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Post.Domain.GrpcServices;
 using Post.Domain.Interfaces;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Post.Infrastructure.GrpcServices;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
+using Post.Infrastructure.Services;
 using Shared.Configurations;
 
 namespace Post.Infrastructure;
@@ -20,22 +22,22 @@ public static class ConfigureServices
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        // Register configuration settings
         services.ConfigureSettings(configuration);
 
-        // Configures and registers the database context with the service collection
+        // Register database context
         services.ConfigureDbContext();
 
-        // Configures and registers to seed post data
+        // Register data seeding for posts
         services.ConfigureSeedData();
 
-        // Configures and registers core services
+        // Register core services
         services.ConfigureCoreServices();
 
-        // Configures and registers repository and services
+        // Register repository services
         services.ConfigureRepositoryServices();
 
-        // Configures and registers grpc services
+        // Register gRPC services
         services.ConfigureGrpcServices();
     }
 
@@ -85,7 +87,8 @@ public static class ConfigureServices
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
-            .AddScoped<ICategoryGrpcService, CategoryGrpcService>();
+            .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
+            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>();
     }
     
     private static void ConfigureGrpcServices(this IServiceCollection services)
