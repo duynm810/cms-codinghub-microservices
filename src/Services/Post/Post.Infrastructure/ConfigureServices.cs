@@ -22,22 +22,22 @@ public static class ConfigureServices
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        // Register configuration settings
         services.ConfigureSettings(configuration);
 
-        // Configures and registers the database context with the service collection
+        // Register database context
         services.ConfigureDbContext();
 
-        // Configures and registers to seed post data
+        // Register data seeding for posts
         services.ConfigureSeedData();
 
-        // Configures and registers core services
+        // Register core services
         services.ConfigureCoreServices();
 
-        // Configures and registers repository and services
+        // Register repository services
         services.ConfigureRepositoryServices();
 
-        // Configures and registers grpc services
+        // Register gRPC services
         services.ConfigureGrpcServices();
     }
 

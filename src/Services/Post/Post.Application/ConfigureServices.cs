@@ -12,19 +12,19 @@ public static class ConfigureServices
 {
     public static void AddApplicationServices(this IServiceCollection services)
     {
-        // Configures and registers AutoMapper
+        // Register AutoMapper
         services.ConfigureAutoMapper();
 
-        // Configures and registers Validators
+        // Register Validators
         services.ConfigureValidators();
 
-        // Configures and registers MediatR (using for event handler)
+        // Register MediatR for event handling
         services.ConfigureMediatR();
 
-        // Configures and registers pipeline (middleware)
+        // Register pipeline behaviors
         services.ConfigurePipelineBehaviours();
-        
-        // Configures infrastructure services in infrastructure class library
+    
+        // Register infrastructure services
         services.ConfigureInfrastructureServices();
     }
 

@@ -28,31 +28,31 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Extracts configuration settings from appsettings.json and registers them with the service collection
+        // Register configuration settings
         services.ConfigureSettings(configuration);
 
-        // Configures and registers the redis
+        // Register Redis
         services.ConfigureRedis();
 
-        // Configures and registers core services
+        // Register core services
         services.ConfigureCoreServices();
 
-        // Configures and registers repository and services
+        // Register repository services
         services.ConfigureRepositoryServices();
 
-        // Configures and registers essential services
+        // Register additional services
         services.ConfigureOtherServices();
 
-        // Configures and registers AutoMapper
+        // Register AutoMapper
         services.ConfigureAutoMapper();
 
-        // Configures swagger services
+        // Register Swagger services
         services.ConfigureSwaggerServices();
 
-        // Configure health checks
+        // Register health checks
         services.ConfigureHealthChecks();
-        
-        // Configures and registers grpc services
+    
+        // Register gRPC services
         services.ConfigureGrpcServices();
     }
 
