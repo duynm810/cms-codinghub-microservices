@@ -7,6 +7,8 @@ using Post.Application.Commons.Models;
 using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Application.Features.V1.Posts.Commands.CreatePost;
 using Post.Application.Features.V1.Posts.Commands.DeletePost;
+using Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
+using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
@@ -81,6 +83,24 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> ApprovePost(Guid id)
     {
         var query = new ApprovePostCommand(id);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpPost("submit-for-approval/{id:guid}")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> SubmitPostForApproval(Guid id)
+    {
+        var query = new SubmitPostForApprovalCommand(id);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpPost("reject/{id:guid}")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] string note)
+    {
+        var query = new RejectPostWithReasonCommand(id, note);
         var result = await mediator.Send(query);
         return Ok(result);
     }

@@ -31,6 +31,10 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
 
     Task ApprovePost(PostBase post);
-    
+
+    Task SubmitPostForApproval(PostBase post);
+
+    Task RejectPostWithReason(PostBase post);
+
     #endregion
 }
