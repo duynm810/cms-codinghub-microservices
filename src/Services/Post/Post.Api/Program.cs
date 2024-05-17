@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using Post.Api.Extensions;
 using Post.Application;
@@ -22,16 +23,19 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Add configure settings get in appsettings
+    // Register configuration settings
     builder.Services.ConfigureSettings(configuration);
+    
+    // Register rabbitmq
+    builder.Services.ConfigureMassTransitWithRabbitMq();
 
-    // Add health checks
+    // Register health checks
     builder.Services.ConfigureHealthChecks();
 
-    // Add application services in Post.Application
+    // Register application services
     builder.Services.AddApplicationServices();
 
-    // Add infrastructure services in Post.Infrastructure
+    // Register infrastructure
     builder.Services.AddInfrastructureServices(configuration);
 
     builder.Services.AddControllers();

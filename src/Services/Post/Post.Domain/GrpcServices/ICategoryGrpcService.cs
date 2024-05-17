@@ -1,6 +1,6 @@
 using Shared.Dtos.Category;
 
-namespace Post.Domain.Services;
+namespace Post.Domain.GrpcServices;
 
 public interface ICategoryGrpcService
 {

@@ -1,5 +1,5 @@
 using Category.Grpc.Protos;
-using Post.Domain.Services;
+using Post.Domain.GrpcServices;
 using Serilog;
 using Shared.Dtos.Category;
 
