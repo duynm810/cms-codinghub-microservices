@@ -13,7 +13,6 @@ public class BackgroundJobService(
 {
     public string? SendEmail(string to, string subject, string emailContent, DateTimeOffset enqueueAt)
     {
-        // Create a new MailRequest object with the provided email, subject, and email content
         var emailRequest = new MailRequest
         {
             ToAddress = to,
@@ -23,20 +22,14 @@ public class BackgroundJobService(
 
         try
         {
-            // Schedule the email to be sent at the specified time
             var jobId = scheduledJobService.Schedule(() => smtpEmailService.SendEmail(emailRequest), enqueueAt);
-            
-            logger.Information("Sent email to {Email} with subject: {Subject} - Job Id: {JobId}", to, subject,
-                jobId);
-
+            logger.Information("Scheduled email to {Email} with subject: {Subject} - Job Id: {JobId}", to, subject, jobId);
             return jobId;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            logger.Error("failed due to an error with the email service: {ExMessage}", e.Message);
+            logger.Error(ex, "Failed to schedule email to {Email} with subject: {Subject}", to, subject);
+            return null;
         }
-
-        // Return null if the email is scheduled successfully
-        return null;
     }
 }

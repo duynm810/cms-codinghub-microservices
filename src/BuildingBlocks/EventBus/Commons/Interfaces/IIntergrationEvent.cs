@@ -1,4 +1,4 @@
-namespace EventBus.Commons;
+namespace EventBus.Commons.Interfaces;
 
 public interface IIntergrationEvent
 {
