@@ -1,5 +1,6 @@
 using Contracts.Services.Interfaces;
-using EventBus.IntergrationEvents;
+using EventBus.IntegrationEvents;
+using EventBus.IntegrationEvents.Interfaces;
 using MassTransit;
 using Post.Domain.Services;
 
@@ -26,7 +27,7 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
         };
 
-        await publishEndpoint.Publish(postApprovedEvent);
+        await publishEndpoint.Publish<IPostApprovedEvent>(postApprovedEvent);
     }
 
     public async Task SendPostSubmissionForApprovalEmail(Guid postId, string name)
@@ -46,7 +47,7 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
         };
 
-        await publishEndpoint.Publish(postSubmittedForApprovalEvent);
+        await publishEndpoint.Publish<IPostSubmittedForApprovalEvent>(postSubmittedForApprovalEvent);
     }
 
     public async Task SendPostRejectionEmail(string name, string? reason)
@@ -66,6 +67,6 @@ public class PostEmailTemplateService(IPublishEndpoint publishEndpoint, IEmailTe
             EnqueueAt = DateTimeOffset.UtcNow // Thời điểm bạn muốn enqueue
         };
 
-        await publishEndpoint.Publish(postRejectedWithReasonEvent);
+        await publishEndpoint.Publish<IPostRejectedWithReasonEvent>(postRejectedWithReasonEvent);
     }
 }

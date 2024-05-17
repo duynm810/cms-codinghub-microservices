@@ -2,7 +2,7 @@ using EventBus.Commons.Interfaces;
 
 namespace EventBus.Commons;
 
-public record IntergrationEvent : IIntergrationEvent
+public record IntegrationEvent : IIntegrationEvent
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     

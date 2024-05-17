@@ -1,6 +1,6 @@
 namespace EventBus.Commons.Interfaces;
 
-public interface IIntergrationEvent
+public interface IIntegrationEvent
 {
     Guid Id { get; set; }
     
