@@ -16,6 +16,8 @@ public static class ApplicationExtensions
         // uncomment if you want to add a UI
         app.UseStaticFiles();
         app.UseRouting();
+        
+        app.UseCors("CorsPolicy");
 
         app.UseIdentityServer();
 
