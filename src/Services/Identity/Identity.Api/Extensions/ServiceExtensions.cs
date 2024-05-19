@@ -1,9 +1,14 @@
+using Shared.Configurations;
+
 namespace Identity.Api.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void AddInfrastructureService(this IServiceCollection services)
+    public static void AddInfrastructureService(this IServiceCollection services, IConfiguration configuration)
     {
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
+        
         // Register additional services
         services.AddAdditionalServices();
 
@@ -12,6 +17,15 @@ public static class ServiceExtensions
 
         // Register CORS services
         services.AddCorsConfiguration();
+    }
+    
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton(databaseSettings);
     }
 
     private static void AddIdentityServer(this IServiceCollection services)

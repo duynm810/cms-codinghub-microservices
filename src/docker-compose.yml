@@ -15,6 +15,9 @@ services:
     
   hangfiredb:
     image: mongo
+    
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
   
   ##infrastructure section
   rabbitmq:
@@ -112,3 +115,5 @@ volumes:
     name: elasticsearch_data
   hangfire_mongo_data:
     name: hangfire_mongo_data
+  identity_sqlserver_data:
+    name: identity_sqlserver_data
