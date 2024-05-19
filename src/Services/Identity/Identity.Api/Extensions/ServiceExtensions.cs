@@ -20,12 +20,15 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register core services
         services.AddCoreInfrastructure();
-        
+
         // Register repository and related services
         services.AddRepositoryAndDomainServices();
+        
+        // Register AutoMapper
+        services.AddAutoMapperConfiguration();
 
         // Register additional services
         services.AddAdditionalServices();
@@ -48,7 +51,7 @@ public static class ServiceExtensions
 
         services.AddSingleton(databaseSettings);
     }
-    
+
     private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services
@@ -56,12 +59,18 @@ public static class ServiceExtensions
             .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
-    
+
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
             .AddScoped<IIdentityProfileService, IdentityProfileService>()
-            .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>();
+            .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
+            .AddScoped<IPermissionRepository, PermissionRepository>();
+    }
+    
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
     private static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
