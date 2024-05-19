@@ -1,4 +1,5 @@
 ﻿using Identity.Api.Extensions;
+using Identity.Api.Persistence;
 using Logging;
 using Serilog;
 using Shared.Constants;
@@ -26,7 +27,7 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    app.Run();
+    app.MigrateDatabase().Run();
 }
 catch (Exception ex)
 {
