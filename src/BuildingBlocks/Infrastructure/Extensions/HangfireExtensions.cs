@@ -14,20 +14,20 @@ namespace Infrastructure.Extensions;
 
 public static class HangfireExtensions
 {
-    public static void ConfigureHangfireServices(this IServiceCollection services)
+    public static void AddHangfireServices(this IServiceCollection services)
     {
         var hangfireSettings = services.GetOptions<HangfireSettings>(nameof(HangfireSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(HangfireSettings)} is not configured properly");
 
-        services.AddHangfireServices(hangfireSettings);
+        services.ConfigureHangfire(hangfireSettings);
         services.AddHangfireServer(serverOptions =>
         {
             serverOptions.ServerName = hangfireSettings.ServerName;
         });
     }
 
-    private static void AddHangfireServices(this IServiceCollection services,
+    private static void ConfigureHangfire(this IServiceCollection services,
         HangfireSettings hangfireSettings)
     {
         if (string.IsNullOrEmpty(hangfireSettings.Storage.DbProvider))

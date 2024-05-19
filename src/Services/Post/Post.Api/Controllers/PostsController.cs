@@ -98,9 +98,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] string note)
+    public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto model)
     {
-        var query = new RejectPostWithReasonCommand(id, note);
+        var query = new RejectPostWithReasonCommand(id, model);
         var result = await mediator.Send(query);
         return Ok(result);
     }

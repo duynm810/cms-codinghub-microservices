@@ -24,10 +24,10 @@ try
     builder.AddAppConfiguration();
 
     // Add configure settings get in appsettings
-    builder.Services.ConfigureSettings(configuration);
+    builder.Services.AddConfigurationSettings(configuration);
 
     // Add health checks to checks database
-    builder.Services.ConfigureHealthChecks();
+    builder.Services.AddHealthCheckServices();
 
     // Add application services in Post.Application
     builder.Services.AddApplicationServices();

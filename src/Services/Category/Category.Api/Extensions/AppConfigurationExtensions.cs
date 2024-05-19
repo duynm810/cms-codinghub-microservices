@@ -1,6 +1,6 @@
-namespace Post.Grpc.Extensions;
+namespace Category.Api.Extensions;
 
-public static class ConfigureHostExtensions
+public static class ConfigurationExtensions
 {
     /// <summary>
     /// Extends the WebApplicationBuilder to add application configuration from JSON files and environment variables.

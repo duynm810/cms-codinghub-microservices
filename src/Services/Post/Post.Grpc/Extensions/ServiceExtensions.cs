@@ -8,7 +8,7 @@ namespace Post.Grpc.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    public static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
                                ?? throw new ArgumentNullException(
@@ -17,7 +17,7 @@ public static class ServiceExtensions
         services.AddSingleton(databaseSettings);
     }
 
-    public static void ConfigureHealthChecks(this IServiceCollection services)
+    public static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
