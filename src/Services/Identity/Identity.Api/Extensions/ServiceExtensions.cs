@@ -1,3 +1,5 @@
+using Infrastructure.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Shared.Configurations;
 
 namespace Identity.Api.Extensions;
@@ -8,7 +10,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register additional services
         services.AddAdditionalServices();
 
@@ -18,7 +20,7 @@ public static class ServiceExtensions
         // Register CORS services
         services.AddCorsConfiguration();
     }
-    
+
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
@@ -30,16 +32,37 @@ public static class ServiceExtensions
 
     private static void AddIdentityServer(this IServiceCollection services)
     {
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
         services.AddIdentityServer(options =>
             {
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
                 options.EmitStaticAudienceClaim = true;
             })
-            .AddInMemoryIdentityResources(Config.IdentityResources)
+            .AddDeveloperSigningCredential() // not recommended for production - you need to store your key material somewhere source
+            /*.AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
             .AddInMemoryApiResources(Config.ApiResources)
-            .AddTestUsers(TestUsers.Users);
+            .AddTestUsers(TestUsers.Users)*/
+            .AddConfigurationStore(opt =>
+            {
+                opt.ConfigureDbContext = c =>
+                {
+                    c.UseSqlServer(databaseSettings.ConnectionString,
+                        builder => builder.MigrationsAssembly("Identity.Api"));
+                };
+            })
+            .AddOperationalStore(opt =>
+            {
+                opt.ConfigureDbContext = c =>
+                {
+                    c.UseSqlServer(databaseSettings.ConnectionString,
+                        builder => builder.MigrationsAssembly("Identity.Api"));
+                };
+            });
     }
 
     private static void AddCorsConfiguration(this IServiceCollection services)

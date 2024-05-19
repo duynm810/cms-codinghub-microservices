@@ -1,6 +1,7 @@
 ﻿using Identity.Api.Extensions;
 using Logging;
 using Serilog;
+using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -29,10 +30,14 @@ try
 }
 catch (Exception ex)
 {
-    Log.Fatal(ex, "Unhandled exception");
+    var type = ex.GetType().Name;
+    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
+    
+    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
 }
 finally
 {
-    Log.Information("Shut down complete");
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
     Log.CloseAndFlush();
 }
