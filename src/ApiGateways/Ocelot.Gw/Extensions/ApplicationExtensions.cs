@@ -9,8 +9,13 @@ public static class ApplicationExtensions
     /// Configures the HTTP request pipeline with essential middleware components such as Swagger UI, routing, and endpoint mapping.
     /// </summary>
     /// <param name="app">The IApplicationBuilder to configure the middleware pipeline.</param>
-    public static void ConfigurePipeline(this IApplicationBuilder app)
+    public static void ConfigurePipeline(this WebApplication app)
     {
+        if (app.Environment.IsProduction())
+        {
+            app.UseHttpsRedirection();
+        }
+
         app.UseRouting();
 
         app.UseCors("CorsPolicy");
@@ -20,7 +25,7 @@ public static class ApplicationExtensions
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-        
+
         app.UseSwaggerForOcelotUI(options =>
         {
             options.PathToSwaggerGenerator = "/swagger/docs";

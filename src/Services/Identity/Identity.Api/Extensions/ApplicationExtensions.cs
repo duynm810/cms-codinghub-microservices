@@ -6,12 +6,12 @@ public static class ApplicationExtensions
 {
     public static void ConfigurePipeline(this WebApplication app)
     {
-        app.UseSerilogRequestLogging();
-
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
         }
+        
+        app.UseSerilogRequestLogging();
 
         // uncomment if you want to add a UI
         app.UseStaticFiles();
