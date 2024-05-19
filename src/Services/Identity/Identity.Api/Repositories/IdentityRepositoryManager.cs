@@ -9,7 +9,7 @@ namespace Identity.Api.Repositories;
 
 public class IdentityRepositoryManager(
     IdentityContext dbContext,
-    IUnitOfWork unitOfWork,
+    IUnitOfWork<IdentityContext> unitOfWork,
     UserManager<User> userManager,
     RoleManager<IdentityRole> roleManager) : IIdentityReposityManager
 {
