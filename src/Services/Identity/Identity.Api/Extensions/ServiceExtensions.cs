@@ -24,7 +24,8 @@ public static class ServiceExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryClients(Config.Clients)
-            .AddInMemoryApiResources(Config.ApiResources);
+            .AddInMemoryApiResources(Config.ApiResources)
+            .AddTestUsers(TestUsers.Users);
     }
 
     private static void AddCorsConfiguration(this IServiceCollection services)
