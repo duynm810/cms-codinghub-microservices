@@ -1,4 +1,4 @@
-﻿using Identity.Api.Extensions;
+using Identity.Api.Extensions;
 using Identity.Api.Persistence;
 using Logging;
 using Serilog;
