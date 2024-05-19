@@ -1,4 +1,4 @@
-﻿using Identity.Api;
+﻿using Identity.Api.Extensions;
 using Logging;
 using Serilog;
 
@@ -14,9 +14,16 @@ try
     // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
 
-    var app = builder
-        .ConfigureServices()
-        .ConfigurePipeline();
+    // Load configuration from JSON files and environment variables
+    builder.AddAppConfiguration();
+
+    // Register application infrastructure services
+    builder.Services.AddInfrastructureService();
+
+    var app = builder.Build();
+
+    // Set up middleware and request handling pipeline
+    app.ConfigurePipeline();
 
     app.Run();
 }

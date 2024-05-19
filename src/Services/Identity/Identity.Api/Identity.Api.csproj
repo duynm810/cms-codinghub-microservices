@@ -13,8 +13,4 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Extensions\" />
-	</ItemGroup>
 </Project>
