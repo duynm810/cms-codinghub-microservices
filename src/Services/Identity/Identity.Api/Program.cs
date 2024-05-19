@@ -26,6 +26,9 @@ try
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
+    
+    // Seed user sample data
+    UserSeedData.EnsureSeedData(configuration);
 
     app.MigrateDatabase().Run();
 }

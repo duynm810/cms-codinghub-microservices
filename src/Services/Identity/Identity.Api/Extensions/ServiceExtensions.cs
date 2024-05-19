@@ -1,5 +1,7 @@
 using Identity.Api.Entities;
 using Identity.Api.Persistence;
+using Identity.Api.Services;
+using Identity.Api.Services.Intefaces;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +15,9 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
+        
+        // Register repository and related services
+        services.AddRepositoryAndDomainServices();
 
         // Register additional services
         services.AddAdditionalServices();
@@ -35,19 +40,22 @@ public static class ServiceExtensions
 
         services.AddSingleton(databaseSettings);
     }
+    
+    private static void AddRepositoryAndDomainServices(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IIdentityProfileService, IdentityProfileService>();
+    }
 
     private static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
-        
+
         services
-            .AddDbContext<IdentityContext>(options =>
-            {
-                options.UseSqlServer(databaseSettings.ConnectionString);
-                
-            }).AddIdentity<User, IdentityRole>(opt =>
+            .AddDbContext<IdentityContext>(options => { options.UseSqlServer(databaseSettings.ConnectionString); })
+            .AddIdentity<User, IdentityRole>(opt =>
             {
                 opt.Password.RequireDigit = false;
                 opt.Password.RequiredLength = 6;
@@ -95,9 +103,10 @@ public static class ServiceExtensions
                         builder => builder.MigrationsAssembly("Identity.Api"));
                 };
             })
-            .AddAspNetIdentity<User>();
+            .AddAspNetIdentity<User>()
+            .AddProfileService<IdentityProfileService>();
     }
-    
+
     private static void AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
