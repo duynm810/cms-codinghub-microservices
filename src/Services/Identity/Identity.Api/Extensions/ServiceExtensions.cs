@@ -1,4 +1,7 @@
+using Identity.Api.Entities;
+using Identity.Api.Persistence;
 using Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Shared.Configurations;
 
@@ -14,6 +17,9 @@ public static class ServiceExtensions
         // Register additional services
         services.AddAdditionalServices();
 
+        // Register identity
+        services.AddIdentity(configuration);
+
         // Register identity server
         services.AddIdentityServer();
 
@@ -28,6 +34,32 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+    }
+
+    private static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    {
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        services
+            .AddDbContext<IdentityContext>(options =>
+            {
+                options.UseSqlServer(databaseSettings.ConnectionString);
+                
+            }).AddIdentity<User, IdentityRole>(opt =>
+            {
+                opt.Password.RequireDigit = false;
+                opt.Password.RequiredLength = 6;
+                opt.Password.RequireUppercase = false;
+                opt.Password.RequireLowercase = false;
+                opt.User.RequireUniqueEmail = true;
+                opt.Lockout.AllowedForNewUsers = true;
+                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                opt.Lockout.MaxFailedAccessAttempts = 3;
+            })
+            .AddEntityFrameworkStores<IdentityContext>()
+            .AddDefaultTokenProviders();
     }
 
     private static void AddIdentityServer(this IServiceCollection services)
@@ -62,9 +94,10 @@ public static class ServiceExtensions
                     c.UseSqlServer(databaseSettings.ConnectionString,
                         builder => builder.MigrationsAssembly("Identity.Api"));
                 };
-            });
+            })
+            .AddAspNetIdentity<User>();
     }
-
+    
     private static void AddCorsConfiguration(this IServiceCollection services)
     {
         services.AddCors(options =>
