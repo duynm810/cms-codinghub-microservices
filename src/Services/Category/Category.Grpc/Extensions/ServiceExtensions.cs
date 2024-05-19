@@ -21,6 +21,9 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
+        
+        // Register gRPC services
+        services.AddGrpcServices();
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
@@ -51,6 +54,12 @@ public static class ServiceExtensions
                 e.MigrationsAssembly("Category.Api");
                 e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
             }));
+    }
+
+    private static void AddGrpcServices(this IServiceCollection services)
+    {
+        services.AddGrpc();
+        services.AddGrpcReflection();
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)

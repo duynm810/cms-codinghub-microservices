@@ -26,6 +26,9 @@ public static class ServiceExtensions
         // Register database context
         services.AddDatabaseContext();
 
+        // Register gRPC services
+        services.AddGrpcServices();
+
         // Register core services
         services.AddCoreInfrastructure();
 
@@ -57,6 +60,12 @@ public static class ServiceExtensions
                 builder =>
                     builder.MigrationsAssembly(typeof(SeriesContext).Assembly.FullName));
         });
+    }
+
+    private static void AddGrpcServices(this IServiceCollection services)
+    {
+        services.AddGrpc();
+        services.AddGrpcReflection();
     }
 
     private static void AddCoreInfrastructure(this IServiceCollection services)
