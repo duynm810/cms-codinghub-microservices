@@ -68,5 +68,38 @@ public static class Config
                     "roles"
                 }
             },
+            new()
+            {
+                ClientName = "Coding Hub Microservices Postman Client",
+                ClientId = "coding_hub_microservices_postman",
+                Enabled = true,
+                ClientUri = null,
+                RequireClientSecret = true,
+                RequireConsent = false,
+                AccessTokenLifetime = 60 * 60 * 2,
+                AllowOfflineAccess = true,
+                ClientSecrets = new[]
+                {
+                    new Secret("SuperStrongSecret".Sha512())
+                },
+                AllowedGrantTypes = new[]
+                {
+                    GrantType.ClientCredentials,
+                    GrantType.ResourceOwnerPassword
+                },
+                RedirectUris = new List<string>
+                {
+                    "https://www.getpostman.com/oauth2/callback"
+                },
+                AllowedScopes =
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Email,
+                    "roles",
+                    "coding_hub_microservices_api.read",
+                    "coding_hub_microservices_api.write",
+                }
+            },
         };
 }
