@@ -28,35 +28,35 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register configuration settings
-        services.ConfigureSettings(configuration);
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
 
         // Register Redis
-        services.ConfigureRedis();
-
-        // Register core services
-        services.ConfigureCoreServices();
-
-        // Register repository services
-        services.ConfigureRepositoryServices();
-
-        // Register additional services
-        services.ConfigureOtherServices();
+        services.AddRedisConfiguration();
 
         // Register AutoMapper
-        services.ConfigureAutoMapper();
+        services.AddAutoMapperConfiguration();
 
         // Register Swagger services
-        services.ConfigureSwaggerServices();
+        services.AddSwaggerConfiguration();
+
+        // Register core services
+        services.AddCoreInfrastructure();
+
+        // Register repository services
+        services.AddRepositoryAndDomainServices();
+
+        // Register additional services
+        services.AddAdditionalServices();
 
         // Register health checks
-        services.ConfigureHealthChecks();
-    
+        services.AddHealthCheckServices();
+
         // Register gRPC services
-        services.ConfigureGrpcServices();
+        services.AddGrpcConfiguration();
     }
 
-    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
                             ?? throw new ArgumentNullException(
@@ -65,7 +65,7 @@ public static class ServiceExtensions
         services.AddSingleton(cacheSettings);
     }
 
-    private static void ConfigureRedis(this IServiceCollection services)
+    private static void AddRedisConfiguration(this IServiceCollection services)
     {
         var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
                             throw new ArgumentNullException($"{nameof(DatabaseSettings)} is not configured properly");
@@ -74,12 +74,12 @@ public static class ServiceExtensions
         services.AddStackExchangeRedisCache(options => { options.Configuration = cacheSettings.ConnectionString; });
     }
 
-    private static void ConfigureAutoMapper(this IServiceCollection services)
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
-    private static void ConfigureSwaggerServices(this IServiceCollection services)
+    private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -94,7 +94,7 @@ public static class ServiceExtensions
         });
     }
 
-    private static void ConfigureCoreServices(this IServiceCollection services)
+    private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services
             .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
@@ -102,7 +102,7 @@ public static class ServiceExtensions
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
-    private static void ConfigureRepositoryServices(this IServiceCollection services)
+    private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
             .AddScoped<IPostInSeriesRepository, PostInSeriesRepository>()
@@ -110,14 +110,14 @@ public static class ServiceExtensions
             .AddScoped<ISerializeService, SerializeService>();
     }
 
-    private static void ConfigureOtherServices(this IServiceCollection services)
+    private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
-    private static void ConfigureHealthChecks(this IServiceCollection services)
+    private static void AddHealthCheckServices(this IServiceCollection services)
     {
         var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
                             throw new ArgumentNullException($"{nameof(DatabaseSettings)} is not configured properly");
@@ -128,7 +128,7 @@ public static class ServiceExtensions
                 HealthStatus.Degraded);
     }
 
-    private static void ConfigureGrpcServices(this IServiceCollection services)
+    private static void AddGrpcConfiguration(this IServiceCollection services)
     {
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(
@@ -136,7 +136,7 @@ public static class ServiceExtensions
 
         services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostUrl));
-        
+
         services.AddScoped<IPostGrpcService, PostGrpcService>();
 
         services.AddGrpcClient<SeriesProtoService.SeriesProtoServiceClient>(x =>

@@ -8,7 +8,7 @@ namespace Infrastructure.Extensions;
 
 public static class MassTransitExtensions
 {
-    public static void ConfigureMassTransitWithRabbitMq(this IServiceCollection services)
+    public static void AddMassTransitWithRabbitMq(this IServiceCollection services)
     {
         var eventBusSettings = services.GetOptions<EventBusSettings>(nameof(EventBusSettings)) ??
                                throw new ArgumentNullException(

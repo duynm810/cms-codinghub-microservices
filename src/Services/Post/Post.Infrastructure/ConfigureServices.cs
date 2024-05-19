@@ -22,26 +22,26 @@ public static class ConfigureServices
 {
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register configuration settings
-        services.ConfigureSettings(configuration);
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
 
         // Register database context
-        services.ConfigureDbContext();
+        services.AddDatabaseContext();
 
         // Register data seeding for posts
-        services.ConfigureSeedData();
+        services.AddSeedDataServices();
 
         // Register core services
-        services.ConfigureCoreServices();
+        services.AddCoreInfrastructure();
 
         // Register repository services
-        services.ConfigureRepositoryServices();
+        services.AddRepositoryAndDomainServices();
 
         // Register gRPC services
-        services.ConfigureGrpcServices();
+        services.AddGrpcServices();
     }
 
-    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
                                ?? throw new ArgumentNullException(
@@ -50,7 +50,7 @@ public static class ConfigureServices
         services.AddSingleton(databaseSettings);
     }
 
-    private static void ConfigureDbContext(this IServiceCollection services)
+    private static void AddDatabaseContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -70,12 +70,12 @@ public static class ConfigureServices
         });
     }
 
-    private static void ConfigureSeedData(this IServiceCollection services)
+    private static void AddSeedDataServices(this IServiceCollection services)
     {
         services.AddScoped<IDatabaseSeeder, PostSeedData>();
     }
 
-    private static void ConfigureCoreServices(this IServiceCollection services)
+    private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services
             .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
@@ -83,23 +83,23 @@ public static class ConfigureServices
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
-    private static void ConfigureRepositoryServices(this IServiceCollection services)
+    private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>();
     }
-    
-    private static void ConfigureGrpcServices(this IServiceCollection services)
+
+    private static void AddGrpcServices(this IServiceCollection services)
     {
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(
                                $"{nameof(GrpcSettings)} is not configured properly");
-        
+
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
-        
+
         services.AddScoped<CategoryGrpcService>();
     }
 }

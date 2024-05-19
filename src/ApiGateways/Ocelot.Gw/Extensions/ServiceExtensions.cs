@@ -1,4 +1,3 @@
-using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Polly;
@@ -15,31 +14,31 @@ public static class ServiceExtensions
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         // Register Ocelot services
-        services.ConfigureOcelot(configuration);
+        services.AddOcelotConfiguration(configuration);
 
         // Register Ocelot with Swagger support
-        services.ConfigureOcelotSwaggerServices(configuration);
+        services.AddOcelotSwaggerConfiguration(configuration);
 
         // Register CORS services
-        services.ConfigureCorsServices(configuration);
+        services.AddCorsConfiguration(configuration);
 
         // Register additional necessary services
-        services.ConfigureOtherServices();
+        services.AddAdditionalServices();
     }
 
-    private static void ConfigureOcelot(this IServiceCollection services, IConfiguration configuration)
+    private static void AddOcelotConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOcelot(configuration)
             .AddPolly()
             .AddCacheManager(x => x.WithDictionaryHandle());
     }
 
-    private static void ConfigureOcelotSwaggerServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddOcelotSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSwaggerForOcelot(configuration); // Add this line to register SwaggerForOcelot services
     }
 
-    private static void ConfigureCorsServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         var origins = configuration["AllowOrigins"];
 
@@ -55,7 +54,7 @@ public static class ServiceExtensions
         });
     }
 
-    private static void ConfigureOtherServices(this IServiceCollection services)
+    private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();

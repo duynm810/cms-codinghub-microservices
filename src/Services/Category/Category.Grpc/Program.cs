@@ -20,7 +20,7 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Add infrastructure services like database contexts and repositories
+    // Register application infrastructure services
     builder.Services.AddInfrastructureServices(builder.Configuration);
 
     // Add grpc services

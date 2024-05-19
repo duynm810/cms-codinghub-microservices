@@ -20,23 +20,23 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register configuration settings
-        services.ConfigureSettings(configuration);
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
 
         // Register database context
-        services.ConfigureDbContext();
+        services.AddDatabaseContext();
 
         // Register core services
-        services.ConfigureCoreServices();
+        services.AddCoreInfrastructure();
 
         // Register repository services
-        services.ConfigureRepositoryServices();
+        services.AddRepositoryAndDomainServices();
 
         // Register health checks
-        services.ConfigureHealthChecks();
+        services.AddHealthCheckServices();
     }
 
-    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
                                ?? throw new ArgumentNullException(
@@ -45,7 +45,7 @@ public static class ServiceExtensions
         services.AddSingleton(databaseSettings);
     }
 
-    private static void ConfigureDbContext(this IServiceCollection services)
+    private static void AddDatabaseContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
@@ -59,7 +59,7 @@ public static class ServiceExtensions
         });
     }
 
-    private static void ConfigureCoreServices(this IServiceCollection services)
+    private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services
             .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
@@ -67,12 +67,12 @@ public static class ServiceExtensions
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
-    private static void ConfigureRepositoryServices(this IServiceCollection services)
+    private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<ISeriesRepository, SeriesRepository>();
     }
 
-    private static void ConfigureHealthChecks(this IServiceCollection services)
+    private static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
         services.AddHealthChecks()
