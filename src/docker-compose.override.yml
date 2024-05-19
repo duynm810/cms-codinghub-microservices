@@ -56,6 +56,18 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'admin'
       MONGO_INITDB_ROOT_PASSWORD: 'admin'
+      
+  #identitydb: sqlserver
+  identitydb:
+    container_name: identitydb
+    environment:
+      SA_PASSWORD: "Passw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - identity_sqlserver_data:/var/opt/mssql
+    restart: always
+    ports:
+      - "1436:1433"
   
   ##infrastructure section
   rabbitmq:

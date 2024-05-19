@@ -1,4 +1,4 @@
-﻿using Duende.IdentityServer;
+using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
 
 namespace Identity.Api;
@@ -96,9 +96,9 @@ public static class Config
                     IdentityServerConstants.StandardScopes.OpenId,
                     IdentityServerConstants.StandardScopes.Profile,
                     IdentityServerConstants.StandardScopes.Email,
-                    "roles",
                     "coding_hub_microservices_api.read",
                     "coding_hub_microservices_api.write",
+                    "roles",
                 }
             },
         };
