@@ -1,7 +1,12 @@
+using Contracts.Domains.Repositories;
 using Identity.Api.Entities;
 using Identity.Api.Persistence;
+using Identity.Api.Repositories;
+using Identity.Api.Repositories.Interfaces;
 using Identity.Api.Services;
 using Identity.Api.Services.Intefaces;
+using Infrastructure.Domains;
+using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +20,9 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
+        
+        // Register core services
+        services.AddCoreInfrastructure();
         
         // Register repository and related services
         services.AddRepositoryAndDomainServices();
@@ -41,10 +49,19 @@ public static class ServiceExtensions
         services.AddSingleton(databaseSettings);
     }
     
+    private static void AddCoreInfrastructure(this IServiceCollection services)
+    {
+        services
+            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
+            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
+            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
+    }
+    
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
-            .AddScoped<IIdentityProfileService, IdentityProfileService>();
+            .AddScoped<IIdentityProfileService, IdentityProfileService>()
+            .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>();
     }
 
     private static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
