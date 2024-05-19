@@ -1,25 +1,25 @@
 using Logging;
 using Serilog;
+using Shared.Constants;
 using WebApps.HealthCheck.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
+
+// Initialize console logging for application startup
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
 
 try
 {
-    // Initialize console logging for application startup
-    Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
-    Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
-
     // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
 
+    // Register app configuration settings
     builder.AddAppConfiguration();
 
-    // Add services to the container.
-    builder.Services.AddControllersWithViews();
-
-    // Registers health check UI
-    builder.Services.AddHealthChecksUI().AddInMemoryStorage();
+    // Register application infrastructure services
+    builder.Services.AddInfrastructureServices(configuration);
 
     builder.WebHost.UseWebRoot("wwwroot");
 
@@ -51,7 +51,7 @@ try
 }
 catch (Exception e)
 {
-    Log.Error(e.Message);
+    Log.Fatal(e, $"{ErrorMessageConsts.Common.UnhandledException}: {e.Message}");
     throw;
 }
 finally

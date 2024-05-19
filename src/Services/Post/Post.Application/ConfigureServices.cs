@@ -13,44 +13,44 @@ public static class ConfigureServices
     public static void AddApplicationServices(this IServiceCollection services)
     {
         // Register AutoMapper
-        services.ConfigureAutoMapper();
+        services.AddAutoMapperConfiguration();
 
         // Register Validators
-        services.ConfigureValidators();
+        services.AddValidatorServices();
 
         // Register MediatR for event handling
-        services.ConfigureMediatR();
+        services.AddMediatRConfiguration();
 
         // Register pipeline behaviors
-        services.ConfigurePipelineBehaviours();
+        services.AddPipelineBehaviors();
     
         // Register infrastructure services
-        services.ConfigureInfrastructureServices();
+        services.AddAppInfrastructureServices();
     }
 
-    private static void ConfigureAutoMapper(this IServiceCollection services)
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
     }
 
-    private static void ConfigureValidators(this IServiceCollection services)
+    private static void AddValidatorServices(this IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     }
 
-    private static void ConfigureMediatR(this IServiceCollection services)
+    private static void AddMediatRConfiguration(this IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly()));
     }
 
-    private static void ConfigurePipelineBehaviours(this IServiceCollection services)
+    private static void AddPipelineBehaviors(this IServiceCollection services)
     {
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>))
             .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     }
 
-    private static void ConfigureInfrastructureServices(this IServiceCollection services)
+    private static void AddAppInfrastructureServices(this IServiceCollection services)
     {
         services.AddSingleton<IEmailTemplateService, EmailTemplateService>();
     }

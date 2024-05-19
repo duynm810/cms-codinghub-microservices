@@ -22,29 +22,29 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        // Register configuration settings
-        services.ConfigureSettings(configuration);
-    
-        // Register Hangfire services
-        services.ConfigureHangfireServices();
-    
-        // Register MassTransit with RabbitMQ
-        services.ConfigureMassTransitWithRabbitMq();
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
 
         // Register core services
-        services.ConfigureCoreServices();
+        services.AddCoreInfrastructure();
 
         // Register additional services
-        services.ConfigureOtherServices();
+        services.AddAdditionalServices();
 
         // Register Swagger services
-        services.ConfigureSwaggerServices();
+        services.AddSwaggerConfiguration();
+
+        // Register Hangfire services
+        services.AddHangfireServices();
+
+        // Register MassTransit with RabbitMQ
+        services.AddMassTransitWithRabbitMq();
 
         // Register health checks
-        services.ConfigureHealthChecks();
+        services.AddHealthCheckServices();
     }
 
-    private static void ConfigureSettings(this IServiceCollection services, IConfiguration configuration)
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var hangfireSettings = configuration.GetSection(nameof(HangfireSettings)).Get<HangfireSettings>()
                                ?? throw new ArgumentNullException(
@@ -57,14 +57,15 @@ public static class ServiceExtensions
                                     $"{nameof(SmtpEmailSettings)} is not configured properly");
 
         services.AddSingleton(smtpEmailSettings);
-        
-        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>() 
-                              ?? throw new ArgumentNullException($"{nameof(EventBusSettings)} is not configured properly");
+
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(EventBusSettings)} is not configured properly");
 
         services.AddSingleton(eventBusSetings);
     }
 
-    private static void ConfigureSwaggerServices(this IServiceCollection services)
+    private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
@@ -79,21 +80,21 @@ public static class ServiceExtensions
         });
     }
 
-    private static void ConfigureCoreServices(this IServiceCollection services)
+    private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services.AddTransient<IScheduledJobService, HangfireService>()
             .AddScoped<ISmtpEmailService, SmtpEmailService>()
             .AddScoped<IBackgroundJobService, BackgroundJobService>();
     }
 
-    private static void ConfigureOtherServices(this IServiceCollection services)
+    private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
-    private static void ConfigureHealthChecks(this IServiceCollection services)
+    private static void AddHealthCheckServices(this IServiceCollection services)
     {
         var hangfireSettings = services.GetOptions<HangfireSettings>(nameof(HangfireSettings)) ??
                                throw new ArgumentNullException(

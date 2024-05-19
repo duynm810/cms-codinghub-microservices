@@ -23,14 +23,13 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Register configuration settings
-    builder.Services.ConfigureSettings(configuration);
+    // Register app configuration settings
+    builder.Services.AddConfigurationSettings(configuration);
     
-    // Register rabbitmq
-    builder.Services.ConfigureMassTransitWithRabbitMq();
-
+    builder.Services.AddMassTransitWithRabbitMq();
+    
     // Register health checks
-    builder.Services.ConfigureHealthChecks();
+    builder.Services.AddHealthCheckServices();
 
     // Register application services
     builder.Services.AddApplicationServices();

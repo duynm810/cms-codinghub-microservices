@@ -1,6 +1,6 @@
 namespace WebApps.HealthCheck.Extensions;
 
-public static class ConfigureHostExtensions
+public static class AppConfigurationExtensions
 {
     /// <summary>
     /// Extends the WebApplicationBuilder to add application configuration from JSON files and environment variables.
