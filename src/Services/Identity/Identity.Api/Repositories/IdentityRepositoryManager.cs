@@ -1,3 +1,4 @@
+using AutoMapper;
 using Contracts.Domains.Repositories;
 using Identity.Api.Entities;
 using Identity.Api.Persistence;
@@ -7,15 +8,16 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Identity.Api.Repositories;
 
-public class IdentityRepositoryManager(
-    IdentityContext dbContext,
-    IUnitOfWork<IdentityContext> unitOfWork,
-    UserManager<User> userManager,
-    RoleManager<IdentityRole> roleManager) : IIdentityReposityManager
+public class IdentityRepositoryManager(IdentityContext dbContext, IUnitOfWork<IdentityContext> unitOfWork, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager) : IIdentityReposityManager
 {
+    private readonly Lazy<IPermissionRepository> _permissionRepository =
+        new(() => new PermissionRepository(dbContext, unitOfWork, userManager, mapper));
+
     public UserManager<User> UserManager { get; } = userManager;
 
     public RoleManager<IdentityRole> RoleManager { get; } = roleManager;
+
+    public IPermissionRepository Permissions => _permissionRepository.Value;
 
     #region FUNCTIONS
 
