@@ -181,8 +181,8 @@ services:
       - "6007:80"
     restart: always
   
-  postinseries.api:
-    container_name: postinseries.api
+  post-in-series.api:
+    container_name: post-in-series.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
@@ -212,7 +212,7 @@ services:
       - category.api
       - post.api
       - series.api
-      - postinseries.api
+      - post-in-series.api
       - hangfire.api
     ports:
       - "6020:80"

@@ -7,7 +7,7 @@
         "POST",
         "DELETE"
       ],
-      "DownstreamPathTemplate": "/api/postinseries",
+      "DownstreamPathTemplate": "/api/post-in-series",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -22,7 +22,7 @@
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/postinseries/paging",
+      "DownstreamPathTemplate": "/api/post-in-series/paging",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
