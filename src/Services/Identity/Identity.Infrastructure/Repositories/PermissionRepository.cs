@@ -37,7 +37,7 @@ public class PermissionRepository(
         throw new NotImplementedException();
     }
 
-    public async Task UpdatePermissionsByRoleId(string roleId, IEnumerable<CreatePermissionDto> permissionCollection)
+    public async Task UpdatePermission(string roleId, IEnumerable<CreatePermissionDto> permissionCollection)
     {
         throw new NotImplementedException();
     }

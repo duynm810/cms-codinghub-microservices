@@ -10,6 +10,8 @@ public interface IPermissionRepository : IRepositoryCommandBase<Permission, long
 
     Task<PermissionDto?> CreatePermission(string roleId, CreatePermissionDto model);
 
+    Task UpdatePermission(string roleId, IEnumerable<CreatePermissionDto> permissionCollection);
+
     Task DeletePermission(string roleId, string function, string command);
 
     #endregion
@@ -18,8 +20,6 @@ public interface IPermissionRepository : IRepositoryCommandBase<Permission, long
 
     Task<IReadOnlyList<PermissionDto>> GetPermissionsByRole(string roleId);
     
-    Task UpdatePermissionsByRoleId(string roleId, IEnumerable<CreatePermissionDto> permissionCollection);
-
     Task<IEnumerable<PermissionUserDto>> GetPermissionsByUser(User user);
 
     #endregion

@@ -18,6 +18,7 @@ public static class ApplicationExtensions
         {
             c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
+            c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
 

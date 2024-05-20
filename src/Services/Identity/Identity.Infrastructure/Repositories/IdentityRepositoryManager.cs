@@ -10,14 +10,13 @@ namespace Identity.Infrastructure.Repositories;
 
 public class IdentityRepositoryManager(IdentityContext dbContext, IUnitOfWork<IdentityContext> unitOfWork, IMapper mapper, UserManager<User> userManager, RoleManager<IdentityRole> roleManager) : IIdentityReposityManager
 {
-    private readonly Lazy<IPermissionRepository> _permissionRepository =
-        new(() => new PermissionRepository(dbContext, unitOfWork, userManager, mapper));
+    private readonly Lazy<IPermissionRepository> _permissionRepository = new(() => new PermissionRepository(dbContext, unitOfWork, userManager, mapper));
+
+    public IPermissionRepository Permissions => _permissionRepository.Value;
 
     public UserManager<User> UserManager { get; } = userManager;
 
     public RoleManager<IdentityRole> RoleManager { get; } = roleManager;
-
-    public IPermissionRepository Permissions => _permissionRepository.Value;
 
     #region FUNCTIONS
 
