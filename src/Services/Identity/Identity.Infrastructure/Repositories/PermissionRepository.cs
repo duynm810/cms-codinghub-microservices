@@ -18,7 +18,7 @@ public class PermissionRepository(
     UserManager<User> userManager,
     IMapper mapper,
     ILogger logger)
-    : DapperRepositoryBase<Permission, long>(dbContext), IPermissionRepository
+    : RepositoryCommandBase<Permission, long, IdentityContext>(dbContext, unitOfWork), IPermissionRepository
 {
     #region CRUD
 

@@ -20,6 +20,10 @@ public interface IRepositoryQueryBase<T, in TK> where T : EntityBase<TK>
     Task<T?> GetByIdAsync(TK id);
 
     Task<T?> GetByIdAsync(TK id, params Expression<Func<T, object>>[] includeProperties);
+    
+    Task<IReadOnlyList<TModel>> QueryAsync<TModel>(string sql, object? parameters = null);
+
+    Task<T?> QueryFirstOrDefaultAsync(string sql, object? parameters = null);
 }
 
 public interface IRepositoryQueryBase<T, in TK, TContext> : IRepositoryQueryBase<T, TK> where T : EntityBase<TK>
@@ -55,6 +59,8 @@ public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     void DeleteList(IEnumerable<T> entities);
 
     Task DeleteListAsync(IEnumerable<T> entities);
+    
+    Task<int> ExecuteAsync(string sql, object? parameters = null);
 
     Task<int> SaveChangesAsync();
 

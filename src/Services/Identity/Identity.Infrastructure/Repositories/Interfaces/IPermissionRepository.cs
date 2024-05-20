@@ -6,7 +6,7 @@ using Shared.Dtos.Identity.Permission;
 
 namespace Identity.Infrastructure.Repositories.Interfaces;
 
-public interface IPermissionRepository : IDapperRepositoryCommandBase<Permission, long>
+public interface IPermissionRepository : IRepositoryCommandBase<Permission, long>
 {
     #region CRUD
 

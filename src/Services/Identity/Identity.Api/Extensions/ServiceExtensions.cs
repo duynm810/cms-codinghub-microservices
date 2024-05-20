@@ -69,8 +69,6 @@ public static class ServiceExtensions
         services
             .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
             .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IDapperRepositoryCommandBase<,>), typeof(DapperRepositoryBase<,>))
-            .AddScoped(typeof(IDapperRepositoryQueryBase<,>), typeof(DapperRepositoryBase<,>))
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
