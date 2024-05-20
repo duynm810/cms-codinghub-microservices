@@ -1,10 +1,10 @@
 using Contracts.Domains.Repositories;
-using Identity.Api.Entities;
-using Identity.Api.Persistence;
-using Identity.Api.Repositories;
-using Identity.Api.Repositories.Interfaces;
 using Identity.Api.Services;
 using Identity.Api.Services.Intefaces;
+using Identity.Infrastructure.Entities;
+using Identity.Infrastructure.Persistence;
+using Identity.Infrastructure.Repositories;
+using Identity.Infrastructure.Repositories.Interfaces;
 using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
@@ -24,6 +24,9 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
+        
+        // Fix can't login same site
+        services.ConfigureCookiePolicy();
 
         // Register core services
         services.AddCoreInfrastructure();
@@ -125,7 +128,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Api"));
+                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
                 };
             })
             .AddOperationalStore(opt =>
@@ -133,7 +136,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Api"));
+                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
                 };
             })
             .AddAspNetIdentity<User>()
