@@ -8,7 +8,13 @@ public interface IPermissionRepository : IDapperRepositoryCommandBase<Permission
 {
     #region CRUD
 
-    Task<PermissionDto?> CreatePermission(string roleId, CreatePermissionDto model);
+    Task<PermissionDto?> CreatePermission(string roleId, CreateOrUpdatePermissionDto model);
+    
+    Task UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionDto> permissions);
+    
+    Task DeletePermission(string roleId, string function, string command);
+    
+    Task<IReadOnlyList<PermissionDto>> GetPermissions(string roleId);
 
     #endregion
 }

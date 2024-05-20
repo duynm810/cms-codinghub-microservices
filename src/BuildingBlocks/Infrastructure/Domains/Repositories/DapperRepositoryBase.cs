@@ -11,20 +11,20 @@ public class DapperRepositoryBase<T, TK>(DbContext dbContext) : IDapperRepositor
 {
     private IDbConnection Connection => dbContext.Database.GetDbConnection();
 
-    public async Task<IReadOnlyList<T>> QueryAsync(string sql, object? parameters = null)
+    public async Task<IReadOnlyList<TModel>> QueryAsync<TModel>(string sql, object? parameters = null)
     {
         var existingConnectionState = Connection.State;
         if (existingConnectionState != ConnectionState.Open)
-            Connection.Open(); // Đảm bảo kết nối được mở
+            Connection.Open();
 
         try
         {
-            return (await Connection.QueryAsync<T>(sql, parameters)).AsList();
+            return (await Connection.QueryAsync<TModel>(sql, parameters)).AsList();
         }
         finally
         {
             if (existingConnectionState != ConnectionState.Open)
-                Connection.Close(); // Đóng kết nối nếu nó không mở trước đó
+                Connection.Close();
         }
     }
 

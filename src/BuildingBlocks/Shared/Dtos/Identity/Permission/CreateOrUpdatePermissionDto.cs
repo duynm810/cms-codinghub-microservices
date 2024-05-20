@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Shared.Dtos.Identity.Permission;
 
-public class CreatePermissionDto
+public class CreateOrUpdatePermissionDto
 {
     public required string Function { get; set; }
 
