@@ -10,11 +10,11 @@ public interface IPermissionRepository : IRepositoryCommandBase<Permission, long
 {
     #region CRUD
 
-    Task<int> CreatePermission(string roleId, CreateOrUpdatePermissionDto model, DynamicParameters parameters);
+    Task<long> CreatePermission(string roleId, CreateOrUpdatePermissionDto model, DynamicParameters parameters);
 
-    Task<int> UpdatePermissions(string roleId, DataTable permissions);
+    Task<long> UpdatePermissions(string roleId, DataTable permissions);
 
-    Task<int> DeletePermission(string roleId, string function, string command);
+    Task<long> DeletePermission(string roleId, string function, string command);
 
     Task<IEnumerable<PermissionDto>> GetPermissions(string roleId);
 

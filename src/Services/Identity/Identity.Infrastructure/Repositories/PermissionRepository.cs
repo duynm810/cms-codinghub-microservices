@@ -22,7 +22,7 @@ public class PermissionRepository(
 {
     #region CRUD
 
-    public async Task<int> CreatePermission(string roleId, CreateOrUpdatePermissionDto model,
+    public async Task<long> CreatePermission(string roleId, CreateOrUpdatePermissionDto model,
         DynamicParameters parameters)
     {
         parameters.Add("@roleId", roleId, DbType.String);
@@ -30,14 +30,10 @@ public class PermissionRepository(
         parameters.Add("@command", model.Command, DbType.String);
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
-        await ExecuteAsync("Create_Permission", parameters);
-        
-        // Retrieve the value of the output parameter
-        var newId = parameters.Get<int>("@newID");
-        return newId;
+        return await ExecuteAsync("Create_Permission", parameters);
     }
 
-    public async Task<int> UpdatePermissions(string roleId, DataTable permissions)
+    public async Task<long> UpdatePermissions(string roleId, DataTable permissions)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@roleId", roleId, DbType.String);
@@ -46,7 +42,7 @@ public class PermissionRepository(
         return await ExecuteAsync("Update_Permissions", parameters);
     }
 
-    public async Task<int> DeletePermission(string roleId, string function, string command)
+    public async Task<long> DeletePermission(string roleId, string function, string command)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@roleId", roleId, DbType.String);
