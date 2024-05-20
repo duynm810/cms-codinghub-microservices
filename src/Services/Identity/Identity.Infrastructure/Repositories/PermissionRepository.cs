@@ -53,8 +53,8 @@ public class PermissionRepository(
                 Command = model.Command
             };
 
-            logger.Information("END {MethodName} - Permission created successfully with ID {PermissionId}", methodName,
-                newId);
+            logger.Information("END {MethodName} - Permission created successfully with ID {PermissionId}", methodName, newId);
+            
             return permission;
         }
         catch (Exception e)
