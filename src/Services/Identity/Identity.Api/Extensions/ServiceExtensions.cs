@@ -44,7 +44,7 @@ public static class ServiceExtensions
         services.AddSwaggerConfiguration();
 
         // Register identity
-        services.AddIdentity(configuration);
+        services.AddIdentity();
 
         // Register identity server
         services.AddIdentityServer();
@@ -83,7 +83,7 @@ public static class ServiceExtensions
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
-    private static void AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    private static void AddIdentity(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(

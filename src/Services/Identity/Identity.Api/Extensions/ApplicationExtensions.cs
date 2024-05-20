@@ -16,7 +16,7 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Identity Swagger UI";
+            c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
             c.DisplayRequestDuration();
         });

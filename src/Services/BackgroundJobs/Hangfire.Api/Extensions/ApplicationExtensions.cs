@@ -19,7 +19,7 @@ public static class ApplicationExtensions
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Hangfire Swagger UI";
+            c.DocumentTitle = $"{SwaggerConsts.HangfireApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.HangfireApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
