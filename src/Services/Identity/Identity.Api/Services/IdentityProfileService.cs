@@ -1,8 +1,8 @@
 using System.Security.Claims;
 using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
-using Identity.Api.Entities;
 using Identity.Api.Services.Intefaces;
+using Identity.Infrastructure.Entities;
 using Microsoft.AspNetCore.Identity;
 using Shared.Constants;
 

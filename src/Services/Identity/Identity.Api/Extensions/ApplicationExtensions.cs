@@ -11,27 +11,31 @@ public static class ApplicationExtensions
         {
             app.UseDeveloperExceptionPage();
         }
-        
+
         // Configure the HTTP request pipeline.
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Identity Swagger UI";
+            c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
             c.DisplayRequestDuration();
         });
-        
-        app.UseSerilogRequestLogging();
 
-        // uncomment if you want to add a UI
-        app.UseStaticFiles();
-        app.UseRouting();
+        app.UseSerilogRequestLogging();
         
         app.UseCors("CorsPolicy");
 
+        // Uncomment if you want to add a UI
+        app.UseStaticFiles();
+        app.UseRouting();
+        
+        // Fix can't log in same site
+        // Set cookie policy before authentication/authorization setup
+        app.UseCookiePolicy();
+
         app.UseIdentityServer();
 
-        // uncomment if you want to add a UI
+        // Uncomment if you want to add a UI
         app.UseAuthorization();
         app.MapRazorPages().RequireAuthorization();
     }
