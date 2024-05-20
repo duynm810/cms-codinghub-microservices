@@ -5,6 +5,8 @@ using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Repositories.Interfaces;
+using Identity.Infrastructure.Services;
+using Identity.Infrastructure.Services.Interfaces;
 using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
@@ -77,7 +79,8 @@ public static class ServiceExtensions
         services
             .AddScoped<IIdentityProfileService, IdentityProfileService>()
             .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
-            .AddScoped<IPermissionRepository, PermissionRepository>();
+            .AddScoped<IPermissionRepository, PermissionRepository>()
+            .AddScoped<IPermissionService, PermissionService>();
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)

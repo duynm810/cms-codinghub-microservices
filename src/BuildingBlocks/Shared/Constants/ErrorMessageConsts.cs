@@ -6,7 +6,7 @@ public static class ErrorMessageConsts
     {
         public const string UnhandledException = "Unhandled exception";
     }
-    
+
     public static class Category
     {
         public const string CategoryNotFound = "Category not found";
@@ -29,5 +29,13 @@ public static class ErrorMessageConsts
     {
         public const string PostIdsNotFound = "Post Ids not found";
         public const string PostNotFoundInSeries = "No posts found in this series";
+    }
+
+    public static class Identity
+    {
+        public static class Permission
+        {
+            public const string PermissionCreationFailed = "Failed to create permission.";
+        }
     }
 }
