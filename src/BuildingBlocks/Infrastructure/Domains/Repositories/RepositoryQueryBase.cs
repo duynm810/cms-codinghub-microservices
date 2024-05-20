@@ -1,6 +1,8 @@
+using System.Data;
 using System.Linq.Expressions;
 using Contracts.Domains;
 using Contracts.Domains.Repositories;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Domains.Repositories;
@@ -13,7 +15,8 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
     where TContext : DbContext
 {
     private readonly TContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-
+    private IDbConnection Connection => _dbContext.Database.GetDbConnection();
+    
     public IQueryable<T> FindAll(bool trackChanges = false)
     {
         return !trackChanges
@@ -53,5 +56,39 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
     {
         return await FindByCondition(x => x.Id != null && x.Id.Equals(id), false, includeProperties)
             .FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<TModel>> QueryAsync<TModel>(string sql, object? parameters = null)
+    {
+        var existingConnectionState = Connection.State;
+        if (existingConnectionState != ConnectionState.Open)
+            Connection.Open();
+
+        try
+        {
+            return (await Connection.QueryAsync<TModel>(sql, parameters)).AsList();
+        }
+        finally
+        {
+            if (existingConnectionState != ConnectionState.Open)
+                Connection.Close();
+        }
+    }
+
+    public async Task<T?> QueryFirstOrDefaultAsync(string sql, object? parameters = null)
+    {
+        var existingConnectionState = Connection.State;
+        if (existingConnectionState != ConnectionState.Open)
+            Connection.Open();
+
+        try
+        {
+            return await Connection.QueryFirstOrDefaultAsync<T>(sql, parameters);
+        }
+        finally
+        {
+            if (existingConnectionState != ConnectionState.Open)
+                Connection.Close();
+        }
     }
 }

@@ -1,10 +1,13 @@
+using System.Data;
 using AutoMapper;
 using Contracts.Domains.Repositories;
+using Dapper;
 using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories.Interfaces;
 using Infrastructure.Domains.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Serilog;
 using Shared.Dtos.Identity.Permission;
 
 namespace Identity.Infrastructure.Repositories;
@@ -13,39 +16,49 @@ public class PermissionRepository(
     IdentityContext dbContext,
     IUnitOfWork<IdentityContext> unitOfWork,
     UserManager<User> userManager,
-    IMapper mapper)
+    IMapper mapper,
+    ILogger logger)
     : RepositoryCommandBase<Permission, long, IdentityContext>(dbContext, unitOfWork), IPermissionRepository
 {
     #region CRUD
 
-    public async Task<PermissionDto?> CreatePermission(string roleId, CreatePermissionDto model)
+    public async Task<long> CreatePermission(string roleId, CreateOrUpdatePermissionDto model,
+        DynamicParameters parameters)
     {
-        throw new NotImplementedException();
+        parameters.Add("@roleId", roleId, DbType.String);
+        parameters.Add("@function", model.Function, DbType.String);
+        parameters.Add("@command", model.Command, DbType.String);
+        parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
+
+        return await ExecuteAsync("Create_Permission", parameters);
     }
 
-    public async Task DeletePermission(string roleId, string function, string command)
+    public async Task<long> UpdatePermissions(string roleId, DataTable permissions)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+        parameters.Add("@roleId", roleId, DbType.String);
+        parameters.Add("@permissions", permissions.AsTableValuedParameter("dbo.Permission"));
+
+        return await ExecuteAsync("Update_Permissions", parameters);
     }
 
-    #endregion
-
-    #region OTHERS
-
-    public async Task<IReadOnlyList<PermissionDto>> GetPermissionsByRole(string roleId)
+    public async Task<long> DeletePermission(string roleId, string function, string command)
     {
-        throw new NotImplementedException();
+        var parameters = new DynamicParameters();
+        parameters.Add("@roleId", roleId, DbType.String);
+        parameters.Add("@function", function, DbType.String);
+        parameters.Add("@command", command, DbType.String);
+
+        return await ExecuteAsync("Delete_Permission", parameters);
     }
 
-    public async Task UpdatePermission(string roleId, IEnumerable<CreatePermissionDto> permissionCollection)
+    public async Task<IEnumerable<PermissionDto>> GetPermissions(string roleId)
     {
-        throw new NotImplementedException();
-    }
+        var parameters = new DynamicParameters();
+        parameters.Add("@roleId", roleId);
 
-    public async Task<IEnumerable<PermissionUserDto>> GetPermissionsByUser(User user)
-    {
-        throw new NotImplementedException();
+        return await QueryAsync<PermissionDto>("Get_Permissions", parameters);
     }
-
+    
     #endregion
 }

@@ -1,4 +1,6 @@
+using System.Data;
 using Contracts.Domains.Repositories;
+using Dapper;
 using Identity.Infrastructure.Entities;
 using Shared.Dtos.Identity.Permission;
 
@@ -8,19 +10,13 @@ public interface IPermissionRepository : IRepositoryCommandBase<Permission, long
 {
     #region CRUD
 
-    Task<PermissionDto?> CreatePermission(string roleId, CreatePermissionDto model);
+    Task<long> CreatePermission(string roleId, CreateOrUpdatePermissionDto model, DynamicParameters parameters);
 
-    Task UpdatePermission(string roleId, IEnumerable<CreatePermissionDto> permissionCollection);
+    Task<long> UpdatePermissions(string roleId, DataTable permissions);
 
-    Task DeletePermission(string roleId, string function, string command);
+    Task<long> DeletePermission(string roleId, string function, string command);
 
-    #endregion
-
-    #region OTHERS
-
-    Task<IReadOnlyList<PermissionDto>> GetPermissionsByRole(string roleId);
-    
-    Task<IEnumerable<PermissionUserDto>> GetPermissionsByUser(User user);
+    Task<IEnumerable<PermissionDto>> GetPermissions(string roleId);
 
     #endregion
 }

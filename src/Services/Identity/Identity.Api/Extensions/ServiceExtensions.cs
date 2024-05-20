@@ -5,6 +5,8 @@ using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Repositories.Interfaces;
+using Identity.Infrastructure.Services;
+using Identity.Infrastructure.Services.Interfaces;
 using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
@@ -24,7 +26,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Fix can't login same site
         services.ConfigureCookiePolicy();
 
@@ -33,13 +35,13 @@ public static class ServiceExtensions
 
         // Register repository and related services
         services.AddRepositoryAndDomainServices();
-        
+
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
 
         // Register additional services
         services.AddAdditionalServices();
-        
+
         // Register Swagger services
         services.AddSwaggerConfiguration();
 
@@ -75,9 +77,10 @@ public static class ServiceExtensions
         services
             .AddScoped<IIdentityProfileService, IdentityProfileService>()
             .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
-            .AddScoped<IPermissionRepository, PermissionRepository>();
+            .AddScoped<IPermissionRepository, PermissionRepository>()
+            .AddScoped<IPermissionService, PermissionService>();
     }
-    
+
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
@@ -158,21 +161,21 @@ public static class ServiceExtensions
     {
         // uncomment if you want to add a UI
         services.AddRazorPages();
-        
-        services.AddEndpointsApiExplorer();
         services.AddControllers(config =>
         {
             config.RespectBrowserAcceptHeader = true;
             config.ReturnHttpNotAcceptable = true;
             config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
         }).AddApplicationPart(typeof(AssemblyReference).Assembly);
+        
+        services.AddEndpointsApiExplorer();
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
-    
+
     private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
-            c.EnableAnnotations();
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {
