@@ -5,12 +5,16 @@ using Identity.Api.Repositories;
 using Identity.Api.Repositories.Interfaces;
 using Identity.Api.Services;
 using Identity.Api.Services.Intefaces;
+using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Configurations;
+using Shared.Constants;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Identity.Api.Extensions;
 
@@ -32,6 +36,9 @@ public static class ServiceExtensions
 
         // Register additional services
         services.AddAdditionalServices();
+        
+        // Register Swagger services
+        services.AddSwaggerConfiguration();
 
         // Register identity
         services.AddIdentity(configuration);
@@ -148,5 +155,29 @@ public static class ServiceExtensions
     {
         // uncomment if you want to add a UI
         services.AddRazorPages();
+        
+        services.AddEndpointsApiExplorer();
+        services.AddControllers(config =>
+        {
+            config.RespectBrowserAcceptHeader = true;
+            config.ReturnHttpNotAcceptable = true;
+            config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
+        }).AddApplicationPart(typeof(AssemblyReference).Assembly);
+    }
+    
+    private static void AddSwaggerConfiguration(this IServiceCollection services)
+    {
+        services.AddSwaggerGen(c =>
+        {
+            c.EnableAnnotations();
+            c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Version = "v1",
+                Title = $"{SwaggerConsts.IdentityApi} for Administrators",
+                Description =
+                    "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
+            });
+        });
     }
 }

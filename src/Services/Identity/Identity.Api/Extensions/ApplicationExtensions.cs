@@ -1,4 +1,5 @@
 using Serilog;
+using Shared.Constants;
 
 namespace Identity.Api.Extensions;
 
@@ -10,6 +11,15 @@ public static class ApplicationExtensions
         {
             app.UseDeveloperExceptionPage();
         }
+        
+        // Configure the HTTP request pipeline.
+        app.UseSwagger();
+        app.UseSwaggerUI(c =>
+        {
+            c.DocumentTitle = "Identity Swagger UI";
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
+            c.DisplayRequestDuration();
+        });
         
         app.UseSerilogRequestLogging();
 
