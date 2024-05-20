@@ -30,7 +30,11 @@ public class PermissionRepository(
         parameters.Add("@command", model.Command, DbType.String);
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
-        return await ExecuteAsync("Create_Permission", parameters);
+        await ExecuteAsync("Create_Permission", parameters);
+        
+        // Retrieve the value of the output parameter
+        var newId = parameters.Get<int>("@newID");
+        return newId;
     }
 
     public async Task<int> UpdatePermissions(string roleId, DataTable permissions)
@@ -59,6 +63,6 @@ public class PermissionRepository(
 
         return await QueryAsync<PermissionDto>("Get_Permissions", parameters);
     }
-
+    
     #endregion
 }
