@@ -11,16 +11,4 @@ public interface IIdentityReposityManager
     RoleManager<IdentityRole> RoleManager { get; }
     
     IPermissionRepository Permissions { get; }
-
-    #region FUNCTIONS
-
-    Task<int> SaveAsync();
-
-    Task<IDbContextTransaction> BeginTransactionAsync();
-
-    Task EndTransactionAsync();
-
-    void RollbackTransaction();
-
-    #endregion
 }

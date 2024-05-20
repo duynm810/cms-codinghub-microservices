@@ -5,12 +5,10 @@ using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Repositories.Interfaces;
-using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Configurations;
 using Shared.Constants;
@@ -24,7 +22,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Fix can't login same site
         services.ConfigureCookiePolicy();
 
@@ -33,13 +31,13 @@ public static class ServiceExtensions
 
         // Register repository and related services
         services.AddRepositoryAndDomainServices();
-        
+
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
 
         // Register additional services
         services.AddAdditionalServices();
-        
+
         // Register Swagger services
         services.AddSwaggerConfiguration();
 
@@ -67,6 +65,8 @@ public static class ServiceExtensions
         services
             .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
             .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
+            .AddScoped(typeof(IDapperRepositoryCommandBase<,>), typeof(DapperRepositoryBase<,>))
+            .AddScoped(typeof(IDapperRepositoryQueryBase<,>), typeof(DapperRepositoryBase<,>))
             .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
@@ -77,7 +77,7 @@ public static class ServiceExtensions
             .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
             .AddScoped<IPermissionRepository, PermissionRepository>();
     }
-    
+
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
@@ -158,21 +158,15 @@ public static class ServiceExtensions
     {
         // uncomment if you want to add a UI
         services.AddRazorPages();
-        
+        services.AddControllers();
         services.AddEndpointsApiExplorer();
-        services.AddControllers(config =>
-        {
-            config.RespectBrowserAcceptHeader = true;
-            config.ReturnHttpNotAcceptable = true;
-            config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
-        }).AddApplicationPart(typeof(AssemblyReference).Assembly);
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
-    
+
     private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
         services.AddSwaggerGen(c =>
         {
-            c.EnableAnnotations();
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
             c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
             {

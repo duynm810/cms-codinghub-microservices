@@ -38,6 +38,11 @@ public static class ApplicationExtensions
 
         // Uncomment if you want to add a UI
         app.UseAuthorization();
+        
+        app.UseAuthentication();
+        
+        app.MapControllers();
+        
         app.MapRazorPages().RequireAuthorization();
     }
 }

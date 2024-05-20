@@ -1,5 +1,7 @@
+using System.Data;
 using AutoMapper;
 using Contracts.Domains.Repositories;
+using Dapper;
 using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories.Interfaces;
@@ -14,37 +16,28 @@ public class PermissionRepository(
     IUnitOfWork<IdentityContext> unitOfWork,
     UserManager<User> userManager,
     IMapper mapper)
-    : RepositoryCommandBase<Permission, long, IdentityContext>(dbContext, unitOfWork), IPermissionRepository
+    : DapperRepositoryBase<Permission, long>(dbContext), IPermissionRepository
 {
     #region CRUD
 
     public async Task<PermissionDto?> CreatePermission(string roleId, CreatePermissionDto model)
     {
-        throw new NotImplementedException();
-    }
+        var parameters = new DynamicParameters();
+        parameters.Add("@roleId", roleId, DbType.String);
+        parameters.Add("@function", model.Function, DbType.String);
+        parameters.Add("@command", model.Command, DbType.String);
+        parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
-    public async Task DeletePermission(string roleId, string function, string command)
-    {
-        throw new NotImplementedException();
-    }
-
-    #endregion
-
-    #region OTHERS
-
-    public async Task<IReadOnlyList<PermissionDto>> GetPermissionsByRole(string roleId)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task UpdatePermission(string roleId, IEnumerable<CreatePermissionDto> permissionCollection)
-    {
-        throw new NotImplementedException();
-    }
-
-    public async Task<IEnumerable<PermissionUserDto>> GetPermissionsByUser(User user)
-    {
-        throw new NotImplementedException();
+        var result = await ExecuteAsync("Create_Permission", parameters);
+        if (result <= 0) return null;
+        var newId = parameters.Get<long>("@newID");
+        return new PermissionDto
+        {
+            Id = newId,
+            RoleId = roleId,
+            Function = model.Function,
+            Command = model.Command
+        };
     }
 
     #endregion

@@ -16,6 +16,5 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Identity.Infrastructure\Identity.Infrastructure.csproj" />
-	  <ProjectReference Include="..\Identity.Presentation\Identity.Presentation.csproj" />
 	</ItemGroup>
 </Project>
