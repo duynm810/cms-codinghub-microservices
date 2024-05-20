@@ -5,10 +5,12 @@ using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories;
 using Identity.Infrastructure.Repositories.Interfaces;
+using Identity.Presentation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Shared.Configurations;
 using Shared.Constants;
@@ -158,7 +160,13 @@ public static class ServiceExtensions
     {
         // uncomment if you want to add a UI
         services.AddRazorPages();
-        services.AddControllers();
+        services.AddControllers(config =>
+        {
+            config.RespectBrowserAcceptHeader = true;
+            config.ReturnHttpNotAcceptable = true;
+            config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
+        }).AddApplicationPart(typeof(AssemblyReference).Assembly);
+        
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
