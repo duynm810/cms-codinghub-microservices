@@ -14,7 +14,7 @@ using Post.Infrastructure.GrpcServices;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Post.Infrastructure;
 

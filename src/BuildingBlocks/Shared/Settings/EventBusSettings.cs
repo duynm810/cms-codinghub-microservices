@@ -1,4 +1,4 @@
-namespace Shared.Configurations;
+namespace Shared.Settings;
 
 public class EventBusSettings
 {

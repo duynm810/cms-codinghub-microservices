@@ -8,6 +8,7 @@ using Identity.Infrastructure.Repositories.Interfaces;
 using Identity.Infrastructure.Services;
 using Identity.Infrastructure.Services.Interfaces;
 using Identity.Presentation;
+using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
@@ -16,8 +17,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Identity.Api.Extensions;
@@ -197,7 +198,7 @@ public static class ServiceExtensions
             });
             
             var identityServerBaseUrl = configuration.GetSection("IdentityServer:BaseUrl").Value;
-            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
                 // Determine the security scheme type as OAuth2
                 // Xác định loại scheme bảo mật là OAuth2
@@ -232,7 +233,7 @@ public static class ServiceExtensions
                         Reference = new OpenApiReference
                         {
                             Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Id = IdentityServerAuthenticationDefaults.AuthenticationScheme
                         }
                     },
                     new List<string> //  List of scopes to which this security requirement applies (Danh sách các phạm vi (scopes) mà yêu cầu bảo mật này áp dụng)
@@ -249,7 +250,7 @@ public static class ServiceExtensions
     {
         services
             .AddAuthentication()
-            .AddLocalApi("Bearer", option =>
+            .AddLocalApi(IdentityServerAuthenticationDefaults.AuthenticationScheme, option =>
             {
                 option.ExpectedScope = "coding_hub_microservices_api.read";
             }); // Any token with this scope will be accepted. (Bất kỳ token nào có scope này sẽ được chấp nhận.)
@@ -260,9 +261,9 @@ public static class ServiceExtensions
         services.AddAuthorization(
             options =>
             {
-                options.AddPolicy("Bearer", policy =>
+                options.AddPolicy(IdentityServerAuthenticationDefaults.AuthenticationScheme, policy =>
                 {
-                    policy.AddAuthenticationSchemes("Bearer"); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
+                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
                     policy.RequireAuthenticatedUser(); // User authentication is required to meet this policy. (Yêu cầu người dùng phải xác thực để đáp ứng policy này.)
                 });
             });

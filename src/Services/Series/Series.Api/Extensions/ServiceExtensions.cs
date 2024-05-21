@@ -9,8 +9,8 @@ using Series.Api.Repositories;
 using Series.Api.Repositories.Interfaces;
 using Series.Api.Services;
 using Series.Api.Services.Interfaces;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Series.Api.Extensions;

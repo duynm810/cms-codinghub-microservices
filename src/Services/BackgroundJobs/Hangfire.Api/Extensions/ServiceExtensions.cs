@@ -7,8 +7,8 @@ using Infrastructure.Extensions;
 using Infrastructure.Scheduled;
 using Infrastructure.Services;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Hangfire.Api.Extensions;

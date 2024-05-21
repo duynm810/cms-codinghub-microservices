@@ -1,14 +1,19 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Category.Api.Services.Interfaces;
+using IdentityServer4.AccessTokenValidation;
+using Infrastructure.Identity.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Category;
+using Shared.Enums;
 using Shared.Responses;
 
 namespace Category.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class CategoriesController(ICategoryService categoryService) : ControllerBase
 {
     [HttpPost]
@@ -46,6 +51,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpGet("{id:long}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
+    [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
     public async Task<IActionResult> GetCategory([FromRoute, Required] long id)
     {
         var result = await categoryService.GetCategoryById(id);

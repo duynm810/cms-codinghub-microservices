@@ -1,6 +1,6 @@
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Post.Api.Extensions;
 

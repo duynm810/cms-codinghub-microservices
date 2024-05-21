@@ -22,6 +22,7 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = $"{SwaggerConsts.CategoryApi} Documentation";
+            c.OAuthClientId("coding_hub_microservices_swagger");
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.CategoryApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
@@ -29,6 +30,10 @@ public static class ApplicationExtensions
 
         // Enables routing in the application.
         app.UseRouting();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
         
         app.MapHealthChecks("/hc", new HealthCheckOptions()
         {

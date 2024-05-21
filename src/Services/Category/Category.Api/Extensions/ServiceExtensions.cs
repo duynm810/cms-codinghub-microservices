@@ -6,16 +6,20 @@ using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
 using Contracts.Domains.Repositories;
+using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Category.Api.Extensions;
@@ -31,7 +35,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-
+        
         // Register database context
         services.AddDatabaseContext();
 
@@ -55,6 +59,12 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcConfiguration();
+
+        // Register authentication services
+        services.ConfigureAuthenticationHandler();
+
+        // Register authorization services
+        services.ConfigureAuthorization();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -93,6 +103,10 @@ public static class ServiceExtensions
 
     private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
+        var apiConfigurations = services.GetOptions<ApiConfigurations>(nameof(ApiConfigurations)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(ApiConfigurations)} is not configured properly");
+        
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
@@ -102,6 +116,41 @@ public static class ServiceExtensions
                 Title = $"{SwaggerConsts.CategoryApi} for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
+            });
+            c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.OAuth2,
+                Flows = new OpenApiOAuthFlows
+                {
+                    Implicit = new OpenApiOAuthFlow
+                    {
+                        AuthorizationUrl = new Uri($"{apiConfigurations.IdentityServerBaseUrl}/connect/authorize"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { "coding_hub_microservices_api.read", "Coding Hub Microservices API Read Scope" },
+                            { "coding_hub_microservices_api.write", "Coding Hub Microservices API Write Scope" }
+                        }
+                    }
+                }
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = IdentityServerAuthenticationDefaults.AuthenticationScheme
+                        },
+                        Name = IdentityServerAuthenticationDefaults.AuthenticationScheme
+                    },
+                    new List<string>
+                    {
+                        "coding_hub_microservices_api.read", 
+                        "coding_hub_microservices_api.write"
+                    }
+                }
             });
         });
     }

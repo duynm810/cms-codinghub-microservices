@@ -2,7 +2,7 @@ using Grpc.HealthCheck;
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Post.Grpc.Services.BackgroundServices;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Post.Grpc.Extensions;
 
