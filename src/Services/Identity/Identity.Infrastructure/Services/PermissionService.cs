@@ -34,7 +34,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
             if (executeResult <= 0)
             {
                 result.Messages.Add(ErrorMessageConsts.Identity.Permission.PermissionCreationFailed);
-                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
@@ -57,8 +57,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdatePermissions(string roleId,
-        IEnumerable<CreateOrUpdatePermissionDto> permissions)
+    public async Task<ApiResult<bool>> UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionDto> permissions)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePermissions);

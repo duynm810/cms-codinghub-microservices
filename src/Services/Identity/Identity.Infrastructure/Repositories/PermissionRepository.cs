@@ -1,5 +1,4 @@
 using System.Data;
-using AutoMapper;
 using Contracts.Domains.Repositories;
 using Dapper;
 using Identity.Infrastructure.Entities;
@@ -7,8 +6,6 @@ using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories.Interfaces;
 using Infrastructure.Domains.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Serilog;
-using Shared.Dtos.Identity.Permission;
 
 namespace Identity.Infrastructure.Repositories;
 
@@ -28,7 +25,10 @@ public class PermissionRepository(
         parameters.Add("@command", model.Command, DbType.String);
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
-        return await ExecuteAsync("Create_Permission", parameters);
+        await ExecuteAsync("Create_Permission", parameters);
+        
+        var newId = parameters.Get<long>("@newID");
+        return newId;
     }
 
     public async Task<long> UpdatePermissions(string roleId, DataTable permissions)
