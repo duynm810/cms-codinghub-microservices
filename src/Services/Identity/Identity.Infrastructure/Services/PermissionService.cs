@@ -155,4 +155,29 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
     }
 
     #endregion
+
+    #region OTHERS
+
+    public async Task<ApiResult<List<PermissionDto>>> GetPermissionsByUser(User user)
+    {
+        var result = new ApiResult<List<PermissionDto>>();
+        const string methodName = nameof(GetPermissionsByUser);
+        
+        try
+        {
+            var permissions = await permissionRepository.GetPermissionsByUser(user);
+            var data = mapper.Map<List<PermissionDto>>(permissions);
+            result.Success(data);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    #endregion
 }

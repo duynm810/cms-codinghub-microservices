@@ -19,4 +19,10 @@ public interface IPermissionRepository : IRepositoryCommandBase<Permission, long
     Task<IEnumerable<Permission>> GetPermissions(string roleId);
 
     #endregion
+
+    #region OTHERS
+
+    Task<IEnumerable<Permission>> GetPermissionsByUser(User user);
+
+    #endregion
 }

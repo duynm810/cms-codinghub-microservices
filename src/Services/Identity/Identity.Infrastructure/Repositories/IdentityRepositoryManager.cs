@@ -1,10 +1,8 @@
-using AutoMapper;
 using Contracts.Domains.Repositories;
 using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Serilog;
 
 namespace Identity.Infrastructure.Repositories;
 

@@ -6,6 +6,7 @@ using Identity.Infrastructure.Persistence;
 using Identity.Infrastructure.Repositories.Interfaces;
 using Infrastructure.Domains.Repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Identity.Infrastructure.Repositories;
 
@@ -26,7 +27,7 @@ public class PermissionRepository(
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
         await ExecuteAsync("Create_Permission", parameters);
-        
+
         var newId = parameters.Get<long>("@newID");
         return newId;
     }
@@ -57,6 +58,17 @@ public class PermissionRepository(
 
         return await QueryAsync<Permission>("Get_Permissions", parameters);
     }
-    
+
+    #endregion
+
+    #region OTHERS
+
+    public async Task<IEnumerable<Permission>> GetPermissionsByUser(User user)
+    {
+        var currentUserRoles = await userManager.GetRolesAsync(user);
+        var query = await FindByCondition(x => currentUserRoles.Contains(x.RoleId)).ToListAsync();
+        return query;
+    }
+
     #endregion
 }

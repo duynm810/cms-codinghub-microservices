@@ -1,3 +1,4 @@
+using Identity.Infrastructure.Entities;
 using Shared.Dtos.Identity.Permission;
 using Shared.Responses;
 
@@ -14,6 +15,12 @@ public interface IPermissionService
     Task<ApiResult<bool>> DeletePermission(string roleId, string function, string command);
 
     Task<ApiResult<IReadOnlyList<PermissionDto>>> GetPermissions(string roleId);
+
+    #endregion
+
+    #region OTHERS
+
+    Task<ApiResult<List<PermissionDto>>> GetPermissionsByUser(User user);
 
     #endregion
 }
