@@ -15,6 +15,9 @@ services:
     
   hangfiredb:
     image: mongo
+    
+  identitydb:
+    image: mcr.microsoft.com/mssql/server:2022-latest
   
   ##infrastructure section
   rabbitmq:
@@ -66,8 +69,8 @@ services:
       context: .
       dockerfile: Services/Series/Series.Grpc/Dockerfile
       
-  postinseries.api:
-    image: ${DOCKER_REGISTRY-}postinseries-api:${PLATFORM:-linux}-${TAG:-latest}
+  post-in-series.api:
+    image: ${DOCKER_REGISTRY-}post-in-series-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
@@ -112,3 +115,5 @@ volumes:
     name: elasticsearch_data
   hangfire_mongo_data:
     name: hangfire_mongo_data
+  identity_sqlserver_data:
+    name: identity_sqlserver_data

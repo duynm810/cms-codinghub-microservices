@@ -8,13 +8,18 @@ namespace Hangfire.Api.Extensions;
 
 public static class ApplicationExtensions
 {
-    public static void ConfigurePipeline(this IApplicationBuilder app, IConfiguration configuration)
+    public static void ConfigurePipeline(this WebApplication app, IConfiguration configuration)
     {
+        if (app.Environment.IsProduction())
+        {
+            app.UseHttpsRedirection();
+        }
+
         // Configure the HTTP request pipeline.
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Hangfire Swagger UI";
+            c.DocumentTitle = $"{SwaggerConsts.HangfireApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.HangfireApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
@@ -25,19 +30,16 @@ public static class ApplicationExtensions
 
         app.UseHangfireDashboard(configuration);
 
-        app.UseEndpoints(endpoints =>
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
         {
-            endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            endpoints.MapDefaultControllerRoute();
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
+
+        app.MapDefaultControllerRoute();
     }
 
-    private static void UseHangfireDashboard(this IApplicationBuilder app, IConfiguration configuration)
+    private static void UseHangfireDashboard(this WebApplication app, IConfiguration configuration)
     {
         var configDashboard = configuration.GetSection("HangfireSettings:Dashboard").Get<DashboardOptions>()
                               ?? throw new ArgumentNullException(

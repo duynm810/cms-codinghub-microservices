@@ -5,7 +5,7 @@ using PostInSeries.Api.Services.Interfaces;
 namespace PostInSeries.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/post-in-series")]
 public class PostInSeriesController(IPostInSeriesService postInSeriesService) : ControllerBase
 {
     [HttpPost]

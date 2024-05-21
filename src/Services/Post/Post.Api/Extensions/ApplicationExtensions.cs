@@ -10,13 +10,18 @@ public static class ApplicationExtensions
     /// Configures the HTTP request pipeline with essential middleware components such as Swagger UI, routing, and endpoint mapping.
     /// </summary>
     /// <param name="app">The IApplicationBuilder to configure the middleware pipeline.</param>
-    public static void ConfigurePipeline(this IApplicationBuilder app)
+    public static void ConfigurePipeline(this WebApplication app)
     {
+        if (app.Environment.IsProduction())
+        {
+            app.UseHttpsRedirection();
+        }
+
         // Configure the HTTP request pipeline.
         app.UseSwagger();
         app.UseSwaggerUI(c =>
         {
-            c.DocumentTitle = "Post Swagger UI";
+            c.DocumentTitle = $"{SwaggerConsts.PostApi} Documentation";
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.PostApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
@@ -24,16 +29,13 @@ public static class ApplicationExtensions
 
         // Enables routing in the application.
         app.UseRouting();
-
-        app.UseEndpoints(endpoints =>
+        
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
         {
-            endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
-            {
-                Predicate = _ => true,
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-            });
-
-            endpoints.MapDefaultControllerRoute();
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
+        
+        app.MapDefaultControllerRoute();
     }
 }

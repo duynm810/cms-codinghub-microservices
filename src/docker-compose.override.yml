@@ -56,6 +56,18 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'admin'
       MONGO_INITDB_ROOT_PASSWORD: 'admin'
+      
+  #identitydb: sqlserver
+  identitydb:
+    container_name: identitydb
+    environment:
+      SA_PASSWORD: "Passw0rd!"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - identity_sqlserver_data:/var/opt/mssql
+    restart: always
+    ports:
+      - "1436:1433"
   
   ##infrastructure section
   rabbitmq:
@@ -169,8 +181,8 @@ services:
       - "6007:80"
     restart: always
   
-  postinseries.api:
-    container_name: postinseries.api
+  post-in-series.api:
+    container_name: post-in-series.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
@@ -200,7 +212,7 @@ services:
       - category.api
       - post.api
       - series.api
-      - postinseries.api
+      - post-in-series.api
       - hangfire.api
     ports:
       - "6020:80"

@@ -1,3 +1,4 @@
+using System.Data;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -6,7 +7,7 @@ namespace Contracts.Domains.Repositories;
 
 #region Query Base (Get)
 
-public interface IRepositoryQueryBase<T, in TK> where T : EntityBase<TK>
+public interface IRepositoryQueryBase<T, TK> where T : EntityBase<TK>
 {
     IQueryable<T> FindAll(bool trackChanges = false);
 
@@ -19,10 +20,17 @@ public interface IRepositoryQueryBase<T, in TK> where T : EntityBase<TK>
 
     Task<T?> GetByIdAsync(TK id);
 
-    Task<T?> GetByIdAsync(TK id, params Expression<Func<T, object>>[] includeProperties);
+    Task<IReadOnlyList<TModel>> QueryAsync<TModel>(string sql, object? param,
+        CommandType? commandType, IDbTransaction? transaction, int? commandTimeout) where TModel : EntityBase<TK>;
+
+    Task<TModel> QueryFirstOrDefaultAsync<TModel>(string sql, object? param,
+        CommandType? commandType, IDbTransaction? transaction, int? commandTimeout) where TModel : EntityBase<TK>;
+
+    Task<TModel> QuerySingleAsync<TModel>(string sql, object? param,
+        CommandType? commandType, IDbTransaction? transaction, int? commandTimeout) where TModel : EntityBase<TK>;
 }
 
-public interface IRepositoryQueryBase<T, in TK, TContext> : IRepositoryQueryBase<T, TK> where T : EntityBase<TK>
+public interface IRepositoryQueryBase<T, TK, TContext> : IRepositoryQueryBase<T, TK> where T : EntityBase<TK>
     where TContext : DbContext;
 
 #endregion
@@ -55,6 +63,8 @@ public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     void DeleteList(IEnumerable<T> entities);
 
     Task DeleteListAsync(IEnumerable<T> entities);
+    
+    Task<int> ExecuteAsync(string sql, object? param, CommandType? commandType, IDbTransaction? transaction, int? commandTimeout);
 
     Task<int> SaveChangesAsync();
 
