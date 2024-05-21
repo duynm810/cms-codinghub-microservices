@@ -1,5 +1,6 @@
 using System.Data;
-using Dapper;
+using AutoMapper;
+using Identity.Infrastructure.Entities;
 using Identity.Infrastructure.Repositories.Interfaces;
 using Identity.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -11,7 +12,7 @@ using Shared.Utilities;
 
 namespace Identity.Infrastructure.Services;
 
-public class PermissionService(IPermissionRepository permissionRepository, ILogger logger) : IPermissionService
+public class PermissionService(IPermissionRepository permissionRepository, IMapper mapper, ILogger logger) : IPermissionService
 {
     #region CRUD
 
@@ -25,29 +26,26 @@ public class PermissionService(IPermissionRepository permissionRepository, ILogg
             logger.Information(
                 "BEGIN {MethodName} - Creating permission for role: {RoleId} with function: {Function} and command: {Command}",
                 methodName, roleId, model.Function, model.Command);
+            
+            var permission = mapper.Map<Permission>(model);
+            permission.RoleId = roleId;
 
-            var parameters = new DynamicParameters();
-            var executeResult = await permissionRepository.CreatePermission(roleId, model, parameters);
+            var executeResult = await permissionRepository.CreatePermission(roleId, permission);
             if (executeResult <= 0)
             {
                 result.Messages.Add(ErrorMessageConsts.Identity.Permission.PermissionCreationFailed);
-                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
-            var newId = parameters.Get<long>("@newID");
-            var permission = new PermissionDto
-            {
-                Id = newId,
-                RoleId = roleId,
-                Function = model.Function,
-                Command = model.Command
-            };
+            permission.Id = executeResult;
+            
+            var permissionDto = mapper.Map<PermissionDto>(permission);
 
-            result.Success(permission);
+            result.Success(permissionDto);
 
             logger.Information("END {MethodName} - Permission created successfully with ID {PermissionId}", methodName,
-                newId);
+                permission.Id);
         }
         catch (Exception e)
         {
@@ -59,8 +57,7 @@ public class PermissionService(IPermissionRepository permissionRepository, ILogg
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdatePermissions(string roleId,
-        IEnumerable<CreateOrUpdatePermissionDto> permissions)
+    public async Task<ApiResult<bool>> UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionDto> permissions)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePermissions);
@@ -69,13 +66,16 @@ public class PermissionService(IPermissionRepository permissionRepository, ILogg
         {
             logger.Information("BEGIN {MethodName} - Updating permissions for role: {RoleId}", methodName, roleId);
 
+            var permissionList = permissions.ToList();
+            var updatePermissions = permissionList.Select(mapper.Map<Permission>).ToList();
+            
             var dt = new DataTable();
 
             dt.Columns.Add("RoleId", typeof(string));
             dt.Columns.Add("Function", typeof(string));
             dt.Columns.Add("Command", typeof(string));
 
-            foreach (var item in permissions)
+            foreach (var item in updatePermissions)
             {
                 dt.Rows.Add(roleId, item.Function, item.Command);
             }
@@ -136,13 +136,38 @@ public class PermissionService(IPermissionRepository permissionRepository, ILogg
 
             var queryResult = await permissionRepository.GetPermissions(roleId);
 
-            var permissionDtos = queryResult.ToList();
+            var permissionDtos = mapper.Map<List<PermissionDto>>(queryResult);
 
             result.Success(permissionDtos.ToList());
 
             logger.Information(
                 "END {MethodName} - Successfully retrieved {PermissionCount} permissions for role: {RoleId}",
                 methodName, permissionDtos.Count, roleId);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    #endregion
+
+    #region OTHERS
+
+    public async Task<ApiResult<List<PermissionDto>>> GetPermissionsByUser(User user)
+    {
+        var result = new ApiResult<List<PermissionDto>>();
+        const string methodName = nameof(GetPermissionsByUser);
+        
+        try
+        {
+            var permissions = await permissionRepository.GetPermissionsByUser(user);
+            var data = mapper.Map<List<PermissionDto>>(permissions);
+            result.Success(data);
         }
         catch (Exception e)
         {

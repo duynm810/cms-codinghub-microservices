@@ -61,7 +61,8 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
         await _dbContext.SaveChangesAsync();
     }
 
-    public async Task<int> ExecuteAsync(string sql, object? parameters = null)
+    public async  Task<int> ExecuteAsync(string sql, object? param,
+        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null, int? commandTimeout = 30)
     {
         var existingConnectionState = Connection.State;
         if (existingConnectionState != ConnectionState.Open)
@@ -69,7 +70,7 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
 
         try
         {
-            return await Connection.ExecuteAsync(sql, parameters);
+            return await Connection.ExecuteAsync(sql, param, transaction, commandTimeout, commandType);
         }
         finally
         {
