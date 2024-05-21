@@ -12,12 +12,10 @@ public class IdentityRepositoryManager(
     IdentityContext dbContext,
     IUnitOfWork<IdentityContext> unitOfWork,
     UserManager<User> userManager,
-    RoleManager<IdentityRole> roleManager,
-    IMapper mapper,
-    ILogger logger) : IIdentityReposityManager
+    RoleManager<IdentityRole> roleManager) : IIdentityReposityManager
 {
     private readonly Lazy<IPermissionRepository> _permissionRepository =
-        new(() => new PermissionRepository(dbContext, unitOfWork, userManager, mapper, logger));
+        new(() => new PermissionRepository(dbContext, unitOfWork, userManager));
 
     public IPermissionRepository Permissions => _permissionRepository.Value;
 
