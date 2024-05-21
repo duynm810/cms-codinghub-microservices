@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Shared.Constants;
 
@@ -17,6 +19,7 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
+            c.OAuthClientId("coding_hub_microservices_swagger");
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
@@ -41,7 +44,13 @@ public static class ApplicationExtensions
         
         app.UseAuthentication();
         
-        app.MapControllers();
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+        
+        app.MapDefaultControllerRoute().RequireAuthorization("Bearer");
         
         app.MapRazorPages().RequireAuthorization();
     }
