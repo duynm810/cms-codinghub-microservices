@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using Identity.Infrastructure.Services.Interfaces;
+using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Identity.Permission;
@@ -10,7 +11,7 @@ namespace Identity.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/roles/{roleId}")]
-[Authorize("Bearer")]
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class PermissionsController(IPermissionService permissionService) : ControllerBase
 {
     [HttpPost]

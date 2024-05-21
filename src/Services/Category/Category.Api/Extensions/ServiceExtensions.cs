@@ -6,16 +6,20 @@ using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
 using Contracts.Domains.Repositories;
+using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Category.Api.Extensions;
@@ -31,7 +35,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-
+        
         // Register database context
         services.AddDatabaseContext();
 
@@ -55,6 +59,12 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcConfiguration();
+
+        // Register authentication services
+        services.AddAuthenticationServices();
+
+        // Register authorization services
+        services.AddAuthorizationServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -69,6 +79,11 @@ public static class ServiceExtensions
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
 
         services.AddSingleton(grpcSettings);
+        
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                           ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)
@@ -93,15 +108,64 @@ public static class ServiceExtensions
 
     private static void AddSwaggerConfiguration(this IServiceCollection services)
     {
+        var apiConfigurations = services.GetOptions<ApiConfigurations>(nameof(ApiConfigurations)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(ApiConfigurations)} is not configured properly");
+        
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            c.SwaggerDoc(apiConfigurations.ApiVersion, new OpenApiInfo
             {
-                Version = "v1",
+                Version = apiConfigurations.ApiVersion,
                 Title = $"{SwaggerConsts.CategoryApi} for Administrators",
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
+            });
+            c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                // Determine the security scheme type as OAuth2
+                // Xác định loại scheme bảo mật là OAuth2
+                Type = SecuritySchemeType.OAuth2, 
+                Flows = new OpenApiOAuthFlows //  Supported OAuth2 flow definitions (Định nghĩa flow OAuth2 được hỗ trợ)
+                {
+                    Implicit = new OpenApiOAuthFlow
+                    {
+                        // The URL of the authorization endpoint where the user will be redirected for authentication.
+                        // URL của endpoint ủy quyền, nơi người dùng sẽ được chuyển hướng đến để xác thực.
+                        AuthorizationUrl = new Uri($"{apiConfigurations.IdentityServerBaseUrl}/connect/authorize"),
+                        Scopes = new Dictionary<string, string>
+                        {
+                            { "coding_hub_microservices_api.read", "Coding Hub Microservices API Read Scope" },
+                            { "coding_hub_microservices_api.write", "Coding Hub Microservices API Write Scope" }
+                        }
+                    }
+                },
+                Description = "JWT Authorization header using the Bearer scheme. Example: Bearer {token}",
+                Name = "Authorization",
+                In = ParameterLocation.Header
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    // Determine security requirements for the API
+                    // Xác định yêu cầu bảo mật cho API
+                    new OpenApiSecurityScheme
+                    {
+                        // Reference to the security definition "Bearer".
+                        // Tham chiếu đến định nghĩa bảo mật "Bearer".
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = IdentityServerAuthenticationDefaults.AuthenticationScheme
+                        }
+                    },
+                    new List<string> //  List of scopes to which this security requirement applies (Danh sách các phạm vi (scopes) mà yêu cầu bảo mật này áp dụng)
+                    {
+                        "coding_hub_microservices_api.read",
+                        "coding_hub_microservices_api.write"
+                    }
+                }
             });
         });
     }

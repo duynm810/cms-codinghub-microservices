@@ -4,8 +4,8 @@ using Identity.Infrastructure.Persistence;
 using IdentityModel;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 
 namespace Identity.Api.Seeds;
 

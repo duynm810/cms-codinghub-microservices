@@ -13,8 +13,8 @@ using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services;
 using PostInSeries.Api.Services.Interfaces;
 using Series.Grpc.Protos;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PostInSeries.Api.Extensions;

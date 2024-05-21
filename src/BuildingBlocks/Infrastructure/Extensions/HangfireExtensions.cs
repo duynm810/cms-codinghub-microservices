@@ -8,7 +8,7 @@ using Hangfire.Mongo.Migration.Strategies.Backup;
 using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 using Newtonsoft.Json;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Infrastructure.Extensions;
 
