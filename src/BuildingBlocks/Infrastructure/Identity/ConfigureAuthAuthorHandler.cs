@@ -8,7 +8,7 @@ namespace Infrastructure.Identity;
 
 public static class ConfigureAuthAuthorHandler
 {
-    public static void ConfigureAuthenticationHandler(this IServiceCollection services)
+    public static void AddAuthenticationServices(this IServiceCollection services)
     {
         var configurations = services.GetOptions<ApiConfigurations>(nameof(ApiConfigurations)) ??
                              throw new ArgumentNullException(
@@ -27,15 +27,15 @@ public static class ConfigureAuthAuthorHandler
             });
     }
     
-    public static void ConfigureAuthorization(this IServiceCollection services)
+    public static void AddAuthorizationServices(this IServiceCollection services)
     {
         services.AddAuthorization(
             options =>
             {
                 options.AddPolicy(IdentityServerAuthenticationDefaults.AuthenticationScheme, policy =>
                 {
-                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme);
-                    policy.RequireAuthenticatedUser();
+                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
+                    policy.RequireAuthenticatedUser(); // User authentication is required to meet this policy. (Yêu cầu người dùng phải xác thực để đáp ứng policy này.)
                 });
             });
     }

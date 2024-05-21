@@ -12,6 +12,7 @@ using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -61,7 +62,7 @@ public static class ServiceExtensions
         services.AddAuthenticationConfiguration();
 
         // Register authorization
-        services.AddAuthorizationConfiguration();
+        services.AddAuthorizationServices();
         
         // Register health checks
         services.AddHealthCheckServices();
@@ -254,19 +255,6 @@ public static class ServiceExtensions
             {
                 option.ExpectedScope = "coding_hub_microservices_api.read";
             }); // Any token with this scope will be accepted. (Bất kỳ token nào có scope này sẽ được chấp nhận.)
-    }
-
-    private static void AddAuthorizationConfiguration(this IServiceCollection services)
-    {
-        services.AddAuthorization(
-            options =>
-            {
-                options.AddPolicy(IdentityServerAuthenticationDefaults.AuthenticationScheme, policy =>
-                {
-                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
-                    policy.RequireAuthenticatedUser(); // User authentication is required to meet this policy. (Yêu cầu người dùng phải xác thực để đáp ứng policy này.)
-                });
-            });
     }
     
     private static void AddHealthCheckServices(this IServiceCollection services)
