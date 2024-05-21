@@ -67,7 +67,8 @@ public class PermissionRepository(
     public async Task<IEnumerable<Permission>> GetPermissionsByUser(User user)
     {
         var currentUserRoles = await userManager.GetRolesAsync(user);
-        var query = await FindByCondition(x => currentUserRoles.Contains(x.RoleId)).ToListAsync();
+        var query = await FindByCondition(x =>
+            x.Role != null && x.Role.Name != null && currentUserRoles.Contains(x.Role.Name)).ToListAsync();
         return query;
     }
 

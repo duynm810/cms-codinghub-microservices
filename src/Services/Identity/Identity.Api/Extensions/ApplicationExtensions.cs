@@ -1,4 +1,6 @@
 using HealthChecks.UI.Client;
+using IdentityServer4.AccessTokenValidation;
+using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Shared.Constants;
@@ -24,6 +26,8 @@ public static class ApplicationExtensions
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
+        
+        app.UseMiddleware<ErrorWrappingMiddleware>();
 
         app.UseSerilogRequestLogging();
         
@@ -39,7 +43,6 @@ public static class ApplicationExtensions
 
         app.UseIdentityServer();
 
-        // Uncomment if you want to add a UI
         app.UseAuthorization();
         
         app.UseAuthentication();
@@ -50,8 +53,9 @@ public static class ApplicationExtensions
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
         
-        app.MapDefaultControllerRoute().RequireAuthorization("Bearer");
+        app.MapDefaultControllerRoute().RequireAuthorization(IdentityServerAuthenticationDefaults.AuthenticationScheme);
         
+        // Uncomment if you want to add a UI
         app.MapRazorPages().RequireAuthorization();
     }
 }

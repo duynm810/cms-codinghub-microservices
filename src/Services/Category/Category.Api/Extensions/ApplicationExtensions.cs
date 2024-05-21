@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 
@@ -28,6 +29,8 @@ public static class ApplicationExtensions
             c.DisplayRequestDuration();
         });
 
+        app.UseMiddleware<ErrorWrappingMiddleware>();
+        
         // Enables routing in the application.
         app.UseRouting();
 
