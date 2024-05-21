@@ -215,7 +215,10 @@ public static class ServiceExtensions
                             { "coding_hub_microservices_api.write", "Coding Hub Microservices API Write Scope" }
                         }
                     }
-                }
+                },
+                Description = "JWT Authorization header using the Bearer scheme. Example: Bearer {token}",
+                Name = "Authorization",
+                In = ParameterLocation.Header
             });
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
