@@ -19,6 +19,7 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
+            c.OAuthClientId("coding_hub_microservices_swagger");
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
@@ -49,7 +50,7 @@ public static class ApplicationExtensions
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
         
-        app.MapControllers();
+        app.MapDefaultControllerRoute().RequireAuthorization("Bearer");
         
         app.MapRazorPages().RequireAuthorization();
     }
