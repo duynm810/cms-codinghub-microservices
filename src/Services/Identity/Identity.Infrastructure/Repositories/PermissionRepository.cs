@@ -7,6 +7,7 @@ using Identity.Infrastructure.Repositories.Interfaces;
 using Infrastructure.Domains.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Shared.Constants;
 
 namespace Identity.Infrastructure.Repositories;
 
@@ -26,7 +27,7 @@ public class PermissionRepository(
         parameters.Add("@command", model.Command, DbType.String);
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
-        await ExecuteAsync("Create_Permission", parameters);
+        await ExecuteAsync(StoredProceduresConsts.Permission.CreatePermission, parameters);
 
         var newId = parameters.Get<long>("@newID");
         return newId;
@@ -38,7 +39,7 @@ public class PermissionRepository(
         parameters.Add("@roleId", roleId, DbType.String);
         parameters.Add("@permissions", permissions.AsTableValuedParameter("dbo.Permission"));
 
-        return await ExecuteAsync("Update_Permissions", parameters);
+        return await ExecuteAsync(StoredProceduresConsts.Permission.UpdatePermissions, parameters);
     }
 
     public async Task<long> DeletePermission(string roleId, string function, string command)
@@ -48,7 +49,7 @@ public class PermissionRepository(
         parameters.Add("@function", function, DbType.String);
         parameters.Add("@command", command, DbType.String);
 
-        return await ExecuteAsync("Delete_Permission", parameters);
+        return await ExecuteAsync(StoredProceduresConsts.Permission.DeletePermission, parameters);
     }
 
     public async Task<IEnumerable<Permission>> GetPermissions(string roleId)
@@ -56,7 +57,7 @@ public class PermissionRepository(
         var parameters = new DynamicParameters();
         parameters.Add("@roleId", roleId);
 
-        return await QueryAsync<Permission>("Get_Permissions", parameters);
+        return await QueryAsync<Permission>(StoredProceduresConsts.Permission.GetPermissions, parameters);
     }
 
     #endregion
