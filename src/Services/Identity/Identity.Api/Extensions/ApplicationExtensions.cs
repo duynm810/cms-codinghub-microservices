@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
 using Shared.Constants;
 
@@ -40,6 +42,12 @@ public static class ApplicationExtensions
         app.UseAuthorization();
         
         app.UseAuthentication();
+        
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
         
         app.MapControllers();
         

@@ -10,7 +10,7 @@ namespace Identity.Presentation.Controllers;
 
 [ApiController]
 [Route("api/[controller]/roles/{roleId}")]
-[AllowAnonymous]
+[Authorize("Bearer")]
 public class PermissionsController(IPermissionService permissionService) : ControllerBase
 {
     [HttpPost]

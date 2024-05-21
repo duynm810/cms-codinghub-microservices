@@ -14,6 +14,7 @@ using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Shared.Configurations;
 using Shared.Constants;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -53,6 +54,9 @@ public static class ServiceExtensions
 
         // Register CORS services
         services.AddCorsConfiguration();
+        
+        // Register health checks
+        services.AddHealthCheckServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -185,5 +189,18 @@ public static class ServiceExtensions
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
         });
+    }
+
+    private static void AddAuthentication(this IServiceCollection services)
+    {
+    }
+    
+    private static void AddHealthCheckServices(this IServiceCollection services)
+    {
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+        services.AddHealthChecks()
+            .AddSqlServer(databaseSettings.ConnectionString,
+                name: "SqlServer Health",
+                failureStatus: HealthStatus.Degraded);
     }
 }
