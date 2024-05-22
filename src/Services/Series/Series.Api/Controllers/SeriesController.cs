@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Series.Api.Services.Interfaces;
 using Shared.Dtos.Series;
@@ -9,6 +11,7 @@ namespace Series.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class SeriesController(ISeriesService seriesService) : ControllerBase
 {
     [HttpPost]

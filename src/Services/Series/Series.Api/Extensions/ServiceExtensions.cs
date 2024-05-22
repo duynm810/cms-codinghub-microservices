@@ -2,6 +2,7 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Series.Api.Persistence;
@@ -47,6 +48,12 @@ public static class ServiceExtensions
 
         // Register health checks
         services.AddHealthCheckServices();
+        
+        // Register authentication services
+        services.AddAuthenticationServices();
+
+        // Register authorization services
+        services.AddAuthorizationServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -75,21 +82,6 @@ public static class ServiceExtensions
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-    }
-
-    private static void AddSwaggerConfiguration(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(c =>
-        {
-            c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            {
-                Version = "v1",
-                Title = $"{SwaggerConsts.SeriesApi} for Administrators",
-                Description =
-                    "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
-            });
-        });
     }
 
     private static void AddCoreInfrastructure(this IServiceCollection services)

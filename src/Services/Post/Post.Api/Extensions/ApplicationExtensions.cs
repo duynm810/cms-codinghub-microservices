@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 
@@ -22,13 +23,20 @@ public static class ApplicationExtensions
         app.UseSwaggerUI(c =>
         {
             c.DocumentTitle = $"{SwaggerConsts.PostApi} Documentation";
+            c.OAuthClientId("coding_hub_microservices_swagger");
             c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.PostApi} v1");
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
+        
+        app.UseMiddleware<ErrorWrappingMiddleware>();
 
         // Enables routing in the application.
         app.UseRouting();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
         
         app.MapHealthChecks("/hc", new HealthCheckOptions()
         {

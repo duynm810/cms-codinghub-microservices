@@ -1,5 +1,5 @@
 using Contracts.Services.Interfaces;
-using Infrastructure.Configurations;
+using Infrastructure.Settings;
 using MailKit.Net.Smtp;
 using MimeKit;
 using Serilog;

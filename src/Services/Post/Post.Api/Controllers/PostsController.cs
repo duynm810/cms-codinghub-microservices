@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using AutoMapper;
+using IdentityServer4.AccessTokenValidation;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Post.Application.Commons.Models;
 using Post.Application.Features.V1.Posts.Commands.ApprovePost;
@@ -20,6 +22,7 @@ namespace Post.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class PostsController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]

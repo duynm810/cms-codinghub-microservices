@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using IdentityServer4.AccessTokenValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostInSeries.Api.Services.Interfaces;
 
@@ -6,6 +8,7 @@ namespace PostInSeries.Api.Controllers;
 
 [ApiController]
 [Route("api/post-in-series")]
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class PostInSeriesController(IPostInSeriesService postInSeriesService) : ControllerBase
 {
     [HttpPost]

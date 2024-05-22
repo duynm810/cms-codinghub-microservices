@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using Shared.Configurations;
 using Shared.Constants;
 using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -47,7 +48,7 @@ public static class ServiceExtensions
         services.AddAdditionalServices();
 
         // Register Swagger services
-        services.AddSwaggerConfiguration(configuration);
+        services.AddSwaggerConfiguration();
 
         // Register identity
         services.AddIdentity();
@@ -75,6 +76,11 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddCoreInfrastructure(this IServiceCollection services)
@@ -183,68 +189,6 @@ public static class ServiceExtensions
         
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
-    }
-
-    private static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddSwaggerGen(c =>
-        {
-            c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("v1", new OpenApiInfo
-            {
-                Version = "v1",
-                Title = $"{SwaggerConsts.IdentityApi} for Administrators",
-                Description =
-                    "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
-            });
-            
-            var identityServerBaseUrl = configuration.GetSection("IdentityServer:BaseUrl").Value;
-            c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
-            {
-                // Determine the security scheme type as OAuth2
-                // Xác định loại scheme bảo mật là OAuth2
-                Type = SecuritySchemeType.OAuth2, 
-                Flows = new OpenApiOAuthFlows //  Supported OAuth2 flow definitions (Định nghĩa flow OAuth2 được hỗ trợ)
-                {
-                    Implicit = new OpenApiOAuthFlow
-                    {
-                        // The URL of the authorization endpoint where the user will be redirected for authentication.
-                        // URL của endpoint ủy quyền, nơi người dùng sẽ được chuyển hướng đến để xác thực.
-                        AuthorizationUrl = new Uri($"{identityServerBaseUrl}/connect/authorize"),
-                        Scopes = new Dictionary<string, string>
-                        {
-                            { "coding_hub_microservices_api.read", "Coding Hub Microservices API Read Scope" },
-                            { "coding_hub_microservices_api.write", "Coding Hub Microservices API Write Scope" }
-                        }
-                    }
-                },
-                Description = "JWT Authorization header using the Bearer scheme. Example: Bearer {token}",
-                Name = "Authorization",
-                In = ParameterLocation.Header
-            });
-            c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    // Determine security requirements for the API
-                    // Xác định yêu cầu bảo mật cho API
-                    new OpenApiSecurityScheme
-                    {
-                        // Reference to the security definition "Bearer".
-                        // Tham chiếu đến định nghĩa bảo mật "Bearer".
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = IdentityServerAuthenticationDefaults.AuthenticationScheme
-                        }
-                    },
-                    new List<string> //  List of scopes to which this security requirement applies (Danh sách các phạm vi (scopes) mà yêu cầu bảo mật này áp dụng)
-                    {
-                        "coding_hub_microservices_api.read",
-                        "coding_hub_microservices_api.write"
-                    }
-                }
-            });
-        });
     }
 
     private static void AddAuthenticationConfiguration(this IServiceCollection services)

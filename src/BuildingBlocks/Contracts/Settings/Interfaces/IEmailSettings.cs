@@ -1,4 +1,4 @@
-namespace Contracts.Configurations.Interfaces;
+namespace Contracts.Settings.Interfaces;
 
 public interface IEmailSettings
 {

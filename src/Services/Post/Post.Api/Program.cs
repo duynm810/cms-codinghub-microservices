@@ -1,4 +1,5 @@
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Logging;
 using Post.Api.Extensions;
 using Post.Application;
@@ -6,7 +7,6 @@ using Post.Domain.Interfaces;
 using Post.Infrastructure;
 using Serilog;
 using Shared.Constants;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -42,19 +42,14 @@ try
     // Another services
     builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
-    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen(c =>
-    {
-        c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-        c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-        {
-            Version = "v1",
-            Title = $"{SwaggerConsts.PostApi} for Administrators",
-            Description =
-                "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
-        });
-    });
+    // Register authentication services
+    builder.Services.AddAuthenticationServices();
+
+    // Register authorization services
+    builder.Services.AddAuthorizationServices();
+    
+    // Register Swagger services
+    builder.Services.AddSwaggerConfiguration();
 
     var app = builder.Build();
     

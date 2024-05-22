@@ -1,5 +1,6 @@
 using Infrastructure.Extensions;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Shared.Configurations;
 using Shared.Settings;
 
 namespace Post.Api.Extensions;
@@ -28,6 +29,11 @@ public static class ServiceExtensions
                               ?? throw new ArgumentNullException($"{nameof(EmailTemplateSettings)} is not configured properly");
 
         services.AddSingleton(emailTemplateSettings);
+        
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     public static void AddHealthCheckServices(this IServiceCollection services)

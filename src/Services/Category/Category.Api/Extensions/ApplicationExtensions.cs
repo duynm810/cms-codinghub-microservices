@@ -1,6 +1,8 @@
 using HealthChecks.UI.Client;
+using Infrastructure.Extensions;
 using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Shared.Configurations;
 using Shared.Constants;
 
 namespace Category.Api.Extensions;
