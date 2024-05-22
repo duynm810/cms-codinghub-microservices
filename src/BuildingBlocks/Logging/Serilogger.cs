@@ -14,9 +14,9 @@ public static class Serilogger
             var environmentName = context.HostingEnvironment.EnvironmentName;
 
             // Elastic search configuration
-            var elasticUri = context.Configuration.GetValue<string>("ElasticConfiguration:Uri");
-            var username = context.Configuration.GetValue<string>("ElasticConfiguration:Username");
-            var password = context.Configuration.GetValue<string>("ElasticConfiguration:Password");
+            var elasticUri = context.Configuration.GetValue<string>("ElasticConfigurations:Uri");
+            var username = context.Configuration.GetValue<string>("ElasticConfigurations:Username");
+            var password = context.Configuration.GetValue<string>("ElasticConfigurations:Password");
 
             if (string.IsNullOrEmpty(elasticUri))
             {
