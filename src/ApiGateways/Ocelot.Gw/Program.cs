@@ -7,8 +7,6 @@ using Shared.Constants;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-var routes = builder.Environment.EnvironmentName == "Development" ? "Routes/Development" : "Routes/Local";
-
 // Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
@@ -23,8 +21,6 @@ try
 
     // Add infrastructure services
     builder.Services.AddInfrastructureServices(configuration);
-
-    configuration.AddOcelotWithSwaggerSupport(options => { options.Folder = routes; });
 
     var app = builder.Build();
 

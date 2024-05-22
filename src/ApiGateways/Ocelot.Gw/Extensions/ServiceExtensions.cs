@@ -1,6 +1,8 @@
+using Infrastructure.Identity;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
 using Ocelot.Provider.Polly;
+using Shared.Configurations;
 
 namespace Ocelot.Gw.Extensions;
 
@@ -13,6 +15,9 @@ public static class ServiceExtensions
     /// <param name="configuration">The configuration to be used by the services.</param>
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
+        // Register app configuration settings
+        services.AddConfigurationSettings(configuration);
+        
         // Register Ocelot services
         services.AddOcelotConfiguration(configuration);
 
@@ -24,6 +29,17 @@ public static class ServiceExtensions
 
         // Register additional necessary services
         services.AddAdditionalServices();
+        
+        // Register authentication services
+        services.AddAuthenticationServices();
+    }
+    
+    private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
+    {
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddOcelotConfiguration(this IServiceCollection services, IConfiguration configuration)
