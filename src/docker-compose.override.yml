@@ -226,7 +226,7 @@ services:
       - post-in-series.api
       - hangfire.api
     ports:
-      - "6020:80"
+      - "6000:80"
     restart: always
   
   healthcheck:
