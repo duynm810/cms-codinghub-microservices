@@ -145,7 +145,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
+                        builder => builder.MigrationsAssembly("Identity.Api"));
                 };
             })
             .AddOperationalStore(opt =>
@@ -153,7 +153,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
+                        builder => builder.MigrationsAssembly("Identity.Api"));
                 };
             })
             .AddAspNetIdentity<User>()
