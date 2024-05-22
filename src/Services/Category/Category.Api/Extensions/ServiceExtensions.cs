@@ -6,21 +6,18 @@ using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
 using Contracts.Domains.Repositories;
-using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.OpenApi.Models;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Constants;
 using Shared.Settings;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Category.Api.Extensions;
 
