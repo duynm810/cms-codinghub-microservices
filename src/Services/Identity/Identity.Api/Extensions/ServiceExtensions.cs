@@ -76,11 +76,6 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
-        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
-                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
-
-        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddCoreInfrastructure(this IServiceCollection services)
