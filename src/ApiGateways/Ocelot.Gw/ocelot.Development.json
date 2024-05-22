@@ -18,6 +18,10 @@
           "Port": 5002
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "category-service"
     },
     {
@@ -34,6 +38,10 @@
           "Port": 5002
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "category-service"
     },
     {
@@ -49,6 +57,10 @@
           "Port": 5002
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "category-service"
     },
     {
@@ -65,6 +77,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -82,6 +98,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -97,6 +117,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -112,6 +136,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -127,6 +155,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -142,6 +174,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -157,6 +193,10 @@
           "Port": 5005
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -174,6 +214,10 @@
           "Port": 5006
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "series-service"
     },
     {
@@ -190,6 +234,10 @@
           "Port": 5006
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "series-service"
     },
     {
@@ -205,6 +253,10 @@
           "Port": 5006
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "series-service"
     },
     {
@@ -222,6 +274,10 @@
           "Port": 5008
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-in-series-service"
     },
     {
@@ -237,6 +293,10 @@
           "Port": 5008
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-in-series-service"
     }
   ],

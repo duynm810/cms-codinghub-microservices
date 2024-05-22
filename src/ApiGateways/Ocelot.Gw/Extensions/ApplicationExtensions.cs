@@ -15,6 +15,8 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
+        
+        app.UseStaticFiles();
 
         app.UseRouting();
 
@@ -22,12 +24,10 @@ public static class ApplicationExtensions
 
         app.UseSwagger();
 
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
         app.UseSwaggerForOcelotUI(options =>
         {
+            options.OAuthClientId("coding_hub_microservices_swagger");
+            options.DisplayRequestDuration();
             options.PathToSwaggerGenerator = "/swagger/docs";
             options.ReConfigureUpstreamSwaggerJson = AlterUpstream.AlterUpstreamSwaggerJson;
         }).UseOcelot().Wait();
