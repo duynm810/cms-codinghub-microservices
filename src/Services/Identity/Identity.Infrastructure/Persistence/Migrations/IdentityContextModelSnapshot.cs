@@ -151,13 +151,13 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3c340dae-cdac-4565-b1fa-7cd1124acb01",
+                            Id = "9767ea34-f5b9-467a-aa9c-ac6db1555da7",
                             Name = "Administrator",
                             NormalizedName = "ADMINISTRATOR"
                         },
                         new
                         {
-                            Id = "eec0c600-e89e-448a-b992-ddfc9d51d8ac",
+                            Id = "fd819cb9-5b7c-44df-a422-3549860ada11",
                             Name = "Member",
                             NormalizedName = "MEMBER"
                         });

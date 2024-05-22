@@ -163,8 +163,8 @@ namespace Identity.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "3c340dae-cdac-4565-b1fa-7cd1124acb01", null, "Administrator", "ADMINISTRATOR" },
-                    { "eec0c600-e89e-448a-b992-ddfc9d51d8ac", null, "Member", "MEMBER" }
+                    { "9767ea34-f5b9-467a-aa9c-ac6db1555da7", null, "Administrator", "ADMINISTRATOR" },
+                    { "fd819cb9-5b7c-44df-a422-3549860ada11", null, "Member", "MEMBER" }
                 });
 
             migrationBuilder.CreateIndex(
