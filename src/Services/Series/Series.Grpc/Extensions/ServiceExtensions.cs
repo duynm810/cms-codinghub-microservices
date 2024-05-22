@@ -7,7 +7,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Series.Grpc.Persistence;
 using Series.Grpc.Repositories;
 using Series.Grpc.Repositories.Interfaces;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Series.Grpc.Extensions;
 

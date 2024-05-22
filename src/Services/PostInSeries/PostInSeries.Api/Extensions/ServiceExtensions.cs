@@ -4,6 +4,7 @@ using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Post.Grpc.Protos;
 using PostInSeries.Api.GrpcServices;
@@ -13,8 +14,8 @@ using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services;
 using PostInSeries.Api.Services.Interfaces;
 using Series.Grpc.Protos;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace PostInSeries.Api.Extensions;
@@ -54,6 +55,12 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcConfiguration();
+        
+        // Register authentication services
+        services.AddAuthenticationServices();
+
+        // Register authorization services
+        services.AddAuthorizationServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -78,22 +85,7 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
-
-    private static void AddSwaggerConfiguration(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(c =>
-        {
-            c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            {
-                Version = "v1",
-                Title = $"{SwaggerConsts.PostInSeriesApi} for Administrators",
-                Description =
-                    "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
-            });
-        });
-    }
-
+    
     private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services

@@ -1,6 +1,6 @@
-using Contracts.Configurations.Interfaces;
+using Contracts.Settings.Interfaces;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Settings;
 
 public class SmtpEmailSettings : IEmailSettings
 {

@@ -2,7 +2,7 @@ using System.Reflection;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Infrastructure.Extensions;
 

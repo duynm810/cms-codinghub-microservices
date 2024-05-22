@@ -9,6 +9,7 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
@@ -16,7 +17,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Constants;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Shared.Settings;
 
 namespace Category.Api.Extensions;
 
@@ -31,7 +32,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-
+        
         // Register database context
         services.AddDatabaseContext();
 
@@ -55,6 +56,12 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcConfiguration();
+
+        // Register authentication services
+        services.AddAuthenticationServices();
+
+        // Register authorization services
+        services.AddAuthorizationServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -69,6 +76,11 @@ public static class ServiceExtensions
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
 
         services.AddSingleton(grpcSettings);
+        
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                           ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)
@@ -89,21 +101,6 @@ public static class ServiceExtensions
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-    }
-
-    private static void AddSwaggerConfiguration(this IServiceCollection services)
-    {
-        services.AddSwaggerGen(c =>
-        {
-            c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
-            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
-            {
-                Version = "v1",
-                Title = $"{SwaggerConsts.CategoryApi} for Administrators",
-                Description =
-                    "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
-            });
-        });
     }
 
     private static void AddCoreInfrastructure(this IServiceCollection services)

@@ -2,13 +2,13 @@ using Contracts.Scheduled;
 using Contracts.Services.Interfaces;
 using Hangfire.Api.Services;
 using Hangfire.Api.Services.Interfaces;
-using Infrastructure.Configurations;
 using Infrastructure.Extensions;
 using Infrastructure.Scheduled;
 using Infrastructure.Services;
+using Infrastructure.Settings;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Hangfire.Api.Extensions;

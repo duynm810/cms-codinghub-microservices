@@ -1,5 +1,5 @@
 using Contracts.Services.Interfaces;
-using Shared.Configurations;
+using Shared.Settings;
 
 namespace Infrastructure.Services;
 

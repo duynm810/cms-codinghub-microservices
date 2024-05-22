@@ -1,8 +1,8 @@
 using Hangfire.Api.Filters;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using Shared.Configurations;
 using Shared.Constants;
+using Shared.Settings;
 
 namespace Hangfire.Api.Extensions;
 
