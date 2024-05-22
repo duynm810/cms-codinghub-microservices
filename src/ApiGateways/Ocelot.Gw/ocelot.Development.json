@@ -1,6 +1,6 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://localhost:5020"
+    "BaseUrl": "http://localhost:5000"
   },
   "Routes": [
     {
@@ -308,7 +308,7 @@
         {
           "Name": "Ocelot.Gw",
           "Version": "1.0",
-          "Url": "http://localhost:5020/swagger/v1/swagger.json"
+          "Url": "http://localhost:5000/swagger/v1/swagger.json"
         }
       ]
     },

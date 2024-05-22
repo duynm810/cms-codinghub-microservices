@@ -53,7 +53,7 @@ public static class Config
                     "http://localhost:5005/swagger/oauth2-redirect.html",
                     "http://localhost:5006/swagger/oauth2-redirect.html",
                     "http://localhost:5008/swagger/oauth2-redirect.html",
-                    "http://localhost:5020/swagger/oauth2-redirect.html",
+                    "http://localhost:5000/swagger/oauth2-redirect.html",
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
@@ -62,7 +62,7 @@ public static class Config
                     "http://localhost:5005/swagger/oauth2-redirect.html",
                     "http://localhost:5006/swagger/oauth2-redirect.html",
                     "http://localhost:5008/swagger/oauth2-redirect.html",
-                    "http://localhost:5020/swagger/oauth2-redirect.html",
+                    "http://localhost:5000/swagger/oauth2-redirect.html",
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
@@ -71,7 +71,7 @@ public static class Config
                     "http://localhost:5005",
                     "http://localhost:5006",
                     "http://localhost:5008",
-                    "http://localhost:5020",
+                    "http://localhost:5000",
                 },
                 AllowedScopes =
                 {

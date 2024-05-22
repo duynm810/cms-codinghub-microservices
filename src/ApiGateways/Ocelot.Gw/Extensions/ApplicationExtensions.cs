@@ -1,3 +1,4 @@
+using Infrastructure.Middlewares;
 using Ocelot.Gw.Configs;
 using Ocelot.Middleware;
 
@@ -16,9 +17,12 @@ public static class ApplicationExtensions
             app.UseHttpsRedirection();
         }
         
-        app.UseStaticFiles();
-
+        app.UseMiddleware<ErrorWrappingMiddleware>();
+        
+        // Enables routing in the application.
         app.UseRouting();
+        
+        app.UseStaticFiles();
 
         app.UseCors("CorsPolicy");
 
