@@ -93,7 +93,7 @@ public static class ServiceExtensions
         services.AddDbContext<CategoryContext>(m => m.UseMySql(builder.ConnectionString,
             ServerVersion.AutoDetect(builder.ConnectionString), e =>
             {
-                e.MigrationsAssembly(SwaggerConsts.CategoryApi);
+                e.MigrationsAssembly(typeof(CategoryContext).Assembly.FullName);
                 e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
             }));
     }
