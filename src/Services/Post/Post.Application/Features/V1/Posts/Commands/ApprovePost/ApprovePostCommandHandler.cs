@@ -40,6 +40,8 @@ public class ApprovePostCommandHandler(
                 }
 
                 // TODO: Implement check current user id
+                var currentUserId = request.UserId;
+                
 
                 await postRepository.ApprovePost(post);
 

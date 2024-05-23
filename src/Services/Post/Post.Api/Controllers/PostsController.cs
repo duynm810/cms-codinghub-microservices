@@ -2,8 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using AutoMapper;
 using IdentityServer4.AccessTokenValidation;
-using Infrastructure.Extensions;
-using Infrastructure.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -33,10 +31,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreateOrUpdatePostDto model)
     {
         var userId = User.GetUserId();
-        
-        model.AuthorUserId = userId;
-        
         var command = mapper.Map<CreatePostCommand>(model);
+        command.AuthorUserId = userId; // Set current user id
+        
         var result = await mediator.Send(command);
         return Ok(result);
     }
@@ -92,7 +89,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> ApprovePost(Guid id)
     {
-        var query = new ApprovePostCommand(id);
+        var userId = User.GetUserId();
+        
+        var query = new ApprovePostCommand(id, userId);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -101,7 +100,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> SubmitPostForApproval(Guid id)
     {
-        var query = new SubmitPostForApprovalCommand(id);
+        var userId = User.GetUserId();
+        
+        var query = new SubmitPostForApprovalCommand(id, userId);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -110,7 +111,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto model)
     {
-        var query = new RejectPostWithReasonCommand(id, model);
+        var userId = User.GetUserId();
+        
+        var query = new RejectPostWithReasonCommand(id, userId, model);
         var result = await mediator.Send(query);
         return Ok(result);
     }

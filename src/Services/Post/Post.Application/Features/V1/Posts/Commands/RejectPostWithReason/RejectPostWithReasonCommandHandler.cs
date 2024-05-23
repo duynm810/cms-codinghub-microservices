@@ -41,6 +41,7 @@ public class RejectPostWithReasonCommandHandler(
                 }
 
                 // TODO: Implement check current user id
+                var currentUserId = request.UserId;
 
                 await postRepository.RejectPostWithReason(post);
 

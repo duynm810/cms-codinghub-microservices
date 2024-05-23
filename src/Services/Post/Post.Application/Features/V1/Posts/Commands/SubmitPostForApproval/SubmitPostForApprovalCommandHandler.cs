@@ -41,6 +41,7 @@ public class SubmitPostForApprovalCommandHandler(
                 }
 
                 // TODO: Implement check current user id
+                var currentUserId = request.UserId;
 
                 await postRepository.SubmitPostForApproval(post);
 

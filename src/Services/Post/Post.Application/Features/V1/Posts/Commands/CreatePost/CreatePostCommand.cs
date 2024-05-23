@@ -12,5 +12,7 @@ public class CreatePostCommand : CreateOrUpdateCommand, IMapFrom<CreateOrUpdateP
     public new void Mapping(Profile profile)
     {
         profile.CreateMap<CreateOrUpdatePostDto, CreatePostCommand>();
+        profile.CreateMap<CreateOrUpdatePostDto, CreatePostCommand>()
+            .ForMember(dest => dest.AuthorUserId, opt => opt.Ignore()); // Bỏ qua mapping cho UserId
     }
 }
