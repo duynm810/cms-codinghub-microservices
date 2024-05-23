@@ -22,8 +22,6 @@ public static class ApplicationExtensions
         // Enables routing in the application.
         app.UseRouting();
         
-        app.UseStaticFiles();
-
         app.UseCors("CorsPolicy");
 
         app.UseSwagger();
