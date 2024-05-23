@@ -30,6 +30,7 @@ public static class ApplicationExtensions
         {
             options.OAuthClientId("coding_hub_microservices_swagger");
             options.DisplayRequestDuration();
+            options.DisplayOperationId();
             options.PathToSwaggerGenerator = "/swagger/docs";
             options.ReConfigureUpstreamSwaggerJson = AlterUpstream.AlterUpstreamSwaggerJson;
         }).UseOcelot().Wait();
