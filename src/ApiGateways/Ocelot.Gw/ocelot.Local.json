@@ -15,7 +15,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6002
+          "Port": 6003
         }
       ],
       "AuthenticationOptions": {
@@ -35,7 +35,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6002
+          "Port": 6003
         }
       ],
       "AuthenticationOptions": {
@@ -54,7 +54,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6002
+          "Port": 6003
         }
       ],
       "AuthenticationOptions": {
@@ -211,7 +211,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6006
+          "Port": 6007
         }
       ],
       "AuthenticationOptions": {
@@ -231,7 +231,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6006
+          "Port": 6007
         }
       ],
       "AuthenticationOptions": {
@@ -250,7 +250,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6006
+          "Port": 6007
         }
       ],
       "AuthenticationOptions": {
@@ -271,7 +271,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6008
+          "Port": 6009
         }
       ],
       "AuthenticationOptions": {
@@ -290,7 +290,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6008
+          "Port": 6009
         }
       ],
       "AuthenticationOptions": {

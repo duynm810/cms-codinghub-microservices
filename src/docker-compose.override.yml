@@ -115,6 +115,17 @@ services:
       - "5601:5601"
   
   ##microservices api sections
+  identity.api:
+    container_name: identity.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6002:80"
+    restart: always
+  
   category.api:
     container_name: category.api
     environment:
@@ -123,7 +134,7 @@ services:
     depends_on:
       - categorydb
     ports:
-      - "6002:80"
+      - "6003:80"
     restart: always
   
   category.grpc:
@@ -134,20 +145,10 @@ services:
     depends_on:
       - categorydb
     ports:
-      - "6003:80"
-    restart: always
-  
-  post.grpc:
-    container_name: post.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - postdb
-    ports:
       - "6004:80"
     restart: always
-  
+    
+    
   post.api:
     container_name: post.api
     environment:
@@ -159,6 +160,17 @@ services:
       - "6005:80"
     restart: always
   
+  post.grpc:
+    container_name: post.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - postdb
+    ports:
+      - "6006:80"
+    restart: always
+  
   series.api:
     container_name: series.api
     environment:
@@ -167,7 +179,7 @@ services:
     depends_on:
       - seriesdb
     ports:
-      - "6006:80"
+      - "6007:80"
     restart: always
   
   series.grpc:
@@ -178,7 +190,7 @@ services:
     depends_on:
       - seriesdb
     ports:
-      - "6007:80"
+      - "6008:80"
     restart: always
   
   post-in-series.api:
@@ -189,7 +201,7 @@ services:
     depends_on:
       - postinseriesdb
     ports:
-      - "6008:80"
+      - "6009:80"
     restart: always
   
   hangfire.api:
@@ -200,18 +212,7 @@ services:
     depends_on:
       - hangfiredb
     ports:
-      - "6009:80"
-    restart: always
-    
-  identity.api:
-    container_name: identity.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - identitydb
-    ports:
-      - "6001:80"
+      - "6015:80"
     restart: always
   
   apigw.ocelot:
@@ -226,7 +227,7 @@ services:
       - post-in-series.api
       - hangfire.api
     ports:
-      - "6000:80"
+      - "6001:80"
     restart: always
   
   healthcheck:
@@ -235,4 +236,4 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6010:80"
+      - "6020:80"
