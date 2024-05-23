@@ -49,7 +49,7 @@ docker-compose up -d --build [service-name]
 
 ## How to migration the project (Development)
 
-- Category API
+- Category Api
 
 ```Powershell
 dotnet ef migrations "Initial"
@@ -74,15 +74,15 @@ dotnet ef database update
 ## Application URLs - DEVELOPMENT Environment:
 
 - Ocelot GW: http://localhost:5001/swagger/index.html
-- Identity API: http://localhost:5002/swagger/index.html
-- Category API: http://localhost:5003/swagger/index.html
+- Identity Api: http://localhost:5002/swagger/index.html
+- Category Api: http://localhost:5003/swagger/index.html
 - Category GRPC: http://localhost:5004/swagger/index.html
-- Post API: http://localhost:5005/swagger/index.html
+- Post Api: http://localhost:5005/swagger/index.html
 - Post GRPC: http://localhost:5006/swagger/index.html
-- Series API: http://localhost:5007/swagger/index.html
+- Series Api: http://localhost:5007/swagger/index.html
 - Series GRPC: http://localhost:5008/swagger/index.html
-- Post In Series API: http://localhost:5009/swagger/index.html
-- Hangfire API: http://localhost:5015/swagger/index.html
+- Post In Series Api: http://localhost:5009/swagger/index.html
+- Hangfire Api: http://localhost:5015/swagger/index.html
 
 ---
 
