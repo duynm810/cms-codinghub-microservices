@@ -19,7 +19,7 @@ namespace Post.Infrastructure.Migrations
                     name = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     slug = table.Column<string>(type: "varchar(250)", nullable: false),
                     content = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    description = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
+                    summary = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     thumbnail = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: true),
                     seo_description = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: true),
                     source = table.Column<string>(type: "character varying(120)", maxLength: 120, nullable: true),

@@ -50,7 +50,7 @@ public class SubmitPostForApprovalCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.WaitingForApproval,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);

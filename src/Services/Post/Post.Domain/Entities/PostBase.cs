@@ -34,7 +34,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// Mô tả ngắn gọn bài viết
     /// </summary>
     [MaxLength(500)]
-    public string? Description { get; set; }
+    public string? Summary { get; set; }
 
     /// <summary>
     /// URL ảnh thu nhỏ đại diện cho bài viết
@@ -87,7 +87,7 @@ public class PostBase : EntityAuditBase<Guid>
     public long CategoryId { get; set; }
 
     /// <summary>
-    /// Khóa ngoại đến thông tin tác giả bài viết
+    /// ID của tác giả bài viết
     /// </summary>
     [Required]
     public Guid AuthorUserId { get; set; }
