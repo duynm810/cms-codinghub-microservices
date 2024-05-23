@@ -38,7 +38,6 @@ public class ErrorWrappingMiddleware(RequestDelegate next, ILogger logger)
             context.Response.ContentType = "application/json";
 
             response.Error("Unauthorized");
-            response.StatusCode = StatusCodes.Status401Unauthorized;
 
             var json = JsonSerializer.Serialize(response);
 
