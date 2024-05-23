@@ -40,8 +40,6 @@ public class RejectPostWithReasonCommandHandler(
                     return result;
                 }
 
-                // TODO: Implement check current user id
-
                 await postRepository.RejectPostWithReason(post);
 
                 var postActivityLog = new PostActivityLog
@@ -49,7 +47,7 @@ public class RejectPostWithReasonCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.Rejected,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id,
                     Note = request.Reason
                 };

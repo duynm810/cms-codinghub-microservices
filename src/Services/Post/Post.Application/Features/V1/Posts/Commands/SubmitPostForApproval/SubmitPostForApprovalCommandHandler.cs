@@ -41,6 +41,7 @@ public class SubmitPostForApprovalCommandHandler(
                 }
 
                 // TODO: Implement check current user id
+                var currentUserId = request.UserId;
 
                 await postRepository.SubmitPostForApproval(post);
 
@@ -49,7 +50,7 @@ public class SubmitPostForApprovalCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.WaitingForApproval,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);

@@ -39,8 +39,6 @@ public class ApprovePostCommandHandler(
                     return result;
                 }
 
-                // TODO: Implement check current user id
-
                 await postRepository.ApprovePost(post);
 
                 var postActivityLog = new PostActivityLog
@@ -48,7 +46,7 @@ public class ApprovePostCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.Published,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
@@ -59,7 +57,7 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Description).ConfigureAwait(false);
+                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Summary).ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {

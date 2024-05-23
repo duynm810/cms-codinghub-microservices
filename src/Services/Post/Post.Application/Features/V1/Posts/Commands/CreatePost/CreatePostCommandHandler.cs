@@ -48,7 +48,7 @@ public class CreatePostCommandHandler(
             }
 
             var post = mapper.Map<PostBase>(request);
-
+            
             // Set category id get by categories services
             post.CategoryId = category.Id;
 

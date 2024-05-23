@@ -12,7 +12,7 @@ using Post.Infrastructure.Persistence;
 namespace Post.Infrastructure.Migrations
 {
     [DbContext(typeof(PostContext))]
-    [Migration("20240510092655_Initial")]
+    [Migration("20240523151400_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -94,11 +94,6 @@ namespace Post.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_date");
 
-                    b.Property<string>("Description")
-                        .HasMaxLength(500)
-                        .HasColumnType("character varying(500)")
-                        .HasColumnName("description");
-
                     b.Property<bool>("IsPaid")
                         .HasColumnType("boolean")
                         .HasColumnName("is_paid");
@@ -141,6 +136,11 @@ namespace Post.Infrastructure.Migrations
                         .HasColumnType("integer")
                         .HasDefaultValue(0)
                         .HasColumnName("status");
+
+                    b.Property<string>("Summary")
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)")
+                        .HasColumnName("summary");
 
                     b.Property<string>("Tags")
                         .HasMaxLength(250)

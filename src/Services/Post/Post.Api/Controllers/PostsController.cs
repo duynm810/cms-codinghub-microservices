@@ -16,6 +16,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
+using Shared.Extensions;
 using Shared.Responses;
 
 namespace Post.Api.Controllers;
@@ -27,9 +28,11 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<long>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreateOrUpdatePostDto model)
+    public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreatePostDto model)
     {
         var command = mapper.Map<CreatePostCommand>(model);
+        command.AuthorUserId = User.GetUserId();
+        
         var result = await mediator.Send(command);
         return Ok(result);
     }
@@ -48,8 +51,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<ActionResult> DeletePost([Required] Guid id)
     {
         var command = new DeletePostCommand(id);
-        await mediator.Send(command);
-        return NoContent();
+        var result = await mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpGet]
@@ -85,8 +88,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> ApprovePost(Guid id)
     {
-        var query = new ApprovePostCommand(id);
-        var result = await mediator.Send(query);
+        var command = new ApprovePostCommand(id, User.GetUserId());
+        var result = await mediator.Send(command);
         return Ok(result);
     }
     
@@ -94,8 +97,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> SubmitPostForApproval(Guid id)
     {
-        var query = new SubmitPostForApprovalCommand(id);
-        var result = await mediator.Send(query);
+        var command = new SubmitPostForApprovalCommand(id, User.GetUserId());
+        var result = await mediator.Send(command);
         return Ok(result);
     }
     
@@ -103,8 +106,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto model)
     {
-        var query = new RejectPostWithReasonCommand(id, model);
-        var result = await mediator.Send(query);
+        var command = new RejectPostWithReasonCommand(id, User.GetUserId(), model);
+        var result = await mediator.Send(command);
         return Ok(result);
     }
 }
