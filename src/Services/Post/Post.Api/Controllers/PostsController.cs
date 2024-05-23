@@ -2,6 +2,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Net;
 using AutoMapper;
 using IdentityServer4.AccessTokenValidation;
+using Infrastructure.Extensions;
+using Infrastructure.Helpers;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +18,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
+using Shared.Extensions;
 using Shared.Responses;
 
 namespace Post.Api.Controllers;
@@ -29,6 +32,10 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<long>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreateOrUpdatePostDto model)
     {
+        var userId = User.GetUserId();
+        
+        model.AuthorUserId = userId;
+        
         var command = mapper.Map<CreatePostCommand>(model);
         var result = await mediator.Send(command);
         return Ok(result);
