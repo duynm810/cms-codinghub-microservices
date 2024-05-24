@@ -1,6 +1,6 @@
 namespace Shared.Constants;
 
-public static class SystemConsts
+public static class InternalClaimTypesConsts
 {
     public const string IdentitySchema = "Identity";
 

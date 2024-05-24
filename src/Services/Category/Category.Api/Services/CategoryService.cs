@@ -65,7 +65,7 @@ public class CategoryService(
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
-                result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -103,7 +103,7 @@ public class CategoryService(
                 var category = await categoryRepository.GetCategoryById(id);
                 if (category == null)
                 {
-                    result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
+                    result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
@@ -111,7 +111,7 @@ public class CategoryService(
                 var existedPost = await postGrpcService.HasPostsInCategory(id);
                 if (existedPost)
                 {
-                    result.Messages.Add(ErrorMessageConsts.Category.CategoryContainsPost);
+                    result.Messages.Add(ErrorMessagesConsts.Category.CategoryContainsPost);
                     result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                     return result;
                 }
@@ -174,7 +174,7 @@ public class CategoryService(
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
-                result.Messages.Add(ErrorMessageConsts.Category.CategoryNotFound);
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }

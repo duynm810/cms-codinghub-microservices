@@ -12,7 +12,7 @@ using Shared.Utilities;
 
 namespace Identity.Infrastructure.Services;
 
-public class PermissionService(IPermissionRepository permissionRepository, IMapper mapper, ILogger logger) : IPermissionService
+public class PermissionService(IIdentityReposityManager reposityManager, IMapper mapper, ILogger logger) : IPermissionService
 {
     #region CRUD
 
@@ -30,10 +30,10 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
             var permission = mapper.Map<Permission>(model);
             permission.RoleId = roleId;
 
-            var executeResult = await permissionRepository.CreatePermission(roleId, permission);
+            var executeResult = await reposityManager.Permissions.CreatePermission(roleId, permission);
             if (executeResult <= 0)
             {
-                result.Messages.Add(ErrorMessageConsts.Identity.Permission.PermissionCreationFailed);
+                result.Messages.Add(ErrorMessagesConsts.Identity.Permission.PermissionCreationFailed);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
@@ -80,7 +80,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
                 dt.Rows.Add(roleId, item.Function, item.Command);
             }
 
-            await permissionRepository.UpdatePermissions(roleId, dt);
+            await reposityManager.Permissions.UpdatePermissions(roleId, dt);
 
             result.Success(true);
 
@@ -108,7 +108,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
                 "BEGIN {MethodName} - Deleting permission for role: {RoleId} with function: {Function} and command: {Command}",
                 methodName, roleId, function, command);
 
-            await permissionRepository.DeletePermission(roleId, function, command);
+            await reposityManager.Permissions.DeletePermission(roleId, function, command);
 
             result.Success(true);
 
@@ -134,7 +134,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
         {
             logger.Information("BEGIN {MethodName} - Retrieving permissions for role: {RoleId}", methodName, roleId);
 
-            var queryResult = await permissionRepository.GetPermissions(roleId);
+            var queryResult = await reposityManager.Permissions.GetPermissions(roleId);
 
             var permissionDtos = mapper.Map<List<PermissionDto>>(queryResult);
 
@@ -165,7 +165,7 @@ public class PermissionService(IPermissionRepository permissionRepository, IMapp
         
         try
         {
-            var permissions = await permissionRepository.GetPermissionsByUser(user);
+            var permissions = await reposityManager.Permissions.GetPermissionsByUser(user);
             var data = mapper.Map<List<PermissionDto>>(permissions);
             result.Success(data);
         }

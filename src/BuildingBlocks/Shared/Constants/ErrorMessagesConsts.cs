@@ -1,6 +1,6 @@
 namespace Shared.Constants;
 
-public static class ErrorMessageConsts
+public static class ErrorMessagesConsts
 {
     public static class Common
     {
@@ -36,6 +36,14 @@ public static class ErrorMessageConsts
         public static class Permission
         {
             public const string PermissionCreationFailed = "Failed to create permission.";
+        }
+
+        public static class Role
+        {
+            public const string RoleNotFound = "Role not found";
+            public const string RoleCreationFailed = "Failed to create role";
+            public const string RoleUpdateFailed = "Failed to update role";
+            public const string RoleDeleteFailed = "Failed to delete role";
         }
     }
 }
