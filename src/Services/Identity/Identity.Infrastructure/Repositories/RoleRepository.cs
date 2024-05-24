@@ -8,30 +8,16 @@ public class RoleRepository(RoleManager<IdentityRole> roleManager) : IRoleReposi
 {
     #region CRUD
 
-    public async Task CreateRole(IdentityRole model) => await roleManager.CreateAsync(model);
+    public async Task CreateRole(IdentityRole role) => await roleManager.CreateAsync(role);
 
-    public async Task<bool> UpdateRole(Guid roleId, IdentityRole model)
+    public async Task<bool> UpdateRole(Guid roleId, IdentityRole role)
     {
-        var role = await roleManager.FindByIdAsync(roleId.ToString());
-        if (role == null)
-        {
-            return false;
-        }
-
-        role.Name = model.Name;
-
         var result = await roleManager.UpdateAsync(role);
         return result.Succeeded;
     }
 
-    public async Task<bool> DeleteRole(Guid roleId)
+    public async Task<bool> DeleteRole(IdentityRole role)
     {
-        var role = await roleManager.FindByIdAsync(roleId.ToString());
-        if (role == null)
-        {
-            return false;
-        }
-
         var result = await roleManager.DeleteAsync(role);
         return result.Succeeded;
     }

@@ -6,11 +6,11 @@ public interface IRoleRepository
 {
     #region CRUD
 
-    Task CreateRole(IdentityRole model);
+    Task CreateRole(IdentityRole role);
 
-    Task<bool> UpdateRole(Guid roleId, IdentityRole model);
+    Task<bool> UpdateRole(Guid roleId, IdentityRole role);
 
-    Task<bool> DeleteRole(Guid roleId);
+    Task<bool> DeleteRole(IdentityRole role);
 
     Task<IEnumerable<IdentityRole>> GetRoles();
 

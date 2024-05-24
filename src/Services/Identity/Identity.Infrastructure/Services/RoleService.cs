@@ -51,9 +51,17 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
         {
             logger.Information("BEGIN {MethodName} - Updating role with ID: {RoleId}", methodName, roleId);
 
-            var role = mapper.Map<IdentityRole>(model);
-            var updateResult = await repositoryManager.Roles.UpdateRole(roleId, role);
+            var role = await repositoryManager.Roles.GetRoleById(roleId);
+            if (role == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
 
+            role.Name = model.Name;
+
+            var updateResult = await repositoryManager.Roles.UpdateRole(roleId, role);
             if (!updateResult)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleUpdateFailed);
@@ -62,6 +70,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             }
 
             result.Success(updateResult);
+            
             logger.Information("END {MethodName} - Role updated successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
@@ -83,8 +92,15 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
         {
             logger.Information("BEGIN {MethodName} - Deleting role with ID: {RoleId}", methodName, roleId);
 
-            var deleteResult = await repositoryManager.Roles.DeleteRole(roleId);
+            var role = await repositoryManager.Roles.GetRoleById(roleId);
+            if (role == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
 
+            var deleteResult = await repositoryManager.Roles.DeleteRole(role);
             if (!deleteResult)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleDeleteFailed);
@@ -93,6 +109,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             }
 
             result.Success(deleteResult);
+            
             logger.Information("END {MethodName} - Role deleted successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
@@ -118,6 +135,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             var data = mapper.Map<IEnumerable<RoleDto>>(roles);
 
             result.Success(data);
+            
             logger.Information("END {MethodName} - Successfully retrieved roles", methodName);
         }
         catch (Exception e)
@@ -142,13 +160,14 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             var role = await repositoryManager.Roles.GetRoleById(roleId);
             if (role == null)
             {
-                result.Messages.Add("Role not found.");
+                result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
             var data = mapper.Map<RoleDto>(role);
             result.Success(data);
+            
             logger.Information("END {MethodName} - Successfully retrieved role with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)

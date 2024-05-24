@@ -40,6 +40,7 @@ public static class ErrorMessagesConsts
 
         public static class Role
         {
+            public const string RoleNotFound = "Role not found";
             public const string RoleCreationFailed = "Failed to create role";
             public const string RoleUpdateFailed = "Failed to update role";
             public const string RoleDeleteFailed = "Failed to delete role";
