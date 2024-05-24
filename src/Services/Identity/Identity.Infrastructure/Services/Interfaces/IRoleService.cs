@@ -13,7 +13,7 @@ public interface IRoleService
 
     Task<ApiResult<bool>> DeleteRole(Guid roleId);
 
-    Task<ApiResult<IReadOnlyList<RoleDto>>> GetRoles();
+    Task<ApiResult<IEnumerable<RoleDto>>> GetRoles();
 
     Task<ApiResult<RoleDto>> GetRoleById(Guid roleId);
     
