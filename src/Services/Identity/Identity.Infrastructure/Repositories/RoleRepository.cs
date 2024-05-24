@@ -13,16 +13,25 @@ public class RoleRepository(RoleManager<IdentityRole> roleManager) : IRoleReposi
     public async Task<bool> UpdateRole(Guid roleId, IdentityRole role)
     {
         var result = await roleManager.UpdateAsync(role);
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
         return result.Succeeded;
     }
 
     public async Task<bool> DeleteRole(IdentityRole role)
     {
         var result = await roleManager.DeleteAsync(role);
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
         return result.Succeeded;
     }
 
     public async Task<IEnumerable<IdentityRole>> GetRoles() => await roleManager.Roles.ToListAsync();
+    
     public async Task<IdentityRole?> GetRoleById(Guid roleId) => await roleManager.FindByIdAsync(roleId.ToString());
 
     #endregion
