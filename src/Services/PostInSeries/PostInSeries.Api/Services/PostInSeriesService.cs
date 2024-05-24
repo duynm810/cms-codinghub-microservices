@@ -91,7 +91,7 @@ public class PostInSeriesService(
             {
                 logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName,
                     seriesId);
-                result.Messages.Add(ErrorMessageConsts.PostInSeries.PostIdsNotFound);
+                result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -109,7 +109,7 @@ public class PostInSeriesService(
             }
             else
             {
-                result.Messages.Add(ErrorMessageConsts.PostInSeries.PostNotFoundInSeries);
+                result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
             }
         }
@@ -140,7 +140,7 @@ public class PostInSeriesService(
             {
                 logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName,
                     seriesId);
-                result.Messages.Add(ErrorMessageConsts.PostInSeries.PostIdsNotFound);
+                result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -165,7 +165,7 @@ public class PostInSeriesService(
             }
             else
             {
-                result.Messages.Add(ErrorMessageConsts.PostInSeries.PostNotFoundInSeries);
+                result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
             }
         }

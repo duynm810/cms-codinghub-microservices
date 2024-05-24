@@ -27,7 +27,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
             if (post == null)
             {
                 logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
-                result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
+                result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -37,7 +37,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
             if (slugExists)
             {
                 logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}", methodName, request.Id, request.Slug);
-                result.Messages.Add(ErrorMessageConsts.Post.SlugExists);
+                result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
             }
@@ -47,7 +47,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
             if (category == null)
             {
                 logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, request.CategoryId);
-                result.Messages.Add(ErrorMessageConsts.Category.InvalidCategoryId);
+                result.Messages.Add(ErrorMessagesConsts.Category.InvalidCategoryId);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }

@@ -15,7 +15,11 @@ public class IdentityRepositoryManager(
     private readonly Lazy<IPermissionRepository> _permissionRepository =
         new(() => new PermissionRepository(dbContext, unitOfWork, userManager));
 
+    private readonly Lazy<IRoleRepository> _roleRepository = new(() => new RoleRepository(roleManager));
+
     public IPermissionRepository Permissions => _permissionRepository.Value;
+
+    public IRoleRepository Roles => _roleRepository.Value;
 
     public UserManager<User> UserManager { get; } = userManager;
 

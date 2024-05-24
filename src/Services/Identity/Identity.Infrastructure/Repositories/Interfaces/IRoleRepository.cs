@@ -14,7 +14,7 @@ public interface IRoleRepository
 
     Task<IEnumerable<IdentityRole>> GetRoles();
 
-    Task<IdentityRole> GetRoleById(Guid roleId);
+    Task<IdentityRole?> GetRoleById(Guid roleId);
 
     #endregion
 }

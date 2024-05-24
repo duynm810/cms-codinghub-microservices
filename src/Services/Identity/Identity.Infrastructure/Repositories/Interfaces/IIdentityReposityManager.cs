@@ -11,4 +11,6 @@ public interface IIdentityReposityManager
     RoleManager<IdentityRole> RoleManager { get; }
     
     IPermissionRepository Permissions { get; }
+    
+    IRoleRepository Roles { get; }
 }

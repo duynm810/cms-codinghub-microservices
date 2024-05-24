@@ -93,7 +93,8 @@ public static class ServiceExtensions
             .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
             .AddScoped<IPermissionRepository, PermissionRepository>()
             .AddScoped<IPermissionService, PermissionService>()
-            .AddScoped<IRoleService, RoleService>();
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<IRoleRepository, RoleRepository>();
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)

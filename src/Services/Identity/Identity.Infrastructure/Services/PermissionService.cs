@@ -33,7 +33,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
             var executeResult = await reposityManager.Permissions.CreatePermission(roleId, permission);
             if (executeResult <= 0)
             {
-                result.Messages.Add(ErrorMessageConsts.Identity.Permission.PermissionCreationFailed);
+                result.Messages.Add(ErrorMessagesConsts.Identity.Permission.PermissionCreationFailed);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }

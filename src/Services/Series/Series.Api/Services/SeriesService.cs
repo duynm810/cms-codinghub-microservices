@@ -60,7 +60,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             if (series == null)
             {
                 logger.Warning("{MethodName} - Series not found with ID: {SeriesId}", methodName, id);
-                result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
+                result.Messages.Add(ErrorMessagesConsts.Series.SeriesNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
@@ -98,7 +98,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
                 if (series == null)
                 {
                     logger.Warning("{MethodName} - Series not found with ID: {SeriesId}", methodName, id);
-                    result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
+                    result.Messages.Add(ErrorMessagesConsts.Series.SeriesNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
@@ -159,7 +159,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             var series = await seriesRepository.GetSeriesById(id);
             if (series == null)
             {
-                result.Messages.Add(ErrorMessageConsts.Series.SeriesNotFound);
+                result.Messages.Add(ErrorMessagesConsts.Series.SeriesNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }

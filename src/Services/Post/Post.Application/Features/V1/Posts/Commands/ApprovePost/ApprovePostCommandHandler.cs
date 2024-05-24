@@ -34,7 +34,7 @@ public class ApprovePostCommandHandler(
                 if (post == null)
                 {
                     logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
-                    result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
+                    result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }

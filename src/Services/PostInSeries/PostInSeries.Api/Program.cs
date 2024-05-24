@@ -33,7 +33,7 @@ catch (Exception ex)
     var type = ex.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
+    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
 }
 finally
 {

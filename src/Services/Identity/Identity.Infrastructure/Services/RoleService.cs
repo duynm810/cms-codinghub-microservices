@@ -1,13 +1,17 @@
+using AutoMapper;
+using Identity.Infrastructure.Repositories.Interfaces;
 using Identity.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Identity.Role;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Identity.Infrastructure.Services;
 
-public class RoleService(ILogger logger) : IRoleService
+public class RoleService(IIdentityReposityManager repositoryManager, IMapper mapper, ILogger logger) : IRoleService
 {
     #region CRUD
 
@@ -18,7 +22,15 @@ public class RoleService(ILogger logger) : IRoleService
 
         try
         {
-            throw new NotImplementedException();
+            logger.Information("BEGIN {MethodName} - Creating role with name: {RoleName}", methodName, model.Name);
+
+            var role = mapper.Map<IdentityRole>(model);
+            await repositoryManager.Roles.CreateRole(role);
+
+            var data = mapper.Map<RoleDto>(role);
+            result.Success(data);
+
+            logger.Information("END {MethodName} - Role created successfully with ID {RoleId}", methodName, role.Id);
         }
         catch (Exception e)
         {
@@ -37,7 +49,20 @@ public class RoleService(ILogger logger) : IRoleService
 
         try
         {
-            throw new NotImplementedException();
+            logger.Information("BEGIN {MethodName} - Updating role with ID: {RoleId}", methodName, roleId);
+
+            var role = mapper.Map<IdentityRole>(model);
+            var updateResult = await repositoryManager.Roles.UpdateRole(roleId, role);
+
+            if (!updateResult)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleUpdateFailed);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            result.Success(updateResult);
+            logger.Information("END {MethodName} - Role updated successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
         {
@@ -56,7 +81,19 @@ public class RoleService(ILogger logger) : IRoleService
 
         try
         {
-            throw new NotImplementedException();
+            logger.Information("BEGIN {MethodName} - Deleting role with ID: {RoleId}", methodName, roleId);
+
+            var deleteResult = await repositoryManager.Roles.DeleteRole(roleId);
+
+            if (!deleteResult)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.Role.RoleDeleteFailed);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            result.Success(deleteResult);
+            logger.Information("END {MethodName} - Role deleted successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
         {
@@ -75,7 +112,13 @@ public class RoleService(ILogger logger) : IRoleService
 
         try
         {
-            throw new NotImplementedException();
+            logger.Information("BEGIN {MethodName} - Retrieving all roles", methodName);
+
+            var roles = await repositoryManager.Roles.GetRoles();
+            var data = mapper.Map<IEnumerable<RoleDto>>(roles);
+
+            result.Success(data);
+            logger.Information("END {MethodName} - Successfully retrieved roles", methodName);
         }
         catch (Exception e)
         {
@@ -94,7 +137,19 @@ public class RoleService(ILogger logger) : IRoleService
 
         try
         {
-            throw new NotImplementedException();
+            logger.Information("BEGIN {MethodName} - Retrieving role with ID: {RoleId}", methodName, roleId);
+
+            var role = await repositoryManager.Roles.GetRoleById(roleId);
+            if (role == null)
+            {
+                result.Messages.Add("Role not found.");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<RoleDto>(role);
+            result.Success(data);
+            logger.Information("END {MethodName} - Successfully retrieved role with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
         {

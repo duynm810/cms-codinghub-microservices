@@ -12,7 +12,7 @@ public class ClaimRequirementFilter(FunctionCodeEnum functionCode, CommandCodeEn
     public void OnAuthorization(AuthorizationFilterContext context)
     {
         var permissionsClaim = context.HttpContext.User.Claims
-            .SingleOrDefault(c => c.Type.Equals(SystemConsts.Claims.Permissions));
+            .SingleOrDefault(c => c.Type.Equals(InternalClaimTypesConsts.Claims.Permissions));
         if (permissionsClaim != null)
         {
             var permissions = JsonSerializer.Deserialize<List<string>>(permissionsClaim.Value);
