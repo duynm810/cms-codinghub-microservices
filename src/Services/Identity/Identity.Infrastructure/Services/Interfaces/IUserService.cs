@@ -18,4 +18,10 @@ public interface IUserService
     Task<ApiResult<UserDto>> GetUserById(Guid userId);
 
     #endregion
+
+    #region OTHERS
+
+    Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto model);
+
+    #endregion
 }

@@ -61,7 +61,6 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 
             mapper.Map(model, user);
             var updateResult = await repositoryManager.Users.UpdateUser(user);
-
             if (!updateResult)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.User.UserUpdateFailed);
@@ -169,6 +168,48 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
             result.Success(data);
 
             logger.Information("END {MethodName} - Successfully retrieved user with ID {UserId}", methodName, userId);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    #endregion
+
+    #region OTHERS
+
+    public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto model)
+    {
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(ChangePassword);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Changing password for user with ID: {UserId}", methodName, userId);
+
+            var user = await repositoryManager.Users.GetUserById(userId);
+            if (user == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var changePasswordResult = await repositoryManager.Users.ChangePassword(user, model.CurrentPassword, model.NewPassword);
+            if (!changePasswordResult)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserChangePasswordFailed);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            result.Success(true);
+            logger.Information("END {MethodName} - Password changed successfully for user with ID {UserId}", methodName, userId);
         }
         catch (Exception e)
         {

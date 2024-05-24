@@ -21,6 +21,11 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     public async Task<bool> UpdateUser(User user)
     {
         var result = await userManager.UpdateAsync(user);
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
+        
         return result.Succeeded;
     }
 
@@ -39,6 +44,17 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     #region OTHERS
 
     public async Task<User?> GetUserByUserName(string userName) => await userManager.FindByNameAsync(userName);
+
+    public async Task<bool> ChangePassword(User user, string currentPassword, string newPassword)
+    {
+        var result = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        if (!result.Succeeded)
+        {
+            throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
+
+        return result.Succeeded;
+    }
 
     #endregion
 }

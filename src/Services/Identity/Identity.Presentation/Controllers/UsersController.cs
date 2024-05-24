@@ -52,4 +52,12 @@ public class UsersController(IUserService userService) : ControllerBase
         var result = await userService.GetUserById(userId);
         return Ok(result);
     }
+    
+    [HttpPost("{userId:guid}/change-password")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ChangePassword(Guid userId, [FromBody] ChangePasswordUserDto model)
+    {
+        var result = await userService.ChangePassword(userId, model);
+        return Ok(result);
+    }
 }

@@ -52,6 +52,7 @@ public static class ErrorMessagesConsts
             public const string UserCreationFailed = "Failed to create user";
             public const string UserUpdateFailed = "Failed to update user";
             public const string UserDeleteFailed = "Failed to delete user";
+            public const string UserChangePasswordFailed = "Failed to change password user";
         }
     }
 }
