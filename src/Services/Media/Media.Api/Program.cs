@@ -1,4 +1,5 @@
 using Logging;
+using Media.Api.Extensions;
 using Serilog;
 using Shared.Constants;
 
@@ -14,18 +15,16 @@ try
     // Configure Serilog as the logging provider
     builder.Host.UseSerilog(Serilogger.Configure);
 
-    builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddSwaggerGen();
-
+    // Load configuration from JSON files and environment variables
+    builder.AddAppConfiguration();
+    
+    // Register application infrastructure services
+    builder.Services.AddInfrastructureServices(configuration);
+    
     var app = builder.Build();
 
-    if (app.Environment.IsDevelopment())
-    {
-        app.UseSwagger();
-        app.UseSwaggerUI();
-    }
-
-    app.UseHttpsRedirection();
+    // Set up middleware and request handling pipeline
+    app.ConfigurePipeline();
 
     app.Run();
 }
