@@ -55,4 +55,12 @@ public static class ErrorMessagesConsts
             public const string UserChangePasswordFailed = "Failed to change password user";
         }
     }
+    
+    public static class Media
+    {
+        public const string FileNotUploaded = "No files have been uploaded";
+        public const string FileIsEmpty = "The file is empty";
+        public const string InvalidFileTypeOrName = "Invalid file type or name";
+        public const string FileNameCannotBeEmpty = "Filename cannot be null or empty";
+    }
 }
