@@ -237,6 +237,8 @@ services:
     ports:
       - "6016:80"
     restart: always
+    volumes:
+      - ./wwwroot:/app/wwwroot
   
   healthcheck:
     container_name: healthcheck
