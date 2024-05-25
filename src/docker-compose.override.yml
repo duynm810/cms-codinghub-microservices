@@ -115,6 +115,21 @@ services:
       - "5601:5601"
   
   ##microservices api sections
+  apigw.ocelot:
+    container_name: apigw.ocelot
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - category.api
+      - post.api
+      - series.api
+      - post-in-series.api
+      - hangfire.api
+    ports:
+      - "6001:80"
+    restart: always
+    
   identity.api:
     container_name: identity.api
     environment:
@@ -147,7 +162,6 @@ services:
     ports:
       - "6004:80"
     restart: always
-    
     
   post.api:
     container_name: post.api
@@ -214,20 +228,14 @@ services:
     ports:
       - "6015:80"
     restart: always
-  
-  apigw.ocelot:
-    container_name: apigw.ocelot
+       
+  media.api:
+    container_name: media.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - category.api
-      - post.api
-      - series.api
-      - post-in-series.api
-      - hangfire.api
     ports:
-      - "6001:80"
+      - "6016:80"
     restart: always
   
   healthcheck:
