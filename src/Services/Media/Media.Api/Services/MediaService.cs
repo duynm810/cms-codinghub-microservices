@@ -133,16 +133,66 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
     private async Task ProcessImage(IFormFile file, string filePath, string fileExtension)
     {
         using var image = await Image.LoadAsync(file.OpenReadStream());
-        if (image.Width > 1920)
+        var encoder = GetEncoder(fileExtension); // Determine the appropriate encoder (Xác định bộ mã hóa thích hợp)
+        const int maxFileSize = 500000; // Maximum file size in bytes, for example 500 KB (Kích thước tối đa tính bằng byte, ví dụ 500 KB)
+        const int maxWidth = 1920; // Maximum width to start (Chiều rộng hình ảnh tối đa để bắt đầu xử lý tối ưu)
+
+        // Use binary search to find the optimal size (Sử dụng tìm kiếm nhị phân để tìm kích thước tối ưu)
+        var min = 0;
+        var max = maxWidth;
+        var bestWidth = max;
+        var bestHeight = CalculateHeight(image, bestWidth); // Calculate initial best height (Tính chiều cao tốt nhất ban đầu)
+        
+        using var tmpStream = new MemoryStream();
+        while (min <= max)
         {
-            var newHeight = (int)(image.Height * (1920.0 / image.Width));
-            image.Mutate(x => x.Resize(1920, newHeight));
+            var width = (min + max) / 2;
+            var height = CalculateHeight(image, width);
+            tmpStream.SetLength(0); // Reset the memory stream for reuse (Đặt lại luồng bộ nhớ để sử dụng lại)
+            
+            // Adjust the temporary size to this width and height (Điều chỉnh kích thước tạm thời với chiều rộng và chiều cao này)
+            using var resizedImage = image.Clone(op => op.Resize(new ResizeOptions
+            {
+                Mode = ResizeMode.Max,
+                Size = new Size(width, height)
+            }));
+
+            // Save to stream to check file size (Lưu vào luồng tạm thời để kiểm tra kích thước tệp)
+            await resizedImage.SaveAsync(tmpStream, encoder);
+            
+            // Nếu kích thước tệp nhỏ hơn maxFileSize, chiều rộng và chiều cao này được xem là khả thi
+            if (tmpStream.Length < maxFileSize)
+            {
+                bestWidth = width;
+                bestHeight = height;
+                min = width + 1; // The algorithm will try a larger size (thuật toán sẽ thử một kích thước lớn hơn)
+            }
+            else
+            {
+                max = width - 1; // If the file size is over the limit, try a smaller size (Nếu kích thước tệp lớn hơn, thử lại kích thước nhỏ hơn)
+            }
         }
 
-        // Determine the encoder based on file extension (Xác định bộ mã hóa dựa trên phần mở rộng tệp)
-        IImageEncoder encoder = GetEncoder(fileExtension);
-        await using var fileStream = new FileStream(filePath, FileMode.Create);
-        await image.SaveAsync(fileStream, encoder);
+        // Resize to the best width and height found and save to the final destination (Thay đổi kích thước theo chiều rộng và chiều cao tốt nhất được tìm thấy và lưu vào đích cuối cùng)
+        image.Mutate(x => x.Resize(new ResizeOptions
+        {
+            Mode = ResizeMode.Max,
+            Size = new Size(bestWidth, bestHeight)
+        }));
+        
+        await using var finalStream = new FileStream(filePath, FileMode.Create);
+        await image.SaveAsync(finalStream, encoder);
+    }
+
+    /// <summary>
+    /// Helper method to calculate the corresponding height for a given width to maintain aspect ratio
+    /// </summary>
+    /// <param name="image"></param>
+    /// <param name="width"></param>
+    /// <returns></returns>
+    private int CalculateHeight(Image image, int width)
+    {
+        return (int)(image.Height * (width / (double)image.Width));
     }
 
     /// <summary>
