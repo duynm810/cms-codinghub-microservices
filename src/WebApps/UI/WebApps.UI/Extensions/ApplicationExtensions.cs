@@ -21,8 +21,9 @@ public static class ApplicationExtensions
 
         app.UseRouting();
 
-        app.UseAuthorization();
         app.UseAuthentication();
+
+        app.UseAuthorization();
 
         app.MapControllerRoute(
             name: "default",

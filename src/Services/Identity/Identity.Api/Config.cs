@@ -134,5 +134,39 @@ public static class Config
                     "roles",
                 }
             },
+            new()
+            {
+                ClientId = "coding_hub_microservices_mvc",
+                ClientName = "Coding Hub Microservices MVC Client",
+                AllowedGrantTypes = GrantTypes.Code,
+                RequirePkce = true,
+                RequireClientSecret = true,
+                ClientSecrets = new[]
+                {
+                    new Secret("mvc-client-secret")
+                },
+                RedirectUris = new List<string>
+                {
+                    "http://localhost:4000/signin-oidc"
+                },
+                PostLogoutRedirectUris = new List<string>
+                {
+                    "http://localhost:4000/signout-callback-oidc"
+                },
+                AllowedScopes = new List<string>
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    IdentityServerConstants.StandardScopes.Email,
+                    "coding_hub_microservices_api.read",
+                    "coding_hub_microservices_api.write",
+                    "roles"
+                },
+                AllowOfflineAccess = true,
+                AccessTokenLifetime = 3600,
+                AllowAccessTokensViaBrowser = false,
+                RequireConsent = false,
+                AlwaysIncludeUserClaimsInIdToken = true
+            }
         };
 }

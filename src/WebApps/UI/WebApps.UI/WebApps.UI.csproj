@@ -14,7 +14,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Duende.IdentityServer" Version="7.0.4" />
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="8.0.5" />
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="8.0.5" />
+      <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="7.5.2" />
     </ItemGroup>
 
     <ItemGroup>
@@ -76,6 +79,10 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\dist\jquery.min.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Views\Accounts\" />
     </ItemGroup>
 
 </Project>
