@@ -1,27 +1,34 @@
+using Logging;
+using Serilog;
+using WebApps.UI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Initialize console logging for application startup
+Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
+Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+try
 {
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    // Configure Serilog as the logging provider
+    builder.Host.UseSerilog(Serilogger.Configure);
+
+    // Load configuration from JSON files and environment variables
+    builder.AddAppConfiguration();
+
+    // Register application infrastructure services
+    builder.Services.AddInfrastructureServices(configuration);
+
+    var app = builder.Build();
+
+    // Set up middleware and request handling pipeline
+    app.ConfigurePipeline();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
-app.Run();
+catch (Exception e)
+{
+    Console.WriteLine(e);
+    throw;
+}
