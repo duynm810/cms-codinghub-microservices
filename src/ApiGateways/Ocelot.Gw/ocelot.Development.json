@@ -7,6 +7,20 @@
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET",
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],

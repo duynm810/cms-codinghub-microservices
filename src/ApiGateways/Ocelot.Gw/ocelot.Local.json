@@ -7,6 +7,20 @@
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET",
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
