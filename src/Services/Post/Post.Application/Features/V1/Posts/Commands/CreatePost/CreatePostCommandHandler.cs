@@ -32,7 +32,7 @@ public class CreatePostCommandHandler(
             if (slugExists)
             {
                 logger.Warning("{MethodName} - Slug already exists: {PostSlug}", methodName, request.Slug);
-                result.Messages.Add(ErrorMessageConsts.Post.SlugExists);
+                result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
             }
@@ -42,13 +42,13 @@ public class CreatePostCommandHandler(
             if (category == null)
             {
                 logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, request.CategoryId);
-                result.Messages.Add(ErrorMessageConsts.Category.InvalidCategoryId);
+                result.Messages.Add(ErrorMessagesConsts.Category.InvalidCategoryId);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
             var post = mapper.Map<PostBase>(request);
-
+            
             // Set category id get by categories services
             post.CategoryId = category.Id;
 

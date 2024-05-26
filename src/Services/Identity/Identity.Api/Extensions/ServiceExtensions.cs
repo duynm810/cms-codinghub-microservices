@@ -54,7 +54,7 @@ public static class ServiceExtensions
         services.AddIdentity();
 
         // Register identity server
-        services.AddIdentityServer();
+        services.AddIdentityServer(configuration);
 
         // Register CORS services
         services.AddCorsConfiguration();
@@ -92,7 +92,11 @@ public static class ServiceExtensions
             .AddScoped<IIdentityProfileService, IdentityProfileService>()
             .AddScoped<IIdentityReposityManager, IdentityRepositoryManager>()
             .AddScoped<IPermissionRepository, PermissionRepository>()
-            .AddScoped<IPermissionService, PermissionService>();
+            .AddScoped<IPermissionService, PermissionService>()
+            .AddScoped<IRoleService, RoleService>()
+            .AddScoped<IRoleRepository, RoleRepository>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IUserRepository, UserRepository>();
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
@@ -123,16 +127,23 @@ public static class ServiceExtensions
             .AddDefaultTokenProviders();
     }
 
-    private static void AddIdentityServer(this IServiceCollection services)
+    private static void AddIdentityServer(this IServiceCollection services, IConfiguration configuration)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
+        var issuerUri = configuration.GetSection("IdentityServer:IssuerUri").Value;
         services.AddIdentityServer(options =>
             {
                 // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
                 options.EmitStaticAudienceClaim = true;
+                options.EmitStaticAudienceClaim = true;
+                options.Events.RaiseErrorEvents = true;
+                options.Events.RaiseInformationEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseSuccessEvents = true;
+                options.IssuerUri = issuerUri;
             })
             .AddDeveloperSigningCredential() // not recommended for production - you need to store your key material somewhere source
             /*.AddInMemoryIdentityResources(Config.IdentityResources)
@@ -145,7 +156,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
+                        builder => builder.MigrationsAssembly("Identity.Api"));
                 };
             })
             .AddOperationalStore(opt =>
@@ -153,7 +164,7 @@ public static class ServiceExtensions
                 opt.ConfigureDbContext = c =>
                 {
                     c.UseSqlServer(databaseSettings.ConnectionString,
-                        builder => builder.MigrationsAssembly("Identity.Infrastructure"));
+                        builder => builder.MigrationsAssembly("Identity.Api"));
                 };
             })
             .AddAspNetIdentity<User>()

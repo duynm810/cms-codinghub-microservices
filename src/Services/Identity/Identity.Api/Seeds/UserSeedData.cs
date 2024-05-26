@@ -69,10 +69,10 @@ public static class UserSeedData
 
         result = userManagement.AddClaimsAsync(user, new Claim[]
         {
-            new(SystemConsts.Claims.UserName, user.UserName),
-            new(SystemConsts.Claims.FirstName, user.FirstName),
-            new(SystemConsts.Claims.LastName, user.LastName),
-            new(SystemConsts.Claims.Roles, role),
+            new(InternalClaimTypesConsts.Claims.UserName, user.UserName),
+            new(InternalClaimTypesConsts.Claims.FirstName, user.FirstName),
+            new(InternalClaimTypesConsts.Claims.LastName, user.LastName),
+            new(InternalClaimTypesConsts.Claims.Roles, role),
             new(JwtClaimTypes.Address, user.Address),
             new(JwtClaimTypes.Email, user.Email),
             new(ClaimTypes.NameIdentifier, user.Id),

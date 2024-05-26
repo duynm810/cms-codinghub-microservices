@@ -32,9 +32,7 @@ public class CreateOrUpdateCommand : IMapFrom<PostBase>
     public PostStatusEnum Status { get; set; }
 
     public long CategoryId { get; set; }
-
-    public Guid AuthorUserId { get; set; }
-
+    
     public DateTimeOffset? PaidDate { get; set; }
 
     public void Mapping(Profile profile)

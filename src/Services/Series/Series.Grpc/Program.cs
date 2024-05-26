@@ -29,7 +29,7 @@ try
 }
 catch (Exception e)
 {
-    Log.Fatal(e, $"{ErrorMessageConsts.Common.UnhandledException}: {e.Message}");
+    Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {

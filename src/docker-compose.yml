@@ -33,6 +33,12 @@ services:
     image: docker.elastic.co/kibana/kibana:8.13.4
   
   ##microservices api section
+  apigw.ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: ApiGateways/Ocelot.Gw/Dockerfile
+  
   category.api:
     image: ${DOCKER_REGISTRY-}category-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -81,11 +87,17 @@ services:
       context: .
       dockerfile: Services/BackgroundJobs/Hangfire.Api/Dockerfile
       
-  apigw.ocelot:
-    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identity-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
-      dockerfile: ApiGateways/Ocelot.Gw/Dockerfile
+      dockerfile: Services/Identity/Identity.Api/Dockerfile
+                
+  media.api:
+    image: ${DOCKER_REGISTRY-}media-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Media/Media.Api/Dockerfile
   
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}

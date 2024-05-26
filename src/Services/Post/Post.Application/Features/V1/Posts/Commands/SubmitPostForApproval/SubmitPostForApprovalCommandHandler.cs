@@ -35,12 +35,13 @@ public class SubmitPostForApprovalCommandHandler(
                 if (post == null)
                 {
                     logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
-                    result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
+                    result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
 
                 // TODO: Implement check current user id
+                var currentUserId = request.UserId;
 
                 await postRepository.SubmitPostForApproval(post);
 
@@ -49,7 +50,7 @@ public class SubmitPostForApprovalCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.WaitingForApproval,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);

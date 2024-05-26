@@ -31,18 +31,18 @@ public class IdentityProfileService(IUserClaimsPrincipalFactory<User> claimsFact
 
         if (user.FirstName != null)
         {
-            claims.Add(new Claim(SystemConsts.Claims.FirstName, user.FirstName));
+            claims.Add(new Claim(InternalClaimTypesConsts.Claims.FirstName, user.FirstName));
         }
 
         if (user.LastName != null)
         {
-            claims.Add(new Claim(SystemConsts.Claims.LastName, user.LastName));
+            claims.Add(new Claim(InternalClaimTypesConsts.Claims.LastName, user.LastName));
         }
 
         if (user.UserName != null)
         {
-            claims.Add(new Claim(SystemConsts.Claims.UserName, user.UserName));
-            claims.Add(new Claim(SystemConsts.Claims.UserId, user.Id));
+            claims.Add(new Claim(InternalClaimTypesConsts.Claims.UserName, user.UserName));
+            claims.Add(new Claim(InternalClaimTypesConsts.Claims.UserId, user.Id));
             claims.Add(new Claim(ClaimTypes.Name, user.UserName));
         }
 
@@ -52,8 +52,8 @@ public class IdentityProfileService(IUserClaimsPrincipalFactory<User> claimsFact
         }
 
         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
-        claims.Add(new Claim(SystemConsts.Claims.Roles, string.Join(";", roles)));
-        claims.Add(new Claim(SystemConsts.Claims.Permissions, JsonSerializer.Serialize(permissions)));
+        claims.Add(new Claim(InternalClaimTypesConsts.Claims.Roles, string.Join(";", roles)));
+        claims.Add(new Claim(InternalClaimTypesConsts.Claims.Permissions, JsonSerializer.Serialize(permissions)));
         
         context.IssuedClaims = claims;
     }

@@ -34,12 +34,10 @@ public class ApprovePostCommandHandler(
                 if (post == null)
                 {
                     logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
-                    result.Messages.Add(ErrorMessageConsts.Post.PostNotFound);
+                    result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
-
-                // TODO: Implement check current user id
 
                 await postRepository.ApprovePost(post);
 
@@ -48,7 +46,7 @@ public class ApprovePostCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.Published,
-                    UserId = Guid.NewGuid(), // TODO: Replace with current user ID
+                    UserId = request.UserId,
                     PostId = request.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
@@ -59,7 +57,7 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Description).ConfigureAwait(false);
+                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Summary).ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {

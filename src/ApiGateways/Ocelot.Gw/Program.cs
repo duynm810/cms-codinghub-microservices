@@ -7,8 +7,6 @@ using Shared.Constants;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-var routes = builder.Environment.EnvironmentName == "Development" ? "Routes/Development" : "Routes/Local";
-
 // Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
 Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
@@ -24,8 +22,6 @@ try
     // Add infrastructure services
     builder.Services.AddInfrastructureServices(configuration);
 
-    configuration.AddOcelotWithSwaggerSupport(options => { options.Folder = routes; });
-
     var app = builder.Build();
 
     // Set up middleware and request handling pipeline
@@ -38,7 +34,7 @@ catch (Exception ex)
     var type = ex.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(ex, $"{ErrorMessageConsts.Common.UnhandledException}: {ex.Message}");
+    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
 }
 finally
 {

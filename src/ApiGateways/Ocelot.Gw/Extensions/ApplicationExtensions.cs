@@ -1,3 +1,4 @@
+using Infrastructure.Middlewares;
 using Ocelot.Gw.Configs;
 using Ocelot.Middleware;
 
@@ -15,19 +16,21 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
-
+        
+        app.UseMiddleware<ErrorWrappingMiddleware>();
+        
+        // Enables routing in the application.
         app.UseRouting();
-
+        
         app.UseCors("CorsPolicy");
 
         app.UseSwagger();
 
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
         app.UseSwaggerForOcelotUI(options =>
         {
+            options.OAuthClientId("coding_hub_microservices_swagger");
+            options.DisplayRequestDuration();
+            options.DisplayOperationId();
             options.PathToSwaggerGenerator = "/swagger/docs";
             options.ReConfigureUpstreamSwaggerJson = AlterUpstream.AlterUpstreamSwaggerJson;
         }).UseOcelot().Wait();
