@@ -298,6 +298,27 @@
         "AllowedScopes": []
       },
       "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/upload-image",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/upload-image",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6016
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
     }
   ],
   "SwaggerEndPoints": [
@@ -353,6 +374,17 @@
           "Name": "PostInSeries.Api",
           "Version": "1.0",
           "Url": "http://post-in-series.api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "media-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Media.Api",
+          "Version": "1.0",
+          "Url": "http://media.api/swagger/v1/swagger.json"
         }
       ]
     }

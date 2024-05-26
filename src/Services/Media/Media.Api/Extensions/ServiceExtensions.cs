@@ -1,3 +1,5 @@
+using Infrastructure.Extensions;
+using Infrastructure.Identity;
 using Media.Api.Services;
 using Media.Api.Services.Interfaces;
 using Shared.Settings;
@@ -21,9 +23,15 @@ public static class ServiceExtensions
 
         // Register additional services
         services.AddAdditionalServices();
-
+        
         // Register Swagger services
         services.AddSwaggerConfiguration();
+        
+        // Register authentication services
+        services.AddAuthenticationServices();
+
+        // Register authorization services
+        services.AddAuthorizationServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -38,11 +46,6 @@ public static class ServiceExtensions
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IMediaService, MediaService>();
-    }
-
-    private static void AddSwaggerConfiguration(this IServiceCollection services)
-    {
-        services.AddSwaggerGen();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

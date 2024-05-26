@@ -1,3 +1,5 @@
+using Shared.Constants;
+
 namespace Media.Api.Extensions;
 
 public static class ApplicationExtensions
@@ -15,8 +17,16 @@ public static class ApplicationExtensions
 
         app.UseStaticFiles();
 
+        // Configure the HTTP request pipeline.
         app.UseSwagger();
-        app.UseSwaggerUI();
+        app.UseSwaggerUI(c =>
+        {
+            c.DocumentTitle = $"{SwaggerConsts.MediaApi} Documentation";
+            c.OAuthClientId("coding_hub_microservices_swagger");
+            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.MediaApi} v1");
+            c.DisplayOperationId(); // Show function name in swagger
+            c.DisplayRequestDuration();
+        });
 
         app.MapDefaultControllerRoute();
     }
