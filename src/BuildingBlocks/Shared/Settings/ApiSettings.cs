@@ -2,5 +2,5 @@ namespace Shared.Settings;
 
 public class ApiSettings
 {
-    public string? ServerUrl { get; set; }
+    public string ServerUrl { get; set; }  = default!;
 }

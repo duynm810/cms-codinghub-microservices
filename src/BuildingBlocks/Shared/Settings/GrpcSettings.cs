@@ -2,9 +2,9 @@ namespace Shared.Settings;
 
 public class GrpcSettings
 {
-    public string? CategoryUrl { get; set; }
+    public string CategoryUrl { get; set; } = default!;
 
-    public string? PostUrl { get; set; }
+    public string PostUrl { get; set; } = default!;
     
-    public string? SeriesUrl { get; set; }
+    public string SeriesUrl { get; set; } = default!;
 }
