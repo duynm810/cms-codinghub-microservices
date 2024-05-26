@@ -11,10 +11,22 @@ public static class ServiceExtensions
     {
         // Register additional services
         services.AddAdditionalServices();
+
+        // Register razor pages runtime (using for dev)
+        services.AddRazorPagesRuntimeConfiguration();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllersWithViews();
+    }
+
+    private static void AddRazorPagesRuntimeConfiguration(this IServiceCollection services)
+    {
+        var enviroment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+        if (enviroment == Environments.Development)
+        {
+            services.AddRazorPages().AddRazorRuntimeCompilation();
+        }
     }
 }
