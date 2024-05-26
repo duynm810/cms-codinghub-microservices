@@ -1,5 +1,6 @@
 using Logging;
 using Serilog;
+using Shared.Constants;
 using WebApps.UI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,8 +28,13 @@ try
 
     app.Run();
 }
-catch (Exception e)
+catch (Exception ex)
 {
-    Console.WriteLine(e);
-    throw;
+    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
+}
+finally
+{
+    // Ensure proper closure of application and flush logs
+    Log.Information("Shutting down {ApplicationName} complete", builder.Environment.ApplicationName);
+    Log.CloseAndFlush();
 }
