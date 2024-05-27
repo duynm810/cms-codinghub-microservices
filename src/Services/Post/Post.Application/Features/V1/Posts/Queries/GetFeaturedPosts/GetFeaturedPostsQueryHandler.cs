@@ -5,11 +5,10 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
-using Shared.Dtos.Category;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetFeaturePosts;
+namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 
 public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
