@@ -1,10 +1,8 @@
-using Post.Application.Commons.Mappings;
-using Post.Domain.Entities;
 using Shared.Enums;
 
-namespace Post.Application.Commons.Models;
+namespace Shared.Dtos.Post;
 
-public class PostDto : IMapFrom<PostBase>
+public class FeaturedPostDto
 {
     public Guid Id { get; set; }
 

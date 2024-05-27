@@ -1,21 +1,28 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.Models;
+using WebApps.UI.Services.Interfaces;
+using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class HomeController : Controller
+public class HomeController(IPostApiClient postApiClient, ILogger logger) : Controller
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public async Task<IActionResult> Index()
     {
-        _logger = logger;
-    }
+        var featuredPosts = await postApiClient.GetFeaturedPosts(4);
+        if (featuredPosts is { IsSuccess: true, Data: not null })
+        {
+            var items = new HomeViewModel
+            {
+                FeaturedPosts = featuredPosts.Data
+            };
 
-    public IActionResult Index()
-    {
-        return View();
+            return View(items);
+        }
+        
+        logger.Error("Failed to load featured posts or no featured posts found.");
+        return Content("No featured posts found.");
     }
 
     public IActionResult Privacy()
