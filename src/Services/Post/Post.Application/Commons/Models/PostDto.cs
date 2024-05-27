@@ -36,7 +36,13 @@ public class PostDto : IMapFrom<PostBase>
     
     public string? CategoryName { get; set; }
 
+    public string? CategoryIcon { get; set; }
+    
+    public string? CategoryColor { get; set; }
+
     public Guid AuthorUserId { get; set; }
 
     public DateTimeOffset? PaidDate { get; set; }
+    
+    public DateTimeOffset CreatedDate { get; set; }
 }

@@ -1,3 +1,5 @@
+@model FooterViewModel
+
 <footer class="pt-50 pb-20 bg-grey">
     <div class="container">
         <div class="row">
@@ -42,24 +44,12 @@
                         <h5 class="mt-5 mb-30">Quick link</h5>
                     </div>
                     <ul class="font-small">
-                        <li class="cat-item cat-item-2">
-                            <a href="#">About me</a>
-                        </li>
-                        <li class="cat-item cat-item-4">
-                            <a href="#">Help & Support</a>
-                        </li>
-                        <li class="cat-item cat-item-5">
-                            <a href="#"> Licensing Policy</a>
-                        </li>
-                        <li class="cat-item cat-item-6">
-                            <a href="#">Refund Policy</a>
-                        </li>
-                        <li class="cat-item cat-item-7">
-                            <a href="#">Hire me</a>
-                        </li>
-                        <li class="cat-item cat-item-7">
-                            <a href="#">Contact</a>
-                        </li>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li class="cat-item cat-item-2">
+                                <a href="#">@category.Name</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

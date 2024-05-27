@@ -8,16 +8,15 @@ using Serilog;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
+namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 
-public class GetPostsQueryHandler(
+public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
-    ILogger logger)
-    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
+    ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetFeaturedPostsQuery request,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
@@ -25,9 +24,9 @@ public class GetPostsQueryHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
+            logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
 
-            var posts = await postRepository.GetPosts();
+            var posts = await postRepository.GetFeaturedPosts(request.Count);
 
             var postBases = posts.ToList();
             if (postBases.IsNotNullOrEmpty())
@@ -51,13 +50,13 @@ public class GetPostsQueryHandler(
 
                 result.Success(data);
 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts", methodName,
-                    data.Count);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} featured posts", methodName,
+                    data.Count());
             }
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

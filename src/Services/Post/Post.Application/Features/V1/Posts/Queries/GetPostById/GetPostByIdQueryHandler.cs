@@ -42,6 +42,8 @@ public class GetPostByIdQueryHandler(
             if (category != null)
             {
                 data.CategoryName = category.Name;
+                data.CategoryIcon = category.Icon;
+                data.CategoryColor = category.Color;
             }
 
             result.Success(data);

@@ -1,3 +1,4 @@
+using AutoMapper;
 using Category.Grpc.Protos;
 using Category.Grpc.Repositories.Interfaces;
 using Grpc.Core;
@@ -5,7 +6,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Category.Grpc.Services;
 
-public class CategoryService(ICategoryRepository categoryRepository, ILogger logger)
+public class CategoryService(ICategoryRepository categoryRepository, IMapper mapper, ILogger logger)
     : CategoryProtoService.CategoryProtoServiceBase
 {
     public override async Task<CategoryModel?> GetCategoryById(GetCategoryByIdRequest request,
@@ -24,13 +25,8 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
                 return null;
             }
 
-            var data = new CategoryModel()
-            {
-                Id = category.Id,
-                Name = category.Name,
-                Slug = category.Slug
-            };
-
+            var data = mapper.Map<CategoryModel>(category);
+            
             logger.Information(
                 "END {MethodName} - Success: Retrieved Category {CategoryId} - Name: {CategoryName} - Slug: {CategorySlug}",
                 methodName, data.Id, data.Name, data.Slug);
@@ -60,15 +56,7 @@ public class CategoryService(ICategoryRepository categoryRepository, ILogger log
 
             var categories = await categoryRepository.GetCategoriesByIds(categoryIds);
 
-            foreach (var category in categories)
-            {
-                result.Categories.Add(new CategoryModel()
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    Slug = category.Slug
-                });
-            }
+            result = mapper.Map<GetCategoriesByIdsResponse>(categories);
 
             logger.Information("{MethodName} - Successfully retrieved {Count} categories.", methodName,
                 result.Categories.Count);

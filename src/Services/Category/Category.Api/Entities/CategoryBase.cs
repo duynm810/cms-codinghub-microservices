@@ -33,6 +33,18 @@ public class CategoryBase : EntityAuditBase<long>
     public Guid? ParentId { get; set; }
 
     /// <summary>
+    /// Biểu tượng danh mục
+    /// </summary>
+    [MaxLength(20)]
+    public string? Icon { get; set; }
+
+    /// <summary>
+    /// Màu danh mục
+    /// </summary>
+    [MaxLength(20)]
+    public string? Color { get; set; }
+
+    /// <summary>
     /// Thứ tự ưu tiên
     /// </summary>
     public int SortOrder { get; set; }

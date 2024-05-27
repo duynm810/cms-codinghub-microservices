@@ -55,7 +55,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpGet("{id:long}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
-    [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCategory([FromRoute, Required] long id)
     {
         var result = await categoryService.GetCategoryById(id);

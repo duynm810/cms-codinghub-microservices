@@ -68,6 +68,9 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
     }
 
+    public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count) =>
+        await FindAll().OrderByDescending(x => x.ViewCount).Take(count).ToListAsync();
+
     public async Task ApprovePost(PostBase post)
     {
         post.Status = PostStatusEnum.Published;
@@ -85,5 +88,6 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         post.Status = PostStatusEnum.Rejected;
         await UpdateAsync(post);
     }
+
     #endregion
 }

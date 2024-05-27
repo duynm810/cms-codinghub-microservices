@@ -29,6 +29,8 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task<bool> HasPostsInCategory(long categoryId);
 
     Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
+    
+    Task<IEnumerable<PostBase>> GetFeaturedPosts(int count);
 
     Task ApprovePost(PostBase post);
 

@@ -25,9 +25,9 @@ public static class CategorySeedData
                 Id = 1,
                 Name = "Language Tutorials",
                 Slug = "language-tutorials",
-                SeoDescription =
-                    "Explore detailed tutorials on popular programming languages to boost your coding skills.",
+                SeoDescription = "Explore detailed tutorials on popular programming languages to boost your coding skills.",
                 ParentId = null, // No parent
+                Color = "text-danger",
                 SortOrder = 1,
                 IsActive = true
             },
@@ -36,9 +36,9 @@ public static class CategorySeedData
                 Id = 2,
                 Name = "Development",
                 Slug = "development",
-                SeoDescription =
-                    "Discover the latest development techniques and trends to stay ahead in the tech industry.",
+                SeoDescription = "Discover the latest development techniques and trends to stay ahead in the tech industry.",
                 ParentId = null, // No parent
+                Color = "text-warning",
                 SortOrder = 2,
                 IsActive = true
             },
@@ -47,8 +47,7 @@ public static class CategorySeedData
                 Id = 3,
                 Name = "About Me",
                 Slug = "about-me",
-                SeoDescription =
-                    "Learn more about the face behind Coding Hub and my journey in the world of software development.",
+                SeoDescription = "Learn more about the face behind Coding Hub and my journey in the world of software development.",
                 ParentId = null, // No parent
                 SortOrder = 3,
                 IsActive = true
@@ -58,8 +57,7 @@ public static class CategorySeedData
                 Id = 4,
                 Name = "Contact",
                 Slug = "contact",
-                SeoDescription =
-                    "Get in touch to discuss potential collaborations, or ask me anything about programming and tech.",
+                SeoDescription = "Get in touch to discuss potential collaborations, or ask me anything about programming and tech.",
                 ParentId = null, // No parent
                 SortOrder = 4,
                 IsActive = true
