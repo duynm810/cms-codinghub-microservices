@@ -10,6 +10,10 @@ public class CreateOrUpdateCategoryDto
 
     public Guid? ParentId { get; set; } = null;
 
+    public string? Icon { get; set; }
+
+    public string? Color { get; set; }
+
     public int SortOrder { get; set; }
 
     public bool IsActive { get; set; }
