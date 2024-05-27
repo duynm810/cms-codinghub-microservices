@@ -6,7 +6,7 @@
             <div class="row pt-20 pb-20">
                 <div class="col-md-3 col-xs-6">
                     <a href="/">
-                        <img class="logo" src="./imgs/theme/logo.png" alt="">
+                        <img class="logo" src="~/imgs/theme/logo.png" alt="">
                     </a>
                 </div>
                 <div class="col-md-9 col-xs-6 text-end header-top-right ">
@@ -39,20 +39,27 @@
                         <li>
                             <a href="#"> <i class="elegant-icon icon_house_alt mr-5"></i> Home</a>
                         </li>
-                        @foreach (var category in Model.Categories)
+                        @if (Model.Categories.Any())
                         {
-                            <li>
-                                <a href="#">@category.Name</a>
-                            </li>
+                            foreach (var category in Model.Categories)
+                            {
+                                var postsByCategoryUrl = "/category/" + category.Slug;
+                                <li>
+                                    <a href="@postsByCategoryUrl">@category.Name</a>
+                                </li>
+                            }
                         }
                     </ul>
                     <!--Mobile menu-->
                     <ul id="mobile-menu" class="d-block d-lg-none text-muted">
-                        @foreach (var category in Model.Categories)
+                        @if (Model.Categories.Any())
                         {
-                        <li>
-                            <a href="#">@category.Name</a>
-                        </li>
+                            foreach (var category in Model.Categories)
+                            {
+                                <li>
+                                    <a href="#">@category.Name</a>
+                                </li>
+                            }
                         }
                     </ul>
                 </nav>

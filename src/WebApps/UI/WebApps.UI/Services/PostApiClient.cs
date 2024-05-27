@@ -10,4 +10,11 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetListAsync<FeaturedPostDto>($"/posts/featured?count={count}");
     }
+
+    public async Task<ApiResult<PagedResponse<PostByCategoryDto>>> GetPostsByCategory(string categorySlug,
+        int pageNumber, int pageSize)
+    {
+        return await baseApiClient.GetAsync<PagedResponse<PostByCategoryDto>>(
+            $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+    }
 }
