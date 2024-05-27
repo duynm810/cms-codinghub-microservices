@@ -21,7 +21,7 @@ public class GetPostByIdQueryHandler(
     public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDto>();
-        const string methodName = nameof(Handle);
+        const string methodName = nameof(GetPostByIdQuery);
 
         try
         {
@@ -53,7 +53,7 @@ public class GetPostByIdQueryHandler(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostByIdQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

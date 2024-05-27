@@ -6,7 +6,7 @@
     {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
       ],
       "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
@@ -168,6 +168,21 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

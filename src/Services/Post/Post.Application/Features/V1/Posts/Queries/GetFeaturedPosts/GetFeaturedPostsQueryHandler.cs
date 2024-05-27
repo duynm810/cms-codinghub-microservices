@@ -20,7 +20,7 @@ public class GetFeaturedPostsQueryHandler(
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
-        const string methodName = nameof(Handle);
+        const string methodName = nameof(GetFeaturedPostsQuery);
 
         try
         {

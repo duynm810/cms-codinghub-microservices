@@ -178,6 +178,21 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/activity-logs/{postId}",
       "UpstreamHttpMethod": [
         "GET"

@@ -5,14 +5,16 @@ using Shared.Dtos.Category;
 
 namespace Post.Infrastructure.GrpcServices;
 
-public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient, ILogger logger) : ICategoryGrpcService
+public class CategoryGrpcService(
+    CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
+    ILogger logger) : ICategoryGrpcService
 {
     public async Task<CategoryDto?> GetCategoryById(long id)
     {
         try
         {
             var request = new GetCategoryByIdRequest { Id = id };
-            var result =  await categoryProtoServiceClient.GetCategoryByIdAsync(request);
+            var result = await categoryProtoServiceClient.GetCategoryByIdAsync(request);
             if (result != null)
             {
                 return new CategoryDto
@@ -58,5 +60,30 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
         }
 
         return [];
+    }
+
+    public async Task<CategoryDto?> GetCategoryBySlug(string slug)
+    {
+        try
+        {
+            var request = new GetCategoryBySlugRequest() { Slug = slug };
+            var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
+            if (result != null)
+            {
+                return new CategoryDto
+                {
+                    Id = result.Id,
+                    Name = result.Name,
+                    Slug = result.Slug
+                };
+            }
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryBySlug), e);
+            return null;
+        }
     }
 }

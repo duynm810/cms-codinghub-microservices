@@ -1,0 +1,87 @@
+@using System.Globalization
+@model PostsByCategoryViewModel
+@{
+    Layout = "_Layout";
+    var culture = new CultureInfo("en-US");
+    var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
+    var increment = 0.2; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
+}
+
+<!--archive header-->
+<div class="archive-header pt-50 text-center">
+    <div class="container">
+        <h2 class="font-weight-900">Guides</h2>
+        <div class="breadcrumb">
+            <a href="index.html" rel="nofollow">Home</a>
+            <span></span> Guides
+        </div>
+        <div class="bt-1 border-color-1 mt-30 mb-50"></div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="loop-grid mb-30">
+        <div class="row">
+            @if (Model.Posts.Items != null && Model.Posts.Items.Any())
+            {
+                foreach (var post in Model.Posts.Items)
+                {
+                    <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
+                        <div class="post-card-1 border-radius-10 hover-up">
+                            <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(../imgs/news/news-3.jpg)">
+                                <a class="img-link" href="single.html"></a>
+                                <span class="top-right-icon bg-success">
+                                    <i class="elegant-icon icon_camera_alt"></i>
+                                </span>
+                                <ul class="social-share">
+                                    <li>
+                                        <a href="#">
+                                            <i class="elegant-icon social_share"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="fb" href="#" title="Share on Facebook" target="_blank">
+                                            <i class="elegant-icon social_facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="tw" href="#" target="_blank" title="Tweet now">
+                                            <i class="elegant-icon social_twitter"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="pt" href="#" target="_blank" title="Pin it">
+                                            <i class="elegant-icon social_pinterest"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="post-content p-30">
+                                <div class="entry-meta meta-0 font-small mb-10">
+                                    <a href="category.html">
+                                        <span class="post-cat @post.CategoryColor">@post.CategoryName</span>
+                                    </a>
+                                </div>
+                                <div class="d-flex post-card-content">
+                                    <h5 class="post-title mb-20 font-weight-900">
+                                        <a href="single.html">@post.Name</a>
+                                    </h5>
+                                    <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                        <span class="post-on">@post.CreatedDate.ToString("dd MMMM", culture)</span>
+                                        <span class="time-reading has-dot">12 mins read</span>
+                                        <span class="post-by has-dot">@post.ViewCount views views</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                }
+            }
+        </div>
+        <div class="row mt-50">
+            <div class="col-12">
+                @await Component.InvokeAsync("Pager", Model.Posts.MetaData)
+            </div>
+        </div>
+    </div>
+</div>
