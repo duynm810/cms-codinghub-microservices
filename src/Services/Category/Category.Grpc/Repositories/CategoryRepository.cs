@@ -25,4 +25,7 @@ public class CategoryRepository(CategoryContext dbContext)
 
         return categories;
     }
+
+    public async Task<CategoryBase?> GetCategoryBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
 }

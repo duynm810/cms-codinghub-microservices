@@ -15,7 +15,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
     public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PagedResponse<PostDto>>();
-        const string methodName = nameof(Handle);
+        const string methodName = nameof(GetPostsPagingQuery);
 
         try
         {
@@ -55,7 +55,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsPagingQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

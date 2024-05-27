@@ -21,7 +21,7 @@ public class GetPostsQueryHandler(
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
-        const string methodName = nameof(Handle);
+        const string methodName = nameof(GetPostsQuery);
 
         try
         {
@@ -57,7 +57,7 @@ public class GetPostsQueryHandler(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

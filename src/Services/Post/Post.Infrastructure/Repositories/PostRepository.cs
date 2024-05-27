@@ -52,6 +52,22 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
+    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1,
+        int pageSize = 10)
+    {
+        var query = FindByCondition(x => x.CategoryId == categoryId);
+
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
+
+        var response = new PagedResponse<PostBase>
+        {
+            Items = items,
+            MetaData = items.GetMetaData()
+        };
+
+        return response;
+    }
+
     public async Task<bool> SlugExists(string slug, Guid? currentId = null)
     {
         return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value))

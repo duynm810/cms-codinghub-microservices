@@ -15,6 +15,7 @@ using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
+using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
 using Shared.Extensions;
@@ -33,7 +34,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     {
         var command = mapper.Map<CreatePostCommand>(model);
         command.AuthorUserId = User.GetUserId();
-        
+
         var result = await mediator.Send(command);
         return Ok(result);
     }
@@ -86,7 +87,20 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
+    [HttpGet("by-category/{categorySlug}/paging")]
+    [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostsByCategoryPaging(
+        [FromRoute] string categorySlug,
+        [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetPostsByCategoryPagingQuery(categorySlug, pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpGet("featured")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
@@ -105,7 +119,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(command);
         return Ok(result);
     }
-    
+
     [HttpPost("submit-for-approval/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> SubmitPostForApproval(Guid id)
@@ -114,7 +128,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(command);
         return Ok(result);
     }
-    
+
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto model)
