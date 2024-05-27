@@ -46,7 +46,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<CategoryDto>>), (int)HttpStatusCode.OK)]
-    [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCategories()
     {
         var result = await categoryService.GetCategories();

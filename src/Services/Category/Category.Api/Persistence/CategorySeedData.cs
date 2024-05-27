@@ -23,10 +23,10 @@ public static class CategorySeedData
             new()
             {
                 Id = 1,
-                Name = "Home",
-                Slug = "home",
+                Name = "Language Tutorials",
+                Slug = "language-tutorials",
                 SeoDescription =
-                    "Welcome to Coding Hub, your ultimate guide to the world of programming and tech trends.",
+                    "Explore detailed tutorials on popular programming languages to boost your coding skills.",
                 ParentId = null, // No parent
                 SortOrder = 1,
                 IsActive = true
@@ -34,10 +34,10 @@ public static class CategorySeedData
             new()
             {
                 Id = 2,
-                Name = "Language Tutorials",
-                Slug = "language-tutorials",
+                Name = "Development",
+                Slug = "development",
                 SeoDescription =
-                    "Explore detailed tutorials on popular programming languages to boost your coding skills.",
+                    "Discover the latest development techniques and trends to stay ahead in the tech industry.",
                 ParentId = null, // No parent
                 SortOrder = 2,
                 IsActive = true
@@ -45,10 +45,10 @@ public static class CategorySeedData
             new()
             {
                 Id = 3,
-                Name = "Development",
-                Slug = "development",
+                Name = "About Me",
+                Slug = "about-me",
                 SeoDescription =
-                    "Discover the latest development techniques and trends to stay ahead in the tech industry.",
+                    "Learn more about the face behind Coding Hub and my journey in the world of software development.",
                 ParentId = null, // No parent
                 SortOrder = 3,
                 IsActive = true
@@ -56,17 +56,6 @@ public static class CategorySeedData
             new()
             {
                 Id = 4,
-                Name = "About Me",
-                Slug = "about-me",
-                SeoDescription =
-                    "Learn more about the face behind Coding Hub and my journey in the world of software development.",
-                ParentId = null, // No parent
-                SortOrder = 4,
-                IsActive = true
-            },
-            new()
-            {
-                Id = 5,
                 Name = "Contact",
                 Slug = "contact",
                 SeoDescription =

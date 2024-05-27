@@ -21,6 +21,8 @@ public static class ApplicationExtensions
 
         app.UseRouting();
 
+        app.UseAuthentication();
+
         app.UseAuthorization();
 
         app.MapControllerRoute(

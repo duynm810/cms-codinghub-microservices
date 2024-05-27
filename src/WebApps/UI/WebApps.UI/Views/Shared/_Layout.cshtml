@@ -1,49 +1,532 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html class="no-js" lang="en">
+
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>@ViewData["Title"] - WebApps.UI</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/WebApps.UI.styles.css" asp-append-version="true"/>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Stories - Personal Blog HTML Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="./imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/widgets.css">
+    <link rel="stylesheet" href="./css/dark.css">
+    <link rel="stylesheet" href="./css/responsive.css">
 </head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-        <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApps.UI</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+
+<body class="theme-mode">
+<div class="scroll-progress primary-bg"></div>
+<!-- Start Preloader -->
+<div class="preloader text-center">
+    <div class="circle"></div>
+</div>
+<!--Off canvas sidebar-->
+<aside id="sidebar-wrapper" class="custom-scrollbar offcanvas-sidebar">
+    <button class="off-canvas-close">
+        <i class="elegant-icon icon_close"></i>
+    </button>
+    <div class="sidebar-inner">
+        <!--Categories-->
+        <div class="sidebar-widget widget_categories mb-50 mt-30">
+            <div class="widget-header-2 position-relative">
+                <h5 class="mt-5 mb-15">Hot topics</h5>
+            </div>
+            <div class="widget_nav_menu">
+                <ul>
+                    <li class="cat-item cat-item-2">
+                        <a href="category.html">Travel tips</a> <span class="post-count">30</span>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    <li class="cat-item cat-item-3">
+                        <a href="category-grid.html">Book review</a> <span class="post-count">25</span>
+                    </li>
+                    <li class="cat-item cat-item-4">
+                        <a href="category-list.html">Hotel review</a> <span class="post-count">16</span>
+                    </li>
+                    <li class="cat-item cat-item-5">
+                        <a href="category-masonry.html">Destinations </a> <span class="post-count">22</span>
+                    </li>
+                    <li class="cat-item cat-item-6">
+                        <a href="category-big.html">Lifestyle</a> <span class="post-count">25</span>
                     </li>
                 </ul>
             </div>
         </div>
-    </nav>
-</header>
-<div class="container">
-    <main role="main" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
-
-<footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2024 - WebApps.UI - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        <!--Latest-->
+        <div class="sidebar-widget widget-latest-posts mb-50">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Don't miss</h5>
+            </div>
+            <div class="post-block-list post-module-1 post-module-5">
+                <ul class="list-post">
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">The Life of a Travel Writer with David Farley</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">05 August</span>
+                                    <span class="post-by has-dot">300 views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">Why Don’t More Black American Women Travel Solo?</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">12 August</span>
+                                    <span class="post-by has-dot">23k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">The 22 Best Things to See and Do in Bangkok</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">27 August</span>
+                                    <span class="post-by has-dot">23k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--Ads-->
+        <div class="sidebar-widget widget-ads">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Advertise banner</h5>
+            </div>
+            <a href="https://themeforest.net/user/alithemes/portfolio" target="_blank">
+                <img class="advertise-img border-radius-5" src="./imgs/ads/ads-1.jpg" alt="">
+            </a>
+        </div>
     </div>
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
+</aside>
+<!-- Start Header -->
+@await Component.InvokeAsync("Header", "Default")
+<!--Start search form-->
+<div class="main-search-form">
+    <div class="container">
+        <div class=" pt-50 pb-50 ">
+            <div class="row mb-20">
+                <div class="col-12 align-self-center main-search-form-cover m-auto">
+                    <p class="text-center">
+                        <span class="search-text-bg">Search</span>
+                    </p>
+                    <form action="#" class="search-header">
+                        <div class="input-group w-100">
+                            <input type="text" class="form-control" placeholder="Search stories, places and people">
+                            <div class="input-group-append">
+                                <button class="btn btn-search bg-white" type="submit">
+                                    <i class="elegant-icon icon_search"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="row mt-80 text-center">
+                <div class="col-12 font-small suggested-area">
+                    <h5 class="suggested font-heading mb-20 text-muted">
+                        <strong>Suggested keywords:</strong>
+                    </h5>
+                    <ul class="list-inline d-inline-block">
+                        <li class="list-inline-item">
+                            <a href="category.html">World</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">American</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Opinion</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Tech</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Science</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Books</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Travel</a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="category.html">Business</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row mt-80">
+                <div class="col-lg-4">
+                    <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
+                        <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                            <a class="color-white" href="single.html">
+                                <img src="./imgs/news/thumb-2.jpg" alt="">
+                            </a>
+                        </div>
+                        <div class="post-content media-body">
+                            <h6>
+                                <a href="category.html">Travel Tips</a>
+                            </h6>
+                            <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
+                        <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                            <a class="color-white" href="single.html">
+                                <img src="./imgs/news/thumb-4.jpg" alt="">
+                            </a>
+                        </div>
+                        <div class="post-content media-body">
+                            <h6>
+                                <a href="category.html">Lifestyle</a>
+                            </h6>
+                            <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4  col-md-6">
+                    <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
+                        <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                            <a class="color-white" href="single.html">
+                                <img src="./imgs/news/thumb-3.jpg" alt="">
+                            </a>
+                        </div>
+                        <div class="post-content media-body">
+                            <h6>
+                                <a href="category.html">Hotel Review</a>
+                            </h6>
+                            <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Start Main content -->
+<main>
+    @RenderBody()
+</main>
+<!-- End Main content -->
+<!--site-bottom-->
+<div class="site-bottom pt-50 pb-50">
+<div class="container">
+<div class="row">
+    <div class="col-lg-4 col-md-6">
+        <div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Destinations</h5>
+            </div>
+            <div class="post-block-list post-module-1">
+                <ul class="list-post">
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-1.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">The Best Time to Travel to Cambodia</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">27 Jan</span>
+                                    <span class="post-by has-dot">13k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-2.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">20 Photos to Inspire You to Visit Cambodia</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">27 August</span>
+                                    <span class="post-by has-dot">14k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-3.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">Epic Arts Cambodia: Charity for the Disabled</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">29 August</span>
+                                    <span class="post-by has-dot">23k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-6">
+        <div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated" data-wow-delay="0.2s">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Lifestyle</h5>
+            </div>
+            <div class="post-block-list post-module-1">
+                <ul class="list-post">
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-4.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">10 Ways to De-Stress Your Day Hour by Hour</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">12 August</span>
+                                    <span class="post-by has-dot">3k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-5.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">134 Free Weekly Meal Planner Printable</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">15 August</span>
+                                    <span class="post-by has-dot">4.1k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-6.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">Free Printable Stickers for Your Bullet Journal</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">16 August</span>
+                                    <span class="post-by has-dot">2.2k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated" data-wow-delay="0.4s">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Photography</h5>
+            </div>
+            <div class="post-block-list post-module-1">
+                <ul class="list-post">
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-7.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">Which TBA Preset Pack is Right For You?</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">06 May</span>
+                                    <span class="post-by has-dot">23k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-8.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">How to Get Amazing Photos at the Pyramids of Giza</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">05 Jun</span>
+                                    <span class="post-by has-dot">5k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="single.html">
+                                    <img src="./imgs/news/thumb-9.jpg" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                    <a href="single.html">Beginner’s Guide to Travel Drone Photography</a>
+                                </h6>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">08 August</span>
+                                    <span class="post-by has-dot">2k views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar-widget widget-latest-posts mb-30 mt-20 wow fadeInUp animated">
+    <div class="widget-header-2 position-relative mb-30">
+        <h5 class="mt-5 mb-30">Categories</h5>
+    </div>
+    <div class="carausel-3-columns">
+        <div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">
+            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                <a class="color-white" href="single.html">
+                    <img src="./imgs/news/thumb-1.jpg" alt="">
+                </a>
+            </div>
+            <div class="post-content media-body">
+                <h6>
+                    <a href="category.html">Travel Tips</a>
+                </h6>
+                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+        <div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">
+            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                <a class="color-white" href="single.html">
+                    <img src="./imgs/news/thumb-2.jpg" alt="">
+                </a>
+            </div>
+            <div class="post-content media-body">
+                <h6>
+                    <a href="category.html">Lifestyle</a>
+                </h6>
+                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+        <div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">
+            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                <a class="color-white" href="single.html">
+                    <img src="./imgs/news/thumb-3.jpg" alt="">
+                </a>
+            </div>
+            <div class="post-content media-body">
+                <h6>
+                    <a href="category.html">Foody</a>
+                </h6>
+                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+        <div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">
+            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                <a class="color-white" href="single.html">
+                    <img src="./imgs/news/thumb-4.jpg" alt="">
+                </a>
+            </div>
+            <div class="post-content media-body">
+                <h6>
+                    <a href="category.html">Entertaiment</a>
+                </h6>
+                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!--container-->
+</div>
+<!--end site-bottom-->
+<!-- Footer Start-->
+@await Component.InvokeAsync("Footer", "Default")
+<!-- End Footer -->
+<div class="dark-mark"></div>
+
+<!-- Vendor JS-->
+<script src="./js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="./js/vendor/jquery-3.6.0.min.js"></script>
+<script src="./js/vendor/popper.min.js"></script>
+<script src="./js/vendor/bootstrap.min.js"></script>
+<script src="./js/vendor/jquery.slicknav.js"></script>
+<script src="./js/vendor/slick.min.js"></script>
+<script src="./js/vendor/wow.min.js"></script>
+<script src="./js/vendor/jquery.ticker.js"></script>
+<script src="./js/vendor/jquery.vticker-min.js"></script>
+<script src="./js/vendor/jquery.scrollUp.min.js"></script>
+<script src="./js/vendor/jquery.nice-select.min.js"></script>
+<script src="./js/vendor/jquery.magnific-popup.js"></script>
+<script src="./js/vendor/jquery.sticky.js"></script>
+<script src="./js/vendor/perfect-scrollbar.js"></script>
+<script src="./js/vendor/waypoints.min.js"></script>
+<script src="./js/vendor/jquery.theia.sticky.js"></script>
+
+<!-- NewsBoard JS -->
+<script src="./js/main.js"></script>
 @await RenderSectionAsync("Scripts", required: false)
+
 </body>
 </html>
