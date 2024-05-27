@@ -4,7 +4,6 @@ using Contracts.Commons.Interfaces;
 using IdentityModel.Client;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
@@ -176,13 +175,13 @@ public static class ServiceExtensions
                 options.Scope.Add("offline_access");
                 options.Scope.Add("coding_hub_microservices_api.read");
                 options.Scope.Add("coding_hub_microservices_api.write");
-                options.Scope.Add("roles");
-                
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     NameClaimType = "name",
-                    RoleClaimType = "role"
+                    RoleClaimType = "roles"
                 };
+                
                 options.Events = new OpenIdConnectEvents
                 {
                     OnTokenValidated = x =>

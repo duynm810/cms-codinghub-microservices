@@ -16,7 +16,14 @@
                     <div class="dark-light-mode-cover">
                         <a class="dark-light-mode" href="#"></a>
                     </div>
-                    <a class="btn btn-radius bg-primary text-white ml-15 font-small box-shadow" asp-controller="Accounts" asp-action="Login" target="_blank">Login</a>
+                    @if (User.Identity is { IsAuthenticated: true })
+                    {
+                        <a class="btn btn-radius bg-secondary text-white ml-15 font-small box-shadow" asp-controller="Accounts" asp-action="Logout">Logout</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-radius bg-primary text-white ml-15 font-small box-shadow" asp-controller="Accounts" asp-action="Login" target="_blank">Login</a>
+                    }
                 </div>
             </div>
         </div>
