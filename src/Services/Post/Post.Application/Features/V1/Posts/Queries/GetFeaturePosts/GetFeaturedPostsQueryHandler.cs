@@ -5,6 +5,7 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Dtos.Category;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -33,15 +34,19 @@ public class GetFeaturedPostsQueryHandler(
             {
                 var categoryIds = postBases.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
+                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
                 var data = mapper.Map<List<PostDto>>(posts);
                 foreach (var post in data)
                 {
-                    if (categoryDictionary.TryGetValue(post.CategoryId, out var value))
+                    if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))
                     {
-                        post.CategoryName = value;
+                        continue;
                     }
+                    
+                    post.CategoryName = category.Name;
+                    post.CategoryIcon = category.Icon;
+                    post.CategoryColor = category.Color;
                 }
 
                 result.Success(data);

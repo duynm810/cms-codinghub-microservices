@@ -27,15 +27,19 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
             {
                 var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
+                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
                 
                 var postDtos = mapper.Map<List<PostDto>>(posts.Items);
                 foreach (var post in postDtos)
                 {
-                    if (categoryDictionary.TryGetValue(post.CategoryId, out var value))
+                    if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))
                     {
-                        post.CategoryName = value;
+                        continue;
                     }
+                    
+                    post.CategoryName = category.Name;
+                    post.CategoryIcon = category.Icon;
+                    post.CategoryColor = category.Color;
                 }
                 
                 var data = new PagedResponse<PostDto>()

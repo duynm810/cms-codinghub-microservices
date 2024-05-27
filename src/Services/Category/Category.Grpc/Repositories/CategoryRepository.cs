@@ -17,7 +17,9 @@ public class CategoryRepository(CategoryContext dbContext)
             {
                 Id = c.Id,
                 Name = c.Name,
-                Slug = c.Slug
+                Slug = c.Slug,
+                Icon = c.Icon,
+                Color = c.Color
             })
             .ToListAsync();
 

@@ -23,6 +23,16 @@ public class CategoryBase : EntityAuditBase<long>
     /// ID danh mục cha. Nếu null, danh mục này là cấp cao nhất.
     /// </summary>
     public Guid? ParentId { get; set; }
+    
+    /// <summary>
+    /// Biểu tượng danh mục
+    /// </summary>
+    public string? Icon { get; set; }
+
+    /// <summary>
+    /// Màu danh mục
+    /// </summary>
+    public string? Color { get; set; }
 
     /// <summary>
     /// Thứ tự ưu tiên

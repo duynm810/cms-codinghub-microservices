@@ -19,7 +19,9 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
                 {
                     Id = result.Id,
                     Name = result.Name,
-                    Slug = result.Slug
+                    Slug = result.Slug,
+                    Icon = result.Icon,
+                    Color = result.Color
                 };
             }
 
@@ -44,7 +46,9 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
                 {
                     Id = c.Id,
                     Name = c.Name,
-                    Slug = c.Slug
+                    Slug = c.Slug,
+                    Icon = c.Icon,
+                    Color = c.Color
                 }).ToList();
             }
         }
