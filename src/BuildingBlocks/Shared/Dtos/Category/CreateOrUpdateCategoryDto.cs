@@ -16,5 +16,7 @@ public class CreateOrUpdateCategoryDto
 
     public int SortOrder { get; set; }
 
+    public bool IsStaticPage { get; set; }
+
     public bool IsActive { get; set; }
 }

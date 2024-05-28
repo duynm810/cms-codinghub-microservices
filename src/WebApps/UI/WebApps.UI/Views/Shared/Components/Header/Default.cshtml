@@ -36,16 +36,19 @@
                 <nav>
                     <!--Desktop menu-->
                     <ul class="main-menu d-none d-lg-inline font-small">
-                        <li>
-                            <a href="/"> <i class="elegant-icon icon_house_alt mr-5"></i> Home</a>
-                        </li>
                         @if (Model.Categories.Any())
                         {
                             foreach (var category in Model.Categories)
                             {
-                                var postsByCategoryUrl = "/category/" + category.Slug;
+                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
                                 <li>
-                                    <a href="@postsByCategoryUrl">@category.Name</a>
+                                    <a href="@url">
+                                        @if (!string.IsNullOrEmpty(category.Icon))
+                                        {
+                                            <i class="elegant-icon @category.Icon mr-5"></i>
+                                        }
+                                        @category.Name
+                                    </a>
                                 </li>
                             }
                         }
@@ -56,9 +59,9 @@
                         {
                             foreach (var category in Model.Categories)
                             {
-                                var postsByCategoryUrl = "/category/" + category.Slug;
+                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
                                 <li>
-                                    <a href="@postsByCategoryUrl">@category.Name</a>
+                                    <a href="@url">@category.Name</a>
                                 </li>
                             }
                         }
