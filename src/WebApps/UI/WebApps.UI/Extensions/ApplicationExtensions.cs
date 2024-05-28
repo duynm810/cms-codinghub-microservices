@@ -1,3 +1,5 @@
+using WebApps.UI.Routes;
+
 namespace WebApps.UI.Extensions;
 
 public static class ApplicationExtensions
@@ -24,24 +26,8 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
-
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
         
-        app.MapControllerRoute(
-            "posts-by-category",
-            "/category/{categorySlug}",
-            new { controller = "Posts", action = "PostsByCategory" });
-        
-        app.MapControllerRoute(
-            "about",
-            "/about-me",
-            new { controller = "About", action = "Index" });
-
-        app.MapControllerRoute(
-            "contact",
-            "/contact",
-            new { controller = "Contact", action = "Index" });
+        // Register routes
+        RouteMap.RegisterRoutes(app);
     }
 }

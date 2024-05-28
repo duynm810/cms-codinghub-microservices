@@ -19,11 +19,23 @@
                     <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
                     @if (User.Identity is { IsAuthenticated: true })
                     {
-                        <a asp-controller="Accounts" asp-action="Logout" class="btn btn-sm btn-outline-secondary shadow-sm ml-2">Logout</a>
+                        <ul class="list-inline nav-topbar d-none d-md-inline">
+                            <li class="list-inline-item menu-item-has-children">
+                                <a href="#">Xin chào, @User.Identity.Name</a>
+                                <ul class="sub-menu font-small">
+                                    <li>
+                                        <a asp-controller="Accounts" asp-action="Profile">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Accounts" asp-action="Logout">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     }
                     else
                     {
-                        <a asp-controller="Accounts" asp-action="Login" class="btn btn-sm btn-outline-primary shadow-sm ml-2">Login</a>
+                        <a asp-controller="Accounts" asp-action="Login" class="btn btn-success btn-sm shadow-sm ml-2">Login</a>
                     }
                 </div>
             </div>

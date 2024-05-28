@@ -33,4 +33,9 @@ public class AccountsController : Controller
         await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
         return RedirectToAction("Index", "Home");
     }
+
+    public IActionResult Profile()
+    {
+        return View();
+    }
 }
