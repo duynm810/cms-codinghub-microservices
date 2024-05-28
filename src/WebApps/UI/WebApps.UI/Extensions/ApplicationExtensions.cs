@@ -1,3 +1,5 @@
+using WebApps.UI.Routes;
+
 namespace WebApps.UI.Extensions;
 
 public static class ApplicationExtensions
@@ -24,9 +26,8 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
-
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+        
+        // Register routes
+        RouteMap.RegisterRoutes(app);
     }
 }

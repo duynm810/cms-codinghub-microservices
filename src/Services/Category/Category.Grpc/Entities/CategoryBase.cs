@@ -38,6 +38,11 @@ public class CategoryBase : EntityAuditBase<long>
     /// Thứ tự ưu tiên
     /// </summary>
     public int SortOrder { get; set; }
+    
+    /// <summary>
+    /// Phân biệt danh mục tĩnh hay động
+    /// </summary>
+    public bool IsStaticPage { get; set; }
 
     /// <summary>
     /// Kích hoạt

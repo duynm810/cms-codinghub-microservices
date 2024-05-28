@@ -13,6 +13,8 @@ public class FeaturedPostDto
     public long CategoryId { get; set; }
     
     public string? CategoryName { get; set; }
+    
+    public string? CategorySlug { get; set; }
 
     public string? CategoryIcon { get; set; }
     

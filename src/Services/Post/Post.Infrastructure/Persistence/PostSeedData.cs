@@ -59,7 +59,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.Draft,
-                    CategoryId = 1,
+                    CategoryId = 2,
                     AuthorUserId = Guid.NewGuid()
                 },
                 new()
@@ -77,7 +77,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 100.00,
                     Status = PostStatusEnum.Published,
-                    CategoryId = 1,
+                    CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
                 },
@@ -96,7 +96,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.WaitingForApproval,
-                    CategoryId = 1,
+                    CategoryId = 2,
                     AuthorUserId = Guid.NewGuid()
                 },
                 new()
@@ -116,7 +116,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.Published,
-                    CategoryId = 1,
+                    CategoryId = 2,
                     AuthorUserId = Guid.NewGuid()
                 },
                 new()
@@ -135,8 +135,9 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 50.0,
                     Status = PostStatusEnum.WaitingForApproval,
-                    CategoryId = 1,
-                    AuthorUserId = Guid.NewGuid()
+                    CategoryId = 2,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow
                 },
                 new()
                 {
@@ -175,8 +176,9 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 75.0,
                     Status = PostStatusEnum.Published,
-                    CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    CategoryId = 3,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow,
                 },
                 new()
                 {
@@ -195,7 +197,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.WaitingForApproval,
-                    CategoryId = 2,
+                    CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 },
                 new()
@@ -214,7 +216,138 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 85.0,
                     Status = PostStatusEnum.Published,
+                    CategoryId = 3,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow,
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Hướng dẫn sử dụng Python cho người mới bắt đầu",
+                    Slug = "huong-dan-su-dung-python-cho-nguoi-moi-bat-dau",
+                    Content = "Bài viết cung cấp các bước cơ bản để bắt đầu học Python...",
+                    Summary = "Một hướng dẫn chi tiết cho người mới bắt đầu học Python.",
+                    Thumbnail = "url-to-thumbnail3.jpg",
+                    SeoDescription = "Hướng dẫn từng bước để bắt đầu học Python.",
+                    Source = "Code Academy",
+                    Tags = "python, tutorial",
+                    ViewCount = 150,
+                    IsPaid = false,
+                    RoyaltyAmount = 0.00,
+                    Status = PostStatusEnum.Published,
                     CategoryId = 2,
+                    AuthorUserId = Guid.NewGuid()
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Các mẫu thiết kế phần mềm quan trọng",
+                    Slug = "cac-mau-thiet-ke-phan-mem-quan-trong",
+                    Content = "Bài viết giới thiệu các mẫu thiết kế phần mềm cơ bản và cách sử dụng chúng...",
+                    Summary = "Giới thiệu các mẫu thiết kế phần mềm quan trọng và ứng dụng của chúng.",
+                    Thumbnail = "url-to-thumbnail4.jpg",
+                    SeoDescription = "Tìm hiểu về các mẫu thiết kế phần mềm và ứng dụng thực tế.",
+                    Source = "Dev Blog",
+                    Tags = "software design, patterns",
+                    ViewCount = 200,
+                    IsPaid = true,
+                    RoyaltyAmount = 80.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 3,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow,
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Phát triển ứng dụng web với ASP.NET Core",
+                    Slug = "phat-trien-ung-dung-web-voi-asp-net-core",
+                    Content = "Bài viết hướng dẫn phát triển ứng dụng web sử dụng ASP.NET Core...",
+                    Summary = "Hướng dẫn chi tiết phát triển ứng dụng web với ASP.NET Core.",
+                    Thumbnail = "url-to-thumbnail5.jpg",
+                    SeoDescription = "Học cách phát triển ứng dụng web với ASP.NET Core.",
+                    Source = "Tech Tutorials",
+                    Tags = "asp.net core, web development",
+                    ViewCount = 300,
+                    IsPaid = false,
+                    RoyaltyAmount = 0.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 3,
+                    AuthorUserId = Guid.NewGuid()
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Những cải tiến mới trong JavaScript năm 2024",
+                    Slug = "nhung-cai-tien-moi-trong-javascript-nam-2024",
+                    Content = "Bài viết khám phá các tính năng mới được thêm vào JavaScript trong năm 2024...",
+                    Summary = "Tìm hiểu những cải tiến mới nhất trong JavaScript năm 2024.",
+                    Thumbnail = "url-to-thumbnail6.jpg",
+                    SeoDescription = "Khám phá những tính năng mới trong JavaScript năm 2024.",
+                    Source = "JS World",
+                    Tags = "javascript, new features",
+                    ViewCount = 220,
+                    IsPaid = true,
+                    RoyaltyAmount = 95.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 2,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow,
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Cách tối ưu hóa hiệu suất ứng dụng di động",
+                    Slug = "cach-toi-uu-hoa-hieu-suat-ung-dung-di-dong",
+                    Content = "Bài viết hướng dẫn cách tối ưu hóa hiệu suất cho các ứng dụng di động...",
+                    Summary = "Các chiến lược tối ưu hóa hiệu suất ứng dụng di động.",
+                    Thumbnail = "url-to-thumbnail7.jpg",
+                    SeoDescription = "Tối ưu hóa hiệu suất cho các ứng dụng di động.",
+                    Source = "Mobile Dev",
+                    Tags = "mobile, performance optimization",
+                    ViewCount = 180,
+                    IsPaid = false,
+                    RoyaltyAmount = 0.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 3,
+                    AuthorUserId = Guid.NewGuid()
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Phân tích dữ liệu với SQL và Python",
+                    Slug = "phan-tich-du-lieu-voi-sql-va-python",
+                    Content = "Bài viết cung cấp các kỹ thuật phân tích dữ liệu sử dụng SQL và Python...",
+                    Summary = "Hướng dẫn phân tích dữ liệu sử dụng SQL và Python.",
+                    Thumbnail = "url-to-thumbnail8.jpg",
+                    SeoDescription = "Phân tích dữ liệu chuyên sâu với SQL và Python.",
+                    Source = "Data Science Blog",
+                    Tags = "data analysis, SQL, Python",
+                    ViewCount = 275,
+                    IsPaid = true,
+                    RoyaltyAmount = 120.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 2,
+                    AuthorUserId = Guid.NewGuid(),
+                    PaidDate = DateTime.UtcNow,
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Xây dựng hệ thống microservices với Docker và Kubernetes",
+                    Slug = "xay-dung-he-thong-microservices-voi-docker-va-kubernetes",
+                    Content =
+                        "Bài viết hướng dẫn cách xây dựng và quản lý hệ thống microservices sử dụng Docker và Kubernetes...",
+                    Summary = "Hướng dẫn xây dựng hệ thống microservices với Docker và Kubernetes.",
+                    Thumbnail = "url-to-thumbnail9.jpg",
+                    SeoDescription = "Xây dựng và quản lý hệ thống microservices với Docker và Kubernetes.",
+                    Source = "DevOps Blog",
+                    Tags = "microservices, Docker, Kubernetes",
+                    ViewCount = 350,
+                    IsPaid = false,
+                    RoyaltyAmount = 0.00,
+                    Status = PostStatusEnum.Published,
+                    CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 }
             };

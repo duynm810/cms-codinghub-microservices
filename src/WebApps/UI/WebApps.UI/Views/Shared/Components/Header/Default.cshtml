@@ -19,11 +19,23 @@
                     <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
                     @if (User.Identity is { IsAuthenticated: true })
                     {
-                        <a asp-controller="Accounts" asp-action="Logout" class="btn btn-sm btn-outline-secondary shadow-sm ml-2">Logout</a>
+                        <ul class="list-inline nav-topbar d-none d-md-inline">
+                            <li class="list-inline-item menu-item-has-children">
+                                <a href="#">Xin chào, @User.Identity.Name</a>
+                                <ul class="sub-menu font-small">
+                                    <li>
+                                        <a asp-controller="Accounts" asp-action="Profile">Profile</a>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Accounts" asp-action="Logout">Logout</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                     }
                     else
                     {
-                        <a asp-controller="Accounts" asp-action="Login" class="btn btn-sm btn-outline-primary shadow-sm ml-2">Login</a>
+                        <a asp-controller="Accounts" asp-action="Login" class="btn btn-success btn-sm shadow-sm ml-2">Login</a>
                     }
                 </div>
             </div>
@@ -36,16 +48,19 @@
                 <nav>
                     <!--Desktop menu-->
                     <ul class="main-menu d-none d-lg-inline font-small">
-                        <li>
-                            <a href="/"> <i class="elegant-icon icon_house_alt mr-5"></i> Home</a>
-                        </li>
                         @if (Model.Categories.Any())
                         {
                             foreach (var category in Model.Categories)
                             {
-                                var postsByCategoryUrl = "/category/" + category.Slug;
+                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
                                 <li>
-                                    <a href="@postsByCategoryUrl">@category.Name</a>
+                                    <a href="@url">
+                                        @if (!string.IsNullOrEmpty(category.Icon))
+                                        {
+                                            <i class="elegant-icon @category.Icon mr-5"></i>
+                                        }
+                                        @category.Name
+                                    </a>
                                 </li>
                             }
                         }
@@ -56,9 +71,9 @@
                         {
                             foreach (var category in Model.Categories)
                             {
-                                var postsByCategoryUrl = "/category/" + category.Slug;
+                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
                                 <li>
-                                    <a href="@postsByCategoryUrl">@category.Name</a>
+                                    <a href="@url">@category.Name</a>
                                 </li>
                             }
                         }

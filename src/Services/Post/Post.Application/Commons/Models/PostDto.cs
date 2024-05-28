@@ -36,6 +36,8 @@ public class PostDto : IMapFrom<PostBase>
     
     public string? CategoryName { get; set; }
 
+    public string? CategorySlug { get; set; }
+
     public string? CategoryIcon { get; set; }
     
     public string? CategoryColor { get; set; }
