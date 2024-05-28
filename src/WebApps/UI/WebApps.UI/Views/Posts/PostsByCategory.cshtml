@@ -4,7 +4,7 @@
     Layout = "_Layout";
     var culture = new CultureInfo("en-US");
     var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
-    var increment = 0.2; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
+    const double increment = 0.1; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
 }
 
 <main>
@@ -27,6 +27,8 @@
                 {
                     foreach (var post in Model.Posts.Items)
                     {
+                        var categoryUrl = "/category/" + post.CategorySlug;
+                        
                         <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
                             <div class="post-card-1 border-radius-10 hover-up">
                                 <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(../imgs/news/news-3.jpg)">
@@ -59,7 +61,7 @@
                                 </div>
                                 <div class="post-content p-30">
                                     <div class="entry-meta meta-0 font-small mb-10">
-                                        <a href="category.html">
+                                        <a href="@categoryUrl">
                                             <span class="post-cat @post.CategoryColor">@post.CategoryName</span>
                                         </a>
                                     </div>

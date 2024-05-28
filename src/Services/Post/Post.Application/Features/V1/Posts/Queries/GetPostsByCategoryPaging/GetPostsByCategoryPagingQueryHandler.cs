@@ -47,6 +47,7 @@ public class GetPostsByCategoryPagingQueryHandler(
             foreach (var post in postDtos)
             {
                 post.CategoryName = category.Name;
+                post.CategorySlug = category.Slug;
                 post.CategoryIcon = category.Icon;
                 post.CategoryColor = category.Color;
             }

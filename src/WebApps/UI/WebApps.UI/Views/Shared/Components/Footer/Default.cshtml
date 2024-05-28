@@ -46,8 +46,9 @@
                     <ul class="font-small">
                         @foreach (var category in Model.Categories)
                         {
+                            var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
                             <li class="cat-item cat-item-2">
-                                <a href="#">@category.Name</a>
+                                <a href="@url">@category.Name</a>
                             </li>
                         }
                     </ul>
