@@ -6,18 +6,20 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class PostsController(IPostApiClient postApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class PostsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
 {
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
     {
         var pageSize = paginationSettings.PageSize;
-        
+
+        var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
         var posts = await postApiClient.GetPostsByCategory(categorySlug, page, pageSize);
-        if (posts is { IsSuccess: true, Data: not null })
+        if (posts is { IsSuccess: true, Data: not null } && category is { IsSuccess: true, Data: not null })
         {
             var items = new PostsByCategoryViewModel
             {
+                Category = category.Data,
                 Posts = posts.Data
             };
             

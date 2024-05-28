@@ -45,7 +45,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -80,7 +80,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -125,7 +125,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -154,7 +154,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -187,7 +187,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -225,7 +225,40 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    public async Task<ApiResult<CategoryDto>> GetCategoryBySlug(string slug)
+    {
+        var result = new ApiResult<CategoryDto>();
+        const string methodName = nameof(GetCategoryBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving category with slug: {CategorySlug}", methodName, slug);
+
+            var category = await categoryRepository.GetCategoryBySlug(slug);
+            if (category == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<CategoryDto>(category);
+            result.Success(data);
+
+            logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}", methodName,
+                slug);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

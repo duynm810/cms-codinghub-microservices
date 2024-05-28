@@ -54,6 +54,21 @@
       "SwaggerKey": "category-service"
     },
     {
+      "UpstreamPathTemplate": "/categories/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
       "UpstreamPathTemplate": "/categories/{id}",
       "UpstreamHttpMethod": [
         "PUT"

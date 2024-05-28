@@ -23,5 +23,7 @@ public interface ICategoryService
 
     Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize);
 
+    Task<ApiResult<CategoryDto>> GetCategoryBySlug(string slug);
+
     #endregion
 }

@@ -24,5 +24,7 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long
 
     Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber = 1, int pageSize = 10);
 
+    Task<CategoryBase?> GetCategoryBySlug(string slug);
+
     #endregion
 }

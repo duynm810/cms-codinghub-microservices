@@ -72,4 +72,13 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
         return Ok(result);
     }
+    
+    [HttpGet("by-slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetCategoryBySlug([FromRoute, Required] string slug)
+    {
+        var result = await categoryService.GetCategoryBySlug(slug);
+        return Ok(result);
+    }
 }

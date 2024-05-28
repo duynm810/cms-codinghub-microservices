@@ -37,7 +37,7 @@
                     <!--Desktop menu-->
                     <ul class="main-menu d-none d-lg-inline font-small">
                         <li>
-                            <a href="#"> <i class="elegant-icon icon_house_alt mr-5"></i> Home</a>
+                            <a href="/"> <i class="elegant-icon icon_house_alt mr-5"></i> Home</a>
                         </li>
                         @if (Model.Categories.Any())
                         {
@@ -56,8 +56,9 @@
                         {
                             foreach (var category in Model.Categories)
                             {
+                                var postsByCategoryUrl = "/category/" + category.Slug;
                                 <li>
-                                    <a href="#">@category.Name</a>
+                                    <a href="@postsByCategoryUrl">@category.Name</a>
                                 </li>
                             }
                         }
