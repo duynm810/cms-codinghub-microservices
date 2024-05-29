@@ -9,28 +9,28 @@ using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
+namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 
-public class GetPostByIdQueryHandler(
+public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
+    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(GetPostBySlugQuery request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDto>();
-        const string methodName = nameof(GetPostByIdQuery);
+        const string methodName = nameof(GetPostBySlugQuery);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving post with ID: {PostId}", methodName, request.Id);
+            logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
 
-            var post = await postRepository.GetPostById(request.Id);
+            var post = await postRepository.GetPostBySlug(request.Slug);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, request.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -49,8 +49,8 @@ public class GetPostByIdQueryHandler(
 
             result.Success(data);
 
-            logger.Information("END {MethodName} - Successfully retrieved post with ID: {PostId}", methodName,
-                request.Id);
+            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName,
+                request.Slug);
         }
         catch (Exception e)
         {

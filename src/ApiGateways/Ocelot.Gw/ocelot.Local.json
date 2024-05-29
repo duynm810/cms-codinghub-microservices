@@ -158,6 +158,21 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/{id}",
       "UpstreamHttpMethod": [
         "PUT",

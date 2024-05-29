@@ -68,6 +68,9 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
+    public async Task<PostBase?> GetPostBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
+
     public async Task<bool> SlugExists(string slug, Guid? currentId = null)
     {
         return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value))

@@ -14,6 +14,7 @@ using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
+using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
@@ -97,6 +98,16 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         [FromQuery, Required] int pageSize = 10)
     {
         var query = new GetPostsByCategoryPagingQuery(categorySlug, pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("by-slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<ActionResult<PostDto>> GetPostBySlug([Required] string slug)
+    {
+        var query = new GetPostBySlugQuery(slug);
         var result = await mediator.Send(query);
         return Ok(result);
     }
