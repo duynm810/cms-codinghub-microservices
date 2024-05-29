@@ -158,6 +158,21 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/{id}/related",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/{id}/related",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/by-slug/{slug}",
       "UpstreamHttpMethod": [
         "GET"

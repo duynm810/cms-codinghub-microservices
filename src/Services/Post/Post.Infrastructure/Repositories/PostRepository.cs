@@ -89,6 +89,28 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count) =>
         await FindAll().OrderByDescending(x => x.ViewCount).Take(count).ToListAsync();
+    
+    public async Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count)
+    {
+        var relatedPostsQuery = FindByCondition(x => x.Id != post.Id);
+
+        // Take double the count to ensure sufficient posts from both criteria
+        // Tăng số lượng kết quả tạm thời lên gấp đôi (count * 2) đảm bảo đủ bài viết từ cả hai tiêu chí, thậm chí sau khi loại bỏ trùng lặp.
+        var relatedPosts = await relatedPostsQuery
+            .Where(x => x.CategoryId == post.CategoryId || x.AuthorUserId == post.AuthorUserId)
+            .OrderByDescending(x => x.ViewCount)
+            .Take(count * 2)
+            .ToListAsync();
+
+        var finalRelatedPosts = relatedPosts
+            .GroupBy(x => x.Id) 
+            .Select(g => g.First())
+            .OrderByDescending(x => x.ViewCount)
+            .Take(count)
+            .ToList();
+
+        return finalRelatedPosts;
+    }
 
     public async Task ApprovePost(PostBase post)
     {

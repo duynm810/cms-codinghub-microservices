@@ -18,6 +18,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
+using Post.Application.Features.V1.Posts.Queries.GetRelatedPosts;
 using Shared.Dtos.Post;
 using Shared.Extensions;
 using Shared.Responses;
@@ -118,6 +119,16 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> GetFeaturedPosts(int count = 5)
     {
         var query = new GetFeaturedPostsQuery(count);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("{id:guid}/related")]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetRelatedPosts(Guid id, int count = 5)
+    {
+        var query = new GetRelatedPostsQuery(id, count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
