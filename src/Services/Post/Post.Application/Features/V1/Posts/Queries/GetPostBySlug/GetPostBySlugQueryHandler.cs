@@ -65,8 +65,8 @@ public class GetPostBySlugQueryHandler(
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
-                var relatedPostDtos = mapper.Map<List<PostModel>>(relatedPosts);
-                foreach (var item in relatedPostDtos)
+                var relatedPostList = mapper.Map<List<PostModel>>(relatedPosts);
+                foreach (var item in relatedPostList)
                 {
                     if (!categoryDictionary.TryGetValue(item.CategoryId, out var relatedCategory))
                     {
@@ -79,7 +79,7 @@ public class GetPostBySlugQueryHandler(
                     item.CategoryColor = relatedCategory.Color;
                 }
 
-                data.RelatedPosts = relatedPostDtos;
+                data.RelatedPosts = relatedPostList;
             }
 
             result.Success(data);

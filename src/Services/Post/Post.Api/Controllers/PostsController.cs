@@ -13,6 +13,7 @@ using Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
 using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
+using Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
@@ -81,10 +82,11 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
     public async Task<IActionResult> GetPostsPaging(
+        [FromQuery] string filter,
         [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)
     {
-        var query = new GetPostsPagingQuery(pageNumber, pageSize);
+        var query = new GetPostsPagingQuery(filter, pageNumber, pageSize);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -101,7 +103,19 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
+    [HttpGet("latest/paging")]
+    [ProducesResponseType(typeof(ApiResult<PagedResponse<PostModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetLatestPostsPaging(
+        [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetLatestPostsPagingQuery(pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpGet("by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostModel>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
@@ -121,7 +135,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
     [HttpPost("approve/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> ApprovePost(Guid id)

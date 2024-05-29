@@ -77,6 +77,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 100.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -116,6 +117,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.0,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid()
                 },
@@ -176,6 +178,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 75.0,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -216,6 +219,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 85.0,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -235,6 +239,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid()
                 },
@@ -253,6 +258,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 80.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -272,6 +278,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 },
@@ -290,6 +297,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 95.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -309,6 +317,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 },
@@ -327,6 +336,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = true,
                     RoyaltyAmount = 120.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 2,
                     AuthorUserId = Guid.NewGuid(),
                     PaidDate = DateTime.UtcNow,
@@ -347,6 +357,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     IsPaid = false,
                     RoyaltyAmount = 0.00,
                     Status = PostStatusEnum.Published,
+                    PublishedDate = DateTime.UtcNow,
                     CategoryId = 3,
                     AuthorUserId = Guid.NewGuid()
                 }

@@ -22,9 +22,11 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     #region OTHERS
 
-    Task<PagedResponse<PostBase>> GetPostsPaging(int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber = 1, int pageSize = 10);
     
     Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
+
+    Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
     Task<PostBase?> GetPostBySlug(string slug);
 

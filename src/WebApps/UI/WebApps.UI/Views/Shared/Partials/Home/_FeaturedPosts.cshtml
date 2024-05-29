@@ -2,6 +2,7 @@
 @using System.Globalization
 
 @{
+    var featuredPosts = Model.FeaturedPosts.ToList();
     var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
     const double increment = 0.1; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
 }
@@ -20,7 +21,7 @@
                             <a href="#"># Covid-19</a>
                         </li>
                         <li class="list-inline-item">
-                            <a href="#"># Inspiration</a>y6 
+                            <a href="#"># Inspiration</a>y6
                         </li>
                         <li class="list-inline-item">
                             <a href="#"># Work online</a>
@@ -43,8 +44,8 @@
                             <div class="thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-4.jpg)">
                                 <a class="img-link" href="single.html"></a>
                                 <span class="top-left-icon bg-warning">
-                        <i class="elegant-icon icon_star_alt"></i>
-                        </span>
+                                    <i class="elegant-icon icon_star_alt"></i>
+                                </span>
                                 <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
                                     <div class="entry-meta meta-0 font-small mb-20">
                                         <a href="category.html">
@@ -68,8 +69,8 @@
                             <div class="thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-6.jpg)">
                                 <a class="img-link" href="single.html"></a>
                                 <span class="top-left-icon bg-danger">
-                        <i class="elegant-icon icon_image"></i>
-                        </span>
+                                    <i class="elegant-icon icon_image"></i>
+                                </span>
                                 <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
                                     <div class="entry-meta meta-0 font-small mb-20">
                                         <a href="category.html">
@@ -89,63 +90,56 @@
                     </div>
                 </div>
             </div>
-            @foreach (var item in Model.FeaturedPosts)
+            @if (featuredPosts.Any())
             {
-                var categoryUrl = "/category/" + item.CategorySlug;
-                var postUrl = "/post/" + item.Slug;
-                
-                // {delay:N1}s: định dạng độ trễ thành một chuỗi với một chữ số thập phân, theo đơn vị giây
-                <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
-                    <div class="post-card-1 border-radius-10 hover-up">
-                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-1.jpg)">
-                            <a class="img-link" href="@postUrl"></a>
-                            <span class="top-right-icon bg-success">
-                                <i class="elegant-icon icon_camera_alt"></i>
-                            </span>
-                            <ul class="social-share">
-                                <li>
-                                    <a href="#">
-                                        <i class="elegant-icon social_share"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="fb" href="#" title="Share on Facebook" target="_blank">
-                                        <i class="elegant-icon social_facebook"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="tw" href="#" target="_blank" title="Tweet now">
-                                        <i class="elegant-icon social_twitter"></i>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="pt" href="#" target="_blank" title="Pin it">
-                                        <i class="elegant-icon social_pinterest"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="post-content p-30">
-                            <div class="entry-meta meta-0 font-small mb-10">
-                                <a href="@categoryUrl">
-                                    <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
-                                </a>
+                foreach (var item in featuredPosts)
+                {
+                    var categoryUrl = "/category/" + item.CategorySlug;
+                    var postUrl = "/post/" + item.Slug;
+
+                    // {delay:N1}s: định dạng độ trễ thành một chuỗi với một chữ số thập phân, theo đơn vị giây
+                    <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
+                        <div class="post-card-1 border-radius-10 hover-up">
+                            <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-1.jpg)">
+                                <a class="img-link" href="@postUrl"></a>
+                                <span class="top-right-icon bg-success">
+                                    <i class="elegant-icon icon_camera_alt"></i>
+                                </span>
+                                <ul class="social-share">
+                                    <li>
+                                        <a href="#">
+                                            <i class="elegant-icon social_share"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="fb" href="#" title="Share on Facebook" target="_blank">
+                                            <i class="elegant-icon social_facebook"></i>
+                                        </a>
+                                    </li>
+                                </ul>
                             </div>
-                            <div class="d-flex post-card-content">
-                                <h5 class="post-title mb-20 font-weight-900">
-                                    <a href="@postUrl">@item.Name</a>
-                                </h5>
-                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                    <span class="post-on">@item.CreatedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
-                                    <span class="time-reading has-dot">12 mins read</span>
-                                    <span class="post-by has-dot">@item.ViewCount views</span>
+                            <div class="post-content p-30">
+                                <div class="entry-meta meta-0 font-small mb-10">
+                                    <a href="@categoryUrl">
+                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                    </a>
+                                </div>
+                                <div class="d-flex post-card-content">
+                                    <h5 class="post-title mb-20 font-weight-900">
+                                        <a href="@postUrl">@item.Name</a>
+                                    </h5>
+                                    <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                        <span class="post-on">@item.CreatedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                        <span class="time-reading has-dot">12 mins read</span>
+                                        <span class="post-by has-dot">@item.ViewCount views</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </article>
-                // Increase the delay for the next iteration (Tăng độ trễ cho lần lặp tiếp theo)
-                delay += increment;
+                    </article>
+                    // Increase the delay for the next iteration (Tăng độ trễ cho lần lặp tiếp theo)
+                    delay += increment;
+                }
             }
         </div>
     </div>

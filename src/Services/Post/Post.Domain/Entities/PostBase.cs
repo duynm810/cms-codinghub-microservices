@@ -79,6 +79,11 @@ public class PostBase : EntityAuditBase<Guid>
     /// Trạng thái của bài viết, ví dụ: Nháp, Chờ duyệt,..
     /// </summary>
     public PostStatusEnum Status { get; set; }
+    
+    /// <summary>
+    /// Ngày công bố bài viết
+    /// </summary>
+    public DateTimeOffset? PublishedDate { get; set; }
 
     /// <summary>
     /// Khóa ngoại đến danh mục của bài viết

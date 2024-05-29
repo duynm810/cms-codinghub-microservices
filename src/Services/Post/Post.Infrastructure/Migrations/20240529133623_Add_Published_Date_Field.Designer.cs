@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Post.Infrastructure.Persistence;
@@ -11,9 +12,11 @@ using Post.Infrastructure.Persistence;
 namespace Post.Infrastructure.Migrations
 {
     [DbContext(typeof(PostContext))]
-    partial class PostContextModelSnapshot : ModelSnapshot
+    [Migration("20240529133623_Add_Published_Date_Field")]
+    partial class Add_Published_Date_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -49,6 +52,10 @@ namespace Post.Infrastructure.Migrations
                     b.Property<Guid>("PostId")
                         .HasColumnType("uuid")
                         .HasColumnName("post_id");
+
+                    b.Property<DateTime?>("PublishedDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("published_date");
 
                     b.Property<int>("ToStatus")
                         .HasColumnType("integer")
@@ -108,10 +115,6 @@ namespace Post.Infrastructure.Migrations
                     b.Property<DateTimeOffset?>("PaidDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("paid_date");
-
-                    b.Property<DateTimeOffset?>("PublishedDate")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("published_date");
 
                     b.Property<double>("RoyaltyAmount")
                         .HasColumnType("double precision")

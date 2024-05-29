@@ -50,6 +50,11 @@ public static class RouteMap
             "post-detail",
             "post/{slug}",
             new { controller = "Posts", action = "Details" });
+        
+        app.MapControllerRoute(
+            "post-search",
+            "/search",
+            new { controller = "Posts", action = "Search" });
 
         #endregion
     }

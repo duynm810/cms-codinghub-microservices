@@ -11,10 +11,11 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
     {
-        var pageSize = paginationSettings.PageSize;
+        var pageSize = paginationSettings.FeaturedPostPageSize;
 
         var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
         var posts = await postApiClient.GetPostsByCategory(categorySlug, page, pageSize);
+        
         if (posts is { IsSuccess: true, Data: not null } && category is { IsSuccess: true, Data: not null })
         {
             var items = new PostsByCategoryViewModel
@@ -26,14 +27,15 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
             return View(items);
         }
         
-        logger.Error("Failed to load posts by category slug.");
-        return Content("No posts by category slug.");
+        logger.Error("Failed to load posts.");
+        return Content("No posts.");
     }
 
     [HttpGet("post/{slug}")]
     public async Task<IActionResult> Details([FromRoute] string slug)
     {
         var posts = await postApiClient.GetPostBySlug(slug);
+        
         if (posts is { IsSuccess: true, Data: not null })
         {
             var items = new PostDetailViewModel()
@@ -44,7 +46,27 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
             return View(items);
         }
         
-        logger.Error("Failed to load post detail.");
-        return Content("No post detail.");
+        logger.Error("Failed to load posts.");
+        return Content("No posts.");
+    }
+
+    public async Task<IActionResult> Search(string keyword, int page = 1)
+    {
+        var pageSize = paginationSettings.SearchPostPageSize;
+
+        var posts = await postApiClient.SearchPosts(keyword, page, pageSize);
+        
+        if (posts is { IsSuccess: true, Data: not null })
+        {
+            var items = new PostSearchViewModel()
+            {
+                Posts = posts.Data
+            };
+
+            return View(items);
+        }
+
+        logger.Error("Failed to load posts.");
+        return Content("No posts.");
     }
 }

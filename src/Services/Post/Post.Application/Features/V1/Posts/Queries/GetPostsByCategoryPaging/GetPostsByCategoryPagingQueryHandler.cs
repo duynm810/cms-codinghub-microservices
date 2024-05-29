@@ -44,8 +44,8 @@ public class GetPostsByCategoryPagingQueryHandler(
             var posts = await postRepository.GetPostsByCategoryPaging(category.Id, request.PageNumber,
                 request.PageSize);
 
-            var postDtos = mapper.Map<List<PostModel>>(posts.Items);
-            foreach (var post in postDtos)
+            var postList = mapper.Map<List<PostModel>>(posts.Items);
+            foreach (var post in postList)
             {
                 post.CategoryName = category.Name;
                 post.CategorySlug = category.Slug;
@@ -55,7 +55,7 @@ public class GetPostsByCategoryPagingQueryHandler(
 
             var pagedResponse = new PagedResponse<PostModel>()
             {
-                Items = postDtos,
+                Items = postList,
                 MetaData = posts.MetaData
             };
 
@@ -63,7 +63,7 @@ public class GetPostsByCategoryPagingQueryHandler(
 
             logger.Information(
                 "END {MethodName} - Successfully retrieved {PostCount} posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
-                methodName, postDtos.Count, request.CategorySlug, request.PageNumber, request.PageSize);
+                methodName, postList.Count, request.CategorySlug, request.PageNumber, request.PageSize);
         }
         catch (Exception e)
         {

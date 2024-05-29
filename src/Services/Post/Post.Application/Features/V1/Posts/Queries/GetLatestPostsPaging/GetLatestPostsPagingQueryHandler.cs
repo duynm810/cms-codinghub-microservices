@@ -8,20 +8,20 @@ using Serilog;
 using Shared.Responses;
 using Shared.Utilities;
 
-namespace Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
+namespace Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 
-public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostModel>>>
+public class GetLatestPostsPagingQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger) : IRequestHandler<GetLatestPostsPagingQuery, ApiResult<PagedResponse<PostModel>>>
 {
-    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetLatestPostsPagingQuery request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PagedResponse<PostModel>>();
-        const string methodName = nameof(GetPostsPagingQuery);
+        const string methodName = nameof(GetLatestPostsPagingQuery);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
+            logger.Information("BEGIN {MethodName} - Retrieving latest posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
 
-            var posts = await postRepository.GetPostsPaging(request.Filter, request.PageNumber, request.PageSize);
+            var posts = await postRepository.GetLatestPostsPaging(request.PageNumber, request.PageSize);
 
             if (posts.Items != null && posts.Items.Count != 0)
             {
@@ -38,7 +38,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                     }
                     
                     post.CategoryName = category.Name;
-                    post.CategorySlug = category.Slug;
+                    post.CategorySlug = category.Name;
                     post.CategoryIcon = category.Icon;
                     post.CategoryColor = category.Color;
                 }
@@ -51,7 +51,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                 
                 result.Success(data);
                 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for page {PageNumber} with page size {PageSize}", methodName, postList.Count, request.PageNumber, request.PageSize);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} latest posts for page {PageNumber} with page size {PageSize}", methodName, postList.Count, request.PageNumber, request.PageSize);
             }
         }
         catch (Exception e)

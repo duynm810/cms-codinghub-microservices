@@ -1,6 +1,7 @@
 @using System.Globalization
 @model PostsByCategoryViewModel
 @{
+    var posts = Model.Posts;
     var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
     const double increment = 0.1; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
 }
@@ -21,9 +22,9 @@
     <div class="container">
         <div class="loop-grid mb-30">
             <div class="row">
-                @if (Model.Posts.Items != null && Model.Posts.Items.Any())
+                @if (posts.Items != null && posts.Items.Any())
                 {
-                    foreach (var item in Model.Posts.Items)
+                    foreach (var item in posts.Items)
                     {
                         var categoryUrl = "/category/" + item.CategorySlug;
                         var postUrl = "/post/" + item.Slug;
@@ -85,7 +86,9 @@
             </div>
             <div class="row mt-50">
                 <div class="col-12">
-                    @await Component.InvokeAsync("Pager", Model.Posts.MetaData)
+                    <div class="pagination-area mb-30 wow fadeInUp animated">
+                        @await Component.InvokeAsync("Pager", posts.MetaData)
+                    </div>
                 </div>
             </div>
         </div>
