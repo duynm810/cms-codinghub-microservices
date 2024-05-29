@@ -11,7 +11,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
     {
-        var pageSize = paginationSettings.PageSize;
+        var pageSize = paginationSettings.FeaturedPostPageSize;
 
         var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
         var posts = await postApiClient.GetPostsByCategory(categorySlug, page, pageSize);

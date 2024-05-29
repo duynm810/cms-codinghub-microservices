@@ -8,6 +8,6 @@ public class PostsByCategoryViewModel
 {
     public required CategoryDto Category { get; set; }
     
-    public required PagedResponse<PostByCategoryDto> Posts { get; set; }
+    public required PagedResponse<PostDto> Posts { get; set; }
     
 }

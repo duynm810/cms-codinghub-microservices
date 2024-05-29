@@ -67,6 +67,21 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return response;
     }
+    
+    public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
+    {
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published && x.PublishedDate.HasValue);
+
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.PublishedDate ?? DateTime.MinValue);
+
+        var response = new PagedResponse<PostBase>
+        {
+            Items = items,
+            MetaData = items.GetMetaData()
+        };
+
+        return response;
+    }
 
     public async Task<PostBase?> GetPostBySlug(string slug) =>
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
@@ -115,6 +130,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     public async Task ApprovePost(PostBase post)
     {
         post.Status = PostStatusEnum.Published;
+        post.PublishedDate = DateTime.UtcNow;
         await UpdateAsync(post);
     }
 

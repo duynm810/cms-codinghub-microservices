@@ -31,6 +31,8 @@ public class PostModel : IMapFrom<PostBase>
     public double RoyaltyAmount { get; set; }
 
     public PostStatusEnum Status { get; set; }
+    
+    public DateTimeOffset? PublishedDate { get; set; }
 
     public long CategoryId { get; set; }
     

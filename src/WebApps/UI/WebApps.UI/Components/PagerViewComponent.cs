@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Shared.SeedWorks;
 
 namespace WebApps.UI.Components;
@@ -11,7 +10,6 @@ public class PagerViewComponent : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(MetaData metaData)
     {
-        // Lấy tên hành động và controller hiện tại
         var actionName = ViewContext.RouteData.Values["action"]?.ToString();
         var controllerName = ViewContext.RouteData.Values["controller"]?.ToString();
 
@@ -21,12 +19,27 @@ public class PagerViewComponent : ViewComponent
         }
 
         // Xây dựng urlTemplate rõ ràng
-        var urlTemplate = new StringBuilder(Url.Action(actionName, controllerName) + "?page={0}");
+        var urlTemplate = new StringBuilder();
+
+        // Kiểm tra nếu là trang chủ
+        if (controllerName.Equals("Home") && actionName.Equals("Index"))
+        {
+            urlTemplate.Append("/home?page={0}");
+        }
+        else
+        {
+            // Xây dựng URL bình thường cho các trang khác
+            urlTemplate.Append(Url.Action(actionName, controllerName) + "?page={0}");
+        }
+        
         var queryParameters = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.ToString());
 
         foreach (var key in queryParameters.AllKeys)
         {
-            if (key == "page") continue;
+            // Omit the "page" parameter to avoid repetition (Bỏ qua tham số "page" để tránh lặp lại)
+            if (key == "page") 
+                continue; 
+            
             var value = queryParameters[key];
             if (value != null)
             {

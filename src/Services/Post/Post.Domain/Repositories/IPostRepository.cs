@@ -26,6 +26,8 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     
     Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
 
+    Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
+
     Task<PostBase?> GetPostBySlug(string slug);
 
     Task<bool> SlugExists(string slug, Guid? currentId = null);

@@ -24,14 +24,16 @@ public class PostDto
 
     public bool IsPaid { get; set; }
 
+    public DateTimeOffset? PublishedDate { get; set; }
+
     public long CategoryId { get; set; }
-    
+
     public string? CategoryName { get; set; }
 
     public string? CategorySlug { get; set; }
 
     public string? CategoryIcon { get; set; }
-    
+
     public string? CategoryColor { get; set; }
 
     public Guid AuthorUserId { get; set; }

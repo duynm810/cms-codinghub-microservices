@@ -2,5 +2,7 @@ namespace Shared.Settings;
 
 public class PaginationSettings
 {
-    public int PageSize { get; set; }
+    public int FeaturedPostPageSize { get; set; }
+
+    public int LatestPostPageSize { get; set; }
 }
