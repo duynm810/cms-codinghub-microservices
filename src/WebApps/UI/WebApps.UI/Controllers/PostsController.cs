@@ -29,4 +29,22 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         logger.Error("Failed to load posts by category slug.");
         return Content("No posts by category slug.");
     }
+
+    [HttpGet("post/{slug}")]
+    public async Task<IActionResult> Details([FromRoute] string slug)
+    {
+        var posts = await postApiClient.GetPostBySlug(slug);
+        if (posts is { IsSuccess: true, Data: not null })
+        {
+            var items = new PostDetailViewModel()
+            {
+                Post = posts.Data
+            };
+            
+            return View(items);
+        }
+        
+        logger.Error("Failed to load post detail.");
+        return Content("No post detail.");
+    }
 }

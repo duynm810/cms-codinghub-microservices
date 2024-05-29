@@ -45,6 +45,11 @@ public static class RouteMap
             "posts-by-category",
             "/category/{categorySlug}",
             new { controller = "Posts", action = "PostsByCategory" });
+        
+        app.MapControllerRoute(
+            "post-detail",
+            "post/{slug}",
+            new { controller = "Posts", action = "Details" });
 
         #endregion
     }

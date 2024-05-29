@@ -92,12 +92,13 @@
             @foreach (var featuredPost in Model.FeaturedPosts)
             {
                 var categoryUrl = "/category/" + featuredPost.CategorySlug;
+                var postUrl = "/post/" + featuredPost.Slug;
                 
                 // {delay:N1}s: định dạng độ trễ thành một chuỗi với một chữ số thập phân, theo đơn vị giây
                 <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
                     <div class="post-card-1 border-radius-10 hover-up">
                         <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-1.jpg)">
-                            <a class="img-link" href="single.html"></a>
+                            <a class="img-link" href="@postUrl"></a>
                             <span class="top-right-icon bg-success">
                                 <i class="elegant-icon icon_camera_alt"></i>
                             </span>
@@ -132,7 +133,7 @@
                             </div>
                             <div class="d-flex post-card-content">
                                 <h5 class="post-title mb-20 font-weight-900">
-                                    <a href="single.html">@featuredPost.Name</a>
+                                    <a href="@postUrl">@featuredPost.Name</a>
                                 </h5>
                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
                                     <span class="post-on">@featuredPost.CreatedDate.ToString("dd MMMM", culture)</span>

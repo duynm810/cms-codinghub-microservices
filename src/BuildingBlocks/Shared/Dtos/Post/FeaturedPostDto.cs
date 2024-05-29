@@ -7,6 +7,8 @@ public class FeaturedPostDto
     public Guid Id { get; set; }
 
     public required string Name { get; set; }
+
+    public required string Slug { get; set; }
     
     public int ViewCount { get; set; }
 

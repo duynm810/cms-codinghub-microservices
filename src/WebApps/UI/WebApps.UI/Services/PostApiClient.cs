@@ -17,4 +17,9 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetAsync<PagedResponse<PostByCategoryDto>>(
             $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
+
+    public async Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug)
+    {
+        return await baseApiClient.GetAsync<PostDetailDto>($"/posts/by-slug/{slug}");
+    }
 }

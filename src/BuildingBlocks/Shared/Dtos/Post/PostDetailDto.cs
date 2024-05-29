@@ -6,6 +6,8 @@ public class PostDetailDto
 
     public required string Name { get; set; }
     
+    public required string Slug { get; set; }
+    
     public int ViewCount { get; set; }
 
     public long CategoryId { get; set; }
