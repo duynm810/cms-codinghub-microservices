@@ -1,4 +1,10 @@
+@using System.Globalization
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model PostDetailViewModel
+@{
+    var categoryUrl = "/category/" + Model.Post.CategorySlug;
+    var postUrl = "/post/" + Model.Post.Slug;
+}
 
 <main class="bg-grey pb-30">
     <div class="container single-content">
@@ -12,18 +18,15 @@
                 <div class="col-md-6 align-self-center">
                     <div class="post-content">
                         <div class="entry-meta meta-0 mb-15 font-small">
-                            <a href="category.html">
-                                <span class="post-cat position-relative text-info">Travel tips</span>
-                            </a>
-                            <a href="category.html">
-                                <span class="post-cat position-relative text-success">Food</span>
+                            <a href="@categoryUrl">
+                                <span class="post-cat position-relative text-info">@Model.Post.CategoryName</span>
                             </a>
                         </div>
                         <h1 class="entry-title mb-30 font-weight-900">
-                            The Best Time to Travel to Cambodia
+                            @Model.Post.Name
                         </h1>
                         <p class="excerpt mb-30">
-                            As school districts across the United States consider whether and how to restart in-person classes, their challenge is complicated by a pair of fundamental uncertainties.
+                            @Model.Post.Summary
                         </p>
                         <div class="entry-meta align-items-center meta-2 font-small color-muted">
                             <p class="mb-5">
@@ -35,7 +38,7 @@
                                     <span class="author-name font-weight-bold">Barbara Cartland</span>
                                 </a>
                             </p>
-                            <span class="mr-10"> 15 April 2023</span>
+                            <span class="mr-10">@Model.Post.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
                             <span class="has-dot"> 8 mins read</span>
                         </div>
                     </div>
