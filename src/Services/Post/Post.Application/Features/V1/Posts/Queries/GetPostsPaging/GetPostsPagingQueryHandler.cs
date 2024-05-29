@@ -5,16 +5,17 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 
-public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostDto>>>
+public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostModel>>>
 {
-    public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PagedResponse<PostDto>>();
+        var result = new ApiResult<PagedResponse<PostModel>>();
         const string methodName = nameof(GetPostsPagingQuery);
 
         try
@@ -29,7 +30,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
                 
-                var postDtos = mapper.Map<List<PostDto>>(posts.Items);
+                var postDtos = mapper.Map<List<PostModel>>(posts.Items);
                 foreach (var post in postDtos)
                 {
                     if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))
@@ -42,7 +43,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                     post.CategoryColor = category.Color;
                 }
                 
-                var data = new PagedResponse<PostDto>()
+                var data = new PagedResponse<PostModel>()
                 {
                     Items = postDtos,
                     MetaData = posts.MetaData

@@ -1,10 +1,6 @@
-using Post.Application.Commons.Mappings;
-using Post.Domain.Entities;
-using Shared.Enums;
+namespace Shared.Dtos.Post;
 
-namespace Post.Application.Commons.Models;
-
-public class PostDto : IMapFrom<PostBase>
+public class PostDto
 {
     public Guid Id { get; set; }
 
@@ -28,10 +24,6 @@ public class PostDto : IMapFrom<PostBase>
 
     public bool IsPaid { get; set; }
 
-    public double RoyaltyAmount { get; set; }
-
-    public PostStatusEnum Status { get; set; }
-
     public long CategoryId { get; set; }
     
     public string? CategoryName { get; set; }
@@ -44,7 +36,5 @@ public class PostDto : IMapFrom<PostBase>
 
     public Guid AuthorUserId { get; set; }
 
-    public DateTimeOffset? PaidDate { get; set; }
-    
     public DateTimeOffset CreatedDate { get; set; }
 }

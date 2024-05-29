@@ -10,7 +10,7 @@ public class HomeController(IPostApiClient postApiClient, ILogger logger) : Cont
 {
     public async Task<IActionResult> Index()
     {
-        var featuredPosts = await postApiClient.GetFeaturedPosts(4);
+        var featuredPosts = await postApiClient.GetFeaturedPosts();
         if (featuredPosts is { IsSuccess: true, Data: not null })
         {
             var items = new HomeViewModel

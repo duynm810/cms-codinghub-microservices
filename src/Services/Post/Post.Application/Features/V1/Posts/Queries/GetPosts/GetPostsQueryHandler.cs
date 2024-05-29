@@ -5,6 +5,7 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -15,12 +16,12 @@ public class GetPostsQueryHandler(
     ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
+    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostModel>>> Handle(GetPostsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostDto>>();
+        var result = new ApiResult<IEnumerable<PostModel>>();
         const string methodName = nameof(GetPostsQuery);
 
         try
@@ -36,7 +37,7 @@ public class GetPostsQueryHandler(
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
-                var data = mapper.Map<List<PostDto>>(posts);
+                var data = mapper.Map<List<PostModel>>(posts);
                 foreach (var post in data)
                 {
                     if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))

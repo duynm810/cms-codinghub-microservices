@@ -36,6 +36,8 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     
     Task<IEnumerable<PostBase>> GetFeaturedPosts(int count);
 
+    Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count);
+
     Task ApprovePost(PostBase post);
 
     Task SubmitPostForApproval(PostBase post);

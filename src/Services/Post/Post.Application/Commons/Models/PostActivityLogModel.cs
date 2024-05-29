@@ -4,7 +4,7 @@ using Shared.Enums;
 
 namespace Post.Application.Commons.Models;
 
-public class PostActivityLogDto : IMapFrom<PostActivityLog>
+public class PostActivityLogModel : IMapFrom<PostActivityLog>
 {
     public string? Note { get; set; }
 

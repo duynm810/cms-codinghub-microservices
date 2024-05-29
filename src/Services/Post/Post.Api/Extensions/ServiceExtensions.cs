@@ -34,6 +34,12 @@ public static class ServiceExtensions
                                 ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
+        
+        var postDisplaySettings = configuration.GetSection(nameof(PostDisplaySettings)).Get<PostDisplaySettings>()
+                                  ?? throw new ArgumentNullException(
+                                      $"{nameof(PostDisplaySettings)} is not configured properly");
+
+        services.AddSingleton(postDisplaySettings);
     }
 
     public static void AddHealthCheckServices(this IServiceCollection services)
