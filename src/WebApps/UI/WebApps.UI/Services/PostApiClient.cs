@@ -6,9 +6,9 @@ namespace WebApps.UI.Services;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {
-    public async Task<ApiResult<List<FeaturedPostDto>>> GetFeaturedPosts(int count)
+    public async Task<ApiResult<List<FeaturedPostDto>>> GetFeaturedPosts()
     {
-        return await baseApiClient.GetListAsync<FeaturedPostDto>($"/posts/featured?count={count}");
+        return await baseApiClient.GetListAsync<FeaturedPostDto>($"/posts/featured");
     }
 
     public async Task<ApiResult<PagedResponse<PostByCategoryDto>>> GetPostsByCategory(string categorySlug,

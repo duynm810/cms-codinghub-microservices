@@ -13,12 +13,12 @@ public class GetPostActivityLogsQueryHandler(
     IPostActivityLogRepository postActivityLogRepository,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostActivityLogsQuery, ApiResult<IEnumerable<PostActivityLogDto>>>
+    : IRequestHandler<GetPostActivityLogsQuery, ApiResult<IEnumerable<PostActivityLogModel>>>
 {
-    public async Task<ApiResult<IEnumerable<PostActivityLogDto>>> Handle(GetPostActivityLogsQuery request,
+    public async Task<ApiResult<IEnumerable<PostActivityLogModel>>> Handle(GetPostActivityLogsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostActivityLogDto>>();
+        var result = new ApiResult<IEnumerable<PostActivityLogModel>>();
         const string methodName = nameof(Handle);
 
         try
@@ -27,7 +27,7 @@ public class GetPostActivityLogsQueryHandler(
                 request.PostId);
 
             var postActivityLogs = await postActivityLogRepository.GetActivityLogs(request.PostId);
-            var data = mapper.Map<List<PostActivityLogDto>>(postActivityLogs);
+            var data = mapper.Map<List<PostActivityLogModel>>(postActivityLogs);
             result.Success(data);
 
             logger.Information(

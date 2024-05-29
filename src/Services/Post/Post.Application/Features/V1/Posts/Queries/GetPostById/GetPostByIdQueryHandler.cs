@@ -6,6 +6,7 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -16,11 +17,11 @@ public class GetPostByIdQueryHandler(
     ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
+    : IRequestHandler<GetPostByIdQuery, ApiResult<PostModel>>
 {
-    public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostModel>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDto>();
+        var result = new ApiResult<PostModel>();
         const string methodName = nameof(GetPostByIdQuery);
 
         try
@@ -36,7 +37,7 @@ public class GetPostByIdQueryHandler(
                 return result;
             }
 
-            var data = mapper.Map<PostDto>(post);
+            var data = mapper.Map<PostModel>(post);
 
             var category = await categoryGrpcService.GetCategoryById(post.CategoryId);
             if (category != null)

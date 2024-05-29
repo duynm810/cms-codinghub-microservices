@@ -6,17 +6,18 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
 public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
-    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
+    : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
 {
-    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostModel>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDto>();
+        var result = new ApiResult<PostModel>();
         const string methodName = nameof(Handle);
 
         try
@@ -59,7 +60,7 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
             
             await postRepository.UpdatePost(updatePost);
 
-            var data = mapper.Map<PostDto>(updatePost);
+            var data = mapper.Map<PostModel>(updatePost);
             result.Success(data);
             
             logger.Information("END {MethodName} - Post with ID {PostId} updated successfully", methodName, request.Id);

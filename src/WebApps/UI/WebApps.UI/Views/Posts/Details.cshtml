@@ -1,9 +1,8 @@
 @using System.Globalization
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model PostDetailViewModel
 @{
-    var categoryUrl = "/category/" + Model.Post.CategorySlug;
-    var postUrl = "/post/" + Model.Post.Slug;
+    var detail = Model.Post.DetailPost;
+    var categoryUrl = "/category/" + detail.CategorySlug;
 }
 
 <main class="bg-grey pb-30">
@@ -19,14 +18,14 @@
                     <div class="post-content">
                         <div class="entry-meta meta-0 mb-15 font-small">
                             <a href="@categoryUrl">
-                                <span class="post-cat position-relative text-info">@Model.Post.CategoryName</span>
+                                <span class="post-cat position-relative text-info">@detail.CategoryName</span>
                             </a>
                         </div>
                         <h1 class="entry-title mb-30 font-weight-900">
-                            @Model.Post.Name
+                            @detail.Name
                         </h1>
                         <p class="excerpt mb-30">
-                            @Model.Post.Summary
+                            @detail.Summary
                         </p>
                         <div class="entry-meta align-items-center meta-2 font-small color-muted">
                             <p class="mb-5">
@@ -38,7 +37,7 @@
                                     <span class="author-name font-weight-bold">Barbara Cartland</span>
                                 </a>
                             </p>
-                            <span class="mr-10">@Model.Post.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
+                            <span class="mr-10">@detail.CreatedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
                             <span class="has-dot"> 8 mins read</span>
                         </div>
                     </div>
@@ -215,13 +214,13 @@
                 </div>
             </div>
             <!--related posts-->
-            @await Html.PartialAsync("./Partials/Posts/_RelatedPosts");
+            @await Html.PartialAsync("./Partials/Posts/_RelatedPosts")
             
             <!--More posts-->
-            @await Html.PartialAsync("./Partials/Posts/_MorePosts");
+            @await Html.PartialAsync("./Partials/Posts/_MorePosts")
             
             <!--Comments-->
-            @await Html.PartialAsync("Partials/Posts/_Comments");
+            @await Html.PartialAsync("Partials/Posts/_Comments")
         </article>
     </div>
     <!--container-->

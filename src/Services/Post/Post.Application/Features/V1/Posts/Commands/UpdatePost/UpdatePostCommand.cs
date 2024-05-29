@@ -10,7 +10,7 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommand : CreateOrUpdateCommand, IMapFrom<UpdatePostDto>, IRequest<ApiResult<PostDto>>
+public class UpdatePostCommand : CreateOrUpdateCommand, IMapFrom<UpdatePostDto>, IRequest<ApiResult<PostModel>>
 {
     public Guid Id { get; private set; }
 

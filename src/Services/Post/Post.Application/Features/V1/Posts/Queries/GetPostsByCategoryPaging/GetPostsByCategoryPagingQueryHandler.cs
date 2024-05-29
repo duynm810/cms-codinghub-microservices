@@ -6,6 +6,7 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -15,12 +16,12 @@ public class GetPostsByCategoryPagingQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
-    ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PagedResponse<PostDto>>>
+    ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PagedResponse<PostModel>>>
 {
-    public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsByCategoryPagingQuery request,
+    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsByCategoryPagingQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PagedResponse<PostDto>>();
+        var result = new ApiResult<PagedResponse<PostModel>>();
         const string methodName = nameof(GetPostsByCategoryPagingQuery);
 
         try
@@ -43,7 +44,7 @@ public class GetPostsByCategoryPagingQueryHandler(
             var posts = await postRepository.GetPostsByCategoryPaging(category.Id, request.PageNumber,
                 request.PageSize);
 
-            var postDtos = mapper.Map<List<PostDto>>(posts.Items);
+            var postDtos = mapper.Map<List<PostModel>>(posts.Items);
             foreach (var post in postDtos)
             {
                 post.CategoryName = category.Name;
@@ -52,7 +53,7 @@ public class GetPostsByCategoryPagingQueryHandler(
                 post.CategoryColor = category.Color;
             }
 
-            var pagedResponse = new PagedResponse<PostDto>()
+            var pagedResponse = new PagedResponse<PostModel>()
             {
                 Items = postDtos,
                 MetaData = posts.MetaData

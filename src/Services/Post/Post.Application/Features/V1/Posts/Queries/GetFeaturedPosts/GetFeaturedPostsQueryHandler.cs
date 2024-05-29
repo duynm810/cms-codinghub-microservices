@@ -5,7 +5,9 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Dtos.Post;
 using Shared.Responses;
+using Shared.Settings;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
@@ -13,20 +15,21 @@ namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
+    PostDisplaySettings postDisplaySettings,
     IMapper mapper,
-    ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostDto>>>
+    ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetFeaturedPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostModel>>> Handle(GetFeaturedPostsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostDto>>();
+        var result = new ApiResult<IEnumerable<PostModel>>();
         const string methodName = nameof(GetFeaturedPostsQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
 
-            var posts = await postRepository.GetFeaturedPosts(request.Count);
+            var posts = await postRepository.GetFeaturedPosts(postDisplaySettings.FeaturedPostsCount);
 
             var postBases = posts.ToList();
             if (postBases.IsNotNullOrEmpty())
@@ -35,7 +38,7 @@ public class GetFeaturedPostsQueryHandler(
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
-                var data = mapper.Map<List<PostDto>>(posts);
+                var data = mapper.Map<List<PostModel>>(posts);
                 foreach (var post in data)
                 {
                     if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))
