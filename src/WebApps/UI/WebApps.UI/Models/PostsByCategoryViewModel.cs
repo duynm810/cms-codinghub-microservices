@@ -6,8 +6,8 @@ namespace WebApps.UI.Models;
 
 public class PostsByCategoryViewModel
 {
-    public CategoryDto Category { get; set; }
+    public required CategoryDto Category { get; set; }
     
-    public PagedResponse<PostByCategoryDto> Posts { get; set; }
+    public required PagedResponse<PostByCategoryDto> Posts { get; set; }
     
 }

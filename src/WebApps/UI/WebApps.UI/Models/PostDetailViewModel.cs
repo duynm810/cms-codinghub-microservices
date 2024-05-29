@@ -4,5 +4,5 @@ namespace WebApps.UI.Models;
 
 public class PostDetailViewModel
 {
-    public PostDetailDto Post { get; set; }
+    public required PostDetailDto Post { get; set; }
 }
