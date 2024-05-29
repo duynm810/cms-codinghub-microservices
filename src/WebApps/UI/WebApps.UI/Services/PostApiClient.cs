@@ -28,4 +28,14 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
             $"/posts/latest/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
+
+    public async Task<ApiResult<PagedResponse<PostDto>>> SearchPosts(string keyword, int pageNumber, int pageSize)
+    {
+        if (!string.IsNullOrEmpty(keyword))
+            return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
+                $"/posts/paging?filter={keyword}&pageNumber={pageNumber}&pageSize={pageSize}");
+
+        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
+            $"/posts/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+    }
 }

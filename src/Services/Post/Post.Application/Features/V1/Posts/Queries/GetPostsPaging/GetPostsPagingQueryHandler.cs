@@ -5,7 +5,6 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
-using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -22,7 +21,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
 
-            var posts = await postRepository.GetPostsPaging(request.PageNumber, request.PageSize);
+            var posts = await postRepository.GetPostsPaging(request.Filter, request.PageNumber, request.PageSize);
 
             if (posts.Items != null && posts.Items.Count != 0)
             {
@@ -39,6 +38,7 @@ public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategor
                     }
                     
                     post.CategoryName = category.Name;
+                    post.CategorySlug = category.Slug;
                     post.CategoryIcon = category.Icon;
                     post.CategoryColor = category.Color;
                 }

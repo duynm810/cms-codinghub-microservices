@@ -37,9 +37,18 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     #region OTHERS
 
-    public async Task<PagedResponse<PostBase>> GetPostsPaging(int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber, int pageSize)
     {
         var query = FindAll();
+
+        if (!string.IsNullOrEmpty(filter))
+        {
+            query = query.Where(x => (x.Name.Contains(filter))
+                                     || (x.Slug.Contains(filter))
+                                     || (x.Content != null && x.Content.Contains(filter))
+                                     || (x.Summary != null && x.Summary.Contains(filter))
+                                     || (x.Tags != null && x.Tags.Contains(filter)));
+        }
 
         var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
 

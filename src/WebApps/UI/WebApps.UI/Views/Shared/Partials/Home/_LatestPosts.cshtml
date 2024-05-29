@@ -1,7 +1,7 @@
 @using System.Globalization
 @model HomeViewModel
 @{
-    var latestPosts = Model.LatestPosts;
+    var posts = Model.LatestPosts;
 }
 
 <div class="post-module-3">
@@ -9,9 +9,9 @@
         <h5 class="mt-5 mb-30">Latest posts</h5>
     </div>
     <div class="loop-list loop-list-style-1">
-        @if (latestPosts.Items != null && latestPosts.Items.Any())
+        @if (posts.Items != null && posts.Items.Any())
         {
-            foreach (var item in latestPosts.Items)
+            foreach (var item in posts.Items)
             {
                 var categoryUrl = "/category/" + item.CategorySlug;
                 var postUrl = "/post/" + item.Slug;
@@ -41,7 +41,7 @@
                             <div class="post-content">
                                 <div class="entry-meta meta-0 font-small mb-10">
                                     <a href="@categoryUrl">
-                                        <span class="post-cat text-primary">@item.CategoryName</span>
+                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
                                     </a>
                                 </div>
                                 <h5 class="post-title font-weight-900 mb-20">
@@ -64,5 +64,5 @@
     </div>
 </div>
 <div class="pagination-area mb-30 wow fadeInUp animated">
-    @await Component.InvokeAsync("Pager", Model.LatestPosts.MetaData)
+    @await Component.InvokeAsync("Pager", posts.MetaData)
 </div>

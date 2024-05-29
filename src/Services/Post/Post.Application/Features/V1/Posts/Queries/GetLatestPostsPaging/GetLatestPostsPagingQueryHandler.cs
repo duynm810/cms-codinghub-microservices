@@ -38,6 +38,7 @@ public class GetLatestPostsPagingQueryHandler(IPostRepository postRepository, IC
                     }
                     
                     post.CategoryName = category.Name;
+                    post.CategorySlug = category.Name;
                     post.CategoryIcon = category.Icon;
                     post.CategoryColor = category.Color;
                 }

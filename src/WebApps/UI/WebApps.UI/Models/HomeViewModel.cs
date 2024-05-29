@@ -5,7 +5,7 @@ namespace WebApps.UI.Models;
 
 public class HomeViewModel
 {
-    public required IEnumerable<PostDto> FeaturedPosts { get; set; }
-    
-    public required PagedResponse<PostDto> LatestPosts { get; set; }
+    public IEnumerable<PostDto> FeaturedPosts { get; set; } = default!;
+
+    public PagedResponse<PostDto> LatestPosts { get; set; } = default!;
 }
