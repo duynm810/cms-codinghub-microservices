@@ -70,4 +70,10 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         logger.Error("Failed to load posts.");
         return Content("No posts.");
     }
+
+    [HttpGet("series/{slug}")]
+    public async Task<IActionResult> PostsInSeries()
+    {
+        return View();
+    }
 }

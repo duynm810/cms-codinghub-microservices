@@ -1,14 +1,13 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
-using WebApps.UI.Models;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class HomeController(IPostApiClient postApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class HomeController(IPostApiClient postApiClient, ISeriesApiClient seriesApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
 {
     public async Task<IActionResult> Index(int page = 1)
     {
@@ -16,13 +15,17 @@ public class HomeController(IPostApiClient postApiClient, PaginationSettings pag
         
         var featuredPosts = await postApiClient.GetFeaturedPosts();
         var latestPosts = await postApiClient.GetLatestPosts(page, pageSize);
+        var series = await seriesApiClient.GetSeries();
         
-        if (featuredPosts is { IsSuccess: true, Data: not null } && latestPosts is { IsSuccess: true, Data: not null })
+        if (featuredPosts is { IsSuccess: true, Data: not null } && 
+            latestPosts is { IsSuccess: true, Data: not null } &&
+            series is { IsSuccess: true, Data: not null })
         {
             var items = new HomeViewModel
             {
                 FeaturedPosts = featuredPosts.Data,
-                LatestPosts = latestPosts.Data
+                LatestPosts = latestPosts.Data,
+                Series = series.Data
             };
 
             return View(items);

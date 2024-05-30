@@ -21,4 +21,6 @@ public class SeriesDto
     public int SortOrder { get; set; }
 
     public bool IsActive { get; set; }
+
+    public DateTimeOffset CreatedDate { get; set; }
 }

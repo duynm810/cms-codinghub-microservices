@@ -62,6 +62,19 @@ public static class SeriesSeedData
                     AuthorUserId = Guid.NewGuid(), // Assume an existing Guid for Author
                     SortOrder = 3,
                     IsActive = true
+                },
+                new()
+                {
+                    Id = Guid.NewGuid(),
+                    Title = "API Development",
+                    Slug = "api-development",
+                    Description = "Comprehensive guides on developing APIs.",
+                    SeoDescription = "Master API development with our detailed tutorials.",
+                    Thumbnail = "https://example.com/thumbnails/apidevelopment.jpg",
+                    Content = "This series provides in-depth knowledge on creating and managing APIs.",
+                    AuthorUserId = Guid.NewGuid(), // Assume an existing Guid for Author
+                    SortOrder = 4,
+                    IsActive = true
                 }
             };
 

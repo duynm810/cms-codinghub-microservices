@@ -57,5 +57,14 @@ public static class RouteMap
             new { controller = "Posts", action = "Search" });
 
         #endregion
+
+        #region Series
+
+        app.MapControllerRoute(
+            "posts-in-series",
+            "series/{slug}",
+            new { controller = "Posts", action = "PostsInSeries" });
+
+        #endregion
     }
 }
