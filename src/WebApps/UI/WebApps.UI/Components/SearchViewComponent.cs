@@ -1,20 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.Models;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SidebarViewComponent(ILogger logger) : ViewComponent
+public class SearchViewComponent(ICategoryApiClient categoryApiClient, ILogger logger) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         try
         {
-            var items = new SidebarViewModel
+            var items = new SearchViewModel
             {
             };
-
+            
             return View(items);
         }
         catch (Exception e)

@@ -24,7 +24,7 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
     public async Task DeleteSeries(SeriesBase series) => await DeleteAsync(series);
 
-    public async Task<IEnumerable<SeriesBase>> GetSeries() => await FindAll().ToListAsync();
+    public async Task<IEnumerable<SeriesBase>> GetSeries(int count = int.MaxValue) => await FindAll().Take(count).ToListAsync();
 
     public async Task<SeriesBase?> GetSeriesById(Guid id) => await GetByIdAsync(id) ?? null;
 

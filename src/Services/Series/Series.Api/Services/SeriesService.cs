@@ -5,12 +5,13 @@ using Series.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Series;
 using Shared.Responses;
+using Shared.Settings;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
 
 namespace Series.Api.Services;
 
-public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, ILogger logger) : ISeriesService
+public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings displaySettings, IMapper mapper, ILogger logger) : ISeriesService
 {
     #region CRUD
 
@@ -128,7 +129,9 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
         {
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
-            var series = await seriesRepository.GetSeries();
+            var count = displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Series.TopSeries, 0);
+            
+            var series = await seriesRepository.GetSeries(count);
             if (series.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<SeriesDto>>(series);

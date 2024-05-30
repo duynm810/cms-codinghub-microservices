@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
 using WebApps.UI.Models;
+using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 

@@ -41,6 +41,7 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<SeriesDto>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetSeries()
     {
         var result = await seriesService.GetSeries();

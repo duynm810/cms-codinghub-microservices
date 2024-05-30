@@ -1,4 +1,4 @@
-namespace WebApps.UI.Models;
+namespace WebApps.UI.Models.About;
 
 public class AboutViewModel
 {

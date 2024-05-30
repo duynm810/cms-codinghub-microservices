@@ -14,7 +14,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task DeleteSeries(SeriesBase series);
 
-    Task<IEnumerable<SeriesBase>> GetSeries();
+    Task<IEnumerable<SeriesBase>> GetSeries(int count);
 
     Task<SeriesBase?> GetSeriesById(Guid id);
 

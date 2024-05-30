@@ -2,7 +2,7 @@ using Shared.Dtos.Category;
 using Shared.Dtos.Post;
 using Shared.Responses;
 
-namespace WebApps.UI.Models;
+namespace WebApps.UI.Models.Posts;
 
 public class PostsByCategoryViewModel
 {
