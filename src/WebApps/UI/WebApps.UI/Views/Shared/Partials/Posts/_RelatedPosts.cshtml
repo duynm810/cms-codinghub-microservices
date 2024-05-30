@@ -1,5 +1,8 @@
 @using System.Globalization
-@model PostDetailViewModel
+@model WebApps.UI.Models.Posts.PostDetailViewModel
+@{
+    var posts = Model.Post.RelatedPosts.ToList();
+}
 
 <div class="related-posts">
     <div class="post-module-3">
@@ -7,9 +10,9 @@
             <h5 class="mt-5 mb-30">Related posts</h5>
         </div>
         <div class="loop-list loop-list-style-1">
-            @if (Model.Post.RelatedPosts.Any())
+            @if (posts.Any())
             {
-                @foreach (var item in Model.Post.RelatedPosts)
+                @foreach (var item in posts)
                 {
                     var categoryUrl = "/category/" + item.CategorySlug;
                     var postUrl = "/post/" + item.Slug;

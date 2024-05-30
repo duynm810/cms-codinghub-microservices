@@ -1,6 +1,6 @@
 using Shared.Dtos.Post;
 
-namespace WebApps.UI.Models;
+namespace WebApps.UI.Models.Posts;
 
 public class PostDetailViewModel
 {

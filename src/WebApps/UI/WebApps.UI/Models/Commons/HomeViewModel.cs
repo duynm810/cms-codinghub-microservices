@@ -1,7 +1,7 @@
 using Shared.Dtos.Post;
 using Shared.Responses;
 
-namespace WebApps.UI.Models;
+namespace WebApps.UI.Models.Commons;
 
 public class HomeViewModel
 {
