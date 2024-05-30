@@ -61,6 +61,12 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        var displaySettings = configuration.GetSection(nameof(DisplaySettings)).Get<DisplaySettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(DisplaySettings)} is not configured properly");
+
+        services.AddSingleton(displaySettings);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)

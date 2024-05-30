@@ -16,7 +16,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    PostDisplaySettings postDisplaySettings,
+    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailModel>>
@@ -41,7 +41,8 @@ public class GetPostBySlugQueryHandler(
             
             // Lấy danh mục và bài viết liên quan đồng thời
             var categoryTask = categoryGrpcService.GetCategoryById(post.CategoryId);
-            var relatedPostsTask =  postRepository.GetRelatedPosts(post, postDisplaySettings.RelatedPostsCount);
+            var relatedPostsTask = postRepository.GetRelatedPosts(post,
+                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.RelatedPosts, 0));
 
             await Task.WhenAll(categoryTask, relatedPostsTask);
 

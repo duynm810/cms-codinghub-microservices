@@ -5,6 +5,7 @@ using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Constants;
 using Shared.Responses;
 using Shared.Settings;
 using Shared.Utilities;
@@ -14,7 +15,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    PostDisplaySettings postDisplaySettings,
+    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -28,7 +29,8 @@ public class GetFeaturedPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
 
-            var posts = await postRepository.GetFeaturedPosts(postDisplaySettings.FeaturedPostsCount);
+            var posts = await postRepository.GetFeaturedPosts(
+                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.FeaturedPosts, 0));
 
             var postList = posts.ToList();
             
