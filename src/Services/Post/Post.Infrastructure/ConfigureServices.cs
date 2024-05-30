@@ -39,6 +39,9 @@ public static class ConfigureServices
 
         // Register gRPC services
         services.AddGrpcServices();
+
+        // Register AutoMapper
+        services.AddAutoMapperConfiguration();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -101,5 +104,10 @@ public static class ConfigureServices
             x.Address = new Uri(grpcSettings.CategoryUrl));
 
         services.AddScoped<CategoryGrpcService>();
+    }
+
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new GrpcMappingProfile()));
     }
 }

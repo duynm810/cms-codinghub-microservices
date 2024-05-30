@@ -59,7 +59,7 @@ public class RejectPostWithReasonCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendPostRejectionEmail(post.Name, postActivityLog.Note)
+                    await postEmailTemplateService.SendPostRejectionEmail(post.Title, postActivityLog.Note)
                         .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)

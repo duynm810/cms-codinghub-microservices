@@ -13,16 +13,7 @@ public class CategoryRepository(CategoryContext dbContext)
 
     public async Task<IEnumerable<CategoryBase>> GetCategoriesByIds(long[] ids)
     {
-        var categories = await FindByCondition(c => ids.Contains(c.Id)).Select(c => new CategoryBase()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Slug = c.Slug,
-                Icon = c.Icon,
-                Color = c.Color
-            })
-            .ToListAsync();
-
+        var categories = await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
         return categories;
     }
 

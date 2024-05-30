@@ -53,7 +53,7 @@ public class PostService(IPostRepository postRepository, ILogger logger) : PostP
                 result.Posts.Add(new PostModel
                 {
                     Id = post.Id.ToString(),
-                    Name = post.Name,
+                    Name = post.Title,
                     Slug = post.Slug
                 });
             }

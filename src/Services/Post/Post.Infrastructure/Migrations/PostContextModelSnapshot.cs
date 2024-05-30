@@ -99,12 +99,6 @@ namespace Post.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("last_modified_date");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("character varying(250)")
-                        .HasColumnName("name");
-
                     b.Property<DateTimeOffset?>("PaidDate")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("paid_date");
@@ -152,6 +146,12 @@ namespace Post.Infrastructure.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)")
                         .HasColumnName("thumbnail");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(250)
+                        .HasColumnType("character varying(250)")
+                        .HasColumnName("title");
 
                     b.Property<int>("ViewCount")
                         .HasColumnType("integer")

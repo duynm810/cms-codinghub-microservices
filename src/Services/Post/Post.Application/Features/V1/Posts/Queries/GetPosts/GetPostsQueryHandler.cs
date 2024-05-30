@@ -1,11 +1,12 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
+using Post.Domain.Entities;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
-using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -14,7 +15,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 public class GetPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IMapper mapper,
+    IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -30,27 +31,13 @@ public class GetPostsQueryHandler(
 
             var posts = await postRepository.GetPosts();
 
-            var postBases = posts.ToList();
-            if (postBases.IsNotNullOrEmpty())
+            var postList = posts.ToList();
+            if (postList.IsNotNullOrEmpty())
             {
-                var categoryIds = postBases.Select(p => p.CategoryId).Distinct().ToList();
+                var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
-                var data = mapper.Map<List<PostModel>>(posts);
-                foreach (var post in data)
-                {
-                    if (!categoryDictionary.TryGetValue(post.CategoryId, out var category))
-                    {
-                        continue;
-                    }
-                    
-                    post.CategoryName = category.Name;
-                    post.CategorySlug = category.Slug;
-                    post.CategoryIcon = category.Icon;
-                    post.CategoryColor = category.Color;
-                }
-
+                var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts", methodName,
