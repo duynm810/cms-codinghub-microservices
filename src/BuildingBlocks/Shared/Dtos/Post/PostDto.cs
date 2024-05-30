@@ -24,7 +24,7 @@ public class PostDto
 
     public bool IsPaid { get; set; }
 
-    public DateTimeOffset? PublishedDate { get; set; }
+    public DateTimeOffset PublishedDate { get; set; }
 
     public long CategoryId { get; set; }
 
