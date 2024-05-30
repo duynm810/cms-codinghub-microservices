@@ -47,7 +47,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Cách học lập trình hiệu quả",
+                    Title = "Cách học lập trình hiệu quả",
                     Slug = "cach-hoc-lap-trinh-hieu-qua",
                     Content = "Nội dung chi tiết về các phương pháp học lập trình...",
                     Summary = "Bài viết này nêu bật các kỹ thuật học lập trình hiệu quả cho người mới bắt đầu.",
@@ -65,7 +65,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Xu hướng công nghệ mới nhất 2024",
+                    Title = "Xu hướng công nghệ mới nhất 2024",
                     Slug = "xu-huong-cong-nghe-moi-nhat-2024",
                     Content = "Bài viết phân tích các xu hướng công nghệ mới nhất trong năm 2024...",
                     Summary = "Một cái nhìn sâu sắc về các xu hướng công nghệ đang dẫn đầu trong năm 2024.",
@@ -85,7 +85,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Lịch sử của ngôn ngữ lập trình Python",
+                    Title = "Lịch sử của ngôn ngữ lập trình Python",
                     Slug = "lich-su-cua-ngon-ngu-lap-trinh-python",
                     Content = "Từ sự ra đời của Python đến nay, ngôn ngữ này đã phát triển như thế nào...",
                     Summary = "Tìm hiểu về lịch sử phát triển của ngôn ngữ lập trình Python.",
@@ -103,7 +103,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "10 Thủ thuật Debug hiệu quả cho lập trình viên",
+                    Title = "10 Thủ thuật Debug hiệu quả cho lập trình viên",
                     Slug = "10-thu-thuat-debug-hieu-qua",
                     Content =
                         "Khám phá những thủ thuật debug giúp tiết kiệm thời gian và tăng hiệu suất công việc của lập trình viên...",
@@ -124,7 +124,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Giới thiệu về Machine Learning",
+                    Title = "Giới thiệu về Machine Learning",
                     Slug = "gioi-thieu-ve-machine-learning",
                     Content = "Một bước chân vào thế giới máy học: Từ lý thuyết đến ứng dụng...",
                     Summary =
@@ -144,7 +144,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Blockchain và tương lai tài chính",
+                    Title = "Blockchain và tương lai tài chính",
                     Slug = "blockchain-va-tuong-lai-tai-chinh",
                     Content = "Phân tích sâu về cách mà Blockchain đang làm thay đổi ngành tài chính toàn cầu...",
                     Summary = "Một cái nhìn chi tiết về Blockchain và các ứng dụng của nó trong ngành tài chính.",
@@ -163,7 +163,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Tiến bộ trong thực tế ảo VR",
+                    Title = "Tiến bộ trong thực tế ảo VR",
                     Slug = "tien-bo-trong-thuc-te-ao-vr",
                     Content =
                         "Bài viết này đưa ra cái nhìn tổng quan về những tiến bộ gần đây trong công nghệ thực tế ảo VR...",
@@ -186,7 +186,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Sự phát triển của IoT trong ngành công nghiệp 4.0",
+                    Title = "Sự phát triển của IoT trong ngành công nghiệp 4.0",
                     Slug = "su-phat-trien-cua-iot-trong-nganh-cong-nghiep-4-0",
                     Content = "Khám phá sự gắn kết của IoT với Công nghiệp 4.0 và những thay đổi mà nó mang lại...",
                     Summary =
@@ -206,7 +206,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Lập trình web hiện đại với JavaScript ES6",
+                    Title = "Lập trình web hiện đại với JavaScript ES6",
                     Slug = "lap-trinh-web-hien-dai-voi-javascript-es6",
                     Content = "Hướng dẫn từng bước cách sử dụng JavaScript ES6 để tạo ra các ứng dụng web hiện đại...",
                     Summary =
@@ -227,7 +227,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Hướng dẫn sử dụng Python cho người mới bắt đầu",
+                    Title = "Hướng dẫn sử dụng Python cho người mới bắt đầu",
                     Slug = "huong-dan-su-dung-python-cho-nguoi-moi-bat-dau",
                     Content = "Bài viết cung cấp các bước cơ bản để bắt đầu học Python...",
                     Summary = "Một hướng dẫn chi tiết cho người mới bắt đầu học Python.",
@@ -246,7 +246,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Các mẫu thiết kế phần mềm quan trọng",
+                    Title = "Các mẫu thiết kế phần mềm quan trọng",
                     Slug = "cac-mau-thiet-ke-phan-mem-quan-trong",
                     Content = "Bài viết giới thiệu các mẫu thiết kế phần mềm cơ bản và cách sử dụng chúng...",
                     Summary = "Giới thiệu các mẫu thiết kế phần mềm quan trọng và ứng dụng của chúng.",
@@ -266,7 +266,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Phát triển ứng dụng web với ASP.NET Core",
+                    Title = "Phát triển ứng dụng web với ASP.NET Core",
                     Slug = "phat-trien-ung-dung-web-voi-asp-net-core",
                     Content = "Bài viết hướng dẫn phát triển ứng dụng web sử dụng ASP.NET Core...",
                     Summary = "Hướng dẫn chi tiết phát triển ứng dụng web với ASP.NET Core.",
@@ -285,7 +285,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Những cải tiến mới trong JavaScript năm 2024",
+                    Title = "Những cải tiến mới trong JavaScript năm 2024",
                     Slug = "nhung-cai-tien-moi-trong-javascript-nam-2024",
                     Content = "Bài viết khám phá các tính năng mới được thêm vào JavaScript trong năm 2024...",
                     Summary = "Tìm hiểu những cải tiến mới nhất trong JavaScript năm 2024.",
@@ -305,7 +305,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Cách tối ưu hóa hiệu suất ứng dụng di động",
+                    Title = "Cách tối ưu hóa hiệu suất ứng dụng di động",
                     Slug = "cach-toi-uu-hoa-hieu-suat-ung-dung-di-dong",
                     Content = "Bài viết hướng dẫn cách tối ưu hóa hiệu suất cho các ứng dụng di động...",
                     Summary = "Các chiến lược tối ưu hóa hiệu suất ứng dụng di động.",
@@ -324,7 +324,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Phân tích dữ liệu với SQL và Python",
+                    Title = "Phân tích dữ liệu với SQL và Python",
                     Slug = "phan-tich-du-lieu-voi-sql-va-python",
                     Content = "Bài viết cung cấp các kỹ thuật phân tích dữ liệu sử dụng SQL và Python...",
                     Summary = "Hướng dẫn phân tích dữ liệu sử dụng SQL và Python.",
@@ -344,7 +344,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Name = "Xây dựng hệ thống microservices với Docker và Kubernetes",
+                    Title = "Xây dựng hệ thống microservices với Docker và Kubernetes",
                     Slug = "xay-dung-he-thong-microservices-voi-docker-va-kubernetes",
                     Content =
                         "Bài viết hướng dẫn cách xây dựng và quản lý hệ thống microservices sử dụng Docker và Kubernetes...",

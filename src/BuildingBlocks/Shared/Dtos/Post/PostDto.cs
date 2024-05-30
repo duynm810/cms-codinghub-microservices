@@ -4,7 +4,7 @@ public class PostDto
 {
     public Guid Id { get; set; }
 
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     public required string Slug { get; set; }
 
@@ -24,13 +24,15 @@ public class PostDto
 
     public bool IsPaid { get; set; }
 
-    public DateTimeOffset? PublishedDate { get; set; }
+    public DateTimeOffset PublishedDate { get; set; }
 
     public long CategoryId { get; set; }
 
     public string? CategoryName { get; set; }
 
     public string? CategorySlug { get; set; }
+
+    public string? CategorySeoDescription { get; set; }
 
     public string? CategoryIcon { get; set; }
 

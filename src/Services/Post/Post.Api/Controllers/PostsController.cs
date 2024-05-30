@@ -82,7 +82,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
     public async Task<IActionResult> GetPostsPaging(
-        [FromQuery] string filter,
+        [FromQuery] string? filter,
         [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)
     {

@@ -57,7 +57,7 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Summary).ConfigureAwait(false);
+                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {

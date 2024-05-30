@@ -1,14 +1,17 @@
+using AutoMapper;
 using Post.Application.Commons.Mappings;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.Entities;
+using Shared.Dtos.Category;
 using Shared.Enums;
 
 namespace Post.Application.Commons.Models;
 
-public class PostModel : IMapFrom<PostBase>
+public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
 {
     public Guid Id { get; set; }
 
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     public required string Slug { get; set; }
 
@@ -39,6 +42,8 @@ public class PostModel : IMapFrom<PostBase>
     public string? CategoryName { get; set; }
 
     public string? CategorySlug { get; set; }
+    
+    public string? CategorySeoDescription { get; set; }
 
     public string? CategoryIcon { get; set; }
     
@@ -49,4 +54,29 @@ public class PostModel : IMapFrom<PostBase>
     public DateTimeOffset? PaidDate { get; set; }
     
     public DateTimeOffset CreatedDate { get; set; }
+    
+    public void Mapping(Profile profile)
+    {
+        profile.CreateMap<PostBase, PostModel>();
+
+        profile.CreateMap<CategoryDto, PostModel>()
+            .ForMember(dest => dest.Id, 
+                opt => opt.Ignore()) // Bỏ qua ánh xạ Id vì sẽ nhầm lẫn Id của Post
+            .ForMember(dest => dest.Slug, 
+                opt => opt.Ignore()) // Bỏ qua ánh xạ Slug vì sẽ nhầm lẫn Slug của Post
+            .ForMember(dest => dest.SeoDescription, 
+                opt => opt.Ignore()) // Bỏ qua ánh xạ Slug vì sẽ nhầm lẫn Slug của Post
+            .ForMember(dest => dest.CategoryId,
+                opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CategoryName,
+                opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.CategorySlug,
+                opt => opt.MapFrom(src => src.Slug))
+            .ForMember(dest => dest.CategorySeoDescription,
+                opt => opt.MapFrom(src => src.SeoDescription))
+            .ForMember(dest => dest.CategoryIcon,
+                opt => opt.MapFrom(src => src.Icon))
+            .ForMember(dest => dest.CategoryColor,
+                opt => opt.MapFrom(src => src.Color));
+    }
 }

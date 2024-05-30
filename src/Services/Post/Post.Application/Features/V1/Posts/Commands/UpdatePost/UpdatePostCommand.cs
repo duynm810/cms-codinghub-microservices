@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Post.Application.Commons.Mappings;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Application.Features.V1.Posts.Commons;
 using Post.Domain.Entities;

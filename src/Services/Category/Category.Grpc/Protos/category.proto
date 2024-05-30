@@ -12,8 +12,9 @@ message CategoryModel {
   int64 id = 1;
   string name = 2;
   string slug = 3;
-  string icon = 4;
-  string color = 5;
+  string seoDescription = 4;
+  string icon = 5;
+  string color = 6;
 }
 
 message GetCategoryByIdRequest {
