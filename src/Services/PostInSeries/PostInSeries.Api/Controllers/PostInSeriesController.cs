@@ -26,6 +26,7 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<IActionResult> GetPostInSeries(Guid seriesId)
     {
         var result = await postInSeriesService.GetPostsInSeries(seriesId);
@@ -33,6 +34,7 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
     }
 
     [HttpGet("paging")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetPostInSeriesPaging(Guid seriesId, [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)
     {

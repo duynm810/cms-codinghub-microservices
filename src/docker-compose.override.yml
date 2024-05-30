@@ -168,6 +168,8 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
+      - "DisplaySettings:Config:Post.Related=2"
+      - "DisplaySettings:Config:Post.Featured=4"
     depends_on:
       - postdb
     ports:
@@ -190,6 +192,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
+      - "DisplaySettings:Config:Series.Top=4"
     depends_on:
       - seriesdb
     ports:

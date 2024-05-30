@@ -316,7 +316,21 @@
     {
       "UpstreamPathTemplate": "/series",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6007
+        }
+      ],
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -376,7 +390,21 @@
     {
       "UpstreamPathTemplate": "/post-in-series",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -407,10 +435,6 @@
           "Port": 6009
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
       "SwaggerKey": "post-in-series-service"
     },
     {
