@@ -5,9 +5,9 @@ using Shared.Dtos.Category;
 
 namespace Post.Infrastructure;
 
-public class GrpcMappingProfile : Profile
+public class MappingProfile : Profile
 {
-    public GrpcMappingProfile()
+    public MappingProfile()
     {
         CreateMap<CategoryDto, CategoryModel>()
             .ForMember(dest => dest.Icon,

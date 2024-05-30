@@ -26,13 +26,13 @@ public class SeriesService(ISeriesRepository seriesRepository, ILogger logger)
             var data = new SeriesModel
             {
                 Id = series.Id.ToString(),
-                Name = series.Name,
+                Title = series.Title,
                 Slug = series.Slug
             };
 
             logger.Information(
                 "END {MethodName} - Success: Retrieved Category {SeriesId} - Name: {CategoryName}",
-                methodName, data.Id, data.Name);
+                methodName, data.Id, data.Title);
 
             return data;
         }

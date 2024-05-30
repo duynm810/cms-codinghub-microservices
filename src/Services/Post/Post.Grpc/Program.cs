@@ -23,9 +23,6 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Add configure settings get in appsettings
-    builder.Services.AddConfigurationSettings(configuration);
-
     // Add health checks to checks database
     builder.Services.AddHealthCheckServices();
 

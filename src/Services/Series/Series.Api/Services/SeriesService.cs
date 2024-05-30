@@ -22,11 +22,11 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating series with name: {SeriesName}", methodName, model.Name);
+            logger.Information("BEGIN {MethodName} - Creating series with name: {SeriesName}", methodName, model.Title);
 
             if (string.IsNullOrEmpty(model.Slug))
             {
-                model.Slug = Utils.ToUnSignString(model.Name);
+                model.Slug = Utils.ToUnSignString(model.Title);
             }
 
             var series = mapper.Map<SeriesBase>(model);

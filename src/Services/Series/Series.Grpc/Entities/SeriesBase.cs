@@ -7,7 +7,7 @@ public class SeriesBase : EntityAuditBase<Guid>
     /// <summary>
     /// Tên của loạt bài viết
     /// </summary>
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     /// <summary>
     /// Đường dẫn tĩnh (SEO-friendly URL) của loạt bài viết

@@ -18,7 +18,7 @@ public class SeriesGrpcService(SeriesProtoService.SeriesProtoServiceClient serie
                 return new SeriesDto()
                 {
                     Id = Guid.Parse(result.Id),
-                    Name = result.Name,
+                    Title = result.Title,
                     Slug = result.Slug
                 };
             }

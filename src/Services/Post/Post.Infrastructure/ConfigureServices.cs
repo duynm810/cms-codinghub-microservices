@@ -108,6 +108,6 @@ public static class ConfigureServices
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
-        services.AddAutoMapper(cfg => cfg.AddProfile(new GrpcMappingProfile()));
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 }

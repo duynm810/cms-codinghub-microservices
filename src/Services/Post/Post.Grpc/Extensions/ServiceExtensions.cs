@@ -8,15 +8,6 @@ namespace Post.Grpc.Extensions;
 
 public static class ServiceExtensions
 {
-    public static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
-    {
-        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
-                               ?? throw new ArgumentNullException(
-                                   $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddSingleton(databaseSettings);
-    }
-
     public static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??

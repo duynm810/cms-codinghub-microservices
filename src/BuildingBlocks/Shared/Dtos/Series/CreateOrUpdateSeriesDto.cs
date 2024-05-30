@@ -2,7 +2,7 @@ namespace Shared.Dtos.Series;
 
 public class CreateOrUpdateSeriesDto
 {
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     public required string Slug { get; set; }
 
