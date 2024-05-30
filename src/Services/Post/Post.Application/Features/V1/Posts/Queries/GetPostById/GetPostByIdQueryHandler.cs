@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
@@ -15,7 +16,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
 public class GetPostByIdQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IMapper mapper,
+    IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostByIdQuery, ApiResult<PostModel>>
 {
@@ -37,17 +38,15 @@ public class GetPostByIdQueryHandler(
                 return result;
             }
 
-            var data = mapper.Map<PostModel>(post);
-
             var category = await categoryGrpcService.GetCategoryById(post.CategoryId);
-            if (category != null)
+            if (category == null)
             {
-                data.CategoryName = category.Name;
-                data.CategorySlug = category.Slug;
-                data.CategoryIcon = category.Icon;
-                data.CategoryColor = category.Color;
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
             }
-
+            
+            var data = mappingHelper.MapPostWithCategory(post, category);
             result.Success(data);
 
             logger.Information("END {MethodName} - Successfully retrieved post with ID: {PostId}", methodName,

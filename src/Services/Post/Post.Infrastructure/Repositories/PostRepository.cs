@@ -43,7 +43,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         if (!string.IsNullOrEmpty(filter))
         {
-            query = query.Where(x => (x.Name.Contains(filter))
+            query = query.Where(x => (x.Title.Contains(filter))
                                      || (x.Slug.Contains(filter))
                                      || (x.Content != null && x.Content.Contains(filter))
                                      || (x.Summary != null && x.Summary.Contains(filter))

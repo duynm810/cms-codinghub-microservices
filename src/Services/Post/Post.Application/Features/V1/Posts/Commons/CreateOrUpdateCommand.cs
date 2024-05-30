@@ -1,5 +1,6 @@
 using AutoMapper;
 using Post.Application.Commons.Mappings;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.Entities;
 using Shared.Enums;
 

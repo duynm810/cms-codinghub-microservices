@@ -15,7 +15,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// </summary>
     [Required]
     [MaxLength(250)]
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     /// <summary>
     /// Đường dẫn tĩnh (SEO-friendly URL) bài viết

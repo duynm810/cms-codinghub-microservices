@@ -1,12 +1,12 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -15,7 +15,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 public class GetPostsByCategoryPagingQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IMapper mapper,
+    IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PagedResponse<PostModel>>>
 {
     public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsByCategoryPagingQuery request,
@@ -40,30 +40,15 @@ public class GetPostsByCategoryPagingQueryHandler(
                 return result;
             }
 
-            // Lấy bài viết theo categoryId và phân trang
             var posts = await postRepository.GetPostsByCategoryPaging(category.Id, request.PageNumber,
                 request.PageSize);
 
-            var postList = mapper.Map<List<PostModel>>(posts.Items);
-            foreach (var post in postList)
-            {
-                post.CategoryName = category.Name;
-                post.CategorySlug = category.Slug;
-                post.CategoryIcon = category.Icon;
-                post.CategoryColor = category.Color;
-            }
-
-            var pagedResponse = new PagedResponse<PostModel>()
-            {
-                Items = postList,
-                MetaData = posts.MetaData
-            };
-
-            result.Success(pagedResponse);
+            var data = mappingHelper.MapPostsWithCategory(posts, category);
+            result.Success(data);
 
             logger.Information(
                 "END {MethodName} - Successfully retrieved {PostCount} posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
-                methodName, postList.Count, request.CategorySlug, request.PageNumber, request.PageSize);
+                methodName, data.MetaData.TotalItems, request.CategorySlug, request.PageNumber, request.PageSize);
         }
         catch (Exception e)
         {
