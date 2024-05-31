@@ -4,10 +4,15 @@ option csharp_namespace = "Series.Grpc.Protos";
 
 service SeriesProtoService {
   rpc GetSeriesById(GetSeriesByIdRequest) returns (SeriesModel);
+  rpc GetSeriesBySlug(GetSeriesBySlugRequest) returns (SeriesModel);
 }
 
 message GetSeriesByIdRequest {
   string id = 1;
+}
+
+message GetSeriesBySlugRequest {
+  string slug = 1;
 }
 
 message SeriesModel {

@@ -29,8 +29,6 @@ try
 
     // Seed database with initial data and start the application
     app.SeedData().Run();
-
-    app.Run();
 }
 catch (Exception ex)
 {

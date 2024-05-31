@@ -1,3 +1,4 @@
+using AutoMapper;
 using Grpc.Core;
 using Series.Grpc.Protos;
 using Series.Grpc.Repositories.Interfaces;
@@ -5,7 +6,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Series.Grpc.Services;
 
-public class SeriesService(ISeriesRepository seriesRepository, ILogger logger)
+public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, ILogger logger)
     : SeriesProtoService.SeriesProtoServiceBase
 {
     public override async Task<SeriesModel?> GetSeriesById(GetSeriesByIdRequest request, ServerCallContext context)
@@ -23,15 +24,10 @@ public class SeriesService(ISeriesRepository seriesRepository, ILogger logger)
                 return null;
             }
 
-            var data = new SeriesModel
-            {
-                Id = series.Id.ToString(),
-                Title = series.Title,
-                Slug = series.Slug
-            };
+            var data = mapper.Map<SeriesModel>(series);
 
             logger.Information(
-                "END {MethodName} - Success: Retrieved Category {SeriesId} - Name: {CategoryName}",
+                "END {MethodName} - Success: Retrieved Series {SeriesId} - Title: {SeriesName}",
                 methodName, data.Id, data.Title);
 
             return data;
@@ -39,7 +35,37 @@ public class SeriesService(ISeriesRepository seriesRepository, ILogger logger)
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
-            return null;
+            throw;
+        }
+    }
+
+    public override async Task<SeriesModel?> GetSeriesBySlug(GetSeriesBySlugRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetSeriesBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Getting series by Slug: {SeriesSlug}", methodName, request.Slug);
+
+            var series = await seriesRepository.GetSeriesBySlug(request.Slug);
+            if (series == null)
+            {
+                logger.Warning("{MethodName} - Series not found for Slug: {SeriesSlug}", methodName, request.Slug);
+                return null;
+            }
+
+            var data = mapper.Map<SeriesModel>(series);
+
+            logger.Information(
+                "END {MethodName} - Success: Retrieved Series {SeriesId} - Title: {SeriesName}",
+                methodName, data.Id, data.Title);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            throw;
         }
     }
 }

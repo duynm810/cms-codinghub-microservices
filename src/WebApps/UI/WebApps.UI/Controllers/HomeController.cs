@@ -14,7 +14,7 @@ public class HomeController(IPostApiClient postApiClient, ISeriesApiClient serie
         var pageSize = paginationSettings.LatestPostPageSize;
         
         var featuredPosts = await postApiClient.GetFeaturedPosts();
-        var latestPosts = await postApiClient.GetLatestPosts(page, pageSize);
+        var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
         var series = await seriesApiClient.GetSeries();
         
         if (featuredPosts is { IsSuccess: true, Data: not null } && 

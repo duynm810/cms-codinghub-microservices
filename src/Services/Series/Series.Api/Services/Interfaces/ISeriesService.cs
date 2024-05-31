@@ -23,5 +23,7 @@ public interface ISeriesService
 
     Task<ApiResult<PagedResponse<SeriesDto>>> GetSeriesPaging(int pageNumber, int pageSize);
 
+    Task<ApiResult<SeriesDto>> GetSeriesBySlug(string slug);
+
     #endregion
 }

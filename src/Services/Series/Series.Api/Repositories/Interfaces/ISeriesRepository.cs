@@ -24,5 +24,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task<PagedResponse<SeriesBase>> GetSeriesPaging(int pageNumber, int pageSize);
 
+    Task<SeriesBase?> GetSeriesBySlug(string slug);
+
     #endregion
 }

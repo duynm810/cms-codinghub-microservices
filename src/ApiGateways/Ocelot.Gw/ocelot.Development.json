@@ -6,7 +6,7 @@
     {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
       ],
       "DownstreamPathTemplate": "/api/categories",
       "DownstreamScheme": "http",
@@ -326,6 +326,10 @@
           "Port": 5007
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
       "SwaggerKey": "series-service"
     },
     {
@@ -349,9 +353,46 @@
       "SwaggerKey": "series-service"
     },
     {
+      "UpstreamPathTemplate": "/series/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
       "UpstreamPathTemplate": "/series/{id}",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/{id}",
+      "UpstreamHttpMethod": [
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/series/{id}",
@@ -403,6 +444,21 @@
       "SwaggerKey": "post-in-series-service"
     },
     {
+      "UpstreamPathTemplate": "/post-in-series/by-slug",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/by-slug",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
       "UpstreamPathTemplate": "/post-in-series",
       "UpstreamHttpMethod": [
         "POST",
@@ -428,6 +484,21 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/post-in-series/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series/by-slug/{slug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/by-slug/{slug}/paging",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

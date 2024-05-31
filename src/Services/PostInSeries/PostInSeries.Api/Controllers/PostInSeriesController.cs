@@ -32,6 +32,14 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
         var result = await postInSeriesService.GetPostsInSeries(seriesId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    
+    [HttpGet("by-slug")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostInSeriesBySlug([FromQuery, Required] string slug)
+    {
+        var result = await postInSeriesService.GetPostsInSeriesBySlug(slug);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 
     [HttpGet("paging")]
     [AllowAnonymous]
@@ -39,6 +47,15 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
         [FromQuery, Required] int pageSize = 10)
     {
         var result = await postInSeriesService.GetPostsInSeriesPaging(seriesId, pageNumber, pageSize);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
+    
+    [HttpGet("by-slug/{slug}/paging")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostInSeriesBySlugPaging(string slug, [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var result = await postInSeriesService.GetPostsInSeriesBySlugPaging(slug, pageNumber, pageSize);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 }

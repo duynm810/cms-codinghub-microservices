@@ -148,6 +148,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - categorydb
+      - category.grpc
     ports:
       - "6003:80"
     restart: always
@@ -172,6 +173,7 @@ services:
       - "DisplaySettings:Config:Post.Featured=4"
     depends_on:
       - postdb
+      - post.grpc
     ports:
       - "6005:80"
     restart: always
@@ -195,6 +197,7 @@ services:
       - "DisplaySettings:Config:Series.Top=4"
     depends_on:
       - seriesdb
+      - series.grpc
     ports:
       - "6007:80"
     restart: always

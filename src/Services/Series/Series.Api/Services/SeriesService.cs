@@ -40,7 +40,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreateSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -76,7 +76,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(UpdateSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -112,7 +112,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeleteSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -142,7 +142,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -174,7 +174,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetSeriesById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -208,7 +208,39 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetSeriesPaging), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    public async Task<ApiResult<SeriesDto>> GetSeriesBySlug(string slug)
+    {
+        var result = new ApiResult<SeriesDto>();
+        const string methodName = nameof(GetSeriesBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving series with Slug: {SeriesSlug}", methodName, slug);
+
+            var series = await seriesRepository.GetSeriesBySlug(slug);
+            if (series == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Series.SeriesNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<SeriesDto>(series);
+            result.Success(data);
+            
+            logger.Information("END {MethodName} - Successfully retrieved series Slug ID {SeriesSlug}", methodName, slug);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
