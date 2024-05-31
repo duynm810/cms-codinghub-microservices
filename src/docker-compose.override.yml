@@ -38,12 +38,18 @@ services:
     ports:
       - "1435:1433"
   
-  #postinseriesdb: redis
-  postinseriesdb:
-    container_name: postinseriesdb
+  #postinseriesdb: postgresql
+  post-in-series-db:
+    container_name: post-in-series-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_in_series_service_db
     restart: always
     ports:
-      - "6379:6379"
+      - "5434:5432"
+    volumes:
+      - post_in_series_postgres_data:/var/lib/postgresql/data
   
   #hangfiredb: mongo
   hangfiredb:
@@ -219,7 +225,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     depends_on:
-      - postinseriesdb
+      - post-in-series-db
     ports:
       - "6009:80"
     restart: always
