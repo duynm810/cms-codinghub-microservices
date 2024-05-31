@@ -69,6 +69,28 @@ dotnet ef database update
  dotnet ef database update --project Post.Infrastructure --startup-project Post.Api
 ```
 
+- Identity Api
+
+```Powershell
+
+```
+
+
+```Powershell
+- Move to Identity.Api folder
+
+dotnet ef migrations add Initial_Persisted_Grant_Migration -c PersistedGrantDbContext -c Migrations/IdentityServer/PersistedGrant
+dotnet ef migrations add Initial_Configuration_Migration -c ConfigurationDbContext -o Migrations/IdentityServer/Configuration
+
+dotnet ef database update -c PersistedGrantDbContext
+dotnet ef database update -c ConfigurationDbContext
+```
+```Powershell
+- Move out Identity.Api folder (in root Identity folder)
+
+dotnet ef migrations add Initial_AspNet_Identity -c IdentityContext -o Persistence/Migrations
+dotnet ef database update -c IdentityContext --project Identity.Infrastructure --startup-project Identity.Api
+```
 ---
 
 ## Application URLs - DEVELOPMENT Environment:

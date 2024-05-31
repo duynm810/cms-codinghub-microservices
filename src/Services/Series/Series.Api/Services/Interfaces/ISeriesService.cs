@@ -7,9 +7,9 @@ public interface ISeriesService
 {
     #region CRUD
 
-    Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto model);
+    Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto request);
 
-    Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto model);
+    Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto request);
 
     Task<ApiResult<bool>> DeleteSeries(List<Guid> ids);
 

@@ -16,9 +16,9 @@ public class PermissionsController(IPermissionService permissionService) : Contr
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<PermissionDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreatePermission(string roleId, [FromBody] CreateOrUpdatePermissionDto model)
+    public async Task<IActionResult> CreatePermission(string roleId, [FromBody] CreateOrUpdatePermissionDto request)
     {
-        var result = await permissionService.CreatePermission(roleId, model);
+        var result = await permissionService.CreatePermission(roleId, request);
         return Ok(result);
     }
 

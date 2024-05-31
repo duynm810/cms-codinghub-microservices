@@ -38,7 +38,7 @@ public class CategoryGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesByIds), e);
             throw;
         }
     }

@@ -2,7 +2,7 @@ using Shared.Dtos.Category;
 
 namespace Post.Domain.GrpcServices;
 
-public interface ICategoryGrpcService
+public interface ICategoryGrpcService 
 {
     Task<CategoryDto?> GetCategoryById(long id);
     

@@ -32,9 +32,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<long>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreatePostDto model)
+    public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreatePostDto request)
     {
-        var command = mapper.Map<CreatePostCommand>(model);
+        var command = mapper.Map<CreatePostCommand>(request);
         command.AuthorUserId = User.GetUserId();
 
         var result = await mediator.Send(command);
@@ -156,9 +156,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto model)
+    public async Task<IActionResult> RejectPostWithReasonCommand(Guid id, [FromBody] RejectPostWithReasonDto request)
     {
-        var command = new RejectPostWithReasonCommand(id, User.GetUserId(), model);
+        var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);
         var result = await mediator.Send(command);
         return Ok(result);
     }

@@ -24,7 +24,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - post_postgres_data:/var/lib/postgresql/data
   
   #seriesdb: sqlserver
   seriesdb:
@@ -33,17 +33,23 @@ services:
       SA_PASSWORD: "Passw0rd!"
       ACCEPT_EULA: "Y"
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - series_sqlserver_data:/var/opt/mssql
     restart: always
     ports:
       - "1435:1433"
   
-  #postinseriesdb: redis
-  postinseriesdb:
-    container_name: postinseriesdb
+  #postinseriesdb: postgresql
+  post-in-series-db:
+    container_name: post-in-series-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_in_series_service_db
     restart: always
     ports:
-      - "6379:6379"
+      - "5434:5432"
+    volumes:
+      - post_in_series_postgres_data:/var/lib/postgresql/data
   
   #hangfiredb: mongo
   hangfiredb:
@@ -103,6 +109,12 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
+    
+  redis:
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
 
   kibana:
     container_name: kibana
@@ -219,7 +231,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     depends_on:
-      - postinseriesdb
+      - post-in-series-db
     ports:
       - "6009:80"
     restart: always

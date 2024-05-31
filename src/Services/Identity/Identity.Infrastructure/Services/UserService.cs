@@ -15,17 +15,17 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 {
     #region CRUD
 
-    public async Task<ApiResult<UserDto?>> CreateUser(CreateUserDto model)
+    public async Task<ApiResult<UserDto?>> CreateUser(CreateUserDto request)
     {
         var result = new ApiResult<UserDto?>();
         const string methodName = nameof(CreateUser);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating user with username: {UserName}", methodName, model.UserName);
+            logger.Information("BEGIN {MethodName} - Creating user with username: {UserName}", methodName, request.UserName);
 
-            var user = mapper.Map<User>(model);
-            await repositoryManager.Users.CreateUser(user, model.Password);
+            var user = mapper.Map<User>(request);
+            await repositoryManager.Users.CreateUser(user, request.Password);
 
             var data = mapper.Map<UserDto>(user);
             result.Success(data);
@@ -42,7 +42,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserDto model)
+    public async Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserDto request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdateUser);
@@ -59,7 +59,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
                 return result;
             }
 
-            mapper.Map(model, user);
+            mapper.Map(request, user);
             var updateResult = await repositoryManager.Users.UpdateUser(user);
             if (!updateResult)
             {
@@ -183,7 +183,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 
     #region OTHERS
 
-    public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto model)
+    public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(ChangePassword);
@@ -200,7 +200,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
                 return result;
             }
 
-            var changePasswordResult = await repositoryManager.Users.ChangePassword(user, model.CurrentPassword, model.NewPassword);
+            var changePasswordResult = await repositoryManager.Users.ChangePassword(user, request.CurrentPassword, request.NewPassword);
             if (!changePasswordResult)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.User.UserChangePasswordFailed);

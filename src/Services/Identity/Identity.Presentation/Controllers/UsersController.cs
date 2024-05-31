@@ -15,17 +15,17 @@ public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<UserDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateUser([FromBody] CreateUserDto model)
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserDto request)
     {
-        var result = await userService.CreateUser(model);
+        var result = await userService.CreateUser(request);
         return Ok(result);
     }
 
     [HttpPut("{userId:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UpdateUserDto model)
+    public async Task<IActionResult> UpdateUser(Guid userId, [FromBody] UpdateUserDto request)
     {
-        var result = await userService.UpdateUser(userId, model);
+        var result = await userService.UpdateUser(userId, request);
         return Ok(result);
     }
 
@@ -55,9 +55,9 @@ public class UsersController(IUserService userService) : ControllerBase
     
     [HttpPost("{userId:guid}/change-password")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ChangePassword(Guid userId, [FromBody] ChangePasswordUserDto model)
+    public async Task<IActionResult> ChangePassword(Guid userId, [FromBody] ChangePasswordUserDto request)
     {
-        var result = await userService.ChangePassword(userId, model);
+        var result = await userService.ChangePassword(userId, request);
         return Ok(result);
     }
 }

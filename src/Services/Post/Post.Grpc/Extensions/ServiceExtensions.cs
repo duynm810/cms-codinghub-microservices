@@ -8,6 +8,11 @@ namespace Post.Grpc.Extensions;
 
 public static class ServiceExtensions
 {
+    public static void AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    }
+    
     public static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??

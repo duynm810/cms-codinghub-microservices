@@ -1,13 +1,16 @@
 
+using Contracts.Domains.Repositories;
+using PostInSeries.Api.Entities;
+
 namespace PostInSeries.Api.Repositories.Interfaces;
 
-public interface IPostInSeriesRepository
+public interface IPostInSeriesRepository : IRepositoryCommandBase<PostInSeriesBase, Guid>
 {
     #region CRUD
 
-    Task CreatePostToSeries(Guid seriesId, Guid postId, int sortOrder);
+    Task CreatePostToSeries(PostInSeriesBase postInSeriesBase);
 
-    Task DeletePostToSeries(Guid seriesId, Guid postId);
+    Task DeletePostToSeries(PostInSeriesBase postInSeriesBase);
 
     #endregion
 

@@ -19,7 +19,7 @@ public class CategoryService(
 {
     #region CRUD
 
-    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto request)
     {
         var result = new ApiResult<CategoryDto>();
         const string methodName = nameof(CreateCategory);
@@ -27,14 +27,14 @@ public class CategoryService(
         try
         {
             logger.Information("BEGIN {MethodName} - Creating category with name: {CategoryName}", methodName,
-                model.Name);
+                request.Name);
 
-            if (string.IsNullOrEmpty(model.Slug))
+            if (string.IsNullOrEmpty(request.Slug))
             {
-                model.Slug = Utils.ToUnSignString(model.Name);
+                request.Slug = Utils.ToUnSignString(request.Name);
             }
 
-            var category = mapper.Map<CategoryBase>(model);
+            var category = mapper.Map<CategoryBase>(request);
             await categoryRepository.CreateCategory(category);
 
             var data = mapper.Map<CategoryDto>(category);
@@ -53,7 +53,7 @@ public class CategoryService(
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto request)
     {
         var result = new ApiResult<CategoryDto>();
         const string methodName = nameof(UpdateCategory);
@@ -70,7 +70,7 @@ public class CategoryService(
                 return result;
             }
 
-            var updateCategory = mapper.Map(model, category);
+            var updateCategory = mapper.Map(request, category);
             await categoryRepository.UpdateCategory(updateCategory);
 
             var data = mapper.Map<CategoryDto>(updateCategory);

@@ -22,6 +22,9 @@ try
 
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
+    
+    // Register AutoMapper
+    builder.Services.AddAutoMapperConfiguration();
 
     // Add health checks to checks database
     builder.Services.AddHealthCheckServices();

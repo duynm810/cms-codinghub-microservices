@@ -19,12 +19,12 @@ public class PermissionRepository(
 {
     #region CRUD
 
-    public async Task<long> CreatePermission(string roleId, Permission model)
+    public async Task<long> CreatePermission(string roleId, Permission request)
     {
         var parameters = new DynamicParameters();
         parameters.Add("@roleId", roleId, DbType.String);
-        parameters.Add("@function", model.Function, DbType.String);
-        parameters.Add("@command", model.Command, DbType.String);
+        parameters.Add("@function", request.Function, DbType.String);
+        parameters.Add("@command", request.Command, DbType.String);
         parameters.Add("@newID", dbType: DbType.Int64, direction: ParameterDirection.Output);
 
         await ExecuteAsync(StoredProceduresConsts.Permission.CreatePermission, parameters);

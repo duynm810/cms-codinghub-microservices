@@ -59,13 +59,14 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
     {
         profile.CreateMap<PostBase, PostModel>();
 
+        // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
         profile.CreateMap<CategoryDto, PostModel>()
             .ForMember(dest => dest.Id, 
-                opt => opt.Ignore()) // Bỏ qua ánh xạ Id vì sẽ nhầm lẫn Id của Post
+                opt => opt.Ignore())
             .ForMember(dest => dest.Slug, 
-                opt => opt.Ignore()) // Bỏ qua ánh xạ Slug vì sẽ nhầm lẫn Slug của Post
+                opt => opt.Ignore()) 
             .ForMember(dest => dest.SeoDescription, 
-                opt => opt.Ignore()) // Bỏ qua ánh xạ Slug vì sẽ nhầm lẫn Slug của Post
+                opt => opt.Ignore())
             .ForMember(dest => dest.CategoryId,
                 opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.CategoryName,

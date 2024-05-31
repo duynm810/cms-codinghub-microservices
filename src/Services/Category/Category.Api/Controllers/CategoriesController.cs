@@ -19,9 +19,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.Created)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Create)]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto request)
     {
-        var result = await categoryService.CreateCategory(categoryDto);
+        var result = await categoryService.CreateCategory(request);
         return Ok(result);
     }
 
@@ -29,9 +29,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.NoContent)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Update)]
     public async Task<IActionResult> UpdateCategory([FromRoute, Required] long id,
-        [FromBody] UpdateCategoryDto categoryDto)
+        [FromBody] UpdateCategoryDto request)
     {
-        var result = await categoryService.UpdateCategory(id, categoryDto);
+        var result = await categoryService.UpdateCategory(id, request);
         return Ok(result);
     }
 
