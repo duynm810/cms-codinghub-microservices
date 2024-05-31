@@ -46,6 +46,8 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
         return response;
     }
+    
+    public async Task<SeriesBase?> GetSeriesBySlug(string slug) => await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
 
     #endregion
 }

@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
-using WebApps.UI.Models;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class PostsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class PostsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, ISeriesApiClient seriesApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
 {
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
@@ -15,7 +14,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         var pageSize = paginationSettings.FeaturedPostPageSize;
 
         var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
-        var posts = await postApiClient.GetPostsByCategory(categorySlug, page, pageSize);
+        var posts = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, pageSize);
         
         if (posts is { IsSuccess: true, Data: not null } && category is { IsSuccess: true, Data: not null })
         {
@@ -55,7 +54,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
     {
         var pageSize = paginationSettings.SearchPostPageSize;
 
-        var posts = await postApiClient.SearchPosts(keyword, page, pageSize);
+        var posts = await postApiClient.SearchPostsPaging(keyword, page, pageSize);
         
         if (posts is { IsSuccess: true, Data: not null })
         {
@@ -72,8 +71,24 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
     }
 
     [HttpGet("series/{slug}")]
-    public async Task<IActionResult> PostsInSeries()
+    public async Task<IActionResult> PostsInSeries(string slug, int page = 1)
     {
+        var pageSize = paginationSettings.PostInSeriesPageSize;
+
+        var series = await seriesApiClient.GetSeriesBySlug(slug);
+        var postsInSeries = await postApiClient.GetPostsInSeriesBySlugPaging(slug, page, pageSize);
+        
+        if (series is { IsSuccess: true, Data: not null } && postsInSeries is { IsSuccess: true, Data: not null })
+        {
+            var items = new PostsInSeriesViewModel()
+            {
+                Series = series.Data,
+                PostInSeries = postsInSeries.Data
+            };
+
+            return View(items);
+        }
+        
         return View();
     }
 }

@@ -55,6 +55,15 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
         var result = await seriesService.GetSeriesById(id);
         return Ok(result);
     }
+    
+    [HttpGet("by-slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<SeriesDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetSeriesBySlug([FromRoute, Required] string slug)
+    {
+        var result = await seriesService.GetSeriesBySlug(slug);
+        return Ok(result);
+    }
 
     [HttpGet("paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<SeriesDto>>), (int)HttpStatusCode.OK)]

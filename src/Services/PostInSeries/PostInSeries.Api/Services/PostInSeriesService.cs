@@ -232,5 +232,64 @@ public class PostInSeriesService(
         return result;
     }
 
+    public async Task<ApiResult<PagedResponse<PostInSeriesDto>>> GetPostsInSeriesBySlugPaging(string seriesSlug,
+        int pageNumber, int pageSize)
+    {
+        var result = new ApiResult<PagedResponse<PostInSeriesDto>>();
+        const string methodName = nameof(GetPostsInSeriesBySlugPaging);
+
+        try
+        {
+            logger.Information(
+                "BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
+                methodName, seriesSlug, pageNumber, pageSize);
+
+            var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
+            if (series != null)
+            {
+                var postIds = await postInSeriesRepository.GetPostIdsInSeries(series.Id);
+                if (postIds == null)
+                {
+                    logger.Warning("{MethodName} - Post IDs not found for series with Slug: {SeriesSlug}", methodName, series.Slug);
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                    return result;
+                }
+                
+                var postList = postIds.ToList();
+                if (postList.Count != 0)
+                {
+                    var posts = await postGrpcService.GetPostsByIds(postList);
+                    var items = PagedList<PostInSeriesDto>.ToPagedList(posts, pageNumber, pageSize, x => x.Id);
+
+                    var data = new PagedResponse<PostInSeriesDto>
+                    {
+                        Items = items,
+                        MetaData = items.GetMetaData()
+                    };
+
+                    result.Success(data);
+
+                    logger.Information(
+                        "END {MethodName} - Successfully retrieved {PostCount} posts for series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
+                        methodName, items.Count, series.Slug, pageNumber, pageSize);
+                }
+                else
+                {
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     #endregion
 }

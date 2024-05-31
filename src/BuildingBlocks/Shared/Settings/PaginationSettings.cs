@@ -7,4 +7,6 @@ public class PaginationSettings
     public int LatestPostPageSize { get; set; }
     
     public int SearchPostPageSize { get; set; }
+    
+    public int PostInSeriesPageSize { get; set; }
 }

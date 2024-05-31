@@ -49,4 +49,13 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
         var result = await postInSeriesService.GetPostsInSeriesPaging(seriesId, pageNumber, pageSize);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    
+    [HttpGet("by-slug/{slug}/paging")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostInSeriesBySlugPaging(string slug, [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var result = await postInSeriesService.GetPostsInSeriesBySlugPaging(slug, pageNumber, pageSize);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 }
