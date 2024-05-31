@@ -1,3 +1,4 @@
+using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
 using Infrastructure.Commons;
@@ -156,5 +157,11 @@ public static class ServiceExtensions
             x.Address = new Uri(grpcSettings.SeriesUrl));
 
         services.AddScoped<ISeriesGrpcService, SeriesGrpcService>();
+        
+        services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.CategoryUrl));
+
+        services.AddScoped<ICategoryGrpcService, CategoryGrpcService>();
+
     }
 }

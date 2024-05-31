@@ -47,6 +47,19 @@ public class MappingProfile : Profile
 
         CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
             .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
+        
+        // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
+        CreateMap<CategoryDto, PostInSeriesDto>()
+            .ForMember(dest => dest.Id, 
+                opt => opt.Ignore())
+            .ForMember(dest => dest.Slug, 
+                opt => opt.Ignore())
+            .ForMember(dest => dest.CategoryId,
+                opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CategoryName,
+                opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.CategorySlug,
+                opt => opt.MapFrom(src => src.Slug));
 
         #endregion
     }
