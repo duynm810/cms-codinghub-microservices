@@ -16,7 +16,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
 {
     #region CRUD
 
-    public async Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionDto model)
+    public async Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionDto request)
     {
         var result = new ApiResult<PermissionDto?>();
         const string methodName = nameof(CreatePermission);
@@ -25,9 +25,9 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
         {
             logger.Information(
                 "BEGIN {MethodName} - Creating permission for role: {RoleId} with function: {Function} and command: {Command}",
-                methodName, roleId, model.Function, model.Command);
+                methodName, roleId, request.Function, request.Command);
             
-            var permission = mapper.Map<Permission>(model);
+            var permission = mapper.Map<Permission>(request);
             permission.RoleId = roleId;
 
             var executeResult = await reposityManager.Permissions.CreatePermission(roleId, permission);

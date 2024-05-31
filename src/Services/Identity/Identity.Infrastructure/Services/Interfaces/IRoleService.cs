@@ -7,9 +7,9 @@ public interface IRoleService
 {
     #region CRUD
 
-    Task<ApiResult<RoleDto?>> CreateRole(CreateOrUpdateRoleDto model);
+    Task<ApiResult<RoleDto?>> CreateRole(CreateOrUpdateRoleDto request);
 
-    Task<ApiResult<bool>> UpdateRole(Guid roleId, CreateOrUpdateRoleDto model);
+    Task<ApiResult<bool>> UpdateRole(Guid roleId, CreateOrUpdateRoleDto request);
 
     Task<ApiResult<bool>> DeleteRole(Guid roleId);
 

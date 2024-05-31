@@ -15,21 +15,21 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
 {
     #region CRUD
 
-    public async Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto model)
+    public async Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto request)
     {
         var result = new ApiResult<SeriesDto>();
         const string methodName = nameof(CreateSeries);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating series with name: {SeriesName}", methodName, model.Title);
+            logger.Information("BEGIN {MethodName} - Creating series with name: {SeriesName}", methodName, request.Title);
 
-            if (string.IsNullOrEmpty(model.Slug))
+            if (string.IsNullOrEmpty(request.Slug))
             {
-                model.Slug = Utils.ToUnSignString(model.Title);
+                request.Slug = Utils.ToUnSignString(request.Title);
             }
 
-            var series = mapper.Map<SeriesBase>(model);
+            var series = mapper.Map<SeriesBase>(request);
             await seriesRepository.CreateSeries(series);
 
             var data = mapper.Map<SeriesDto>(series);
@@ -48,7 +48,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
         return result;
     }
 
-    public async Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto model)
+    public async Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto request)
     {
         var result = new ApiResult<SeriesDto>();
         const string methodName = nameof(UpdateSeries);
@@ -66,7 +66,7 @@ public class SeriesService(ISeriesRepository seriesRepository, DisplaySettings d
                 return result;
             }
 
-            var updateSeries = mapper.Map(model, series);
+            var updateSeries = mapper.Map(request, series);
             await seriesRepository.UpdateSeries(updateSeries);
 
             var data = mapper.Map<SeriesDto>(updateSeries);

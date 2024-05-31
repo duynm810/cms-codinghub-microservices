@@ -8,7 +8,7 @@ public interface IPermissionService
 {
     #region CRUD
 
-    Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionDto model);
+    Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionDto request);
 
     Task<ApiResult<bool>> UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionDto> permissions);
 

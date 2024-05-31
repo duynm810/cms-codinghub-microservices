@@ -3,6 +3,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostInSeries.Api.Services.Interfaces;
+using Shared.Dtos.PostInSeries;
 
 namespace PostInSeries.Api.Controllers;
 
@@ -12,16 +13,16 @@ namespace PostInSeries.Api.Controllers;
 public class PostInSeriesController(IPostInSeriesService postInSeriesService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreatePostToSeries(Guid seriesId, Guid postId, int sortOrder)
+    public async Task<IActionResult> CreatePostToSeries(CreatePostInSeriesDto request)
     {
-        var result = await postInSeriesService.CreatePostToSeries(seriesId, postId, sortOrder);
+        var result = await postInSeriesService.CreatePostToSeries(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeletePostToSeries(Guid seriesId, Guid postId)
+    public async Task<IActionResult> DeletePostToSeries(DeletePostInSeriesDto request)
     {
-        var result = await postInSeriesService.DeletePostToSeries(seriesId, postId);
+        var result = await postInSeriesService.DeletePostToSeries(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 

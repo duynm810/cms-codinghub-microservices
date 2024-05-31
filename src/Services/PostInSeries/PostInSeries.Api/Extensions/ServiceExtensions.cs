@@ -101,15 +101,6 @@ public static class ServiceExtensions
         });
     }
 
-    private static void AddRedisConfiguration(this IServiceCollection services)
-    {
-        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
-                            throw new ArgumentNullException($"{nameof(DatabaseSettings)} is not configured properly");
-
-        //Redis Configuration
-        services.AddStackExchangeRedisCache(options => { options.Configuration = cacheSettings.ConnectionString; });
-    }
-
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
@@ -140,13 +131,14 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
-                            throw new ArgumentNullException($"{nameof(DatabaseSettings)} is not configured properly");
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddHealthChecks()
-            .AddRedis(cacheSettings.ConnectionString,
-                "Redis Health",
-                HealthStatus.Degraded);
+            .AddNpgSql(databaseSettings.ConnectionString,
+                name: "PostgreSQL Health",
+                failureStatus: HealthStatus.Degraded);
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)

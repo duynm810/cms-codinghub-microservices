@@ -1,5 +1,6 @@
 using AutoMapper;
 using Post.Grpc.Protos;
+using PostInSeries.Api.Entities;
 using Series.Grpc.Protos;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.Series;
@@ -19,6 +20,13 @@ public class MappingProfile : Profile
         #region Series
 
         CreateMap<SeriesModel, SeriesDto>().ReverseMap();
+
+        #endregion
+
+        #region Post-In-Series
+
+        CreateMap<CreatePostInSeriesDto, PostInSeriesBase>();
+        CreateMap<DeletePostInSeriesDto, PostInSeriesBase>();
 
         #endregion
     }

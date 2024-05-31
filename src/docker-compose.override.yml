@@ -24,7 +24,7 @@ services:
     ports:
       - "5433:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - post_postgres_data:/var/lib/postgresql/data
   
   #seriesdb: sqlserver
   seriesdb:
@@ -33,7 +33,7 @@ services:
       SA_PASSWORD: "Passw0rd!"
       ACCEPT_EULA: "Y"
     volumes:
-      - sqlserver_data:/var/opt/mssql
+      - series_sqlserver_data:/var/opt/mssql
     restart: always
     ports:
       - "1435:1433"
@@ -109,6 +109,12 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
+    
+  redis:
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
 
   kibana:
     container_name: kibana
