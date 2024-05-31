@@ -1,5 +1,5 @@
 @using System.Globalization
-@model WebApps.UI.Models.Posts.PostSearchViewModel
+@model PostSearchViewModel
 @{
    var posts = Model.Posts;
 }
@@ -10,7 +10,7 @@
       <div class="container">
          <h2 class="font-weight-900">Search results</h2>
          <div class="breadcrumb">
-            We found @posts.MetaData.TotalItems articles for <strong>"Media" </strong> key word
+            We found @posts.MetaData.TotalItems articles for <strong>"@Model.Keyword" </strong> key word
          </div>
          <div class="bt-1 border-color-1 mt-30 mb-50"></div>
       </div>
