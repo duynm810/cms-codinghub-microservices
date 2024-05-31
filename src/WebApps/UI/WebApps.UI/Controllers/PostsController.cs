@@ -60,6 +60,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         {
             var items = new PostSearchViewModel()
             {
+                Keyword = keyword,
                 Posts = posts.Data
             };
 
