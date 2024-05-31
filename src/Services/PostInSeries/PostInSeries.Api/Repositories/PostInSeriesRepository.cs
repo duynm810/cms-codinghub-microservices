@@ -1,9 +1,6 @@
-using System.Text;
-using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
 using Infrastructure.Domains.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using PostInSeries.Api.Entities;
 using PostInSeries.Api.Persistence;
 using PostInSeries.Api.Repositories.Interfaces;
@@ -18,5 +15,5 @@ public class PostInSeriesRepository(PostInSeriesContext dbContext, IUnitOfWork<P
     public async Task DeletePostToSeries(PostInSeriesBase postInSeriesBase) => await DeleteAsync(postInSeriesBase);
 
     public async Task<IEnumerable<Guid>?> GetPostIdsInSeries(Guid seriesId) =>
-        await FindByCondition(x => x.SeriesId == seriesId).Select(x => x.SeriesId).ToListAsync();
+        await FindByCondition(x => x.SeriesId == seriesId).Select(x => x.PostId).ToListAsync();
 }

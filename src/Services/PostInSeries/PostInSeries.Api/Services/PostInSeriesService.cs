@@ -16,6 +16,7 @@ public class PostInSeriesService(
     IPostInSeriesRepository postInSeriesRepository,
     IPostGrpcService postGrpcService,
     ISeriesGrpcService seriesGrpcService,
+    ICategoryGrpcService categoryGrpcService,
     IMapper mapper,
     ILogger logger) : IPostInSeriesService
 {
@@ -274,6 +275,12 @@ public class PostInSeriesService(
                         Items = items,
                         MetaData = items.GetMetaData()
                     };
+
+                    if (data.Items != null && data.Items.IsNotNullOrEmpty())
+                    {
+                        var categoryIds = data.Items.Select(p => p.CategoryId).Distinct().ToList();
+                        var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                    }
 
                     result.Success(data);
 

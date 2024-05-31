@@ -44,6 +44,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
+            <GrpcServices>Client</GrpcServices>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

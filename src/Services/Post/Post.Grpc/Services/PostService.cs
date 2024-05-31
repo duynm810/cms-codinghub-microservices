@@ -1,11 +1,13 @@
+using AutoMapper;
 using Grpc.Core;
 using Post.Domain.Repositories;
 using Post.Grpc.Protos;
+using Shared.Constants;
 using ILogger = Serilog.ILogger;
 
 namespace Post.Grpc.Services;
 
-public class PostService(IPostRepository postRepository, ILogger logger) : PostProtoService.PostProtoServiceBase
+public class PostService(IPostRepository postRepository, IMapper mapper, ILogger logger) : PostProtoService.PostProtoServiceBase
 {
     public override async Task<HasPostsInCategoryResponse> HasPostsInCategory(HasPostsInCategoryRequest request,
         ServerCallContext context)
@@ -37,8 +39,6 @@ public class PostService(IPostRepository postRepository, ILogger logger) : PostP
     {
         const string methodName = nameof(GetPostsByIds);
         
-        var result = new GetPostsByIdsResponse();
-        
         try
         {
             var postIds = request.Ids.Select(Guid.Parse).ToArray();
@@ -48,24 +48,16 @@ public class PostService(IPostRepository postRepository, ILogger logger) : PostP
 
             var posts = await postRepository.GetPostsByIds(postIds);
             
-            foreach (var post in posts)
-            {
-                result.Posts.Add(new PostModel
-                {
-                    Id = post.Id.ToString(),
-                    Title = post.Title,
-                    Slug = post.Slug
-                });
-            }
+            var data = mapper.Map<GetPostsByIdsResponse>(posts);
             
-            logger.Information("{MethodName} - Successfully retrieved {Count} posts.", methodName,
-                result.Posts.Count);
+            logger.Information("{MethodName} - Successfully retrieved {Count} posts.", methodName, data.Posts.Count);
+
+            return data;
         }
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
-
-        return result;
     }
 }
