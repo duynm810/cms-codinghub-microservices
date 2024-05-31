@@ -10,6 +10,8 @@ public interface IPostInSeriesService
     Task<ApiResult<bool>> DeletePostToSeries(Guid seriesId, Guid postId);
 
     Task<ApiResult<IEnumerable<PostInSeriesDto>>> GetPostsInSeries(Guid seriesId);
+
+    Task<ApiResult<IEnumerable<PostInSeriesDto>>> GetPostsInSeriesBySlug(string seriesSlug);
     
     Task<ApiResult<PagedResponse<PostInSeriesDto>>> GetPostsInSeriesPaging(Guid seriesId, int pageNumber, int pageSize);
 }

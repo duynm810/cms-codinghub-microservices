@@ -32,6 +32,14 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
         var result = await postInSeriesService.GetPostsInSeries(seriesId);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
+    
+    [HttpGet("by-slug")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostInSeriesBySlug([FromQuery, Required] string slug)
+    {
+        var result = await postInSeriesService.GetPostsInSeriesBySlug(slug);
+        return result.IsSuccess ? Ok(result) : BadRequest(result);
+    }
 
     [HttpGet("paging")]
     [AllowAnonymous]

@@ -34,6 +34,9 @@ public static class ServiceExtensions
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
+        
+        // Register AutoMapper
+        services.AddAutoMapperConfiguration();
 
         // Register health checks
         services.AddHealthCheckServices();
@@ -79,6 +82,11 @@ public static class ServiceExtensions
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<ISeriesRepository, SeriesRepository>();
+    }
+    
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
     private static void AddHealthCheckServices(this IServiceCollection services)

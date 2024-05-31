@@ -403,6 +403,21 @@
       "SwaggerKey": "post-in-series-service"
     },
     {
+      "UpstreamPathTemplate": "/post-in-series/by-slug",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/by-slug",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
       "UpstreamPathTemplate": "/post-in-series",
       "UpstreamHttpMethod": [
         "POST",
