@@ -39,7 +39,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber, int pageSize)
     {
-        var query = FindAll();
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published);
 
         if (!string.IsNullOrEmpty(filter))
         {
@@ -50,7 +50,9 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
                                      || (x.Tags != null && x.Tags.Contains(filter)));
         }
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
+        query = query.OrderByDescending(x => x.PublishedDate);
+        
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -64,9 +66,10 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1,
         int pageSize = 10)
     {
-        var query = FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published);
+        var query = FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -79,9 +82,10 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     
     public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
     {
-        var query = FindByCondition(x => x.Status == PostStatusEnum.Published);
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -92,27 +96,38 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PostBase?> GetPostBySlug(string slug) =>
+    public async Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count) =>
+        await FindByCondition(x => x.CategoryId == categoryId).Take(count).ToListAsync();
+
+    public async Task<PostBase?> GetPostBySlug(string slug) => 
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
-
-    public async Task<bool> SlugExists(string slug, Guid? currentId = null)
-    {
-        return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value))
-            .AnyAsync();
-    }
-
-    public async Task<bool> HasPostsInCategory(long categoryId)
-    {
-        return await FindByCondition(x => x.CategoryId == categoryId).AnyAsync();
-    }
-
+    
     public async Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids)
     {
         return await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
     }
 
-    public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count) =>
-        await FindByCondition(x => x.Status == PostStatusEnum.Published).OrderByDescending(x => x.ViewCount).Take(count).ToListAsync();
+    public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count)
+    {
+        // Get featured articles first (Lấy các bài viết nổi bật trước)
+        var featuredPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsFeatured)
+            .OrderByDescending(x => x.ViewCount)
+            .Take(count)
+            .ToListAsync();
+
+        // If the number of featured posts is less than required, add non-featured posts (Nếu số lượng bài viết nổi bật ít hơn yêu cầu, bổ sung thêm các bài viết không nổi bật)
+        if (featuredPosts.Count < count)
+        {
+            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsFeatured)
+                .OrderByDescending(x => x.ViewCount)
+                .Take(count - featuredPosts.Count)
+                .ToListAsync();
+
+            featuredPosts.AddRange(additionalPosts);
+        }
+
+        return featuredPosts;
+    }
     
     public async Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count)
     {
@@ -135,6 +150,35 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
             .ToList();
 
         return finalRelatedPosts;
+    }
+
+    public async Task<IEnumerable<PostBase>> GetMostCommentPosts(int count)
+    {
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.CommentCount)
+            .Take(count);
+
+        return await query.ToListAsync();
+    }
+    
+    public async Task<IEnumerable<PostBase>> GetMostLikedPosts(int count)
+    {
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.LikeCount)
+            .Take(count);
+
+        return await query.ToListAsync();
+    }
+
+    public async Task<bool> SlugExists(string slug, Guid? currentId = null)
+    {
+        return await FindByCondition(x => x.Slug == slug && (!currentId.HasValue || x.Id != currentId.Value))
+            .AnyAsync();
+    }
+
+    public async Task<bool> HasPostsInCategory(long categoryId)
+    {
+        return await FindByCondition(x => x.CategoryId == categoryId).AnyAsync();
     }
 
     public async Task ApprovePost(PostBase post)

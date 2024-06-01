@@ -28,17 +28,23 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
+    Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count);
+
     Task<PostBase?> GetPostBySlug(string slug);
-
-    Task<bool> SlugExists(string slug, Guid? currentId = null);
-
-    Task<bool> HasPostsInCategory(long categoryId);
-
+    
     Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
     
     Task<IEnumerable<PostBase>> GetFeaturedPosts(int count);
 
     Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count);
+
+    Task<IEnumerable<PostBase>> GetMostCommentPosts(int count);
+
+    Task<IEnumerable<PostBase>> GetMostLikedPosts(int count);
+
+    Task<bool> SlugExists(string slug, Guid? currentId = null);
+
+    Task<bool> HasPostsInCategory(long categoryId);
 
     Task ApprovePost(PostBase post);
 
