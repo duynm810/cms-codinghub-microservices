@@ -19,4 +19,7 @@ public class CategoryRepository(CategoryContext dbContext)
 
     public async Task<CategoryBase?> GetCategoryBySlug(string slug) =>
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<CategoryBase?>> GetAllNonStaticPageCategories() =>
+        await FindByCondition(x => !x.IsStaticPage).ToListAsync();
 }

@@ -6,6 +6,9 @@ public static class DisplaySettingsConsts
     {
         public const string FeaturedPosts = "Post.Featured";
         public const string RelatedPosts = "Post.Related";
+        public const string MostCommentsPosts = "Post.MostComments";
+        public const string MostLikedPosts = "Post.MostLiked";
+        public const string PostsByNonStaticPageCategory = "Post.NonStaticPageCategory";
     }
 
     public static class Series

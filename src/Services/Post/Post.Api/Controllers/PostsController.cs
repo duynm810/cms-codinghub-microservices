@@ -14,10 +14,13 @@ using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
+using Post.Application.Features.V1.Posts.Queries.GetMostCommentPosts;
+using Post.Application.Features.V1.Posts.Queries.GetMostLikedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
+using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
 using Shared.Extensions;
@@ -132,6 +135,36 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> GetFeaturedPosts()
     {
         var query = new GetFeaturedPostsQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("most-commented")]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetMostCommentedPosts()
+    {
+        var query = new GetMostCommentPostsQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
+    [HttpGet("most-liked")]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetMostLikedPosts()
+    {
+        var query = new GetMostLikedPostsQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("by-non-static-page-category")]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<CategoryWithPostsModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostsByNonStaticPageCategory()
+    {
+        var query = new GetPostsByNonStaticPageCategoryQuery();
         var result = await mediator.Send(query);
         return Ok(result);
     }

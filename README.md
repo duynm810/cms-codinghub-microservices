@@ -62,7 +62,7 @@ dotnet ef database update
 - Post Api
 
 ```Powershell
- dotnet ef migrations add "Add_Published_Date_Field" --project Post.Infrastructure --startup-project Post.Api
+ dotnet ef migrations add "Add_Some_New_Field_Post" --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ```Powershell

@@ -8,6 +8,8 @@ namespace Post.Infrastructure.Persistence;
 
 public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
 {
+    private static readonly Random Random = new Random();
+
     public async Task InitialiseAsync()
     {
         try
@@ -38,15 +40,14 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
         }
     }
 
+    private static DateTimeOffset RandomDate()
+    {
+        var range = (DateTime.Today - DateTime.Today.AddYears(-2)).Days;
+        return DateTime.Today.AddDays(-Random.Next(range));
+    }
+
     private async Task TrySeedAsync()
     {
-        var random = new Random();
-
-        DateTime RandomDate()
-        {
-            return new DateTime(2023, 1, 1).AddDays(random.Next(0, 365));
-        }
-
         if (!context.Posts.Any())
         {
             var posts = new List<PostBase>
@@ -67,12 +68,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 10,
+                    LikeCount = 50,
+                    IsPinned = false,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kiến trúc microservices",
+                    Title = "Kiến trúc microservices",
                     Slug = "kien-truc-microservices",
                     Content = "Các mẫu kiến trúc microservices...",
                     Summary = "Kiến trúc hệ thống với microservices...",
@@ -85,12 +90,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 3,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 15,
+                    LikeCount = 60,
+                    IsPinned = true,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Thủ thuật sử dụng Angular",
+                    Title = "Thủ thuật sử dụng Angular",
                     Slug = "thu-thuat-su-dung-angular",
                     Content = "Các thủ thuật hữu ích khi làm việc với Angular...",
                     Summary = "Thủ thuật Angular giúp tăng hiệu suất...",
@@ -105,12 +114,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 4,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 20,
+                    LikeCount = 70,
+                    IsPinned = false,
+                    IsFeatured = false
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Tối ưu hóa hiệu suất .NET",
+                    Title = "Tối ưu hóa hiệu suất .NET",
                     Slug = "toi-uu-hoa-hieu-suat-net",
                     Content = "Các cách tối ưu hóa hiệu suất khi sử dụng .NET...",
                     Summary = "Tối ưu hóa .NET để cải thiện hiệu suất hệ thống...",
@@ -125,12 +138,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 12,
+                    LikeCount = 55,
+                    IsPinned = true,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Xây dựng hệ thống chịu tải cao",
+                    Title = "Xây dựng hệ thống chịu tải cao",
                     Slug = "xay-dung-he-thong-chiu-tai-cao",
                     Content = "Hướng dẫn xây dựng hệ thống chịu tải cao...",
                     Summary = "Các phương pháp và công cụ để xây dựng hệ thống chịu tải cao...",
@@ -143,12 +160,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 3,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 18,
+                    LikeCount = 65,
+                    IsPinned = false,
+                    IsFeatured = false
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kinh nghiệm phát triển ứng dụng di động",
+                    Title = "Kinh nghiệm phát triển ứng dụng di động",
                     Slug = "kinh-nghiem-phat-trien-ung-dung-di-dong",
                     Content = "Chia sẻ kinh nghiệm phát triển ứng dụng di động...",
                     Summary = "Các kinh nghiệm quý báu khi phát triển ứng dụng di động...",
@@ -160,12 +181,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Status = PostStatusEnum.Draft,
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 22,
+                    LikeCount = 80,
+                    IsPinned = true,
+                    IsFeatured = false
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Thủ thuật tối ưu hóa ReactJS",
+                    Title = "Thủ thuật tối ưu hóa ReactJS",
                     Slug = "thu-thuat-toi-uu-hoa-reactjs",
                     Content = "Các thủ thuật giúp tối ưu hóa hiệu suất của ReactJS...",
                     Summary = "Tối ưu hóa ReactJS để tăng tốc độ tải và hiệu suất...",
@@ -180,12 +205,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 4,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 16,
+                    LikeCount = 75,
+                    IsPinned = false,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kiến trúc serverless",
+                    Title = "Kiến trúc serverless",
                     Slug = "kien-truc-serverless",
                     Content = "Giới thiệu về kiến trúc serverless và các ứng dụng...",
                     Summary = "Lợi ích và thách thức của kiến trúc serverless...",
@@ -197,12 +226,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Status = PostStatusEnum.WaitingForApproval,
                     CreatedDate = RandomDate(),
                     CategoryId = 3,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 11,
+                    LikeCount = 45,
+                    IsPinned = false,
+                    IsFeatured = false
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kinh nghiệm học lập trình",
+                    Title = "Kinh nghiệm học lập trình",
                     Slug = "kinh-nghiem-hoc-lap-trinh",
                     Content = "Chia sẻ kinh nghiệm và phương pháp học lập trình hiệu quả...",
                     Summary = "Các mẹo và chiến lược học lập trình nhanh chóng...",
@@ -214,12 +247,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Status = PostStatusEnum.Rejected,
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 13,
+                    LikeCount = 35,
+                    IsPinned = false,
+                    IsFeatured = false
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Thủ thuật sử dụng Docker",
+                    Title = "Thủ thuật sử dụng Docker",
                     Slug = "thu-thuat-su-dung-docker",
                     Content = "Các thủ thuật và mẹo khi làm việc với Docker...",
                     Summary = "Tối ưu hóa Docker để quản lý container hiệu quả...",
@@ -234,12 +271,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 4,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 19,
+                    LikeCount = 70,
+                    IsPinned = true,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Phát triển ứng dụng web với .NET và Angular",
+                    Title = "Phát triển ứng dụng web với .NET và Angular",
                     Slug = "phat-trien-ung-dung-web-voi-net-va-angular",
                     Content = "Hướng dẫn phát triển ứng dụng web sử dụng .NET và Angular...",
                     Summary = "Các bước và kinh nghiệm trong việc phát triển ứng dụng web với .NET và Angular...",
@@ -252,12 +293,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 24,
+                    LikeCount = 85,
+                    IsPinned = true,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Thiết kế API RESTful hiệu quả",
+                    Title = "Thiết kế API RESTful hiệu quả",
                     Slug = "thiet-ke-api-restful-hieu-qua",
                     Content = "Các nguyên tắc và hướng dẫn để thiết kế API RESTful hiệu quả...",
                     Summary = "Tìm hiểu về cách thiết kế API RESTful để đảm bảo tính dễ dùng và hiệu quả...",
@@ -270,12 +315,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 3,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 21,
+                    LikeCount = 75,
+                    IsPinned = false,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Thủ thuật nâng cao hiệu suất hệ thống",
+                    Title = "Thủ thuật nâng cao hiệu suất hệ thống",
                     Slug = "thu-thuat-nang-cao-hieu-suat-he-thong",
                     Content = "Các thủ thuật giúp nâng cao hiệu suất hệ thống...",
                     Summary = "Các biện pháp và kỹ thuật để tối ưu hóa hiệu suất hệ thống...",
@@ -290,12 +339,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 4,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 22,
+                    LikeCount = 80,
+                    IsPinned = true,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kinh nghiệm phát triển dự án Agile",
+                    Title = "Kinh nghiệm phát triển dự án Agile",
                     Slug = "kinh-nghiem-phat-trien-du-an-agile",
                     Content = "Chia sẻ kinh nghiệm và phương pháp phát triển dự án theo Agile...",
                     Summary = "Các bước và chiến lược để phát triển dự án thành công theo Agile...",
@@ -308,12 +361,16 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 2,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 14,
+                    LikeCount = 50,
+                    IsPinned = false,
+                    IsFeatured = true
                 },
                 new()
                 {
                     Id = Guid.NewGuid(),
-                    Title ="Kiến trúc micro frontends",
+                    Title = "Kiến trúc micro frontends",
                     Slug = "kien-truc-micro-frontends",
                     Content = "Giới thiệu về kiến trúc micro frontends và cách triển khai...",
                     Summary = "Lợi ích và thách thức của kiến trúc micro frontends...",
@@ -326,7 +383,11 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     PublishedDate = RandomDate(),
                     CreatedDate = RandomDate(),
                     CategoryId = 3,
-                    AuthorUserId = Guid.NewGuid()
+                    AuthorUserId = Guid.NewGuid(),
+                    CommentCount = 17,
+                    LikeCount = 65,
+                    IsPinned = true,
+                    IsFeatured = false
                 }
             };
 

@@ -1,8 +1,8 @@
 using AutoMapper;
 using Category.Grpc.Protos;
 using Category.Grpc.Repositories.Interfaces;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
-using Shared.Constants;
 using ILogger = Serilog.ILogger;
 
 namespace Category.Grpc.Services;
@@ -38,7 +38,7 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         {
             logger.Error(e, "{MethodName}. Error occurred while getting category by ID: {CategoryId}. Message: {ErrorMessage}",
                 methodName, request.Id, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw new RpcException(new Status(StatusCode.Internal, "An occurred while getting category by ID"));
         }
     }
 
@@ -65,9 +65,9 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         catch (Exception e)
         {
             logger.Error(e,
-                "{MethodName}. Error occurred while getting categories by IDs: {CategoryIds}. Message: {ErrorMessage}",
+                "{MethodName}. Error occurred while getting categories by IDs: {CategoryIds}. Message: {ErrorMessage}", 
                 methodName, request.Ids, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting categories by IDs"));
         }
     }
 
@@ -97,7 +97,37 @@ public class CategoryService(ICategoryRepository categoryRepository, IMapper map
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}. Error occurred while getting category by Slug: {CategorySlug}. Message: {ErrorMessage}", methodName, request.Slug, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting category by Slug"));
+        }
+    }
+
+    public override async Task<GetAllNonStaticPageCategoriesResponse> GetAllNonStaticPageCategories(Empty request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetAllNonStaticPageCategories);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving all non-static page categories", methodName);
+
+            var categories = await categoryRepository.GetAllNonStaticPageCategories();
+            var categoryList = categories.ToList();
+            
+            if (categoryList == null || categoryList.Count == 0)
+            {
+                logger.Warning("{MethodName} - No non-static page categories found", methodName);
+                throw new RpcException(new Status(StatusCode.NotFound, "No non-static page categories found."));
+            }
+
+            var data = mapper.Map<GetAllNonStaticPageCategoriesResponse>(categories);
+            
+            logger.Information("END {MethodName} - Successfully retrieved {CategoryCount} non-static page categories", methodName, data.Categories.Count);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}. Error occurred while retrieving non-static page categories. Message: {ErrorMessage}", methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while retrieving non-static page categories."));
         }
     }
 }

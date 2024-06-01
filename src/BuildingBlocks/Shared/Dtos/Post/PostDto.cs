@@ -4,9 +4,9 @@ public class PostDto
 {
     public Guid Id { get; set; }
 
-    public required string Title { get; set; }
+    public string? Title { get; set; }
 
-    public required string Slug { get; set; }
+    public string? Slug { get; set; }
 
     public string? Content { get; set; }
 
@@ -21,6 +21,14 @@ public class PostDto
     public string? Tags { get; set; }
 
     public int ViewCount { get; set; }
+
+    public int CommentCount { get; set; }
+
+    public int LikeCount { get; set; }
+
+    public bool IsPinned { get; set; }
+
+    public bool IsFeatured { get; set; }
 
     public bool IsPaid { get; set; }
 

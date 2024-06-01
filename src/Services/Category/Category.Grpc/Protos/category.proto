@@ -1,11 +1,14 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto"; 
+
 option csharp_namespace = "Category.Grpc.Protos";
 
 service CategoryProtoService {
   rpc GetCategoryById(GetCategoryByIdRequest) returns (CategoryModel);
   rpc GetCategoriesByIds(GetCategoriesByIdsRequest) returns (GetCategoriesByIdsResponse);
   rpc GetCategoryBySlug(GetCategoryBySlugRequest) returns (CategoryModel);
+  rpc GetAllNonStaticPageCategories(google.protobuf.Empty) returns (GetAllNonStaticPageCategoriesResponse);
 }
 
 message CategoryModel {
@@ -30,5 +33,9 @@ message GetCategoryBySlugRequest {
 }
 
 message GetCategoriesByIdsResponse {
+  repeated CategoryModel categories = 1;
+}
+
+message GetAllNonStaticPageCategoriesResponse {
   repeated CategoryModel categories = 1;
 }

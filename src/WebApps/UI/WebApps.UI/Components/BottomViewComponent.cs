@@ -5,18 +5,18 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class BottomViewComponent(ICategoryApiClient categoryApiClient, ILogger logger) : ViewComponent
+public class BottomViewComponent(IPostApiClient postApiClient, ILogger logger) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         try
         {
-            var categories = await categoryApiClient.GetCategories();
-            if (categories is { IsSuccess: true, Data: not null })
+            var postsByNonStaticPageCategory = await postApiClient.GetPostsByNonStaticPageCategory();
+            if (postsByNonStaticPageCategory is { IsSuccess: true, Data: not null })
             {
                 var viewModel = new BottomViewModel
                 {
-                    Categories = categories.Data.Where(x => !x.IsStaticPage)
+                    PostsWithCategory = postsByNonStaticPageCategory.Data
                 };
 
                 return View(viewModel);
