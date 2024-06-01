@@ -72,7 +72,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
         return Ok(result);
     }
-    
+
     [HttpGet("by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]

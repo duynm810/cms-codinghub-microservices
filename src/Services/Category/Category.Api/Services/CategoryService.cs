@@ -232,7 +232,7 @@ public class CategoryService(
 
         return result;
     }
-    
+
     public async Task<ApiResult<CategoryDto>> GetCategoryBySlug(string slug)
     {
         var result = new ApiResult<CategoryDto>();
@@ -253,7 +253,8 @@ public class CategoryService(
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
 
-            logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}", methodName,
+            logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}",
+                methodName,
                 slug);
         }
         catch (Exception e)

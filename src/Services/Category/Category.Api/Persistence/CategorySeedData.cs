@@ -84,7 +84,8 @@ public static class CategorySeedData
                 Id = 6,
                 Name = "Liên hệ",
                 Slug = "contact",
-                SeoDescription = "Liên hệ để thảo luận về các cơ hội hợp tác hoặc hỏi tôi bất cứ điều gì về lập trình và công nghệ.",
+                SeoDescription =
+                    "Liên hệ để thảo luận về các cơ hội hợp tác hoặc hỏi tôi bất cứ điều gì về lập trình và công nghệ.",
                 ParentId = null,
                 SortOrder = 6,
                 IsStaticPage = true,

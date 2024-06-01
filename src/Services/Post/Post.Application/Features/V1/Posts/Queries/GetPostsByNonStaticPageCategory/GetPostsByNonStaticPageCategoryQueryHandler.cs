@@ -43,6 +43,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                     {
                         Id = post.Id,
                         Title = post.Title,
+                        Slug = post.Slug,
                         Thumbnail = post.Thumbnail,
                         PublishedDate = post.PublishedDate,
                         ViewCount = post.ViewCount
@@ -52,6 +53,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                     {
                         CategoryId = category.Id,
                         CategoryName = category.Name,
+                        CategorySlug = category.Slug,
                         Posts = postSummaries
                     };
 

@@ -1,6 +1,7 @@
 using Shared.Dtos.Post;
 using Shared.Dtos.PostInSeries;
 using Shared.Responses;
+using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
 
 namespace WebApps.UI.Services;
@@ -23,7 +24,7 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetAsync<PostDetailDto>($"/posts/by-slug/{slug}");
     }
-    
+
     public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)
     {
         return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
@@ -45,5 +46,20 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetAsync<PagedResponse<PostInSeriesDto>>(
             $"/post-in-series/by-slug/{seriesSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+    }
+
+    public async Task<ApiResult<List<PostDto>>> GetMostCommentedPosts()
+    {
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented");
+    }
+    
+    public async Task<ApiResult<List<PostDto>>> GetMostLikedPosts()
+    {
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-liked");
+    }
+
+    public async Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory()
+    {
+        return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category");
     }
 }

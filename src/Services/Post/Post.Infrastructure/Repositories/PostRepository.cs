@@ -97,7 +97,8 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     }
 
     public async Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count) =>
-        await FindByCondition(x => x.CategoryId == categoryId).Take(count).ToListAsync();
+        await FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.PublishedDate).Take(count).ToListAsync();
 
     public async Task<PostBase?> GetPostBySlug(string slug) => 
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;

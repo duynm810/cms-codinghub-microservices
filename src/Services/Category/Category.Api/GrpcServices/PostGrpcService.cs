@@ -4,7 +4,8 @@ using ILogger = Serilog.ILogger;
 
 namespace Category.Api.GrpcServices;
 
-public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoServiceClient, ILogger logger) : IPostGrpcService
+public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoServiceClient, ILogger logger)
+    : IPostGrpcService
 {
     public async Task<bool> HasPostsInCategory(long categoryId)
     {

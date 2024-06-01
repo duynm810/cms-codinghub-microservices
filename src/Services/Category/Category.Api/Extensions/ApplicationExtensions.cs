@@ -32,14 +32,14 @@ public static class ApplicationExtensions
         });
 
         app.UseMiddleware<ErrorWrappingMiddleware>();
-        
+
         // Enables routing in the application.
         app.UseRouting();
 
         app.UseAuthentication();
 
         app.UseAuthorization();
-        
+
         app.MapHealthChecks("/hc", new HealthCheckOptions()
         {
             Predicate = _ => true,

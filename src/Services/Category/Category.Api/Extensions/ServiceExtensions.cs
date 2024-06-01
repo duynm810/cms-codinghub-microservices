@@ -32,7 +32,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register database context
         services.AddDatabaseContext();
 
@@ -76,9 +76,10 @@ public static class ServiceExtensions
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
 
         services.AddSingleton(grpcSettings);
-        
+
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
-                           ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+                                ?? throw new ArgumentNullException(
+                                    $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
     }

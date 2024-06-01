@@ -1,6 +1,6 @@
-namespace Post.Application.Commons.Models;
+namespace Shared.Dtos.Post;
 
-public class CategoryWithPostsModel
+public class PostsByNonStaticPageCategoryDto
 {
     public long CategoryId { get; set; }
 
@@ -8,5 +8,5 @@ public class CategoryWithPostsModel
     
     public string? CategorySlug { get; set; }
 
-    public List<PostModel>? Posts { get; set; }
+    public List<PostDto>? Posts { get; set; }
 }
