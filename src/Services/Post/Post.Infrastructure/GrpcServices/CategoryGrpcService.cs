@@ -1,5 +1,6 @@
 using AutoMapper;
 using Category.Grpc.Protos;
+using Google.Protobuf.WellKnownTypes;
 using Post.Domain.GrpcServices;
 using Serilog;
 using Shared.Dtos.Category;
@@ -46,7 +47,7 @@ public class CategoryGrpcService(
     public async Task<CategoryDto?> GetCategoryBySlug(string slug)
     {
         try
-        {
+        { 
             var request = new GetCategoryBySlugRequest() { Slug = slug };
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
             var data = mapper.Map<CategoryDto>(result);
@@ -55,6 +56,21 @@ public class CategoryGrpcService(
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryBySlug), e);
+            throw;
+        }
+    }
+
+    public async Task<IEnumerable<CategoryDto?>> GetAllNonStaticPageCategories()
+    {
+        try
+        {
+            var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
+            var data = mapper.Map<IEnumerable<CategoryDto>>(result);
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetAllNonStaticPageCategories), e);
             throw;
         }
     }

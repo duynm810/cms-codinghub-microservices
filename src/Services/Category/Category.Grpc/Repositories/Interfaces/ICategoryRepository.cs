@@ -11,4 +11,6 @@ public interface ICategoryRepository : IRepositoryQueryBase<CategoryBase, long, 
     Task<IEnumerable<CategoryBase>> GetCategoriesByIds(long[] ids);
 
     Task<CategoryBase?> GetCategoryBySlug(string slug);
+
+    Task<IEnumerable<CategoryBase?>> GetAllNonStaticPageCategories();
 }
