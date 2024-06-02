@@ -35,8 +35,8 @@ public static class CategorySeedData
             new()
             {
                 Id = 2,
-                Name = "System Architecture",
-                Slug = "system-architecture",
+                Name = "News",
+                Slug = "news",
                 SeoDescription = "Knowledge about system architecture helps you design and build software efficiently.",
                 ParentId = null,
                 Color = "text-warning",
@@ -76,18 +76,6 @@ public static class CategorySeedData
                 SeoDescription = "Learn more about me and my journey in the world of software development.",
                 ParentId = null,
                 SortOrder = 5,
-                IsStaticPage = true,
-                IsActive = true
-            },
-            new()
-            {
-                Id = 6,
-                Name = "Contact",
-                Slug = "contact",
-                SeoDescription =
-                    "Contact me to discuss collaboration opportunities or ask me anything about programming and technology.",
-                ParentId = null,
-                SortOrder = 6,
                 IsStaticPage = true,
                 IsActive = true
             }

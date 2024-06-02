@@ -21,15 +21,6 @@ public static class RouteMap
 
         #endregion
 
-        #region Contact
-
-        app.MapControllerRoute(
-            "contact",
-            "/contact",
-            new { controller = "Contact", action = "Index" });
-
-        #endregion
-
         #region Accounts
 
         app.MapControllerRoute(
