@@ -269,3 +269,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "6020:80"
+  
+  ui:
+    container_name: ui
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - "5000:80"

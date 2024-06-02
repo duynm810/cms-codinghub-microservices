@@ -107,6 +107,12 @@ services:
     build:
       context: .
       dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
+      
+  ui:
+    image: ${DOCKER_REGISTRY-}ui:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: WebApps/UI/WebApps.UI/Dockerfile
 
 #network
 networks:
