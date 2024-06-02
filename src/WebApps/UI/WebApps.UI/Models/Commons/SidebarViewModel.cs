@@ -1,8 +1,8 @@
-using Shared.Dtos.Series;
+using Shared.Dtos.Post;
 
 namespace WebApps.UI.Models.Commons;
 
 public class SidebarViewModel
 {
-    public IEnumerable<SeriesDto> Series { get; set; } = default!;
+    public IEnumerable<PostDto> Posts { get; set; } = default!;
 }

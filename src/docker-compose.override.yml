@@ -184,7 +184,7 @@ services:
       - "DisplaySettings:Config:Post.Related=2"
       - "DisplaySettings:Config:Post.Featured=4"
       - "DisplaySettings:Config:Post.Pinned=4"
-      - "DisplaySettings:Config:Post.MostComments=4"
+      - "DisplaySettings:Config:Post.MostComments=6"
       - "DisplaySettings:Config:Post.MostLiked=4"
       - "DisplaySettings:Config:Post.NonStaticPageCategory=3"
     depends_on:

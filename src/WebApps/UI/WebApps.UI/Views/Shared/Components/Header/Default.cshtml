@@ -1,100 +1,91 @@
-@model WebApps.UI.Models.Commons.HeaderViewModel
+@model HeaderViewModel
 
-<header class="main-header header-style-1 font-heading">
-    <div class="header-top">
-        <div class="container">
-            <div class="row pt-20 pb-20">
-                <div class="col-md-3 col-xs-6">
-                    <a href="/">
-                        <img class="logo" src="~/imgs/theme/logo.png" alt="">
-                    </a>
+<div class="header-top">
+    <div class="container">
+        <div class="row pt-20 pb-20">
+            <div class="col-md-3 col-xs-6">
+                <a href="/">
+                    <img class="logo" src="~/imgs/theme/logo.png" alt="">
+                </a>
+            </div>
+            <div class="col-md-9 col-xs-6 text-end header-top-right ">
+                <button class="search-icon d-none d-md-inline">
+                    <span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>Search</span>
+                </button>
+                <div class="dark-light-mode-cover">
+                    <a class="dark-light-mode" href="#"></a>
                 </div>
-                <div class="col-md-9 col-xs-6 text-end header-top-right ">
-                    <button class="search-icon d-none d-md-inline">
-                        <span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>Search</span>
-                    </button>
-                    <div class="dark-light-mode-cover">
-                        <a class="dark-light-mode" href="#"></a>
-                    </div>
-                    <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
-                    @if (User.Identity is { IsAuthenticated: true })
+                <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
+                @if (User.Identity is { IsAuthenticated: true })
+                {
+                    <ul class="list-inline nav-topbar d-none d-md-inline">
+                        <li class="list-inline-item menu-item-has-children">
+                            <a href="#">Xin chào, @User.Identity.Name</a>
+                            <ul class="sub-menu font-small">
+                                <li>
+                                    <a asp-controller="Accounts" asp-action="Profile">Profile</a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Accounts" asp-action="Logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                }
+                else
+                {
+                    <a asp-controller="Accounts" asp-action="Login" class="btn btn-success btn-sm shadow-sm ml-2">Login</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="header-sticky">
+    <div class="container align-self-center position-relative">
+        <div class="mobile_menu d-lg-none d-block"></div>
+        <div class="main-nav d-none d-lg-block float-start">
+            <nav>
+                <!--Desktop menu-->
+                <ul class="main-menu d-none d-lg-inline font-small">
+                    @if (Model.Categories.Any())
                     {
-                        <ul class="list-inline nav-topbar d-none d-md-inline">
-                            <li class="list-inline-item menu-item-has-children">
-                                <a href="#">Xin chào, @User.Identity.Name</a>
-                                <ul class="sub-menu font-small">
-                                    <li>
-                                        <a asp-controller="Accounts" asp-action="Profile">Profile</a>
-                                    </li>
-                                    <li>
-                                        <a asp-controller="Accounts" asp-action="Logout">Logout</a>
-                                    </li>
-                                </ul>
+                        foreach (var category in Model.Categories)
+                        {
+                            var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
+                            <li>
+                                <a href="@url">
+                                    @if (!string.IsNullOrEmpty(category.Icon))
+                                    {
+                                        <i class="elegant-icon @category.Icon mr-5"></i>
+                                    }
+                                    @category.Name
+                                </a>
                             </li>
-                        </ul>
-                    }
-                    else
-                    {
-                        <a asp-controller="Accounts" asp-action="Login" class="btn btn-success btn-sm shadow-sm ml-2">Login</a>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="header-sticky">
-        <div class="container align-self-center position-relative">
-            <div class="mobile_menu d-lg-none d-block"></div>
-            <div class="main-nav d-none d-lg-block float-start">
-                <nav>
-                    <!--Desktop menu-->
-                    <ul class="main-menu d-none d-lg-inline font-small">
-                        @if (Model.Categories.Any())
-                        {
-                            foreach (var category in Model.Categories)
-                            {
-                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
-                                <li>
-                                    <a href="@url">
-                                        @if (!string.IsNullOrEmpty(category.Icon))
-                                        {
-                                            <i class="elegant-icon @category.Icon mr-5"></i>
-                                        }
-                                        @category.Name
-                                    </a>
-                                </li>
-                            }
                         }
-                    </ul>
-                    <!--Mobile menu-->
-                    <ul id="mobile-menu" class="d-block d-lg-none text-muted">
-                        @if (Model.Categories.Any())
-                        {
-                            foreach (var category in Model.Categories)
-                            {
-                                var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
-                                <li>
-                                    <a href="@url">@category.Name</a>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </nav>
-            </div>
-            <div class="float-end header-tools text-muted font-small">
-                <ul class="header-social-network d-inline-block list-inline mr-15">
-                    <li class="list-inline-item">
-                        <a class="social-icon fb text-xs-center" target="_blank" href="#">
-                            <i class="elegant-icon social_facebook"></i>
-                        </a>
-                    </li>
+                    }
                 </ul>
-                <div class="off-canvas-toggle-cover d-inline-block">
-                    <div class="off-canvas-toggle hidden d-inline-block" id="off-canvas-toggle">
-                        <span></span>
-                    </div>
+                <!--Mobile menu-->
+                <ul id="mobile-menu" class="d-block d-lg-none text-muted">
+                    @if (Model.Categories.Any())
+                    {
+                        foreach (var category in Model.Categories)
+                        {
+                            var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
+                            <li>
+                                <a href="@url">@category.Name</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </nav>
+        </div>
+        <div class="float-end header-tools text-muted font-small">
+            <div class="off-canvas-toggle-cover d-inline-block">
+                <div class="off-canvas-toggle hidden d-inline-block" id="off-canvas-toggle">
+                    <span></span>
                 </div>
             </div>
-            <div class="clearfix"></div>
         </div>
+        <div class="clearfix"></div>
     </div>
-</header>
+</div>

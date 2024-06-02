@@ -5,18 +5,18 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SidebarViewComponent(IPostApiClient postApiClient, ILogger logger) : ViewComponent
+public class CanvasViewComponent(ISeriesApiClient seriesApiClient, ILogger logger) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         try
         {
-            var posts = await postApiClient.GetMostCommentedPosts();
-            if (posts is { IsSuccess: true, Data: not null })
+            var series = await seriesApiClient.GetSeries();
+            if (series is { IsSuccess: true, Data: not null })
             {
-                var items = new SidebarViewModel
+                var items = new CanvasViewModel
                 {
-                    Posts = posts.Data
+                    Series = series.Data
                 };
 
                 return View(items);
