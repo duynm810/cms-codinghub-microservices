@@ -4,7 +4,7 @@ using Shared.Responses;
 
 namespace WebApps.UI.Models.Commons;
 
-public class HomeViewModel
+public class HomeViewModel : BaseViewModel
 {
     public IEnumerable<PostDto> FeaturedPosts { get; set; } = default!;
     

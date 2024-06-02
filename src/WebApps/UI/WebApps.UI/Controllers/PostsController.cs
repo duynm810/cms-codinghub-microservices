@@ -40,6 +40,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         {
             var items = new PostDetailViewModel()
             {
+                MainClass = "bg-grey pb-30",
                 Post = posts.Data
             };
             

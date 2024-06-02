@@ -1,10 +1,11 @@
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.Series;
 using Shared.Responses;
+using WebApps.UI.Models.Commons;
 
 namespace WebApps.UI.Models.Posts;
 
-public class PostsInSeriesViewModel
+public class PostsInSeriesViewModel : BaseViewModel
 {
     public SeriesDto Series { get; set; } = default!;
     
