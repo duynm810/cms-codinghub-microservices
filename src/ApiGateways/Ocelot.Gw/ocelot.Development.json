@@ -142,6 +142,21 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/pinned",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/pinned",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/most-commented",
       "UpstreamHttpMethod": [
         "GET"

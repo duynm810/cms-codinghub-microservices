@@ -8,6 +8,7 @@ namespace WebApps.UI.Services.Interfaces;
 public interface IPostApiClient
 {
     Task<ApiResult<List<PostDto>>> GetFeaturedPosts();
+    Task<ApiResult<List<PostDto>>> GetPinnedPosts();
 
     Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
     

@@ -16,6 +16,7 @@ using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 using Post.Application.Features.V1.Posts.Queries.GetMostCommentPosts;
 using Post.Application.Features.V1.Posts.Queries.GetMostLikedPosts;
+using Post.Application.Features.V1.Posts.Queries.GetPinnedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
@@ -138,7 +139,17 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
+    [HttpGet("pinned")]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPinnedPosts()
+    {
+        var query = new GetPinnedPostsQuery();
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+
     [HttpGet("most-commented")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
@@ -158,7 +169,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-    
+
     [HttpGet("by-non-static-page-category")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<CategoryWithPostsModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]

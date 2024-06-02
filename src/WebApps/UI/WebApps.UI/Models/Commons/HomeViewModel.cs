@@ -7,6 +7,8 @@ namespace WebApps.UI.Models.Commons;
 public class HomeViewModel
 {
     public IEnumerable<PostDto> FeaturedPosts { get; set; } = default!;
+    
+    public IEnumerable<PostDto> PinnedPosts { get; set; } = default!;
 
     public PagedResponse<PostDto> LatestPosts { get; set; } = default!;
     

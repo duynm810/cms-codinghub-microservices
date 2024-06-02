@@ -4,7 +4,7 @@
     var mostLikedPosts = Model.MostLikedPosts.ToList();
 }
 <div class="widget-header-1 position-relative mb-30  wow fadeInUp animated">
-    <h5 class="mt-5 mb-30">Most Liked Posts</h5>
+    <h5 class="mt-5 mb-30">Liked Posts</h5>
 </div>
 <div class="loop-list loop-list-style-1">
     <div class="row">
@@ -44,7 +44,7 @@
                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
                                     <span class="post-on">@item.CreatedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
                                     <span class="time-reading has-dot">12 mins read</span>
-                                    <span class="post-by has-dot">23k views</span>
+                                    <span class="post-by has-dot">@item.ViewCount views</span>
                                 </div>
                             </div>
                         </div>

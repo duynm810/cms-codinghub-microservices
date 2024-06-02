@@ -51,7 +51,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         }
 
         query = query.OrderByDescending(x => x.PublishedDate);
-        
+
         var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
 
         var response = new PagedResponse<PostBase>
@@ -79,7 +79,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return response;
     }
-    
+
     public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
@@ -100,12 +100,35 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         await FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate).Take(count).ToListAsync();
 
-    public async Task<PostBase?> GetPostBySlug(string slug) => 
+    public async Task<PostBase?> GetPostBySlug(string slug) =>
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
-    
+
     public async Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids)
     {
         return await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
+    }
+
+    public async Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count)
+    {
+        var relatedPostsQuery = FindByCondition(x => x.Id != post.Id
+                                                     && x.Status == PostStatusEnum.Published);
+
+        // Take double the count to ensure sufficient posts from both criteria
+        // Tăng số lượng kết quả tạm thời lên gấp đôi (count * 2) đảm bảo đủ bài viết từ cả hai tiêu chí, thậm chí sau khi loại bỏ trùng lặp.
+        var relatedPosts = await relatedPostsQuery
+            .Where(x => x.CategoryId == post.CategoryId || x.AuthorUserId == post.AuthorUserId)
+            .OrderByDescending(x => x.ViewCount)
+            .Take(count * 2)
+            .ToListAsync();
+
+        var finalRelatedPosts = relatedPosts
+            .GroupBy(x => x.Id)
+            .Select(g => g.First())
+            .OrderByDescending(x => x.ViewCount)
+            .Take(count)
+            .ToList();
+
+        return finalRelatedPosts;
     }
 
     public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count)
@@ -129,28 +152,27 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return featuredPosts;
     }
-    
-    public async Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count)
+
+    public async Task<IEnumerable<PostBase>> GetPinnedPosts(int count)
     {
-        var relatedPostsQuery = FindByCondition(x => x.Id != post.Id 
-                                                     && x.Status == PostStatusEnum.Published);
-
-        // Take double the count to ensure sufficient posts from both criteria
-        // Tăng số lượng kết quả tạm thời lên gấp đôi (count * 2) đảm bảo đủ bài viết từ cả hai tiêu chí, thậm chí sau khi loại bỏ trùng lặp.
-        var relatedPosts = await relatedPostsQuery
-            .Where(x => x.CategoryId == post.CategoryId || x.AuthorUserId == post.AuthorUserId)
-            .OrderByDescending(x => x.ViewCount)
-            .Take(count * 2)
-            .ToListAsync();
-
-        var finalRelatedPosts = relatedPosts
-            .GroupBy(x => x.Id) 
-            .Select(g => g.First())
+        // Get pinned posts first (Lấy các bài viết ghim trước)
+        var pinnedPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsPinned)
             .OrderByDescending(x => x.ViewCount)
             .Take(count)
-            .ToList();
+            .ToListAsync();
 
-        return finalRelatedPosts;
+        // If the number of pinned posts is less than required, add non-pinned posts (Nếu số lượng bài viết ghim ít hơn yêu cầu, bổ sung thêm các bài viết không ghim)
+        if (pinnedPosts.Count < count)
+        {
+            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsPinned)
+                .OrderByDescending(x => x.ViewCount)
+                .Take(count - pinnedPosts.Count)
+                .ToListAsync();
+
+            pinnedPosts.AddRange(additionalPosts);
+        }
+
+        return pinnedPosts;
     }
 
     public async Task<IEnumerable<PostBase>> GetMostCommentPosts(int count)
@@ -161,7 +183,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return await query.ToListAsync();
     }
-    
+
     public async Task<IEnumerable<PostBase>> GetMostLikedPosts(int count)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
