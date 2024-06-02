@@ -7,7 +7,7 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class HomeController(IPostApiClient postApiClient, ISeriesApiClient seriesApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class HomeController(IPostApiClient postApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
 {
     public async Task<IActionResult> Index(int page = 1)
     {
@@ -15,17 +15,17 @@ public class HomeController(IPostApiClient postApiClient, ISeriesApiClient serie
         
         var featuredPosts = await postApiClient.GetFeaturedPosts();
         var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
-        var series = await seriesApiClient.GetSeries();
+        var mostLikedPosts = await postApiClient.GetMostLikedPosts();
         
         if (featuredPosts is { IsSuccess: true, Data: not null } && 
             latestPosts is { IsSuccess: true, Data: not null } &&
-            series is { IsSuccess: true, Data: not null })
+            mostLikedPosts is { IsSuccess: true, Data: not null })
         {
             var items = new HomeViewModel
             {
                 FeaturedPosts = featuredPosts.Data,
                 LatestPosts = latestPosts.Data,
-                Series = series.Data
+                MostLikedPosts = mostLikedPosts.Data
             };
 
             return View(items);

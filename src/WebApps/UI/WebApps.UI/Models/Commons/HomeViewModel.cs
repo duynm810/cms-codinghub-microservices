@@ -10,5 +10,5 @@ public class HomeViewModel
 
     public PagedResponse<PostDto> LatestPosts { get; set; } = default!;
     
-    public IEnumerable<SeriesDto> Series { get; set; } = default!;
+    public IEnumerable<PostDto> MostLikedPosts { get; set; } = default!;
 }

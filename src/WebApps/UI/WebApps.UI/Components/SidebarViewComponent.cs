@@ -1,21 +1,28 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.Models;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SidebarViewComponent(ILogger logger) : ViewComponent
+public class SidebarViewComponent(ISeriesApiClient seriesApiClient, ILogger logger) : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
         try
         {
-            var items = new SidebarViewModel
+            var series = await seriesApiClient.GetSeries();
+            if (series is { IsSuccess: true, Data: not null })
             {
-            };
+                var items = new SidebarViewModel
+                {
+                    Series = series.Data
+                };
 
-            return View(items);
+                return View(items);
+            }
+            
+            return Content("No categories found.");
         }
         catch (Exception e)
         {

@@ -1,23 +1,23 @@
 @using System.Globalization
 @model HomeViewModel
 @{
-    var series = Model.Series.ToList();
+    var mostLikedPosts = Model.MostLikedPosts.ToList();
 }
 <div class="widget-header-1 position-relative mb-30  wow fadeInUp animated">
-    <h5 class="mt-5 mb-30">Series</h5>
+    <h5 class="mt-5 mb-30">Most Liked Posts</h5>
 </div>
 <div class="loop-list loop-list-style-1">
     <div class="row">
-        @if (series.Any())
+        @if (mostLikedPosts.Any())
         {
-            foreach (var item in series)
+            foreach (var item in mostLikedPosts)
             {
-                var seriesUrl = "/series/" + item.Slug;
-                
+                var postUrl = "/series/" + item.Slug;
+
                 <article class="col-md-6 mb-40 wow fadeInUp  animated">
                     <div class="post-card-1 border-radius-10 hover-up">
                         <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-6.jpg)">
-                            <a class="img-link" href="@seriesUrl"></a>
+                            <a class="img-link" href="@postUrl"></a>
                             <ul class="social-share">
                                 <li>
                                     <a href="#">
@@ -36,10 +36,10 @@
                             </div>
                             <div class="d-flex post-card-content">
                                 <h5 class="post-title mb-20 font-weight-900">
-                                    <a href="@seriesUrl">@item.Title</a>
+                                    <a href="@postUrl">@item.Title</a>
                                 </h5>
                                 <div class="post-excerpt mb-25 font-small text-muted">
-                                    <p>@item.Description</p>
+                                    <p>@item.Summary</p>
                                 </div>
                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
                                     <span class="post-on">@item.CreatedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>

@@ -23,9 +23,9 @@ public static class CategorySeedData
             new()
             {
                 Id = 1,
-                Name = "Trang chủ",
+                Name = "Home",
                 Slug = "home",
-                SeoDescription = "Chào mừng bạn đến với trang chủ.",
+                SeoDescription = "Welcome to the home page.",
                 ParentId = null,
                 Icon = "icon_house_alt",
                 SortOrder = 1,
@@ -35,9 +35,9 @@ public static class CategorySeedData
             new()
             {
                 Id = 2,
-                Name = "Kiến trúc hệ thống",
-                Slug = "kien-truc-he-thong",
-                SeoDescription = "Kiến thức về kiến trúc hệ thống giúp bạn thiết kế và xây dựng phần mềm hiệu quả.",
+                Name = "System Architecture",
+                Slug = "system-architecture",
+                SeoDescription = "Knowledge about system architecture helps you design and build software efficiently.",
                 ParentId = null,
                 Color = "text-warning",
                 SortOrder = 2,
@@ -47,9 +47,9 @@ public static class CategorySeedData
             new()
             {
                 Id = 3,
-                Name = "Kinh nghiệm thực tế",
-                Slug = "kinh-nghiem-thuc-te",
-                SeoDescription = "Những kinh nghiệm thực tế trong quá trình làm việc và phát triển phần mềm.",
+                Name = "Experience",
+                Slug = "experience",
+                SeoDescription = "Practical experiences in the process of working and developing software.",
                 ParentId = null,
                 Color = "text-danger",
                 SortOrder = 3,
@@ -59,9 +59,9 @@ public static class CategorySeedData
             new()
             {
                 Id = 4,
-                Name = "Thủ thuật",
-                Slug = "thu-thuat",
-                SeoDescription = "Thủ thuật hữu ích giúp bạn làm việc hiệu quả hơn với .NET và Angular.",
+                Name = "Tips and Tricks",
+                Slug = "tips-and-tricks",
+                SeoDescription = "Useful tips to help you work more efficiently with .NET and Angular.",
                 ParentId = null,
                 Color = "text-primary",
                 SortOrder = 4,
@@ -71,9 +71,9 @@ public static class CategorySeedData
             new()
             {
                 Id = 5,
-                Name = "Thông tin",
+                Name = "About Me",
                 Slug = "about-me",
-                SeoDescription = "Tìm hiểu thêm về tôi và hành trình của tôi trong thế giới phát triển phần mềm.",
+                SeoDescription = "Learn more about me and my journey in the world of software development.",
                 ParentId = null,
                 SortOrder = 5,
                 IsStaticPage = true,
@@ -82,10 +82,10 @@ public static class CategorySeedData
             new()
             {
                 Id = 6,
-                Name = "Liên hệ",
+                Name = "Contact",
                 Slug = "contact",
                 SeoDescription =
-                    "Liên hệ để thảo luận về các cơ hội hợp tác hoặc hỏi tôi bất cứ điều gì về lập trình và công nghệ.",
+                    "Contact me to discuss collaboration opportunities or ask me anything about programming and technology.",
                 ParentId = null,
                 SortOrder = 6,
                 IsStaticPage = true,
