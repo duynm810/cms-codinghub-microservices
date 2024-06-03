@@ -38,7 +38,7 @@ public static class ServiceExtensions
         // Register database context
         services.AddDatabaseContext();
         
-         // Register Redis
+        // Register Redis
         services.AddRedisConfiguration();
 
         // Register core services

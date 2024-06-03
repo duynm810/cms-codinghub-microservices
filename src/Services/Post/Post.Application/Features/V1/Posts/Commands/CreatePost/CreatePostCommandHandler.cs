@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
@@ -14,6 +15,7 @@ namespace Post.Application.Features.V1.Posts.Commands.CreatePost;
 public class CreatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
+    IDistributedCache redisCacheService,
     IMapper mapper,
     ILogger logger)
     : IRequestHandler<CreatePostCommand, ApiResult<Guid>>
@@ -55,6 +57,10 @@ public class CreatePostCommandHandler(
             var id = postRepository.CreatePost(post);
             await postRepository.SaveChangesAsync();
             result.Success(id);
+            
+            // Xóa cache liên quan
+            await redisCacheService.RemoveAsync("all_posts", cancellationToken);
+            await redisCacheService.RemoveAsync($"posts_by_category_{category.Slug}_page_1_size_10", cancellationToken);
 
             logger.Information("END {MethodName} - Post created successfully with ID: {PostId}", methodName, id);
         }

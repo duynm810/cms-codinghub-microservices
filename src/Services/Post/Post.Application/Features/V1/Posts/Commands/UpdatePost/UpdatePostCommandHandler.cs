@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
@@ -12,7 +13,12 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
+public class UpdatePostCommandHandler(
+    IPostRepository postRepository,
+    ICategoryGrpcService categoryGrpcService,
+    IDistributedCache redisCacheService,
+    IMapper mapper,
+    ILogger logger)
     : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
 {
     public async Task<ApiResult<PostModel>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
@@ -32,12 +38,13 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             // Check slug exists
             var slugExists = await postRepository.SlugExists(request.Slug, request.Id);
             if (slugExists)
             {
-                logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}", methodName, request.Id, request.Slug);
+                logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}",
+                    methodName, request.Id, request.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
@@ -57,12 +64,17 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
 
             // Set category id get by categories services
             updatePost.CategoryId = category.Id;
-            
+
             await postRepository.UpdatePost(updatePost);
 
             var data = mapper.Map<PostModel>(updatePost);
             result.Success(data);
-            
+
+            // Xóa cache liên quan
+            await redisCacheService.RemoveAsync("all_posts", cancellationToken);
+            await redisCacheService.RemoveAsync($"post_{request.Id}", cancellationToken);
+            await redisCacheService.RemoveAsync($"posts_by_category_{category.Slug}_page_1_size_10", cancellationToken);
+
             logger.Information("END {MethodName} - Post with ID {PostId} updated successfully", methodName, request.Id);
         }
         catch (Exception e)

@@ -1,5 +1,7 @@
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
@@ -13,6 +15,8 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCate
 public class GetPostsByNonStaticPageCategoryQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
+    IDistributedCache redisCacheService,
+    ISerializeService serializeService,
     DisplaySettings displaySettings,
     ILogger logger)
     : IRequestHandler<GetPostsByNonStaticPageCategoryQuery, ApiResult<IEnumerable<CategoryWithPostsModel>>>
@@ -24,6 +28,23 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
         const string methodName = nameof(GetPostsByNonStaticPageCategoryQuery);
         try
         {
+            logger.Information("BEGIN {MethodName} - Retrieving posts by non-static page categories", methodName);
+            
+            var cacheKey = "posts_by_non_static_page_category";
+            
+            // Kiểm tra cache
+            var cachedData = await redisCacheService.GetStringAsync(cacheKey, cancellationToken);
+            if (!string.IsNullOrEmpty(cachedData))
+            {
+                var cachedCategoriesWithPosts = serializeService.Deserialize<IEnumerable<CategoryWithPostsModel>>(cachedData);
+                if (cachedCategoriesWithPosts != null)
+                {
+                    result.Success(cachedCategoriesWithPosts);
+                    logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories from cache", methodName);
+                    return result;
+                }
+            }
+
             var nonStaticPageCategories = await categoryGrpcService.GetAllNonStaticPageCategories();
             
             var data = new List<CategoryWithPostsModel>();
@@ -62,6 +83,13 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
             }
             
             result.Success(data);
+            
+            // Lưu cache
+            var serializedData = serializeService.Serialize(data);
+            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
+            }, cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories", methodName);
         }

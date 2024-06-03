@@ -1,6 +1,8 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
@@ -16,6 +18,8 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
+    IDistributedCache redisCacheService,
+    ISerializeService serializeService,
     DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -29,6 +33,20 @@ public class GetPostBySlugQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
+            
+            var cacheKey = $"post_slug_{request.Slug}";
+            // Kiểm tra cache
+            var cachedPost = await redisCacheService.GetStringAsync(cacheKey, cancellationToken);
+            if (!string.IsNullOrEmpty(cachedPost))
+            {
+                var cachedData = serializeService.Deserialize<PostDetailModel>(cachedPost);
+                if (cachedData != null)
+                {
+                    result.Success(cachedData);
+                    logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}", methodName, request.Slug);
+                    return result;
+                }
+            }
 
             var post = await postRepository.GetPostBySlug(request.Slug);
             if (post == null)
@@ -69,6 +87,13 @@ public class GetPostBySlugQueryHandler(
             }
             
             result.Success(data);
+            
+            // Lưu cache
+            var serializedData = serializeService.Serialize(data);
+            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
+            }, cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName,
                 request.Slug);

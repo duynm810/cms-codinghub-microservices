@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
@@ -16,6 +17,7 @@ public class ApprovePostCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
+    IDistributedCache redisCacheService,
     ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
@@ -66,6 +68,11 @@ public class ApprovePostCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
+                
+                // Xóa cache liên quan
+                await redisCacheService.RemoveAsync("all_posts", cancellationToken);
+                await redisCacheService.RemoveAsync($"post_{request.Id}", cancellationToken);
+                await redisCacheService.RemoveAsync($"posts_by_category_{post.CategoryId}_page_1_size_10", cancellationToken);
 
                 result.Success(true);
             }

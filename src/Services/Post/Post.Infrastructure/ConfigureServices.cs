@@ -1,5 +1,7 @@
 using Category.Grpc.Protos;
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
@@ -27,6 +29,9 @@ public static class ConfigureServices
 
         // Register database context
         services.AddDatabaseContext();
+        
+        // Register Redis
+        services.AddRedisConfiguration();
 
         // Register data seeding for posts
         services.AddSeedDataServices();
@@ -91,7 +96,8 @@ public static class ConfigureServices
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
-            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>();
+            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
+            .AddScoped<ISerializeService, SerializeService>();
     }
 
     private static void AddGrpcServices(this IServiceCollection services)
