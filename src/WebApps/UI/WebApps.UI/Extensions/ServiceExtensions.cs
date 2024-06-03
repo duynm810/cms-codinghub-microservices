@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Settings;
+using WebApps.UI.CustomServices;
+using WebApps.UI.CustomServices.Interfaces;
 using WebApps.UI.Filters;
 using WebApps.UI.Services;
 using WebApps.UI.Services.Interfaces;
@@ -81,6 +83,7 @@ public static class ServiceExtensions
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ISerializeService, SerializeService>();
+        services.AddScoped<IErrorService, ErrorService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

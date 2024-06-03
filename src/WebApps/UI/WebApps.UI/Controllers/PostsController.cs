@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
+using WebApps.UI.CustomServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
@@ -8,7 +9,14 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class PostsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, ISeriesApiClient seriesApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class PostsController(
+    IPostApiClient postApiClient,
+    ICategoryApiClient categoryApiClient,
+    ISeriesApiClient seriesApiClient,
+    PaginationSettings paginationSettings,
+    ILogger logger,
+    IErrorService errorService)
+    : BaseController(errorService)
 {
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
@@ -17,7 +25,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
 
         var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
         var posts = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, pageSize);
-        
+
         if (posts is { IsSuccess: true, Data: not null } && category is { IsSuccess: true, Data: not null })
         {
             var items = new PostsByCategoryViewModel
@@ -25,19 +33,19 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
                 Category = category.Data,
                 Posts = posts.Data
             };
-            
+
             return View(items);
         }
-        
+
         logger.Error("Failed to load posts.");
-        return Error(HttpStatusCode.NotFound, "No posts found for this category.");
+        return HandleError(HttpStatusCode.NotFound);
     }
 
     [HttpGet("post/{slug}")]
     public async Task<IActionResult> Details([FromRoute] string slug)
     {
         var posts = await postApiClient.GetPostBySlug(slug);
-        
+
         if (posts is { IsSuccess: true, Data: not null })
         {
             var items = new PostDetailViewModel()
@@ -45,12 +53,12 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
                 MainClass = "bg-grey pb-30",
                 Post = posts.Data
             };
-            
+
             return View(items);
         }
-        
+
         logger.Error("Failed to load posts.");
-        return Error(HttpStatusCode.NotFound, "Post not found.");
+        return HandleError(HttpStatusCode.NotFound);
     }
 
     public async Task<IActionResult> Search(string keyword, int page = 1)
@@ -58,7 +66,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         var pageSize = paginationSettings.SearchPostPageSize;
 
         var posts = await postApiClient.SearchPostsPaging(keyword, page, pageSize);
-        
+
         if (posts is { IsSuccess: true, Data: not null })
         {
             var items = new PostSearchViewModel()
@@ -71,7 +79,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         }
 
         logger.Error("Failed to load posts.");
-        return Error(HttpStatusCode.NotFound, "No posts found for this search.");
+        return HandleError(HttpStatusCode.NotFound);
     }
 
     [HttpGet("series/{slug}")]
@@ -81,7 +89,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
 
         var series = await seriesApiClient.GetSeriesBySlug(slug);
         var postsInSeries = await postApiClient.GetPostsInSeriesBySlugPaging(slug, page, pageSize);
-        
+
         if (series is { IsSuccess: true, Data: not null } && postsInSeries is { IsSuccess: true, Data: not null })
         {
             var items = new PostsInSeriesViewModel()
@@ -92,13 +100,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
 
             return View(items);
         }
-        
-        return Error(HttpStatusCode.NotFound, "Series not found.");
-    }
-    
-    private IActionResult Error(HttpStatusCode statusCode, string message)
-    {
-        ViewData["ErrorMessage"] = message;
-        return View("Error", new HttpErrorViewModel((int)statusCode));
+
+        return HandleError(HttpStatusCode.NotFound);
     }
 }
