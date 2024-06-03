@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
-using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;

@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.CustomServices.Interfaces;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 
 namespace WebApps.UI.Controllers;
 

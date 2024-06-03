@@ -9,9 +9,9 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Settings;
-using WebApps.UI.CustomServices;
-using WebApps.UI.CustomServices.Interfaces;
-using WebApps.UI.Filters;
+using WebApps.UI.ApiServices;
+using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.Attributes;
 using WebApps.UI.Services;
 using WebApps.UI.Services.Interfaces;
 
@@ -82,14 +82,16 @@ public static class ServiceExtensions
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<ISerializeService, SerializeService>();
-        services.AddScoped<IErrorService, ErrorService>();
+        services.AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<IErrorService, ErrorService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
     {
-        services.AddControllersWithViews();
-        services.AddSingleton<IStartupFilter, DiagnosticsStartupFilter>();
+        services.AddControllersWithViews(options =>
+        {
+            options.Filters.Add<CustomExceptionFilterAttribute>();
+        });
     }
 
     private static void AddRazorPagesRuntimeConfiguration(this IServiceCollection services)

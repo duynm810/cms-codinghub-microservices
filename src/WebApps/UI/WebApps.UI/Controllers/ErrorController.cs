@@ -2,41 +2,25 @@ using System.Net;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 
 namespace WebApps.UI.Controllers;
 
-public class ErrorController : Controller
+/// <summary>
+/// Handle global errors and HTTP status codes (Xử lý các lỗi toàn cục và các mã trạng thái HTTP)
+/// </summary>
+public class ErrorController(IErrorService errorService) : Controller
 {
     [Route("Error/{statusCode}")]
     public IActionResult HttpStatusCodeHandler(int statusCode)
     {
         var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
 
-        string viewName = statusCode switch
-        {
-            404 => "HttpError-NotFound",
-            400 => "HttpError-BadRequest",
-            500 => "HttpError-InternalServerError",
-            _ => "Error"
-        };
+        var viewName = errorService.GetViewName(statusCode);
+        var errorMessage = errorService.GetErrorMessage(statusCode);
 
-        switch (statusCode)
-        {
-            case 404:
-                ViewData["ErrorMessage"] = "Sorry, the resource you requested could not be found.";
-                break;
-            case 400:
-                ViewData["ErrorMessage"] = "Bad request. Please check your request and try again.";
-                break;
-            case 500:
-                ViewData["ErrorMessage"] = "Sorry, something went wrong on the server.";
-                break;
-            default:
-                ViewData["ErrorMessage"] = "An unexpected error occurred.";
-                break;
-        }
+        ViewData["ErrorMessage"] = errorMessage;
 
-        // Optionally log or use statusCodeResult for debugging
         if (statusCodeResult != null)
         {
             ViewData["OriginalPath"] = statusCodeResult.OriginalPath;
@@ -52,7 +36,7 @@ public class ErrorController : Controller
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
         var exception = feature?.Error;
 
-        ViewData["ErrorMessage"] = exception?.Message ?? "An unexpected error occurred.";
-        return View(new HttpErrorViewModel((int)HttpStatusCode.InternalServerError));
+        ViewData["ErrorMessage"] = exception?.Message ?? errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
+        return View(errorService.GetViewName((int)HttpStatusCode.InternalServerError), new HttpErrorViewModel((int)HttpStatusCode.InternalServerError));
     }
 }

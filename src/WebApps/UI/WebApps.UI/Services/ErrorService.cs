@@ -1,6 +1,6 @@
-using WebApps.UI.CustomServices.Interfaces;
+using WebApps.UI.Services.Interfaces;
 
-namespace WebApps.UI.CustomServices;
+namespace WebApps.UI.Services;
 
 public class ErrorService : IErrorService
 {

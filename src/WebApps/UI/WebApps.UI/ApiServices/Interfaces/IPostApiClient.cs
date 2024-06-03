@@ -1,9 +1,8 @@
 using Shared.Dtos.Post;
 using Shared.Dtos.PostInSeries;
 using Shared.Responses;
-using WebApps.UI.Models.Posts;
 
-namespace WebApps.UI.Services.Interfaces;
+namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface IPostApiClient
 {

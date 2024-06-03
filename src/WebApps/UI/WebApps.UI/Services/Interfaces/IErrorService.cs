@@ -1,4 +1,4 @@
-namespace WebApps.UI.CustomServices.Interfaces;
+namespace WebApps.UI.Services.Interfaces;
 
 public interface IErrorService
 {

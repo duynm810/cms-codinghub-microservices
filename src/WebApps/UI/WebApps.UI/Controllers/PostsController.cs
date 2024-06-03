@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
-using WebApps.UI.CustomServices.Interfaces;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
