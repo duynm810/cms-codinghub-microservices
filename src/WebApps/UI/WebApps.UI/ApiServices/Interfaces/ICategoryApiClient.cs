@@ -1,7 +1,7 @@
 using Shared.Dtos.Category;
 using Shared.Responses;
 
-namespace WebApps.UI.Services.Interfaces;
+namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface ICategoryApiClient
 {

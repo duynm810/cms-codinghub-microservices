@@ -1,51 +1,56 @@
-using System.Diagnostics;
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class HomeController(IPostApiClient postApiClient, PaginationSettings paginationSettings, ILogger logger) : Controller
+public class HomeController(
+    IPostApiClient postApiClient,
+    PaginationSettings paginationSettings,
+    IErrorService errorService,
+    ILogger logger) : BaseController(errorService, logger)
 {
     public async Task<IActionResult> Index(int page = 1)
     {
-        var pageSize = paginationSettings.LatestPostPageSize;
-        
-        var featuredPosts = await postApiClient.GetFeaturedPosts();
-        var pinnedPosts = await postApiClient.GetPinnedPosts();
-        var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
-        var mostLikedPosts = await postApiClient.GetMostLikedPosts();
-        
-        if (featuredPosts is { IsSuccess: true, Data: not null } && 
-            pinnedPosts is { IsSuccess: true, Data: not null } && 
-            latestPosts is { IsSuccess: true, Data: not null } &&
-            mostLikedPosts is { IsSuccess: true, Data: not null })
+        try
         {
-            var items = new HomeViewModel
-            {
-                FeaturedPosts = featuredPosts.Data,
-                PinnedPosts = featuredPosts.Data,
-                LatestPosts = latestPosts.Data,
-                MostLikedPosts = mostLikedPosts.Data
-            };
+            var pageSize = paginationSettings.LatestPostPageSize;
 
-            return View(items);
+            var featuredPosts = await postApiClient.GetFeaturedPosts();
+            var pinnedPosts = await postApiClient.GetPinnedPosts();
+            var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
+            var mostLikedPosts = await postApiClient.GetMostLikedPosts();
+
+            if (featuredPosts is { IsSuccess: true, Data: not null } &&
+                pinnedPosts is { IsSuccess: true, Data: not null } &&
+                latestPosts is { IsSuccess: true, Data: not null } &&
+                mostLikedPosts is { IsSuccess: true, Data: not null })
+            {
+                var items = new HomeViewModel
+                {
+                    FeaturedPosts = featuredPosts.Data,
+                    PinnedPosts = featuredPosts.Data,
+                    LatestPosts = latestPosts.Data,
+                    MostLikedPosts = mostLikedPosts.Data
+                };
+
+                return View(items);
+            }
+
+            return HandleError(HttpStatusCode.NotFound, nameof(Index));
         }
-        
-        logger.Error("Failed to load featured posts or no featured posts found.");
-        return Content("No featured posts found.");
+        catch (Exception ex)
+        {
+            return HandleException(ex, nameof(Index));
+        }
     }
 
     public IActionResult Privacy()
     {
         return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
 }

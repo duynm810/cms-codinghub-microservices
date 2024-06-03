@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Authentication;
 using Shared.Constants;
 using Shared.Responses;
 using Shared.Settings;
-using WebApps.UI.Services.Interfaces;
+using WebApps.UI.ApiServices.Interfaces;
 
-namespace WebApps.UI.Services;
+namespace WebApps.UI.ApiServices;
 
 public class BaseApiClient(
     ISerializeService serializeService,

@@ -43,9 +43,12 @@
 <!-- End Main content -->
 
 <!--site-bottom-->
-<div class="site-bottom pt-50 pb-50">
-    @await Component.InvokeAsync("Bottom", "Default")
-</div>
+@if (Model.ShowSiteBottom)
+{
+    <div class="site-bottom pt-50 pb-50">
+        @await Component.InvokeAsync("Bottom", "Default")
+    </div>
+}
 <!--end site-bottom-->
 
 <!-- Footer Start-->

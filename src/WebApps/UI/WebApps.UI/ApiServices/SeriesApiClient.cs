@@ -1,8 +1,8 @@
 using Shared.Dtos.Series;
 using Shared.Responses;
-using WebApps.UI.Services.Interfaces;
+using WebApps.UI.ApiServices.Interfaces;
 
-namespace WebApps.UI.Services;
+namespace WebApps.UI.ApiServices;
 
 public class SeriesApiClient(IBaseApiClient baseApiClient)  : ISeriesApiClient
 {

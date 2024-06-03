@@ -1,11 +1,14 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class BottomViewComponent(IPostApiClient postApiClient, ILogger logger) : ViewComponent
+public class BottomViewComponent(IPostApiClient postApiClient, IErrorService errorService, ILogger logger)
+    : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -22,13 +25,11 @@ public class BottomViewComponent(IPostApiClient postApiClient, ILogger logger) :
                 return View(viewModel);
             }
 
-            logger.Error("Failed to load categories or no categories found.");
-            return Content("No categories found.");
+            return HandleError((HttpStatusCode)postsByNonStaticPageCategory.StatusCode, nameof(InvokeAsync));
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
-            throw;
+            return HandleException(e, nameof(InvokeAsync));
         }
     }
 }

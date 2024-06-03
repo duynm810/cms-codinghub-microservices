@@ -1,11 +1,14 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SidebarViewComponent(IPostApiClient postApiClient, ILogger logger) : ViewComponent
+public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService errorService, ILogger logger)
+    : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -21,13 +24,12 @@ public class SidebarViewComponent(IPostApiClient postApiClient, ILogger logger) 
 
                 return View(items);
             }
-            
-            return Content("No categories found.");
+
+            return HandleError((HttpStatusCode)posts.StatusCode, nameof(InvokeAsync));
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
-            throw;
+            return HandleException(e, nameof(InvokeAsync));
         }
     }
 }
