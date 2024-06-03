@@ -22,7 +22,7 @@ public class ErrorService : IErrorService
             404 => "HttpError-NotFound",
             400 => "HttpError-BadRequest",
             500 => "HttpError-InternalServerError",
-            _ => "Error"
+            _ => "HttpError"
         };
     }
 }

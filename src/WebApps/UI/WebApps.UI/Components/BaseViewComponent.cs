@@ -1,20 +1,20 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 
-namespace WebApps.UI.Controllers;
+namespace WebApps.UI.Components;
 
-public abstract class BaseController(IErrorService errorService) : Controller
+public abstract class BaseViewComponent(IErrorService errorService) : ViewComponent
 {
-    protected IActionResult HandleError(HttpStatusCode statusCode)
+    protected IViewComponentResult HandleError(HttpStatusCode statusCode)
     {
         var errorMessage = errorService.GetErrorMessage((int)statusCode);
         ViewData["ErrorMessage"] = errorMessage;
-        return View(errorService.GetViewName((int)statusCode), new HttpErrorViewModel((int)statusCode));
+        var viewName = errorService.GetViewName((int)statusCode);
+        return View(viewName);
     }
 
-    protected IActionResult HandleException(Exception ex, string methodName)
+    protected IViewComponentResult HandleException(Exception ex, string methodName)
     {
         var errorMessage = errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
         ViewData["ErrorMessage"] = errorMessage;

@@ -47,10 +47,10 @@ public class PostsController(
             logger.Error("Failed to load category. Status code: {StatusCode}", category.StatusCode);
             return HandleError((HttpStatusCode)category.StatusCode);
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             logger.Error(ex, "An error occurred while loading posts by category.");
-            return HandleError(HttpStatusCode.InternalServerError);
+            return HandleException(ex, nameof(PostsByCategory));
         }
     }
 
@@ -78,7 +78,7 @@ public class PostsController(
         catch (Exception ex)
         {
             logger.Error(ex, "An error occurred while loading the post details.");
-            return HandleError(HttpStatusCode.InternalServerError);
+            return HandleException(ex, nameof(Details));
         }
     }
 
@@ -107,7 +107,7 @@ public class PostsController(
         catch (Exception ex)
         {
             logger.Error(ex, "An error occurred while searching posts.");
-            return HandleError(HttpStatusCode.InternalServerError);
+            return HandleException(ex, nameof(Search));
         }
     }
 
@@ -144,7 +144,7 @@ public class PostsController(
         catch (Exception ex)
         {
             logger.Error(ex, "An error occurred while loading posts in series.");
-            return HandleError(HttpStatusCode.InternalServerError);
+            return HandleException(ex, nameof(PostsInSeries));
         }
     }
 }

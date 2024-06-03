@@ -9,7 +9,7 @@ public static class ApplicationExtensions
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Error");
+            app.UseExceptionHandler("/HttpError");
             app.UseHsts();
         }
         
@@ -18,7 +18,7 @@ public static class ApplicationExtensions
             app.UseHttpsRedirection();
         }
 
-        app.UseStatusCodePagesWithReExecute("/Error/{0}");
+        app.UseStatusCodePagesWithReExecute("/HttpError/{0}");
         
         app.UseStaticFiles();
 

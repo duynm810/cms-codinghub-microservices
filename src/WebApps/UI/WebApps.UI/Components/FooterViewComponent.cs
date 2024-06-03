@@ -1,12 +1,14 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class FooterViewComponent(ICategoryApiClient categoryApiClient, ILogger logger) : ViewComponent
+public class FooterViewComponent(ICategoryApiClient categoryApiClient, IErrorService errorService, ILogger logger) : BaseViewComponent(errorService)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -24,12 +26,12 @@ public class FooterViewComponent(ICategoryApiClient categoryApiClient, ILogger l
             }
 
             logger.Error("Failed to load categories or no categories found.");
-            return Content("No categories found.");
+            return HandleError((HttpStatusCode)categories.StatusCode);
         }
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
-            return Content("Unable to load categories at this time.");
+            return HandleException(e, nameof(InvokeAsync));
         }
     }
 }

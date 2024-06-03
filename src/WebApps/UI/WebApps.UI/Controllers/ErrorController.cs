@@ -11,7 +11,7 @@ namespace WebApps.UI.Controllers;
 /// </summary>
 public class ErrorController(IErrorService errorService) : Controller
 {
-    [Route("Error/{statusCode}")]
+    [Route("HttpError/{statusCode}")]
     public IActionResult HttpStatusCodeHandler(int statusCode)
     {
         var statusCodeResult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -30,7 +30,7 @@ public class ErrorController(IErrorService errorService) : Controller
         return View(viewName, new HttpErrorViewModel(statusCode));
     }
 
-    [Route("Error")]
+    [Route("HttpError")]
     public IActionResult Error()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
