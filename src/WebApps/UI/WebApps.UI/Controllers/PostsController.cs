@@ -15,7 +15,7 @@ public class PostsController(
     PaginationSettings paginationSettings,
     IErrorService errorService,
     ILogger logger)
-    : BaseController(errorService)
+    : BaseController(errorService, logger)
 {
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
@@ -40,16 +40,13 @@ public class PostsController(
                     return View(items);
                 }
 
-                logger.Error("Failed to load posts. Status code: {StatusCode}", posts.StatusCode);
-                return HandleError((HttpStatusCode)posts.StatusCode);
+                return HandleError((HttpStatusCode)posts.StatusCode, nameof(PostsByCategory));
             }
 
-            logger.Error("Failed to load category. Status code: {StatusCode}", category.StatusCode);
-            return HandleError((HttpStatusCode)category.StatusCode);
+            return HandleError((HttpStatusCode)category.StatusCode, nameof(PostsByCategory));
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while loading posts by category.");
             return HandleException(ex, nameof(PostsByCategory));
         }
     }
@@ -72,12 +69,10 @@ public class PostsController(
                 return View(items);
             }
 
-            logger.Error("Failed to load posts.");
-            return HandleError((HttpStatusCode)posts.StatusCode);
+            return HandleError((HttpStatusCode)posts.StatusCode, nameof(Details));
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while loading the post details.");
             return HandleException(ex, nameof(Details));
         }
     }
@@ -101,12 +96,10 @@ public class PostsController(
                 return View(items);
             }
 
-            logger.Error("Failed to load posts.");
-            return HandleError((HttpStatusCode)posts.StatusCode);
+            return HandleError((HttpStatusCode)posts.StatusCode, nameof(Search));
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while searching posts.");
             return HandleException(ex, nameof(Search));
         }
     }
@@ -134,16 +127,13 @@ public class PostsController(
                     return View(items);
                 }
 
-                logger.Error("Failed to load posts in series. Status code: {StatusCode}", postsInSeries.StatusCode);
-                return HandleError((HttpStatusCode)postsInSeries.StatusCode);
+                return HandleError((HttpStatusCode)postsInSeries.StatusCode, nameof(PostsInSeries));
             }
 
-            logger.Error("Failed to load series. Status code: {StatusCode}", series.StatusCode);
-            return HandleError((HttpStatusCode)series.StatusCode);
+            return HandleError((HttpStatusCode)series.StatusCode, nameof(PostsInSeries));
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while loading posts in series.");
             return HandleException(ex, nameof(PostsInSeries));
         }
     }

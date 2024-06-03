@@ -8,7 +8,7 @@ using ILogger = Serilog.ILogger;
 namespace WebApps.UI.Components;
 
 public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService errorService, ILogger logger)
-    : BaseViewComponent(errorService)
+    : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -25,11 +25,10 @@ public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService er
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode);
+            return HandleError((HttpStatusCode)posts.StatusCode, nameof(InvokeAsync));
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
             return HandleException(e, nameof(InvokeAsync));
         }
     }

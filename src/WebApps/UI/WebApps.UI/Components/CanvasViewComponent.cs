@@ -7,7 +7,8 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class CanvasViewComponent(ISeriesApiClient seriesApiClient, IErrorService errorService, ILogger logger) : BaseViewComponent(errorService)
+public class CanvasViewComponent(ISeriesApiClient seriesApiClient, IErrorService errorService, ILogger logger)
+    : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -23,12 +24,11 @@ public class CanvasViewComponent(ISeriesApiClient seriesApiClient, IErrorService
 
                 return View(items);
             }
-            
-            return HandleError((HttpStatusCode)series.StatusCode);
+
+            return HandleError((HttpStatusCode)series.StatusCode, nameof(InvokeAsync));
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
             return HandleException(e, nameof(InvokeAsync));
         }
     }
