@@ -276,4 +276,4 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "5000:80"
+      - "6100:80"

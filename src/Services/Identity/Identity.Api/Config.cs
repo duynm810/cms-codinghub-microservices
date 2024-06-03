@@ -165,11 +165,13 @@ public static class Config
                 },
                 RedirectUris = new List<string>
                 {
-                    "http://localhost:4000/signin-oidc"
+                    "http://localhost:5100/signin-oidc",
+                    "http://localhost:6100/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "http://localhost:4000/signout-callback-oidc"
+                    "http://localhost:5100/signout-callback-oidc",
+                    "http://localhost:6100/signout-callback-oidc"
                 },
                 AllowedScopes = new List<string>
                 {
