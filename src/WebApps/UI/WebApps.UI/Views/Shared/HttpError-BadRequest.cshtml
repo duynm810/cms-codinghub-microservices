@@ -1,7 +1,22 @@
 @model HttpErrorViewModel
 @{
-ViewData["Title"] = "Bad Request";
+    ViewData["Title"] = "Bad Request";
 }
 
-<h1>400 - Bad Request</h1>
-<p>@ViewData["ErrorMessage"]</p>
+<div class="container">
+    <div class="row pt-80">
+        <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50">
+            <img src="~/imgs/theme/page-not-found.png" alt="Bad request">
+        </div>
+        <div class="col-lg-6 col-md-12 pl-50 text-md-center text-lg-left">
+            <h1 class="mb-30 font-weight-900 page-400">400</h1>
+            <p>
+                The request could not be understood by the server due to malformed syntax. Please check your request and try again.<br>
+                Visit the <a href="/">Homepage</a> or <a href="page-contact.html">Contact us</a> for further assistance.
+            </p>
+            <div class="form-group">
+                <a class="button button-contactForm mt-30 text-white" href="/">Home page</a>
+            </div>
+        </div>
+    </div>
+</div>
