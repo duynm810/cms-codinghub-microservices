@@ -22,9 +22,9 @@ public class SmtpEmailService(ILogger logger, SmtpEmailSettings smtpEmailSetting
             await _smtpClient.SendAsync(emailMessage, cancellationToken);
             await _smtpClient.DisconnectAsync(true, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex.Message, ex);
+            logger.Error(e.Message, e);
         }
         finally
         {
@@ -44,9 +44,9 @@ public class SmtpEmailService(ILogger logger, SmtpEmailSettings smtpEmailSetting
             _smtpClient.Send(emailMessage);
             _smtpClient.Disconnect(true);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex.Message, ex);
+            logger.Error(e.Message, e);
         }
         finally
         {

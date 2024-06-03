@@ -28,9 +28,9 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception e)
 {
-    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
+    Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {

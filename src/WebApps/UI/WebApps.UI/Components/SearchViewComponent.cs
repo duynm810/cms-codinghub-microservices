@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.ApiServices.Interfaces;
-using WebApps.UI.Models;
 using WebApps.UI.Models.Commons;
+using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SearchViewComponent(ICategoryApiClient categoryApiClient, ILogger logger) : ViewComponent
+public class SearchViewComponent(IErrorService errorService, ILogger logger) : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
@@ -20,8 +19,7 @@ public class SearchViewComponent(ICategoryApiClient categoryApiClient, ILogger l
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(InvokeAsync), e);
-            throw;
+            return HandleException(e, nameof(InvokeAsync));
         }
     }
 }

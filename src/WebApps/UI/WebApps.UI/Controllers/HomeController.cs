@@ -43,9 +43,9 @@ public class HomeController(
 
             return HandleError(HttpStatusCode.NotFound, nameof(Index));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return HandleException(ex, nameof(Index));
+            return HandleException(e, nameof(Index));
         }
     }
 

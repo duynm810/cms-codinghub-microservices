@@ -11,23 +11,23 @@ public static class Utils
         return enumerable.Count != 0 && enumerable.All(x => x != null);
     }
 
-    public static IEnumerable<string> GetExceptionList(this Exception ex)
+    public static IEnumerable<string> GetExceptionList(this Exception e)
     {
-        if (ex.StackTrace == null)
+        if (e.StackTrace == null)
         {
             return [];
         }
 
-        var result = new List<string>() { ex.Message, ex.StackTrace };
-        if (ex.InnerException == null)
+        var result = new List<string>() { e.Message, e.StackTrace };
+        if (e.InnerException == null)
         {
             return result;
         }
 
-        result.Add(ex.InnerException.Message);
-        if (ex.InnerException.StackTrace != null)
+        result.Add(e.InnerException.Message);
+        if (e.InnerException.StackTrace != null)
         {
-            result.Add(ex.InnerException.StackTrace);
+            result.Add(e.InnerException.StackTrace);
         }
 
         return result;

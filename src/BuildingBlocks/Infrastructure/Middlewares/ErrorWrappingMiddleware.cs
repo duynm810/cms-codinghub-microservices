@@ -19,16 +19,16 @@ public class ErrorWrappingMiddleware(RequestDelegate next, ILogger logger)
         {
             await next.Invoke(context);
         }
-        catch (ValidationException ex)
+        catch (ValidationException e)
         {
-            _logger.Error(ex, ex.Message);
-            errorMsg = ex.Errors.FirstOrDefault().Value.FirstOrDefault();
+            _logger.Error(e, e.Message);
+            errorMsg = e.Errors.FirstOrDefault().Value.FirstOrDefault();
             context.Response.StatusCode = StatusCodes.Status406NotAcceptable;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            _logger.Error(ex, ex.Message);
-            errorMsg = ex.Message;
+            _logger.Error(e, e.Message);
+            errorMsg = e.Message;
             context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         }
 

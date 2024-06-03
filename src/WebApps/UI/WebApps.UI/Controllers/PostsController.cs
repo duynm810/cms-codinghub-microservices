@@ -45,9 +45,9 @@ public class PostsController(
 
             return HandleError((HttpStatusCode)category.StatusCode, nameof(PostsByCategory));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return HandleException(ex, nameof(PostsByCategory));
+            return HandleException(e, nameof(PostsByCategory));
         }
     }
 
@@ -71,9 +71,9 @@ public class PostsController(
 
             return HandleError((HttpStatusCode)posts.StatusCode, nameof(Details));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return HandleException(ex, nameof(Details));
+            return HandleException(e, nameof(Details));
         }
     }
 
@@ -98,9 +98,9 @@ public class PostsController(
 
             return HandleError((HttpStatusCode)posts.StatusCode, nameof(Search));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return HandleException(ex, nameof(Search));
+            return HandleException(e, nameof(Search));
         }
     }
 
@@ -132,9 +132,9 @@ public class PostsController(
 
             return HandleError((HttpStatusCode)series.StatusCode, nameof(PostsInSeries));
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            return HandleException(ex, nameof(PostsInSeries));
+            return HandleException(e, nameof(PostsInSeries));
         }
     }
 }

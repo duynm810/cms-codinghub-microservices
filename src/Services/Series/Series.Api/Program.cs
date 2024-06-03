@@ -30,12 +30,12 @@ try
     // Seed database with initial data and start the application
     app.SeedData().Run();
 }
-catch (Exception ex)
+catch (Exception e)
 {
-    var type = ex.GetType().Name;
+    var type = e.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
 
-    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
+    Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {

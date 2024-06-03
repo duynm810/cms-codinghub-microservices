@@ -12,12 +12,12 @@ public static class ApplicationExtensions
             app.UseExceptionHandler("/HttpError");
             app.UseHsts();
         }
-        
+
         if (app.Environment.IsProduction())
         {
             app.UseHttpsRedirection();
         }
-
+        
         app.UseStatusCodePagesWithReExecute("/HttpError/{0}");
         
         app.UseStaticFiles();

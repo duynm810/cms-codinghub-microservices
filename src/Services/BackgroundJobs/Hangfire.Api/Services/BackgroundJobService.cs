@@ -26,9 +26,9 @@ public class BackgroundJobService(
             logger.Information("Scheduled email to {Email} with subject: {Subject} - Job Id: {JobId}", to, subject, jobId);
             return jobId;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "Failed to schedule email to {Email} with subject: {Subject}", to, subject);
+            logger.Error(e, "Failed to schedule email to {Email} with subject: {Subject}", to, subject);
             return null;
         }
     }

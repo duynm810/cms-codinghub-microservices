@@ -17,9 +17,9 @@ public abstract class BaseController(IErrorService errorService, ILogger logger)
         return View(errorService.GetViewName((int)statusCode), new HttpErrorViewModel((int)statusCode));
     }
 
-    protected IActionResult HandleException(Exception ex, string methodName)
+    protected IActionResult HandleException(Exception e, string methodName)
     {
-        logger.Error(ex, "{MethodName} encountered an exception", methodName);
+        logger.Error(e, "{MethodName} encountered an exception", methodName);
         
         var errorMessage = errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
         ViewData["ErrorMessage"] = errorMessage;
