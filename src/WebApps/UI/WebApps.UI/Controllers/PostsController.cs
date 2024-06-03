@@ -1,5 +1,7 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Settings;
+using WebApps.UI.Models.Commons;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
@@ -28,7 +30,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         }
         
         logger.Error("Failed to load posts.");
-        return Content("No posts.");
+        return Error(HttpStatusCode.NotFound, "No posts found for this category.");
     }
 
     [HttpGet("post/{slug}")]
@@ -48,7 +50,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         }
         
         logger.Error("Failed to load posts.");
-        return Content("No posts.");
+        return Error(HttpStatusCode.NotFound, "Post not found.");
     }
 
     public async Task<IActionResult> Search(string keyword, int page = 1)
@@ -69,7 +71,7 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
         }
 
         logger.Error("Failed to load posts.");
-        return Content("No posts.");
+        return Error(HttpStatusCode.NotFound, "No posts found for this search.");
     }
 
     [HttpGet("series/{slug}")]
@@ -91,6 +93,12 @@ public class PostsController(IPostApiClient postApiClient, ICategoryApiClient ca
             return View(items);
         }
         
-        return View();
+        return Error(HttpStatusCode.NotFound, "Series not found.");
+    }
+    
+    private IActionResult Error(HttpStatusCode statusCode, string message)
+    {
+        ViewData["ErrorMessage"] = message;
+        return View("Error", new HttpErrorViewModel((int)statusCode));
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Settings;
+using WebApps.UI.Filters;
 using WebApps.UI.Services;
 using WebApps.UI.Services.Interfaces;
 
@@ -85,6 +86,7 @@ public static class ServiceExtensions
     private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllersWithViews();
+        services.AddSingleton<IStartupFilter, DiagnosticsStartupFilter>();
     }
 
     private static void AddRazorPagesRuntimeConfiguration(this IServiceCollection services)
