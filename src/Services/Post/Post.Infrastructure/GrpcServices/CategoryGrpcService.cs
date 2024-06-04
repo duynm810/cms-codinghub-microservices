@@ -60,14 +60,14 @@ public class CategoryGrpcService(
             
             var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
-            var data = mapper.Map<IEnumerable<CategoryDto>>(result);
+            var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
             
-            var categoriesByIds = data.ToList();
+            var data = categoriesByIds.ToList();
             
             // Lưu cache
-            await cacheService.SetAsync(cacheKey, categoriesByIds);
+            await cacheService.SetAsync(cacheKey, data);
 
-            return categoriesByIds;
+            return data;
         }
         catch (Exception e)
         {

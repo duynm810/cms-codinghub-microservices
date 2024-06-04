@@ -120,7 +120,8 @@ public static class ServiceExtensions
         services
             .AddScoped<IPostInSeriesRepository, PostInSeriesRepository>()
             .AddScoped<IPostInSeriesService, PostInSeriesService>()
-            .AddScoped<ISerializeService, SerializeService>();
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

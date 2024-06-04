@@ -69,6 +69,17 @@ public static class CacheKeyHelper
 
     #endregion
 
+    #region Post Grpc
+    
+    private const string PostGrpcPrefix = "grpc:post";
+
+    public static class PostGrpc
+    {
+        public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) => $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
+    }
+
+    #endregion
+
     #region Series
 
     private const string SeriesServicePrefix = "service:series";
@@ -82,6 +93,19 @@ public static class CacheKeyHelper
         public static string GetSeriesBySlugKey(string slug) => $"{SeriesServicePrefix}:slug:{slug}";
         
         public static string GetSeriesPagingKey(int pageNumber, int pageSize) => $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
+
+    #region Series Grpc
+
+    private const string SeriesGrpcPrefix = "grpc:series";
+
+    public static class SeriesGrpc
+    {
+        public static string GetGrpcSeriesByIdKey(Guid seriesId) => $"{SeriesGrpcPrefix}:{seriesId}";
+        
+        public static string GetGrpcSeriesBySlugKey(string slug) => $"{SeriesGrpcPrefix}:slug:{slug}";
     }
 
     #endregion
