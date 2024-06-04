@@ -16,6 +16,8 @@ public class SeriesGrpcService(
 {
     public async Task<SeriesDto?> GetSeriesById(Guid id)
     {
+        const string methodName = nameof(GetSeriesById);
+        
         try
         {
             // Kiểm tra cache
@@ -37,13 +39,15 @@ public class SeriesGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetSeriesById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
 
     public async Task<SeriesDto?> GetSeriesBySlug(string slug)
     {
+        const string methodName = nameof(GetSeriesBySlug);
+        
         try
         {
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(slug);
@@ -66,7 +70,7 @@ public class SeriesGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetSeriesById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }

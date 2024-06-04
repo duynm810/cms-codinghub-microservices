@@ -77,7 +77,7 @@ public class ApprovePostCommandHandler(
             catch (Exception e)
             {
                 await postRepository.RollbackTransactionAsync();
-                logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(ApprovePostCommand), e);
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
                 result.Messages.AddRange(e.GetExceptionList());
                 result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
             }

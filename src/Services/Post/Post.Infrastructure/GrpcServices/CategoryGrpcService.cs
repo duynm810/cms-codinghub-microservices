@@ -17,6 +17,8 @@ public class CategoryGrpcService(
 {
     public async Task<CategoryDto?> GetCategoryById(long id)
     {
+        const string methodName = nameof(GetCategoryById);
+        
         try
         {
             // Kiểm tra cache
@@ -38,17 +40,19 @@ public class CategoryGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
 
     public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids)
     {
-        var idList = ids as long[] ?? ids.ToArray();
+        const string methodName = nameof(GetCategoriesByIds);
 
         try
         {
+            var idList = ids as long[] ?? ids.ToArray();
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
@@ -70,13 +74,15 @@ public class CategoryGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesByIds), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
 
     public async Task<CategoryDto?> GetCategoryBySlug(string slug)
     {
+        const string methodName = nameof(GetCategoryBySlug);
+        
         try
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
@@ -99,13 +105,15 @@ public class CategoryGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryBySlug), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
 
     public async Task<IEnumerable<CategoryDto?>> GetAllNonStaticPageCategories()
     {
+        const string methodName = nameof(GetAllNonStaticPageCategories);
+        
         try
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
@@ -129,7 +137,7 @@ public class CategoryGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetAllNonStaticPageCategories), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }

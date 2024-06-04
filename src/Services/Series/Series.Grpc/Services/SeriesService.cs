@@ -34,7 +34,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
@@ -64,7 +64,7 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
     }
