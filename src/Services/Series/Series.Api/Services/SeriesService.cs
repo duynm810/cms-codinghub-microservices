@@ -44,7 +44,7 @@ public class SeriesService(
             result.Success(data);
 
             // Xóa cache danh sách series khi tạo mới
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriessKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
 
             logger.Information("END {MethodName} - Series created successfully with ID {SeriesId}", methodName,
                 data.Id);
@@ -84,7 +84,7 @@ public class SeriesService(
             result.Success(data);
 
             // Delete series list cache when updating (Xóa cache danh sách series khi cập nhật)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriessKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
             await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id));
             await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug));
 
@@ -129,7 +129,7 @@ public class SeriesService(
             }
 
             // Delete series list cache when deleting (Xóa cache danh sách series khi xóa dữ liệu)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriessKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
 
             result.Success(true);
 
@@ -156,7 +156,7 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
             // Kiểm tra cache
-            var cacheKey = CacheKeyHelper.Series.GetAllSeriessKey();
+            var cacheKey = CacheKeyHelper.Series.GetAllSeriesKey();
             var cachedSeries = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
             {

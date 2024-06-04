@@ -1,11 +1,14 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using Infrastructure.Paged;
 using PostInSeries.Api.Entities;
 using PostInSeries.Api.GrpcServices.Interfaces;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
 using Shared.Constants;
+using Shared.Dtos.Category;
 using Shared.Dtos.PostInSeries;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -17,6 +20,7 @@ public class PostInSeriesService(
     IPostGrpcService postGrpcService,
     ISeriesGrpcService seriesGrpcService,
     ICategoryGrpcService categoryGrpcService,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : IPostInSeriesService
 {
@@ -37,6 +41,9 @@ public class PostInSeriesService(
 
             await postInSeriesRepository.CreatePostToSeries(postInSeries);
             result.Success(true);
+
+            // Xoá cache
+            await cacheService.RemoveAsync(CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(request.SeriesId));
 
             logger.Information(
                 "END {MethodName} - Successfully created post with ID: {PostId} to series with ID: {SeriesId}",
@@ -66,6 +73,9 @@ public class PostInSeriesService(
 
             await postInSeriesRepository.DeletePostToSeries(postInSeries);
             result.Success(true);
+            
+            // Xoá cache
+            await cacheService.RemoveAsync(CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(request.SeriesId));
 
             logger.Information(
                 "END {MethodName} - Successfully deleted post with ID: {PostId} from series with ID: {SeriesId}",
@@ -92,14 +102,22 @@ public class PostInSeriesService(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts in series with ID: {SeriesId}", methodName,
-                seriesId);
+            logger.Information("BEGIN {MethodName} - Retrieving posts in series with ID: {SeriesId}", methodName, seriesId);
+            
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(seriesId);
+            var cachedPostInSeries = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
+            if (cachedPostInSeries != null)
+            {
+                result.Success(cachedPostInSeries);
+                logger.Information("END {MethodName} - Successfully retrieved post in series with ID {SeriesId} from cache", methodName, seriesId);
+                return result;
+            }
 
             var postIds = await postInSeriesRepository.GetPostIdsInSeries(seriesId);
             if (postIds == null)
             {
-                logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName,
-                    seriesId);
+                logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName, seriesId);
                 result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -111,6 +129,9 @@ public class PostInSeriesService(
                 var postInSeriesDtos = await postGrpcService.GetPostsByIds(postList);
                 var data = postInSeriesDtos.ToList();
                 result.Success(data);
+                
+                // Lưu cache
+                await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information(
                     "END {MethodName} - Successfully retrieved {PostCount} posts for series with ID: {SeriesId}",
@@ -139,9 +160,18 @@ public class PostInSeriesService(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug}", methodName,
-                seriesSlug);
+            logger.Information("BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug}", methodName, seriesSlug);
 
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesBySlugKey(seriesSlug);
+            var cachedPostInSeries = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
+            if (cachedPostInSeries != null)
+            {
+                result.Success(cachedPostInSeries);
+                logger.Information("END {MethodName} - Successfully retrieved post in series with Slug {SeriesSlug} from cache", methodName, seriesSlug);
+                return result;
+            }
+            
             var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
             if (series != null)
             {
@@ -161,6 +191,9 @@ public class PostInSeriesService(
                     var postInSeriesDtos = await postGrpcService.GetPostsByIds(postList);
                     var data = postInSeriesDtos.ToList();
                     result.Success(data);
+                    
+                    // Lưu cache
+                    await cacheService.SetAsync(cacheKey, data);
 
                     logger.Information(
                         "END {MethodName} - Successfully retrieved {PostCount} posts for series with Slug: {SeriesSlug}",
@@ -194,12 +227,21 @@ public class PostInSeriesService(
             logger.Information(
                 "BEGIN {MethodName} - Retrieving posts in series with ID: {SeriesId} for page {PageNumber} with page size {PageSize}",
                 methodName, seriesId, pageNumber, pageSize);
+            
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesByIdPagingKey(seriesId, pageNumber, pageSize);
+            var cachedPostInSeries = await cacheService.GetAsync<PagedResponse<PostInSeriesDto>>(cacheKey);
+            if (cachedPostInSeries != null)
+            {
+                result.Success(cachedPostInSeries);
+                logger.Information("END {MethodName} - Successfully retrieved post in series with ID {SeriesId} from cache", methodName, seriesId);
+                return result;
+            }
 
             var postIds = await postInSeriesRepository.GetPostIdsInSeries(seriesId);
             if (postIds == null)
             {
-                logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName,
-                    seriesId);
+                logger.Warning("{MethodName} - Post IDs not found for series with ID: {SeriesId}", methodName, seriesId);
                 result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -218,6 +260,9 @@ public class PostInSeriesService(
                 };
 
                 result.Success(data);
+                
+                // Lưu cache
+                await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information(
                     "END {MethodName} - Successfully retrieved {PostCount} posts for series with ID: {SeriesId} for page {PageNumber} with page size {PageSize}",
@@ -250,6 +295,16 @@ public class PostInSeriesService(
             logger.Information(
                 "BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
                 methodName, seriesSlug, pageNumber, pageSize);
+            
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesBySlugPagingKey(seriesSlug, pageNumber, pageSize);
+            var cachedPostInSeries = await cacheService.GetAsync<PagedResponse<PostInSeriesDto>>(cacheKey);
+            if (cachedPostInSeries != null)
+            {
+                result.Success(cachedPostInSeries);
+                logger.Information("END {MethodName} - Successfully retrieved post in series with Slug {SeriesSlug} from cache", methodName, seriesSlug);
+                return result;
+            }
 
             var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
             if (series != null)
@@ -292,6 +347,9 @@ public class PostInSeriesService(
                     };
 
                     result.Success(data);
+                    
+                    // Lưu cache
+                    await cacheService.SetAsync(cacheKey, data);
 
                     logger.Information(
                         "END {MethodName} - Successfully retrieved {PostCount} posts for series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
