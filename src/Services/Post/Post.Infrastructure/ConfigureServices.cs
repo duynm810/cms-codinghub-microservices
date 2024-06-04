@@ -5,6 +5,7 @@ using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using MassTransit.Internals.Caching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -97,7 +98,8 @@ public static class ConfigureServices
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
-            .AddScoped<ISerializeService, SerializeService>();
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddGrpcServices(this IServiceCollection services)

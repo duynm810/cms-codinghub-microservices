@@ -2,35 +2,29 @@ using AutoMapper;
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Google.Protobuf.WellKnownTypes;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.GrpcServices;
 using Serilog;
 using Shared.Dtos.Category;
+using Shared.Helpers;
 
 namespace Post.Infrastructure.GrpcServices;
 
 public class CategoryGrpcService(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
     IMapper mapper,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
+    ICacheService cacheService,
     ILogger logger) : ICategoryGrpcService
 {
     public async Task<CategoryDto?> GetCategoryById(long id)
     {
         try
         {
-            var cacheKey = $"category_{id}";
-
             // Kiểm tra cache
-            var cachedCategory = await redisCacheService.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedCategory))
+            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryByIdKey(id);
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
             {
-                var cachedData = serializeService.Deserialize<CategoryDto>(cachedCategory);
-                if (cachedData != null)
-                {
-                    return cachedData;
-                }
+                return cachedCategory;
             }
             
             var request = new GetCategoryByIdRequest { Id = id };
@@ -38,11 +32,7 @@ public class CategoryGrpcService(
             var data = mapper.Map<CategoryDto>(result);
             
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            await cacheService.SetAsync(cacheKey, data);
             
             return data;
         }
@@ -59,31 +49,23 @@ public class CategoryGrpcService(
         
         try
         {
-            var cacheKey = $"categories_{string.Join("_", idList)}";
 
             // Kiểm tra cache
-            var cachedCategories = await redisCacheService.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedCategories))
+            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
+            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
             {
-                var cachedData = serializeService.Deserialize<IEnumerable<CategoryDto>>(cachedCategories);
-                if (cachedData != null)
-                {
-                    return cachedData;
-                }
+                return cachedCategories;
             }
             
             var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             var data = mapper.Map<IEnumerable<CategoryDto>>(result);
             
-            // Lưu cache
             var categoriesByIds = data.ToList();
             
-            var serializedData = serializeService.Serialize(categoriesByIds);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, categoriesByIds);
 
             return categoriesByIds;
         }
@@ -98,17 +80,13 @@ public class CategoryGrpcService(
     {
         try
         { 
-            var cacheKey = $"category_slug_{slug}";
+            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
 
             // Kiểm tra cache
-            var cachedCategory = await redisCacheService.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedCategory))
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
             {
-                var cachedData = serializeService.Deserialize<CategoryDto>(cachedCategory);
-                if (cachedData != null)
-                {
-                    return cachedData;
-                }
+                return cachedCategory;
             }
             
             var request = new GetCategoryBySlugRequest() { Slug = slug };
@@ -116,11 +94,7 @@ public class CategoryGrpcService(
             var data = mapper.Map<CategoryDto>(result);
             
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            await cacheService.SetAsync(cacheKey, data);
             
             return data;
         }
@@ -135,8 +109,23 @@ public class CategoryGrpcService(
     {
         try
         {
+            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
+
+            // Kiểm tra cache
+            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
+            {
+                return cachedCategories;
+            }
+            
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
-            var data = mapper.Map<IEnumerable<CategoryDto>>(result);
+            var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
+            
+            var data = allNonStaticPageCategories.ToList();
+
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, data);
+            
             return data;
         }
         catch (Exception e)
