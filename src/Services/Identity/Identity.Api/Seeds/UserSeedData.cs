@@ -36,7 +36,7 @@ public static class UserSeedData
 
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-        CreateUser(scope, "Duy", "Nguyen", "82 Vo Van Ngan street, Binh Tho ward, Thu Duc city",
+        CreateUser(scope, "Nguyen", "Duy", "82 Vo Van Ngan street, Binh Tho ward, Thu Duc city",
             Guid.NewGuid().ToString(), "admin123",
             "Administrator", "duynguyen810@example.com");
     }
@@ -72,11 +72,13 @@ public static class UserSeedData
             new(InternalClaimTypesConsts.Claims.UserName, user.UserName),
             new(InternalClaimTypesConsts.Claims.FirstName, user.FirstName),
             new(InternalClaimTypesConsts.Claims.LastName, user.LastName),
+            new(InternalClaimTypesConsts.Claims.FullName, user.FirstName + " " + user.LastName),
             new(InternalClaimTypesConsts.Claims.Roles, role),
             new(JwtClaimTypes.Address, user.Address),
             new(JwtClaimTypes.Email, user.Email),
             new(ClaimTypes.NameIdentifier, user.Id),
         }).Result;
+        
         CheckResult(result);
     }
 

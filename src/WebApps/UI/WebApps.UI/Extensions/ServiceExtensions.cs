@@ -89,6 +89,7 @@ public static class ServiceExtensions
     private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllersWithViews(options => { options.Filters.Add<CustomExceptionFilterAttribute>(); });
+        services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
 
     private static void AddRazorPagesRuntimeConfiguration(this IServiceCollection services)

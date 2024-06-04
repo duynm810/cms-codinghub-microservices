@@ -12,6 +12,7 @@ public static class InternalClaimTypesConsts
         public const string UserName = "userName";
         public const string FirstName = "firstName";
         public const string LastName = "lastName";
+        public const string FullName = "fullName";
         public const string DeviceId = "deviceId";
         public const string Device = "device";
         public const string Client = "client";
