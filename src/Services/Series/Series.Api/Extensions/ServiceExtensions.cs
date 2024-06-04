@@ -1,4 +1,6 @@
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
@@ -28,6 +30,9 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
+        
+        // Register Redis
+        services.AddRedisConfiguration();
 
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
@@ -100,7 +105,9 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<ISeriesRepository, SeriesRepository>()
-            .AddScoped<ISeriesService, SeriesService>();
+            .AddScoped<ISeriesService, SeriesService>()
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

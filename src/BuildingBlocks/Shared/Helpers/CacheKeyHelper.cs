@@ -68,4 +68,21 @@ public static class CacheKeyHelper
     }
 
     #endregion
+
+    #region Series
+
+    private const string SeriesServicePrefix = "service:series";
+
+    public static class Series
+    {
+        public static string GetAllSeriessKey() => $"{SeriesServicePrefix}:all";
+        
+        public static string GetSeriesByIdKey(Guid seriesId) => $"{SeriesServicePrefix}:{seriesId}";
+        
+        public static string GetSeriesBySlugKey(string slug) => $"{SeriesServicePrefix}:slug:{slug}";
+        
+        public static string GetSeriesPagingKey(int pageNumber, int pageSize) => $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
 }
