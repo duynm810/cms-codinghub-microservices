@@ -15,7 +15,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// </summary>
     [Required]
     [MaxLength(250)]
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     /// <summary>
     /// Đường dẫn tĩnh (SEO-friendly URL) bài viết
@@ -66,7 +66,27 @@ public class PostBase : EntityAuditBase<Guid>
     public int ViewCount { get; set; }
 
     /// <summary>
-    /// Trạng thái bài viết này đã được thanh toán cho người đăng hay chưa
+    /// Số lượng bình luận bài viết
+    /// </summary>
+    public int CommentCount { get; set; }
+
+    /// <summary>
+    /// Số lượt thích bài viết
+    /// </summary>
+    public int LikeCount { get; set; }
+
+    /// <summary>
+    /// Bài viết có được ghim lên đầu không
+    /// </summary>
+    public bool IsPinned { get; set; }
+
+    /// <summary>
+    /// Bài viết có nổi bật hay không
+    /// </summary>
+    public bool IsFeatured { get; set; }
+
+    /// <summary>
+    /// Bài viết này đã được thanh toán cho người đăng hay chưa
     /// </summary>
     public bool IsPaid { get; set; }
 
@@ -79,6 +99,11 @@ public class PostBase : EntityAuditBase<Guid>
     /// Trạng thái của bài viết, ví dụ: Nháp, Chờ duyệt,..
     /// </summary>
     public PostStatusEnum Status { get; set; }
+
+    /// <summary>
+    /// Ngày công bố bài viết
+    /// </summary>
+    public DateTimeOffset? PublishedDate { get; set; }
 
     /// <summary>
     /// Khóa ngoại đến danh mục của bài viết

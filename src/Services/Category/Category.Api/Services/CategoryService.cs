@@ -3,8 +3,10 @@ using Category.Api.Entities;
 using Category.Api.GrpcServices.Interfaces;
 using Category.Api.Repositories.Interfaces;
 using Category.Api.Services.Interfaces;
+using Contracts.Commons.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Category;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -14,12 +16,13 @@ namespace Category.Api.Services;
 public class CategoryService(
     ICategoryRepository categoryRepository,
     IPostGrpcService postGrpcService,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryService
 {
     #region CRUD
 
-    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto request)
     {
         var result = new ApiResult<CategoryDto>();
         const string methodName = nameof(CreateCategory);
@@ -27,25 +30,28 @@ public class CategoryService(
         try
         {
             logger.Information("BEGIN {MethodName} - Creating category with name: {CategoryName}", methodName,
-                model.Name);
+                request.Name);
 
-            if (string.IsNullOrEmpty(model.Slug))
+            if (string.IsNullOrEmpty(request.Slug))
             {
-                model.Slug = Utils.ToUnSignString(model.Name);
+                request.Slug = Utils.ToUnSignString(request.Name);
             }
 
-            var category = mapper.Map<CategoryBase>(model);
+            var category = mapper.Map<CategoryBase>(request);
             await categoryRepository.CreateCategory(category);
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
+
+            // Xóa cache danh sách category khi tạo mới
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
 
             logger.Information("END {MethodName} - Category created successfully with ID {CategoryId}", methodName,
                 data.Id);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -53,7 +59,7 @@ public class CategoryService(
         return result;
     }
 
-    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model)
+    public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto request)
     {
         var result = new ApiResult<CategoryDto>();
         const string methodName = nameof(UpdateCategory);
@@ -70,17 +76,22 @@ public class CategoryService(
                 return result;
             }
 
-            var updateCategory = mapper.Map(model, category);
+            var updateCategory = mapper.Map(request, category);
             await categoryRepository.UpdateCategory(updateCategory);
 
             var data = mapper.Map<CategoryDto>(updateCategory);
             result.Success(data);
 
+            // Delete category list cache when updating (Xóa cache danh sách category khi cập nhật)
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id));
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug));
+
             logger.Information("END {MethodName} - Category with ID {CategoryId} updated successfully", methodName, id);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(UpdateCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -117,15 +128,23 @@ public class CategoryService(
                 }
 
                 await categoryRepository.DeleteCategory(category);
-                result.Success(true);
 
-                logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
-                    methodName, string.Join(", ", ids));
+                // Delete category cache when delete (Xóa cache category khi xoá dữ liệu)
+                await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id));
+                await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug));
             }
+
+            // Delete category list cache when deleting (Xóa cache danh sách category khi xóa dữ liệu)
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
+
+            result.Success(true);
+
+            logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
+                methodName, string.Join(", ", ids));
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeleteCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -142,11 +161,24 @@ public class CategoryService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
 
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Category.GetAllCategoriesKey();
+            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
+            {
+                result.Success(cachedCategories);
+                logger.Information("END {MethodName} - Successfully retrieved categories from cache", methodName);
+                return result;
+            }
+
             var categories = await categoryRepository.GetCategories();
             if (categories.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<CategoryDto>>(categories);
                 result.Success(data);
+
+                // Lưu cache
+                await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information("END {MethodName} - Successfully retrieved {CategoryCount} categories", methodName,
                     data.Count);
@@ -154,7 +186,7 @@ public class CategoryService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategories), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -171,6 +203,17 @@ public class CategoryService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving category with ID: {CategoryId}", methodName, id);
 
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Category.GetCategoryByIdKey(id);
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
+            {
+                result.Success(cachedCategory);
+                logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId} from cache",
+                    methodName, id);
+                return result;
+            }
+
             var category = await categoryRepository.GetCategoryById(id);
             if (category == null)
             {
@@ -182,12 +225,15 @@ public class CategoryService(
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
 
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, data);
+
             logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId}", methodName,
                 id);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoryById), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -210,6 +256,18 @@ public class CategoryService(
                 "BEGIN {MethodName} - Retrieving categories for page {PageNumber} with page size {PageSize}",
                 methodName, pageNumber, pageSize);
 
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(pageNumber, pageSize);
+            var cachedCategories = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
+            {
+                result.Success(cachedCategories);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved categories for page {PageNumber} from cache", methodName,
+                    pageNumber);
+                return result;
+            }
+
             var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
             var data = new PagedResponse<CategoryDto>()
             {
@@ -219,13 +277,65 @@ public class CategoryService(
 
             result.Success(data);
 
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, data);
+
             logger.Information(
                 "END {MethodName} - Successfully retrieved {CategoryCount} categories for page {PageNumber} with page size {PageSize}",
                 methodName, data.Items.Count, pageNumber, pageSize);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetCategoriesPaging), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<CategoryDto>> GetCategoryBySlug(string slug)
+    {
+        var result = new ApiResult<CategoryDto>();
+        const string methodName = nameof(GetCategoryBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving category with slug: {CategorySlug}", methodName, slug);
+
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Category.GetCategoryBySlugKey(slug);
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
+            {
+                result.Success(cachedCategory);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved category with slug {CategorySlug} from cache",
+                    methodName, slug);
+                return result;
+            }
+
+            var category = await categoryRepository.GetCategoryBySlug(slug);
+            if (category == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<CategoryDto>(category);
+            result.Success(data);
+
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, data);
+
+            logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}",
+                methodName,
+                slug);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

@@ -15,17 +15,17 @@ public class RolesController(IRoleService roleService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<RoleDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateRole([FromBody] CreateOrUpdateRoleDto model)
+    public async Task<IActionResult> CreateRole([FromBody] CreateOrUpdateRoleDto request)
     {
-        var result = await roleService.CreateRole(model);
+        var result = await roleService.CreateRole(request);
         return Ok(result);
     }
 
     [HttpPut("{roleId:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> UpdateRole(Guid roleId, [FromBody] CreateOrUpdateRoleDto model)
+    public async Task<IActionResult> UpdateRole(Guid roleId, [FromBody] CreateOrUpdateRoleDto request)
     {
-        var result = await roleService.UpdateRole(roleId, model);
+        var result = await roleService.UpdateRole(roleId, request);
         return Ok(result);
     }
 

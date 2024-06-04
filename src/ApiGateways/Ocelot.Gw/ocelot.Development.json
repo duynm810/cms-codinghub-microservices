@@ -6,7 +6,21 @@
     {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -27,7 +41,36 @@
     {
       "UpstreamPathTemplate": "/categories/{id}",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/{id}",
+      "UpstreamHttpMethod": [
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/categories/{id}",
@@ -84,9 +127,98 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/featured",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/featured",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/pinned",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/pinned",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/most-commented",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/most-commented",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/most-liked",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/most-liked",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/{id}",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/{id}",
+      "UpstreamHttpMethod": [
         "PUT",
         "DELETE"
       ],
@@ -117,10 +249,51 @@
           "Port": 5005
         }
       ],
-      "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
-        "AllowedScopes": []
-      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/latest/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/latest/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-non-static-page-category",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-non-static-page-category",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
       "SwaggerKey": "post-service"
     },
     {
@@ -202,7 +375,25 @@
     {
       "UpstreamPathTemplate": "/series",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -221,9 +412,46 @@
       "SwaggerKey": "series-service"
     },
     {
+      "UpstreamPathTemplate": "/series/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
       "UpstreamPathTemplate": "/series/{id}",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5007
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/{id}",
+      "UpstreamHttpMethod": [
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/series/{id}",
@@ -262,7 +490,36 @@
     {
       "UpstreamPathTemplate": "/post-in-series",
       "UpstreamHttpMethod": [
-        "GET",
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series/by-slug",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/by-slug",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series",
+      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -293,11 +550,43 @@
           "Port": 5009
         }
       ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series/by-slug/{slug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/by-slug/{slug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/upload-image",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/upload-image",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5016
+        }
+      ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "SwaggerKey": "post-in-series-service"
+      "SwaggerKey": "media-service"
     }
   ],
   "SwaggerEndPoints": [
@@ -353,6 +642,17 @@
           "Name": "PostInSeries.Api",
           "Version": "1.0",
           "Url": "http://localhost:5009/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "media-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Media.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5016/swagger/v1/swagger.json"
         }
       ]
     }

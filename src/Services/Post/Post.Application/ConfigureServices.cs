@@ -5,6 +5,8 @@ using Infrastructure.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Post.Application.Commons.Behaviours;
+using Post.Application.Commons.Mappings;
+using Post.Application.Commons.Mappings.Interfaces;
 
 namespace Post.Application;
 
@@ -23,7 +25,7 @@ public static class ConfigureServices
 
         // Register pipeline behaviors
         services.AddPipelineBehaviors();
-    
+
         // Register infrastructure services
         services.AddAppInfrastructureServices();
     }
@@ -31,6 +33,7 @@ public static class ConfigureServices
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddTransient<IMappingHelper, MappingHelper>();
     }
 
     private static void AddValidatorServices(this IServiceCollection services)

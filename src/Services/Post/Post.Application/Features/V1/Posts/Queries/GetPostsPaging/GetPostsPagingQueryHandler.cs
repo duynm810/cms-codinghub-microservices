@@ -1,57 +1,67 @@
-using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 
-public class GetPostsPagingQueryHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostDto>>>
+public class GetPostsPagingQueryHandler(
+    IPostRepository postRepository,
+    ICategoryGrpcService categoryGrpcService,
+    ICacheService cacheService,
+    IMappingHelper mappingHelper,
+    ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostModel>>>
 {
-    public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsPagingQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsPagingQuery request,
+        CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PagedResponse<PostDto>>();
-        const string methodName = nameof(Handle);
+        var result = new ApiResult<PagedResponse<PostModel>>();
+        const string methodName = nameof(GetPostsPagingQuery);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
+            logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}",
+                methodName, request.PageNumber, request.PageSize);
 
-            var posts = await postRepository.GetPostsPaging(request.PageNumber, request.PageSize);
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Post.GetPostsPagingKey(request.PageNumber, request.PageSize);
+            var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
+            if (cachedPosts != null)
+            {
+                result.Success(cachedPosts);
+                logger.Information("END {MethodName} - Successfully retrieved posts paging from cache", methodName);
+                return result;
+            }
 
-            if (posts.Items != null && posts.Items.Count != 0)
+            var posts = await postRepository.GetPostsPaging(request.Filter, request.PageNumber, request.PageSize);
+
+            if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
-                
-                var postDtos = mapper.Map<List<PostDto>>(posts.Items);
-                foreach (var post in postDtos)
-                {
-                    if (categoryDictionary.TryGetValue(post.CategoryId, out var value))
-                    {
-                        post.CategoryName = value;
-                    }
-                }
-                
-                var data = new PagedResponse<PostDto>()
-                {
-                    Items = postDtos,
-                    MetaData = posts.MetaData
-                };
-                
+
+                var data = mappingHelper.MapPostsWithCategories(posts, categories);
+
                 result.Success(data);
-                
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for page {PageNumber} with page size {PageSize}", methodName, postDtos.Count, request.PageNumber, request.PageSize);
+
+                // Lưu cache
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
+
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved {PostCount} posts for page {PageNumber} with page size {PageSize}",
+                    methodName, data.MetaData.TotalItems, request.PageNumber, request.PageSize);
             }
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsPagingQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

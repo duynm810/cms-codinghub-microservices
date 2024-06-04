@@ -11,10 +11,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="Commons\Mappings\"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <None Remove="..\..\Category\Category.Grpc\Protos\category.proto"/>
     </ItemGroup>
 

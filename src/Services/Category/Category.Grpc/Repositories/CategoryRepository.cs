@@ -13,14 +13,13 @@ public class CategoryRepository(CategoryContext dbContext)
 
     public async Task<IEnumerable<CategoryBase>> GetCategoriesByIds(long[] ids)
     {
-        var categories = await FindByCondition(c => ids.Contains(c.Id)).Select(c => new CategoryBase()
-            {
-                Id = c.Id,
-                Name = c.Name,
-                Slug = c.Slug
-            })
-            .ToListAsync();
-
+        var categories = await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
         return categories;
     }
+
+    public async Task<CategoryBase?> GetCategoryBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<CategoryBase?>> GetAllNonStaticPageCategories() =>
+        await FindByCondition(x => !x.IsStaticPage).ToListAsync();
 }

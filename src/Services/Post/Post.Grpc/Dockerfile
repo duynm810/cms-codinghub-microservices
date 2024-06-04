@@ -9,9 +9,7 @@ COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Inf
 COPY ["BuildingBlocks/Shared/Shared.csproj", "BuildingBlocks/Shared/"]
 COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
 COPY ["Services/Post/Post.Grpc/Post.Grpc.csproj", "Services/Post/Post.Grpc/"]
-COPY ["Services/Post/Post.Application/Post.Application.csproj", "Services/Post/Post.Application/"]
 COPY ["Services/Post/Post.Infrastructure/Post.Infrastructure.csproj", "Services/Post/Post.Infrastructure/"]
-COPY ["Services/Post/Post.Domain/Post.Domain.csproj", "Services/Post/Post.Domain/"]
 
 RUN dotnet restore "Services/Post/Post.Grpc/Post.Grpc.csproj"
 COPY . .

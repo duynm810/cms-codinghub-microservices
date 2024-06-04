@@ -21,10 +21,7 @@ public static class HangfireExtensions
                                    $"{nameof(HangfireSettings)} is not configured properly");
 
         services.ConfigureHangfire(hangfireSettings);
-        services.AddHangfireServer(serverOptions =>
-        {
-            serverOptions.ServerName = hangfireSettings.ServerName;
-        });
+        services.AddHangfireServer(serverOptions => { serverOptions.ServerName = hangfireSettings.ServerName; });
     }
 
     private static void ConfigureHangfire(this IServiceCollection services,
@@ -38,13 +35,14 @@ public static class HangfireExtensions
             case "mongodb":
                 var mongoUrlBuilder = new MongoUrlBuilder(hangfireSettings.Storage.ConnectionString);
 
-                var mongoClientSettings = MongoClientSettings.FromUrl(new MongoUrl(hangfireSettings.Storage.ConnectionString));
-                
+                var mongoClientSettings =
+                    MongoClientSettings.FromUrl(new MongoUrl(hangfireSettings.Storage.ConnectionString));
+
                 mongoClientSettings.SslSettings = new SslSettings
                 {
                     EnabledSslProtocols = SslProtocols.Tls12
                 };
-                
+
                 var mongoClient = new MongoClient(mongoClientSettings);
 
                 var mongoStorageOptions = new MongoStorageOptions
@@ -58,7 +56,7 @@ public static class HangfireExtensions
                     Prefix = "SchedulerQueue",
                     CheckQueuedJobsStrategy = CheckQueuedJobsStrategy.TailNotificationsCollection
                 };
-                
+
                 services.AddHangfire((provider, config) =>
                 {
                     config.UseSimpleAssemblyNameTypeSerializer()
@@ -71,10 +69,10 @@ public static class HangfireExtensions
                     {
                         TypeNameHandling = TypeNameHandling.All
                     };
-                    
+
                     config.UseSerializerSettings(jsonSettings);
                 });
-                
+
                 services.AddHangfireConsoleExtensions();
                 break;
 

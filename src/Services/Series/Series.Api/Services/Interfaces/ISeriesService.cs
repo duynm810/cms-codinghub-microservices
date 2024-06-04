@@ -7,9 +7,9 @@ public interface ISeriesService
 {
     #region CRUD
 
-    Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto model);
+    Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto request);
 
-    Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto model);
+    Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto request);
 
     Task<ApiResult<bool>> DeleteSeries(List<Guid> ids);
 
@@ -22,6 +22,8 @@ public interface ISeriesService
     #region OTHERS
 
     Task<ApiResult<PagedResponse<SeriesDto>>> GetSeriesPaging(int pageNumber, int pageSize);
+
+    Task<ApiResult<SeriesDto>> GetSeriesBySlug(string slug);
 
     #endregion
 }

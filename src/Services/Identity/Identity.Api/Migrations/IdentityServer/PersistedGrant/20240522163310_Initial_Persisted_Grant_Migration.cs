@@ -25,10 +25,7 @@ namespace Identity.Api.Migrations.IdentityServer.PersistedGrant
                     Expiration = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50000, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DeviceCodes", x => x.UserCode);
-                });
+                constraints: table => { table.PrimaryKey("PK_DeviceCodes", x => x.UserCode); });
 
             migrationBuilder.CreateTable(
                 name: "Keys",
@@ -43,10 +40,7 @@ namespace Identity.Api.Migrations.IdentityServer.PersistedGrant
                     DataProtected = table.Column<bool>(type: "bit", nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Keys", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Keys", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "PersistedGrants",
@@ -65,10 +59,7 @@ namespace Identity.Api.Migrations.IdentityServer.PersistedGrant
                     ConsumedTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Data = table.Column<string>(type: "nvarchar(max)", maxLength: 50000, nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PersistedGrants", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_PersistedGrants", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "PushedAuthorizationRequests",
@@ -80,10 +71,7 @@ namespace Identity.Api.Migrations.IdentityServer.PersistedGrant
                     ExpiresAtUtc = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Parameters = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PushedAuthorizationRequests", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_PushedAuthorizationRequests", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "ServerSideSessions",
@@ -101,10 +89,7 @@ namespace Identity.Api.Migrations.IdentityServer.PersistedGrant
                     Expires = table.Column<DateTime>(type: "datetime2", nullable: true),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ServerSideSessions", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ServerSideSessions", x => x.Id); });
 
             migrationBuilder.CreateIndex(
                 name: "IX_DeviceCodes_DeviceCode",

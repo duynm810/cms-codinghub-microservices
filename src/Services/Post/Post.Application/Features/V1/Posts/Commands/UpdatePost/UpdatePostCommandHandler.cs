@@ -1,22 +1,31 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Post;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 
-public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryGrpcService categoryGrpcService, IMapper mapper, ILogger logger)
-    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
+public class UpdatePostCommandHandler(
+    IPostRepository postRepository,
+    ICategoryGrpcService categoryGrpcService,
+    ICacheService cacheService,
+    IMapper mapper,
+    ILogger logger)
+    : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
 {
-    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostModel>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDto>();
+        var result = new ApiResult<PostModel>();
         const string methodName = nameof(Handle);
 
         try
@@ -31,12 +40,13 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             // Check slug exists
             var slugExists = await postRepository.SlugExists(request.Slug, request.Id);
             if (slugExists)
             {
-                logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}", methodName, request.Id, request.Slug);
+                logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}",
+                    methodName, request.Id, request.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
@@ -56,12 +66,23 @@ public class UpdatePostCommandHandler(IPostRepository postRepository, ICategoryG
 
             // Set category id get by categories services
             updatePost.CategoryId = category.Id;
-            
+
             await postRepository.UpdatePost(updatePost);
 
-            var data = mapper.Map<PostDto>(updatePost);
+            var data = mapper.Map<PostModel>(updatePost);
             result.Success(data);
-            
+
+            // Xóa cache liên quan
+            var cacheKeys = new List<string>
+            {
+                CacheKeyHelper.Post.GetAllPostsKey(),
+                CacheKeyHelper.Post.GetPostByIdKey(request.Id),
+                CacheKeyHelper.Post.GetPinnedPostsKey(),
+                CacheKeyHelper.Post.GetFeaturedPostsKey()
+            };
+
+            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+
             logger.Information("END {MethodName} - Post with ID {PostId} updated successfully", methodName, request.Id);
         }
         catch (Exception e)

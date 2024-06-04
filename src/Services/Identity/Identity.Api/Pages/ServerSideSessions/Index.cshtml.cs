@@ -20,20 +20,15 @@ namespace Identity.Api.Pages.ServerSideSessions
 
         public QueryResult<UserSession>? UserSessions { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string? DisplayNameFilter { get; set; }
+        [BindProperty(SupportsGet = true)] public string? DisplayNameFilter { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string? SessionIdFilter { get; set; }
+        [BindProperty(SupportsGet = true)] public string? SessionIdFilter { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string? SubjectIdFilter { get; set; }
+        [BindProperty(SupportsGet = true)] public string? SubjectIdFilter { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string? Token { get; set; }
+        [BindProperty(SupportsGet = true)] public string? Token { get; set; }
 
-        [BindProperty(SupportsGet = true)]
-        public string? Prev { get; set; }
+        [BindProperty(SupportsGet = true)] public string? Prev { get; set; }
 
         public async Task OnGet()
         {
@@ -50,18 +45,18 @@ namespace Identity.Api.Pages.ServerSideSessions
             }
         }
 
-        [BindProperty]
-        public string? SessionId { get; set; }
+        [BindProperty] public string? SessionId { get; set; }
 
         public async Task<IActionResult> OnPost()
         {
             ArgumentNullException.ThrowIfNull(_sessionManagementService);
 
-            await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext { 
+            await _sessionManagementService.RemoveSessionsAsync(new RemoveSessionsContext
+            {
                 SessionId = SessionId,
             });
-            return RedirectToPage("/ServerSideSessions/Index", new { Token, DisplayNameFilter, SessionIdFilter, SubjectIdFilter, Prev });
+            return RedirectToPage("/ServerSideSessions/Index",
+                new { Token, DisplayNameFilter, SessionIdFilter, SubjectIdFilter, Prev });
         }
     }
 }
-

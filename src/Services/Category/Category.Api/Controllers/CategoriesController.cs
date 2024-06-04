@@ -19,9 +19,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.Created)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Create)]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto categoryDto)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto request)
     {
-        var result = await categoryService.CreateCategory(categoryDto);
+        var result = await categoryService.CreateCategory(request);
         return Ok(result);
     }
 
@@ -29,9 +29,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.NoContent)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Update)]
     public async Task<IActionResult> UpdateCategory([FromRoute, Required] long id,
-        [FromBody] UpdateCategoryDto categoryDto)
+        [FromBody] UpdateCategoryDto request)
     {
-        var result = await categoryService.UpdateCategory(id, categoryDto);
+        var result = await categoryService.UpdateCategory(id, request);
         return Ok(result);
     }
 
@@ -46,7 +46,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<CategoryDto>>), (int)HttpStatusCode.OK)]
-    [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCategories()
     {
         var result = await categoryService.GetCategories();
@@ -55,7 +55,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
 
     [HttpGet("{id:long}")]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
-    [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetCategory([FromRoute, Required] long id)
     {
         var result = await categoryService.GetCategoryById(id);
@@ -70,6 +70,15 @@ public class CategoriesController(ICategoryService categoryService) : Controller
         [FromQuery, Required] int pageSize = 10)
     {
         var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
+        return Ok(result);
+    }
+
+    [HttpGet("by-slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetCategoryBySlug([FromRoute, Required] string slug)
+    {
+        var result = await categoryService.GetCategoryBySlug(slug);
         return Ok(result);
     }
 }

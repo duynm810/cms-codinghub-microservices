@@ -29,7 +29,7 @@ public class ApiResult<T> : BaseApiResult
         Data = default;
         Title = title;
     }
-    
+
     public void Error(string message, string title = "Error")
     {
         IsSuccess = false;

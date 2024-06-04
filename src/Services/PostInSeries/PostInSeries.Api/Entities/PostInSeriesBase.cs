@@ -12,7 +12,7 @@ public class PostInSeriesBase : EntityAuditBase<Guid>
     /// </summary>
     [Required]
     public Guid SeriesId { get; set; }
-    
+
     /// <summary>
     /// Khóa liên kết đến bài viết
     /// </summary>

@@ -13,7 +13,7 @@ public static class SwaggerExtensions
         var apiConfigurations = services.GetOptions<ApiConfigurations>(nameof(ApiConfigurations)) ??
                                 throw new ArgumentNullException(
                                     $"{nameof(ApiConfigurations)} is not configured properly");
-        
+
         services.AddSwaggerGen(c =>
         {
             c.CustomOperationIds(apiDesc => apiDesc.TryGetMethodInfo(out var methodInfo) ? methodInfo.Name : null);
@@ -22,7 +22,7 @@ public static class SwaggerExtensions
                 Title = apiConfigurations.ApiTitle,
                 Version = apiConfigurations.ApiVersion
             });
-            
+
             c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
                 Type = SecuritySchemeType.OAuth2,
@@ -42,7 +42,7 @@ public static class SwaggerExtensions
                 Name = "Authorization",
                 In = ParameterLocation.Header
             });
-            
+
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {

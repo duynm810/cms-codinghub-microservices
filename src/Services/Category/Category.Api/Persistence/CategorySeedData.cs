@@ -25,54 +25,58 @@ public static class CategorySeedData
                 Id = 1,
                 Name = "Home",
                 Slug = "home",
-                SeoDescription =
-                    "Welcome to Coding Hub, your ultimate guide to the world of programming and tech trends.",
-                ParentId = null, // No parent
+                SeoDescription = "Welcome to the home page.",
+                ParentId = null,
+                Icon = "icon_house_alt",
                 SortOrder = 1,
-                IsActive = true
+                IsActive = true,
+                IsStaticPage = true
             },
             new()
             {
                 Id = 2,
-                Name = "Language Tutorials",
-                Slug = "language-tutorials",
-                SeoDescription =
-                    "Explore detailed tutorials on popular programming languages to boost your coding skills.",
-                ParentId = null, // No parent
+                Name = "News",
+                Slug = "news",
+                SeoDescription = "Knowledge about system architecture helps you design and build software efficiently.",
+                ParentId = null,
+                Color = "text-warning",
                 SortOrder = 2,
+                IsStaticPage = false,
                 IsActive = true
             },
             new()
             {
                 Id = 3,
-                Name = "Development",
-                Slug = "development",
-                SeoDescription =
-                    "Discover the latest development techniques and trends to stay ahead in the tech industry.",
-                ParentId = null, // No parent
+                Name = "Experience",
+                Slug = "experience",
+                SeoDescription = "Practical experiences in the process of working and developing software.",
+                ParentId = null,
+                Color = "text-danger",
                 SortOrder = 3,
+                IsStaticPage = false,
                 IsActive = true
             },
             new()
             {
                 Id = 4,
-                Name = "About Me",
-                Slug = "about-me",
-                SeoDescription =
-                    "Learn more about the face behind Coding Hub and my journey in the world of software development.",
-                ParentId = null, // No parent
+                Name = "Tips and Tricks",
+                Slug = "tips-and-tricks",
+                SeoDescription = "Useful tips to help you work more efficiently with .NET and Angular.",
+                ParentId = null,
+                Color = "text-primary",
                 SortOrder = 4,
+                IsStaticPage = false,
                 IsActive = true
             },
             new()
             {
                 Id = 5,
-                Name = "Contact",
-                Slug = "contact",
-                SeoDescription =
-                    "Get in touch to discuss potential collaborations, or ask me anything about programming and tech.",
-                ParentId = null, // No parent
-                SortOrder = 4,
+                Name = "About Me",
+                Slug = "about-me",
+                SeoDescription = "Learn more about me and my journey in the world of software development.",
+                ParentId = null,
+                SortOrder = 5,
+                IsStaticPage = true,
                 IsActive = true
             }
         };

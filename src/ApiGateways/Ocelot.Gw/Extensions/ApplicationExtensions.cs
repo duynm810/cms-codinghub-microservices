@@ -16,12 +16,12 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
-        
+
         app.UseMiddleware<ErrorWrappingMiddleware>();
-        
+
         // Enables routing in the application.
         app.UseRouting();
-        
+
         app.UseCors("CorsPolicy");
 
         app.UseSwagger();

@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
@@ -57,15 +58,19 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Name, post.Content, post.Summary).ConfigureAwait(false);
+                    await postEmailTemplateService
+                        .SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {
-                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}", methodName, request.Id, emailEx);
+                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
+                        methodName, request.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
+
+                // Xóa cache liên quan
 
                 result.Success(true);
             }

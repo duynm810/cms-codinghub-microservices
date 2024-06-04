@@ -26,18 +26,18 @@ try
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
-    
+
     // Seed user sample data
     UserSeedData.EnsureSeedData(configuration);
 
     app.MigrateDatabase().Run();
 }
-catch (Exception ex)
+catch (Exception e)
 {
-    var type = ex.GetType().Name;
+    var type = e.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
-    
-    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
+
+    Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {

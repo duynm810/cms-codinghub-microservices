@@ -15,7 +15,7 @@ public class Dashboard
 {
     public string AppPath { get; set; } = default!;
 
-    public int StartsPollingInterval { get; set; } = default!;
+    public int StartsPollingInterval { get; set; }
 
     public string DashboardTitle { get; set; } = default!;
 }

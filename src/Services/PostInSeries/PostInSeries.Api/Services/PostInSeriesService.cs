@@ -1,4 +1,6 @@
+using AutoMapper;
 using Infrastructure.Paged;
+using PostInSeries.Api.Entities;
 using PostInSeries.Api.GrpcServices.Interfaces;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
@@ -13,11 +15,14 @@ namespace PostInSeries.Api.Services;
 public class PostInSeriesService(
     IPostInSeriesRepository postInSeriesRepository,
     IPostGrpcService postGrpcService,
+    ISeriesGrpcService seriesGrpcService,
+    ICategoryGrpcService categoryGrpcService,
+    IMapper mapper,
     ILogger logger) : IPostInSeriesService
 {
     #region CRUD
 
-    public async Task<ApiResult<bool>> CreatePostToSeries(Guid seriesId, Guid postId, int sortOrder)
+    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesDto request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(CreatePostToSeries);
@@ -26,18 +31,20 @@ public class PostInSeriesService(
         {
             logger.Information(
                 "BEGIN {MethodName} - Creating post with ID: {PostId} to series with ID: {SeriesId} with sort order: {SortOrder}",
-                methodName, postId, seriesId, sortOrder);
+                methodName, request.PostId, request.SeriesId, request.SortOrder);
 
-            await postInSeriesRepository.CreatePostToSeries(seriesId, postId, sortOrder);
+            var postInSeries = mapper.Map<PostInSeriesBase>(request);
+
+            await postInSeriesRepository.CreatePostToSeries(postInSeries);
             result.Success(true);
 
             logger.Information(
                 "END {MethodName} - Successfully created post with ID: {PostId} to series with ID: {SeriesId}",
-                methodName, postId, seriesId);
+                methodName, request.PostId, request.SeriesId);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(CreatePostToSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -45,7 +52,7 @@ public class PostInSeriesService(
         return result;
     }
 
-    public async Task<ApiResult<bool>> DeletePostToSeries(Guid seriesId, Guid postId)
+    public async Task<ApiResult<bool>> DeletePostToSeries(DeletePostInSeriesDto request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(DeletePostToSeries);
@@ -53,18 +60,20 @@ public class PostInSeriesService(
         try
         {
             logger.Information("BEGIN {MethodName} - Deleting post with ID: {PostId} from series with ID: {SeriesId}",
-                methodName, postId, seriesId);
+                methodName, request.PostId, request.SeriesId);
 
-            await postInSeriesRepository.DeletePostToSeries(seriesId, postId);
+            var postInSeries = mapper.Map<PostInSeriesBase>(request);
+
+            await postInSeriesRepository.DeletePostToSeries(postInSeries);
             result.Success(true);
 
             logger.Information(
                 "END {MethodName} - Successfully deleted post with ID: {PostId} from series with ID: {SeriesId}",
-                methodName, postId, seriesId);
+                methodName, request.PostId, request.SeriesId);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(DeletePostToSeries), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -111,6 +120,57 @@ public class PostInSeriesService(
             {
                 result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsInSeries), e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<IEnumerable<PostInSeriesDto>>> GetPostsInSeriesBySlug(string seriesSlug)
+    {
+        var result = new ApiResult<IEnumerable<PostInSeriesDto>>();
+        const string methodName = nameof(GetPostsInSeriesBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug}", methodName,
+                seriesSlug);
+
+            var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
+            if (series != null)
+            {
+                var postIds = await postInSeriesRepository.GetPostIdsInSeries(series.Id);
+                if (postIds == null)
+                {
+                    logger.Warning("{MethodName} - Post IDs not found for series with Slug: {SeriesSlug}", methodName,
+                        series.Slug);
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                    return result;
+                }
+
+                var postList = postIds.ToList();
+                if (postList.Count != 0)
+                {
+                    var postInSeriesDtos = await postGrpcService.GetPostsByIds(postList);
+                    var data = postInSeriesDtos.ToList();
+                    result.Success(data);
+
+                    logger.Information(
+                        "END {MethodName} - Successfully retrieved {PostCount} posts for series with Slug: {SeriesSlug}",
+                        methodName, data.Count, series.Slug);
+                }
+                else
+                {
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                }
             }
         }
         catch (Exception e)
@@ -172,6 +232,81 @@ public class PostInSeriesService(
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsInSeriesPaging), e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<PagedResponse<PostInSeriesDto>>> GetPostsInSeriesBySlugPaging(string seriesSlug,
+        int pageNumber, int pageSize)
+    {
+        var result = new ApiResult<PagedResponse<PostInSeriesDto>>();
+        const string methodName = nameof(GetPostsInSeriesBySlugPaging);
+
+        try
+        {
+            logger.Information(
+                "BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
+                methodName, seriesSlug, pageNumber, pageSize);
+
+            var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
+            if (series != null)
+            {
+                var postIds = await postInSeriesRepository.GetPostIdsInSeries(series.Id);
+                if (postIds == null)
+                {
+                    logger.Warning("{MethodName} - Post IDs not found for series with Slug: {SeriesSlug}", methodName,
+                        series.Slug);
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostIdsNotFound);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                    return result;
+                }
+
+                var postIdList = postIds.ToList();
+                if (postIdList.Count != 0)
+                {
+                    var posts = await postGrpcService.GetPostsByIds(postIdList);
+
+                    var postList = posts.ToList();
+
+                    var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
+                    var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                    var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
+
+                    foreach (var post in postList)
+                    {
+                        if (categoryDictionary.TryGetValue(post.CategoryId, out var category))
+                        {
+                            mapper.Map(category, post);
+                        }
+                    }
+
+                    var items = PagedList<PostInSeriesDto>.ToPagedList(postList, pageNumber, pageSize, x => x.Id);
+
+                    var data = new PagedResponse<PostInSeriesDto>
+                    {
+                        Items = items,
+                        MetaData = items.GetMetaData()
+                    };
+
+                    result.Success(data);
+
+                    logger.Information(
+                        "END {MethodName} - Successfully retrieved {PostCount} posts for series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
+                        methodName, items.Count, series.Slug, pageNumber, pageSize);
+                }
+                else
+                {
+                    result.Messages.Add(ErrorMessagesConsts.PostInSeries.PostNotFoundInSeries);
+                    result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

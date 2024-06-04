@@ -1,8 +1,11 @@
 using Category.Grpc.Protos;
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
+using MassTransit.Internals.Caching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +31,9 @@ public static class ConfigureServices
         // Register database context
         services.AddDatabaseContext();
 
+        // Register Redis
+        services.AddRedisConfiguration();
+
         // Register data seeding for posts
         services.AddSeedDataServices();
 
@@ -39,6 +45,9 @@ public static class ConfigureServices
 
         // Register gRPC services
         services.AddGrpcServices();
+
+        // Register AutoMapper
+        services.AddAutoMapperConfiguration();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -88,7 +97,9 @@ public static class ConfigureServices
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
-            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>();
+            .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddGrpcServices(this IServiceCollection services)
@@ -101,5 +112,10 @@ public static class ConfigureServices
             x.Address = new Uri(grpcSettings.CategoryUrl));
 
         services.AddScoped<CategoryGrpcService>();
+    }
+
+    private static void AddAutoMapperConfiguration(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 }

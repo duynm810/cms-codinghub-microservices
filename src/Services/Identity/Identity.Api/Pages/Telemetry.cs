@@ -14,7 +14,7 @@ namespace Identity.Api.Pages;
 public static class Telemetry
 {
     private static readonly string ServiceVersion = typeof(Telemetry).Assembly.GetName().Version!.ToString();
-    
+
     /// <summary>
     /// Service name for telemetry.
     /// </summary>
@@ -100,7 +100,8 @@ public static class Telemetry
             ArgumentNullException.ThrowIfNull(scopes);
             foreach (var scope in scopes)
             {
-                ConsentCounter.Add(1, new(Tags.Client, clientId), new(Tags.Scope, scope), new(Tags.Consent, TagValues.Denied));
+                ConsentCounter.Add(1, new(Tags.Client, clientId), new(Tags.Scope, scope),
+                    new(Tags.Consent, TagValues.Denied));
             }
         }
 

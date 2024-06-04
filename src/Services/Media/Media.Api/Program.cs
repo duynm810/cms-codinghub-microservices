@@ -17,10 +17,10 @@ try
 
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(configuration);
-    
+
     var app = builder.Build();
 
     // Set up middleware and request handling pipeline
@@ -28,9 +28,9 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception e)
 {
-    Log.Fatal(ex, $"{ErrorMessagesConsts.Common.UnhandledException}: {ex.Message}");
+    Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally
 {

@@ -7,7 +7,7 @@ namespace Infrastructure.Scheduled;
 public class HangfireService : IScheduledJobService
 {
     #region Fire And Forget (Chạy ngay lập tức - Không cần đợi)
-    
+
     public string Enqueue(Expression<Action> functionCall)
     {
         return BackgroundJob.Enqueue(functionCall);
@@ -21,7 +21,7 @@ public class HangfireService : IScheduledJobService
     #endregion
 
     #region Delayed Jobs
-    
+
     public string Schedule(Expression<Action> functionCall, TimeSpan delay)
     {
         return BackgroundJob.Schedule(functionCall, delay);
@@ -38,16 +38,16 @@ public class HangfireService : IScheduledJobService
     }
 
     #endregion
-    
+
     #region Continuos Jobs
-    
+
     public string ContinueQueueWith(string parentJobId, Expression<Action> functionCall)
     {
         return BackgroundJob.ContinueJobWith(parentJobId, functionCall);
     }
 
     #endregion
-    
+
     public bool Delete(string jobId)
     {
         return BackgroundJob.Delete(jobId);

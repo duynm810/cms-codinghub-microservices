@@ -24,6 +24,7 @@ public class ViewModel
                 return;
             }
         }
+
         Clients = Enumerable.Empty<string>();
     }
 

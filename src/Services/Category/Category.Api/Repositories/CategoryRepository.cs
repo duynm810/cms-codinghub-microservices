@@ -43,5 +43,8 @@ public class CategoryRepository(CategoryContext dbContext, IUnitOfWork<CategoryC
         return response;
     }
 
+    public async Task<CategoryBase?> GetCategoryBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
+
     #endregion
 }

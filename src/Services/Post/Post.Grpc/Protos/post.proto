@@ -9,8 +9,12 @@ service PostProtoService {
 
 message PostModel {
   string id = 1;
-  string name = 2;
+  string title = 2;
   string slug = 3;
+  int64 viewCount = 4;
+  string categoryId = 5;
+  string categoryName = 6;
+  string categorySlug = 7;
 }
 
 message HasPostsInCategoryRequest {

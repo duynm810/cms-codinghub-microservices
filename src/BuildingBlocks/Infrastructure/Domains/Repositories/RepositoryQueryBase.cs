@@ -17,7 +17,7 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
 {
     private readonly TContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
     private IDbConnection Connection => _dbContext.Database.GetDbConnection();
-    
+
     public IQueryable<T> FindAll(bool trackChanges = false)
     {
         return !trackChanges
@@ -60,7 +60,8 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
     }
 
     public async Task<IReadOnlyList<TModel>> QueryAsync<TModel>(string sql, object? param,
-        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null, int? commandTimeout = 30)
+        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null,
+        int? commandTimeout = 30)
         where TModel : EntityBase<TK>
     {
         var existingConnectionState = Connection.State;
@@ -80,7 +81,8 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
     }
 
     public async Task<TModel> QueryFirstOrDefaultAsync<TModel>(string sql, object? param,
-        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null, int? commandTimeout = 30)
+        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null,
+        int? commandTimeout = 30)
         where TModel : EntityBase<TK>
     {
         var existingConnectionState = Connection.State;
@@ -89,7 +91,8 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
 
         try
         {
-            var entity = await Connection.QueryFirstOrDefaultAsync<TModel>(sql, param, transaction, commandTimeout, commandType);
+            var entity =
+                await Connection.QueryFirstOrDefaultAsync<TModel>(sql, param, transaction, commandTimeout, commandType);
             if (entity == null) throw new EntityNotFoundException();
             return entity;
         }
@@ -99,9 +102,10 @@ public class RepositoryQueryBase<T, TK, TContext>(TContext dbContext)
                 Connection.Close();
         }
     }
-    
+
     public async Task<TModel> QuerySingleAsync<TModel>(string sql, object? param,
-        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null, int? commandTimeout = 30)
+        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null,
+        int? commandTimeout = 30)
         where TModel : EntityBase<TK>
     {
         var existingConnectionState = Connection.State;

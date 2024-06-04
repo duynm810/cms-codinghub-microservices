@@ -23,8 +23,8 @@ try
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
 
-    // Add configure settings get in appsettings
-    builder.Services.AddConfigurationSettings(configuration);
+    // Register AutoMapper
+    builder.Services.AddAutoMapperConfiguration();
 
     // Add health checks to checks database
     builder.Services.AddHealthCheckServices();

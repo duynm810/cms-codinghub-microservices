@@ -1,0 +1,54 @@
+@using System.Globalization
+@model BottomViewModel
+@{
+    var postsWithCategory = Model.PostsWithCategory.ToList();
+}
+
+<div class="container">
+    <div class="row">
+        @if (postsWithCategory.Any())
+        {
+            foreach (var item in postsWithCategory)
+            {
+                <div class="col-lg-4 col-md-6">
+                    <div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated">
+                        <div class="widget-header-2 position-relative mb-30">
+                            <h5 class="mt-5 mb-30">@item.CategoryName</h5>
+                        </div>
+                        <div class="post-block-list post-module-1">
+                            <ul class="list-post">
+                                @if (item.Posts != null)
+                                {
+                                    foreach (var postItem in item.Posts)
+                                    {
+                                        var postUrl = "/post/" + postItem.Slug;
+
+                                        <li class="mb-30">
+                                            <div class="d-flex hover-up-2 transition-normal">
+                                                <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                                    <a class="color-white" href="@postUrl">
+                                                        <img src="~/imgs/news/thumb-1.jpg" alt="">
+                                                    </a>
+                                                </div>
+                                                <div class="post-content media-body">
+                                                    <h6 class="post-title mb-15 text-limit-2-row font-medium">
+                                                        <a href="@postUrl">@postItem.Title</a>
+                                                    </h6>
+                                                    <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                                        <span class="post-on">@postItem.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                                        <span class="post-by has-dot">@postItem.ViewCount views</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<!--container-->

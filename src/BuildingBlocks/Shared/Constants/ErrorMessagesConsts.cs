@@ -7,6 +7,23 @@ public static class ErrorMessagesConsts
         public const string UnhandledException = "Unhandled exception";
     }
 
+    public static class Authentication
+    {
+        public const string InvalidCredentials = "Invalid credentials provided.";
+        public const string TokenExpired = "Authentication token has expired.";
+    }
+
+    public static class Network
+    {
+        public const string ServerUrlNotConfigured = "Server URL must be configured.";
+        public const string RequestFailed = "Request failed with status code {0} and content {1}";
+    }
+
+    public static class Data
+    {
+        public const string DeserializeFailed = "Failed to deserialize the response content.";
+    }
+
     public static class Category
     {
         public const string CategoryNotFound = "Category not found";
@@ -45,7 +62,7 @@ public static class ErrorMessagesConsts
             public const string RoleUpdateFailed = "Failed to update role";
             public const string RoleDeleteFailed = "Failed to delete role";
         }
-        
+
         public static class User
         {
             public const string UserNotFound = "User not found";
@@ -55,7 +72,7 @@ public static class ErrorMessagesConsts
             public const string UserChangePasswordFailed = "Failed to change password user";
         }
     }
-    
+
     public static class Media
     {
         public const string FileNotUploaded = "No files have been uploaded";

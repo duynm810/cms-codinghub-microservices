@@ -1,4 +1,6 @@
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
@@ -10,9 +12,7 @@ using Series.Api.Repositories;
 using Series.Api.Repositories.Interfaces;
 using Series.Api.Services;
 using Series.Api.Services.Interfaces;
-using Shared.Constants;
 using Shared.Settings;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Series.Api.Extensions;
 
@@ -31,6 +31,9 @@ public static class ServiceExtensions
         // Register database context
         services.AddDatabaseContext();
 
+        // Register Redis
+        services.AddRedisConfiguration();
+
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
 
@@ -48,7 +51,7 @@ public static class ServiceExtensions
 
         // Register health checks
         services.AddHealthCheckServices();
-        
+
         // Register authentication services
         services.AddAuthenticationServices();
 
@@ -63,6 +66,12 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+
+        var displaySettings = configuration.GetSection(nameof(DisplaySettings)).Get<DisplaySettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(DisplaySettings)} is not configured properly");
+
+        services.AddSingleton(displaySettings);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)
@@ -96,7 +105,9 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<ISeriesRepository, SeriesRepository>()
-            .AddScoped<ISeriesService, SeriesService>();
+            .AddScoped<ISeriesService, SeriesService>()
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

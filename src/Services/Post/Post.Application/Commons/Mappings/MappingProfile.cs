@@ -1,5 +1,6 @@
 using System.Reflection;
 using AutoMapper;
+using Post.Application.Commons.Mappings.Interfaces;
 
 namespace Post.Application.Commons.Mappings;
 

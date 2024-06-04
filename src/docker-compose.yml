@@ -10,8 +10,8 @@ services:
   seriesdb:
     image: mcr.microsoft.com/mssql/server:2022-latest
     
-  postinseriesdb:
-    image: redis:alpine
+  post-in-series-db:
+    image: postgres:alpine3.16
     
   hangfiredb:
     image: mongo
@@ -31,6 +31,9 @@ services:
 
   kibana:
     image: docker.elastic.co/kibana/kibana:8.13.4
+    
+  redis:
+    image: redis:alpine
   
   ##microservices api section
   apigw.ocelot:
@@ -104,6 +107,12 @@ services:
     build:
       context: .
       dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
+      
+  ui:
+    image: ${DOCKER_REGISTRY-}ui:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: WebApps/UI/WebApps.UI/Dockerfile
 
 #network
 networks:
@@ -115,10 +124,10 @@ networks:
 volumes:
   mysql_data:
     name: mysql_data
-  postgres_data:
-    name: postgres_data
-  sqlserver_data:
-    name: sqlserver_data
+  post_postgres_data:
+    name: post_postgres_data
+  series_sqlserver_data:
+    name: series_sqlserver_data
   rabbitmq_data:
     name: rabbitmq_data
   portainer_data:
@@ -129,3 +138,5 @@ volumes:
     name: hangfire_mongo_data
   identity_sqlserver_data:
     name: identity_sqlserver_data
+  post_in_series_postgres_data:
+    name: post_in_series_postgres_data

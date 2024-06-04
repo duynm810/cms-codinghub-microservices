@@ -5,7 +5,9 @@ using Category.Api.Repositories;
 using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
+using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
@@ -16,7 +18,6 @@ using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
-using Shared.Constants;
 using Shared.Settings;
 
 namespace Category.Api.Extensions;
@@ -32,9 +33,12 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register database context
         services.AddDatabaseContext();
+
+        // Register Redis
+        services.AddRedisConfiguration();
 
         // Register core services
         services.AddCoreInfrastructure();
@@ -76,9 +80,10 @@ public static class ServiceExtensions
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
 
         services.AddSingleton(grpcSettings);
-        
+
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
-                           ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+                                ?? throw new ArgumentNullException(
+                                    $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
     }
@@ -115,7 +120,9 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<ICategoryRepository, CategoryRepository>()
-            .AddScoped<ICategoryService, CategoryService>();
+            .AddScoped<ICategoryService, CategoryService>()
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)

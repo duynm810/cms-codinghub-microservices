@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
@@ -61,7 +62,7 @@ public class SubmitPostForApprovalCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Name)
+                    await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Title)
                         .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
@@ -72,6 +73,8 @@ public class SubmitPostForApprovalCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
+
+                // Xóa cache liên quan
 
                 result.Success(true);
             }

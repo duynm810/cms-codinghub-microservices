@@ -8,7 +8,7 @@ namespace Post.Infrastructure.Persistence;
 public class PostContext(DbContextOptions<PostContext> options) : DbContext(options)
 {
     public required DbSet<PostBase> Posts { get; set; }
-    
+
     public required DbSet<PostActivityLog> PostActivityLogs { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

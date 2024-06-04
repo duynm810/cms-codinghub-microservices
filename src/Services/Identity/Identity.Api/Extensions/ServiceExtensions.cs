@@ -64,7 +64,7 @@ public static class ServiceExtensions
 
         // Register authorization
         services.AddAuthorizationServices();
-        
+
         // Register health checks
         services.AddHealthCheckServices();
     }
@@ -181,7 +181,7 @@ public static class ServiceExtensions
                     .AllowAnyHeader());
         });
     }
-    
+
     private static void AddSwaggerConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSwaggerGen(c =>
@@ -194,13 +194,13 @@ public static class ServiceExtensions
                 Description =
                     "API for CMS core domain. This domain keeps track of campaigns, campaign rules, and campaign execution."
             });
-            
+
             var identityServerBaseUrl = configuration.GetSection("IdentityServer:BaseUrl").Value;
             c.AddSecurityDefinition(IdentityServerAuthenticationDefaults.AuthenticationScheme, new OpenApiSecurityScheme
             {
                 // Determine the security scheme type as OAuth2
                 // Xác định loại scheme bảo mật là OAuth2
-                Type = SecuritySchemeType.OAuth2, 
+                Type = SecuritySchemeType.OAuth2,
                 Flows = new OpenApiOAuthFlows //  Supported OAuth2 flow definitions (Định nghĩa flow OAuth2 được hỗ trợ)
                 {
                     Implicit = new OpenApiOAuthFlow
@@ -234,11 +234,12 @@ public static class ServiceExtensions
                             Id = IdentityServerAuthenticationDefaults.AuthenticationScheme
                         }
                     },
-                    new List<string> //  List of scopes to which this security requirement applies (Danh sách các phạm vi (scopes) mà yêu cầu bảo mật này áp dụng)
-                    {
-                        "coding_hub_microservices_api.read",
-                        "coding_hub_microservices_api.write"
-                    }
+                    new
+                        List<string> //  List of scopes to which this security requirement applies (Danh sách các phạm vi (scopes) mà yêu cầu bảo mật này áp dụng)
+                        {
+                            "coding_hub_microservices_api.read",
+                            "coding_hub_microservices_api.write"
+                        }
                 }
             });
         });
@@ -254,7 +255,7 @@ public static class ServiceExtensions
             config.ReturnHttpNotAcceptable = true;
             config.Filters.Add(new ProducesAttribute("application/json", "text/plain", "text/json"));
         }).AddApplicationPart(typeof(AssemblyReference).Assembly);
-        
+
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
     }
@@ -263,12 +264,13 @@ public static class ServiceExtensions
     {
         services
             .AddAuthentication()
-            .AddLocalApi(IdentityServerAuthenticationDefaults.AuthenticationScheme, option =>
-            {
-                option.ExpectedScope = "coding_hub_microservices_api.read";
-            }); // Any token with this scope will be accepted. (Bất kỳ token nào có scope này sẽ được chấp nhận.)
+            .AddLocalApi(IdentityServerAuthenticationDefaults.AuthenticationScheme,
+                option =>
+                {
+                    option.ExpectedScope = "coding_hub_microservices_api.read";
+                }); // Any token with this scope will be accepted. (Bất kỳ token nào có scope này sẽ được chấp nhận.)
     }
-    
+
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));

@@ -14,7 +14,7 @@ public class SeriesBase : EntityAuditBase<Guid>
     /// </summary>
     [MaxLength(250)]
     [Required]
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     /// <summary>
     /// Đường dẫn tĩnh (SEO-friendly URL) của loạt bài viết

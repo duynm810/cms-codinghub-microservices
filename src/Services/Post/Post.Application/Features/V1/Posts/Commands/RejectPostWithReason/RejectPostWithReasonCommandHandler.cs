@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
@@ -59,7 +60,7 @@ public class RejectPostWithReasonCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendPostRejectionEmail(post.Name, postActivityLog.Note)
+                    await postEmailTemplateService.SendPostRejectionEmail(post.Title, postActivityLog.Note)
                         .ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
@@ -70,6 +71,8 @@ public class RejectPostWithReasonCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
+
+                // Xóa cache liên quan
 
                 result.Success(true);
             }

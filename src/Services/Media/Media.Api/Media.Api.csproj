@@ -9,24 +9,24 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="wwwroot\" />
-      <Folder Include="wwwroot\media\images\posts\052024\" />
+        <Folder Include="wwwroot\"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Content Include="..\..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
+        <Content Include="..\..\..\..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
     </ItemGroup>
 
 </Project>

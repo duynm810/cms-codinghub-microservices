@@ -15,7 +15,10 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
     where TContext : DbContext
 {
     private readonly TContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-    private readonly IUnitOfWork<TContext> _unitOfWork = unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
+    private readonly IUnitOfWork<TContext> _unitOfWork =
+        unitOfWork ?? throw new ArgumentNullException(nameof(unitOfWork));
+
     private IDbConnection Connection => _dbContext.Database.GetDbConnection();
 
     #region Async
@@ -61,8 +64,9 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
         await _dbContext.SaveChangesAsync();
     }
 
-    public async  Task<int> ExecuteAsync(string sql, object? param,
-        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null, int? commandTimeout = 30)
+    public async Task<int> ExecuteAsync(string sql, object? param,
+        CommandType? commandType = CommandType.StoredProcedure, IDbTransaction? transaction = null,
+        int? commandTimeout = 30)
     {
         var existingConnectionState = Connection.State;
         if (existingConnectionState != ConnectionState.Open)

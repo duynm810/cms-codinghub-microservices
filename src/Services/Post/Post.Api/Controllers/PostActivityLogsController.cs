@@ -10,7 +10,7 @@ namespace Post.Api.Controllers;
 public class PostActivityLogsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{postId:guid}")]
-    public async Task<ActionResult<List<PostActivityLogDto>>> GetActivityLogs(Guid postId)
+    public async Task<ActionResult<List<PostActivityLogModel>>> GetActivityLogs(Guid postId)
     {
         var query = new GetPostActivityLogsQuery(postId);
         var result = await mediator.Send(query);

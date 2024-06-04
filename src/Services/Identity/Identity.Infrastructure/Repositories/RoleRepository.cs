@@ -17,6 +17,7 @@ public class RoleRepository(RoleManager<IdentityRole> roleManager) : IRoleReposi
         {
             throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
+
         return result.Succeeded;
     }
 
@@ -27,11 +28,12 @@ public class RoleRepository(RoleManager<IdentityRole> roleManager) : IRoleReposi
         {
             throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
+
         return result.Succeeded;
     }
 
     public async Task<IEnumerable<IdentityRole>> GetRoles() => await roleManager.Roles.ToListAsync();
-    
+
     public async Task<IdentityRole?> GetRoleById(Guid roleId) => await roleManager.FindByIdAsync(roleId.ToString());
 
     #endregion

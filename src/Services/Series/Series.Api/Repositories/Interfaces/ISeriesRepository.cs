@@ -14,7 +14,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task DeleteSeries(SeriesBase series);
 
-    Task<IEnumerable<SeriesBase>> GetSeries();
+    Task<IEnumerable<SeriesBase>> GetSeries(int count);
 
     Task<SeriesBase?> GetSeriesById(Guid id);
 
@@ -23,6 +23,8 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
     #region OTHERS
 
     Task<PagedResponse<SeriesBase>> GetSeriesPaging(int pageNumber, int pageSize);
+
+    Task<SeriesBase?> GetSeriesBySlug(string slug);
 
     #endregion
 }

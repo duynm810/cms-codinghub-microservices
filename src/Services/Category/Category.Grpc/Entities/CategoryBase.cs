@@ -25,9 +25,24 @@ public class CategoryBase : EntityAuditBase<long>
     public Guid? ParentId { get; set; }
 
     /// <summary>
+    /// Biểu tượng danh mục
+    /// </summary>
+    public string? Icon { get; set; }
+
+    /// <summary>
+    /// Màu danh mục
+    /// </summary>
+    public string? Color { get; set; }
+
+    /// <summary>
     /// Thứ tự ưu tiên
     /// </summary>
     public int SortOrder { get; set; }
+
+    /// <summary>
+    /// Phân biệt danh mục tĩnh hay động
+    /// </summary>
+    public bool IsStaticPage { get; set; }
 
     /// <summary>
     /// Kích hoạt

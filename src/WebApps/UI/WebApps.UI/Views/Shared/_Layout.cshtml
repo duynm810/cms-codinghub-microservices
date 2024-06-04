@@ -1,0 +1,82 @@
+﻿@model BaseViewModel
+
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Coding Hub - Personal Blog HTML Template</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="~/imgs/theme/favicon.png">
+    <!-- NewsBoard CSS  -->
+    <link rel="stylesheet" href="~/css/style.css">
+    <link rel="stylesheet" href="~/css/widgets.css">
+    <link rel="stylesheet" href="~/css/dark.css">
+    <link rel="stylesheet" href="~/css/responsive.css">
+</head>
+<body class="theme-mode">
+<div class="scroll-progress primary-bg"></div>
+<!-- Start Preloader -->
+<div class="preloader text-center">
+    <div class="circle"></div>
+</div>
+<!--Off canvas sidebar-->
+<aside id="sidebar-wrapper" class="custom-scrollbar offcanvas-sidebar">
+    @await Component.InvokeAsync("Canvas", "Default")
+</aside>
+
+<!-- Start Header -->
+<header class="main-header header-style-1 font-heading">
+    @await Component.InvokeAsync("Header", "Default")
+</header>
+
+<!--Start search form-->
+<div class="main-search-form">
+    @await Component.InvokeAsync("Search", "Default")
+</div>
+
+<!-- Start Main content -->
+<main class="@Model.MainClass">
+    @RenderBody()
+</main>
+<!-- End Main content -->
+
+<!--site-bottom-->
+@if (Model.ShowSiteBottom)
+{
+    <div class="site-bottom pt-50 pb-50">
+        @await Component.InvokeAsync("Bottom", "Default")
+    </div>
+}
+<!--end site-bottom-->
+
+<!-- Footer Start-->
+<footer class="pt-50 pb-20 bg-grey">
+    @await Component.InvokeAsync("Footer", "Default")
+</footer>
+<!-- End Footer -->
+
+<div class="dark-mark"></div>
+<!-- Vendor JS-->
+<script src="~/js/vendor/modernizr-3.6.0.min.js"></script>
+<script src="~/js/vendor/jquery-3.6.0.min.js"></script>
+<script src="~/js/vendor/popper.min.js"></script>
+<script src="~/js/vendor/bootstrap.min.js"></script>
+<script src="~/js/vendor/jquery.slicknav.js"></script>
+<script src="~/js/vendor/slick.min.js"></script>
+<script src="~/js/vendor/wow.min.js"></script>
+<script src="~/js/vendor/jquery.ticker.js"></script>
+<script src="~/js/vendor/jquery.vticker-min.js"></script>
+<script src="~/js/vendor/jquery.scrollUp.min.js"></script>
+<script src="~/js/vendor/jquery.nice-select.min.js"></script>
+<script src="~/js/vendor/jquery.magnific-popup.js"></script>
+<script src="~/js/vendor/jquery.sticky.js"></script>
+<script src="~/js/vendor/perfect-scrollbar.js"></script>
+<script src="~/js/vendor/waypoints.min.js"></script>
+<script src="~/js/vendor/jquery.theia.sticky.js"></script>
+<!-- NewsBoard JS -->
+<script src="~/js/main.js"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

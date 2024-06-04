@@ -25,9 +25,9 @@ try
 
     // Register app configuration settings
     builder.Services.AddConfigurationSettings(configuration);
-    
+
     builder.Services.AddMassTransitWithRabbitMq();
-    
+
     // Register health checks
     builder.Services.AddHealthCheckServices();
 
@@ -47,12 +47,12 @@ try
 
     // Register authorization services
     builder.Services.AddAuthorizationServices();
-    
+
     // Register Swagger services
     builder.Services.AddSwaggerConfiguration();
 
     var app = builder.Build();
-    
+
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 

@@ -28,7 +28,7 @@ public static class ApplicationExtensions
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
-        
+
         app.UseMiddleware<ErrorWrappingMiddleware>();
 
         // Enables routing in the application.
@@ -37,13 +37,13 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
-        
+
         app.MapHealthChecks("/hc", new HealthCheckOptions()
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
-        
+
         app.MapDefaultControllerRoute();
     }
 }

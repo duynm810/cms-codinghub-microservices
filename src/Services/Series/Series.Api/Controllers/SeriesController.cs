@@ -41,6 +41,7 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
 
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<SeriesDto>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
     public async Task<IActionResult> GetSeries()
     {
         var result = await seriesService.GetSeries();
@@ -52,6 +53,15 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
     public async Task<IActionResult> GetSeries([FromRoute, Required] Guid id)
     {
         var result = await seriesService.GetSeriesById(id);
+        return Ok(result);
+    }
+
+    [HttpGet("by-slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<SeriesDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetSeriesBySlug([FromRoute, Required] string slug)
+    {
+        var result = await seriesService.GetSeriesBySlug(slug);
         return Ok(result);
     }
 

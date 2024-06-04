@@ -25,6 +25,10 @@ public class IdentityRepositoryManager(
     
     public IUserRepository Users => _userRepository.Value;
 
+    public IRoleRepository Roles => _roleRepository.Value;
+
+    public IUserRepository Users => _userRepository.Value;
+
     public UserManager<User> UserManager { get; } = userManager;
 
     public RoleManager<IdentityRole> RoleManager { get; } = roleManager;

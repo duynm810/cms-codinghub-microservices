@@ -1,0 +1,56 @@
+@using System.Globalization
+@model HomeViewModel
+@{
+    var mostLikedPosts = Model.MostLikedPosts.ToList();
+}
+<div class="widget-header-1 position-relative mb-30  wow fadeInUp animated">
+    <h5 class="mt-5 mb-30">Liked Posts</h5>
+</div>
+<div class="loop-list loop-list-style-1">
+    <div class="row">
+        @if (mostLikedPosts.Any())
+        {
+            foreach (var item in mostLikedPosts)
+            {
+                var postUrl = "/post/" + item.Slug;
+
+                <article class="col-md-6 mb-40 wow fadeInUp  animated">
+                    <div class="post-card-1 border-radius-10 hover-up">
+                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-6.jpg)">
+                            <a class="img-link" href="@postUrl"></a>
+                            <ul class="social-share">
+                                <li>
+                                    <a href="#">
+                                        <i class="elegant-icon social_share"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="fb" href="#" title="Share on Facebook" target="_blank">
+                                        <i class="elegant-icon social_facebook"></i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="post-content p-30">
+                            <div class="entry-meta meta-0 font-small mb-10">
+                            </div>
+                            <div class="d-flex post-card-content">
+                                <h5 class="post-title mb-20 font-weight-900">
+                                    <a href="@postUrl">@item.Title</a>
+                                </h5>
+                                <div class="post-excerpt mb-25 font-small text-muted">
+                                    <p>@item.Summary</p>
+                                </div>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">@item.CreatedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                    <span class="time-reading has-dot">12 mins read</span>
+                                    <span class="post-by has-dot">@item.ViewCount views</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            }
+        }
+    </div>
+</div>

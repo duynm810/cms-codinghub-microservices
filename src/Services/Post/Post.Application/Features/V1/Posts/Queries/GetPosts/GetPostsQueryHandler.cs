@@ -1,10 +1,15 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Caching.Distributed;
+using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
+using Post.Domain.Entities;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -13,39 +18,44 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 public class GetPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IMapper mapper,
+    ICacheService cacheService,
+    IMappingHelper mappingHelper,
     ILogger logger)
-    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
+    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostModel>>> Handle(GetPostsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostDto>>();
-        const string methodName = nameof(Handle);
+        var result = new ApiResult<IEnumerable<PostModel>>();
+        const string methodName = nameof(GetPostsQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
 
+            // Kiểm tra cache
+            var cacheKey = CacheKeyHelper.Post.GetAllPostsKey();
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
+            if (cachedPosts != null)
+            {
+                result.Success(cachedPosts);
+                logger.Information("END {MethodName} - Successfully retrieved all posts from cache", methodName);
+                return result;
+            }
+
             var posts = await postRepository.GetPosts();
 
-            var postBases = posts.ToList();
-            if (postBases.IsNotNullOrEmpty())
+            var postList = posts.ToList();
+            if (postList.IsNotNullOrEmpty())
             {
-                var categoryIds = postBases.Select(p => p.CategoryId).Distinct().ToList();
+                var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c.Name);
 
-                var data = mapper.Map<List<PostDto>>(posts);
-                foreach (var post in data)
-                {
-                    if (categoryDictionary.TryGetValue(post.CategoryId, out var value))
-                    {
-                        post.CategoryName = value;
-                    }
-                }
-
+                var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
+
+                // Lưu cache
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts", methodName,
                     data.Count);
@@ -53,7 +63,7 @@ public class GetPostsQueryHandler(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsQuery), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

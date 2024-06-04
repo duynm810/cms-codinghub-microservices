@@ -7,9 +7,9 @@ public interface ICategoryService
 {
     #region CRUD
 
-    Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto model);
+    Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto request);
 
-    Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto model);
+    Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto request);
 
     Task<ApiResult<bool>> DeleteCategory(List<long> ids);
 
@@ -22,6 +22,8 @@ public interface ICategoryService
     #region OTHERS
 
     Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize);
+
+    Task<ApiResult<CategoryDto>> GetCategoryBySlug(string slug);
 
     #endregion
 }

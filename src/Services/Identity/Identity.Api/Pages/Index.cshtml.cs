@@ -19,9 +19,10 @@ public class Index : PageModel
     public string Version
     {
         get => typeof(Duende.IdentityServer.Hosting.IdentityServerMiddleware).Assembly
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-            ?.InformationalVersion.Split('+').First()
-            ?? "unavailable";
+                   .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                   ?.InformationalVersion.Split('+').First()
+               ?? "unavailable";
     }
+
     public IdentityServerLicense? License { get; }
 }
