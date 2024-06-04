@@ -2,8 +2,6 @@
 @model WebApps.UI.Models.Posts.PostsByCategoryViewModel
 @{
     var posts = Model.Posts;
-    var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
-    const double increment = 0.1; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
 }
 
 <!--archive header-->
@@ -28,7 +26,7 @@
                     var categoryUrl = "/category/" + item.CategorySlug;
                     var postUrl = "/post/" + item.Slug;
 
-                    <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
+                    <article class="col-lg-4 col-md-6 mb-30">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(../imgs/news/news-3.jpg)">
                                 <a class="img-link" href="@postUrl"></a>
@@ -77,15 +75,12 @@
                             </div>
                         </div>
                     </article>
-
-                    // Increase the delay for the next iteration (Tăng độ trễ cho lần lặp tiếp theo)
-                    delay += increment;
                 }
             }
         </div>
         <div class="row mt-50">
             <div class="col-12">
-                <div class="pagination-area mb-30 wow fadeInUp animated">
+                <div class="pagination-area mb-30">
                     @await Component.InvokeAsync("Pager", posts.MetaData)
                 </div>
             </div>

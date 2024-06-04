@@ -16,7 +16,7 @@
                 var categoryUrl = "/category/" + item.CategorySlug;
                 var postUrl = "/post/" + item.Slug;
 
-                <article class="hover-up-2 transition-normal wow fadeInUp animated">
+                <article class="hover-up-2 transition-normal">
                     <div class="row mb-40 list-style-2">
                         <div class="col-md-4">
                             <div class="post-thumb position-relative border-radius-5">
@@ -66,6 +66,6 @@
         }
     </div>
 </div>
-<div class="pagination-area mb-30 wow fadeInUp animated">
+<div class="pagination-area mb-30">
     @await Component.InvokeAsync("Pager", posts.MetaData)
 </div>
