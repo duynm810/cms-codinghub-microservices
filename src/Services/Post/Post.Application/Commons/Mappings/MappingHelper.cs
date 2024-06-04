@@ -23,10 +23,10 @@ public class MappingHelper(IMapper mapper) : IMappingHelper
         {
             return [];
         }
-        
+
         var postModels = mapper.Map<List<PostModel>>(postBases);
         var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
-        
+
         foreach (var post in postModels)
         {
             if (categoryDictionary.TryGetValue(post.CategoryId, out var category))
@@ -34,33 +34,34 @@ public class MappingHelper(IMapper mapper) : IMappingHelper
                 mapper.Map(category, post);
             }
         }
-        
+
         return postModels;
     }
-    
-    public PagedResponse<PostModel> MapPostsWithCategories(PagedResponse<PostBase> pagedPosts, IEnumerable<CategoryDto> categories)
+
+    public PagedResponse<PostModel> MapPostsWithCategories(PagedResponse<PostBase> pagedPosts,
+        IEnumerable<CategoryDto> categories)
     {
         var postModels = MapPostsWithCategories(pagedPosts.Items, categories);
-        
+
         return new PagedResponse<PostModel>
         {
             Items = postModels,
             MetaData = pagedPosts.MetaData
         };
     }
-    
+
     public PagedResponse<PostModel> MapPostsWithCategory(PagedResponse<PostBase> pagedPosts, CategoryDto category)
     {
         var postModels = mapper.Map<List<PostModel>>(pagedPosts.Items);
         MapCategoryToPosts(postModels, category);
-        
+
         return new PagedResponse<PostModel>
         {
             Items = postModels,
             MetaData = pagedPosts.MetaData
         };
     }
-    
+
     public PostModel MapPostWithCategory(PostBase post, CategoryDto category)
     {
         var postModel = mapper.Map<PostModel>(post);

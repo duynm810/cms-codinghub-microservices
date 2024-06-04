@@ -36,7 +36,9 @@ public class ErrorController(IErrorService errorService) : Controller
         var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
         var exception = feature?.Error;
 
-        ViewData["ErrorMessage"] = exception?.Message ?? errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
-        return View(errorService.GetViewName((int)HttpStatusCode.InternalServerError), new HttpErrorViewModel((int)HttpStatusCode.InternalServerError));
+        ViewData["ErrorMessage"] =
+            exception?.Message ?? errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
+        return View(errorService.GetViewName((int)HttpStatusCode.InternalServerError),
+            new HttpErrorViewModel((int)HttpStatusCode.InternalServerError));
     }
 }

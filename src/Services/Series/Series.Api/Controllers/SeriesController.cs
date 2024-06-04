@@ -55,7 +55,7 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
         var result = await seriesService.GetSeriesById(id);
         return Ok(result);
     }
-    
+
     [HttpGet("by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<SeriesDto>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]

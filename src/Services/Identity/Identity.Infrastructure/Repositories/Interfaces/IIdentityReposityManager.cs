@@ -9,7 +9,7 @@ public interface IIdentityReposityManager
     UserManager<User> UserManager { get; }
 
     RoleManager<IdentityRole> RoleManager { get; }
-    
+
     IPermissionRepository Permissions { get; }
 
     IRoleRepository Roles { get; }

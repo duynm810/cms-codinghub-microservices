@@ -33,7 +33,7 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ICacheServ
 
             await postRepository.DeletePost(post);
             result.Success(true);
-            
+
             // Xóa cache liên quan
             var cacheKeys = new List<string>
             {

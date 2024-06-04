@@ -62,10 +62,10 @@ public static class ServiceExtensions
                 $"{nameof(IdentityServerSettings)} is not configured properly");
 
         services.AddSingleton(identityServerSettings);
-        
+
         var paginationSettings = configuration.GetSection(nameof(PaginationSettings)).Get<PaginationSettings>()
-                          ?? throw new ArgumentNullException(
-                              $"{nameof(PaginationSettings)} is not configured properly");
+                                 ?? throw new ArgumentNullException(
+                                     $"{nameof(PaginationSettings)} is not configured properly");
 
         services.AddSingleton(paginationSettings);
     }
@@ -88,10 +88,7 @@ public static class ServiceExtensions
 
     private static void AddAdditionalServices(this IServiceCollection services)
     {
-        services.AddControllersWithViews(options =>
-        {
-            options.Filters.Add<CustomExceptionFilterAttribute>();
-        });
+        services.AddControllersWithViews(options => { options.Filters.Add<CustomExceptionFilterAttribute>(); });
     }
 
     private static void AddRazorPagesRuntimeConfiguration(this IServiceCollection services)
@@ -116,7 +113,7 @@ public static class ServiceExtensions
 
         // Config SSO with Identity Server 4
         IdentityModelEventSource.ShowPII = true;
-        
+
         services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -154,7 +151,8 @@ public static class ServiceExtensions
                                                 RefreshToken = refreshToken
                                             });
 
-                                        if (!response.IsError && response is { AccessToken: not null, RefreshToken: not null })
+                                        if (!response.IsError && response is
+                                                { AccessToken: not null, RefreshToken: not null })
                                         {
                                             identity.RemoveClaim(accessTokenClaim);
                                             identity.RemoveClaim(refreshTokenClaim);
@@ -184,7 +182,7 @@ public static class ServiceExtensions
                 options.ClientSecret = identityServerSettings.ClientSecret;
                 options.ResponseType = "code";
                 options.SaveTokens = true;
-                
+
                 options.Scope.Add("openid");
                 options.Scope.Add("profile");
                 options.Scope.Add("offline_access");
@@ -196,7 +194,7 @@ public static class ServiceExtensions
                     NameClaimType = "name",
                     RoleClaimType = "roles"
                 };
-                
+
                 options.Events = new OpenIdConnectEvents
                 {
                     OnTokenValidated = x =>

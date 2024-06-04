@@ -26,17 +26,17 @@ public static class ApplicationExtensions
             c.DisplayOperationId(); // Show function name in swagger
             c.DisplayRequestDuration();
         });
-        
+
         app.UseMiddleware<ErrorWrappingMiddleware>();
 
         app.UseSerilogRequestLogging();
-        
+
         app.UseCors("CorsPolicy");
 
         // Uncomment if you want to add a UI
         app.UseStaticFiles();
         app.UseRouting();
-        
+
         // Fix can't log in same site
         // Set cookie policy before authentication/authorization setup
         app.UseCookiePolicy();
@@ -44,17 +44,17 @@ public static class ApplicationExtensions
         app.UseIdentityServer();
 
         app.UseAuthorization();
-        
+
         app.UseAuthentication();
-        
+
         app.MapHealthChecks("/hc", new HealthCheckOptions()
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
-        
+
         app.MapDefaultControllerRoute().RequireAuthorization(IdentityServerAuthenticationDefaults.AuthenticationScheme);
-        
+
         // Uncomment if you want to add a UI
         app.MapRazorPages().RequireAuthorization();
     }

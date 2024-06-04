@@ -70,7 +70,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             }
 
             result.Success(updateResult);
-            
+
             logger.Information("END {MethodName} - Role updated successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
@@ -109,7 +109,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             }
 
             result.Success(deleteResult);
-            
+
             logger.Information("END {MethodName} - Role deleted successfully with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)
@@ -135,7 +135,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
             var data = mapper.Map<IEnumerable<RoleDto>>(roles);
 
             result.Success(data);
-            
+
             logger.Information("END {MethodName} - Successfully retrieved roles", methodName);
         }
         catch (Exception e)
@@ -167,7 +167,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
 
             var data = mapper.Map<RoleDto>(role);
             result.Success(data);
-            
+
             logger.Information("END {MethodName} - Successfully retrieved role with ID {RoleId}", methodName, roleId);
         }
         catch (Exception e)

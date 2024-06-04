@@ -23,10 +23,10 @@ public static class ServiceExtensions
 
         // Register additional services
         services.AddAdditionalServices();
-        
+
         // Register Swagger services
         services.AddSwaggerConfiguration();
-        
+
         // Register authentication services
         services.AddAuthenticationServices();
 

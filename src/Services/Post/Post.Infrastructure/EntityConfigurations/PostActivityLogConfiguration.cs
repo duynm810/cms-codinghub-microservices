@@ -4,7 +4,7 @@ using Post.Domain.Entities;
 
 namespace Post.Infrastructure.EntityConfigurations;
 
-public class PostActivityLogConfiguration  : IEntityTypeConfiguration<PostActivityLog>
+public class PostActivityLogConfiguration : IEntityTypeConfiguration<PostActivityLog>
 {
     public void Configure(EntityTypeBuilder<PostActivityLog> builder)
     {

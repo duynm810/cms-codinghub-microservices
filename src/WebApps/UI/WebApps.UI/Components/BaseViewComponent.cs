@@ -20,7 +20,7 @@ public abstract class BaseViewComponent(IErrorService errorService, ILogger logg
     protected IViewComponentResult HandleException(Exception e, string methodName)
     {
         logger.Error(e, "{MethodName} encountered an exception", methodName);
-        
+
         var errorMessage = errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
         ViewData["ErrorMessage"] = errorMessage;
         return View(errorService.GetViewName((int)HttpStatusCode.InternalServerError));

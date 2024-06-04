@@ -3,7 +3,7 @@ namespace Shared.Helpers;
 public static class CacheKeyHelper
 {
     #region Category
-    
+
     private const string CategoryServicePrefix = "service:category";
 
     public static class Category
@@ -14,7 +14,8 @@ public static class CacheKeyHelper
 
         public static string GetCategoryBySlugKey(string slug) => $"{CategoryServicePrefix}:slug:{slug}";
 
-        public static string GetCategoriesPagingKey(int pageNumber, int pageSize) => $"{CategoryServicePrefix}:page:{pageNumber}:size:{pageSize}";
+        public static string GetCategoriesPagingKey(int pageNumber, int pageSize) =>
+            $"{CategoryServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion
@@ -26,11 +27,12 @@ public static class CacheKeyHelper
     public static class CategoryGrpc
     {
         public static string GetGrpcCategoryByIdKey(long categoryId) => $"{CategoryGrpcPrefix}:{categoryId}";
-        
+
         public static string GetGrpcCategoryBySlugKey(string slug) => $"{CategoryGrpcPrefix}:slug:{slug}";
-        
-        public static string GetGrpcCategoriesByIdsKey(IEnumerable<long> ids) => $"{CategoryGrpcPrefix}:ids:{string.Join("_", ids)}";
-        
+
+        public static string GetGrpcCategoriesByIdsKey(IEnumerable<long> ids) =>
+            $"{CategoryGrpcPrefix}:ids:{string.Join("_", ids)}";
+
         public static string GetGrpcAllNonStaticPageCategoriesKey() => $"{CategoryGrpcPrefix}:non_static";
     }
 
@@ -39,7 +41,7 @@ public static class CacheKeyHelper
     #region Post
 
     private const string PostServicePrefix = "service:post";
-    
+
     public static class Post
     {
         public static string GetAllPostsKey() => $"{PostServicePrefix}:all";
@@ -47,35 +49,37 @@ public static class CacheKeyHelper
         public static string GetPinnedPostsKey() => $"{PostServicePrefix}:pinned";
 
         public static string GetFeaturedPostsKey() => $"{PostServicePrefix}:featured";
-        
+
         public static string GetMostLikedPostsKey() => $"{PostServicePrefix}:most_liked";
-        
+
         public static string GetMostCommentPostsKey() => $"{PostServicePrefix}:most_commented";
 
         public static string GetPostByIdKey(Guid postId) => $"{PostServicePrefix}:{postId}";
-        
+
         public static string GetPostsByNonStaticPageCategoryKey() => $"{PostServicePrefix}:category:non_static_page";
 
         public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
 
         public static string GetLatestPostsPagingKey(int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:latest:page:{pageNumber}:size:{pageSize}";
-        
+
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:category:{categorySlug}:page:{pageNumber}:size:{pageSize}";
-        
-        public static string GetPostsPagingKey(int pageNumber, int pageSize) => $"{PostServicePrefix}:page:{pageNumber}:size:{pageSize}";
+
+        public static string GetPostsPagingKey(int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion
 
     #region Post Grpc
-    
+
     private const string PostGrpcPrefix = "grpc:post";
 
     public static class PostGrpc
     {
-        public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) => $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
+        public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) =>
+            $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
     }
 
     #endregion
@@ -87,12 +91,13 @@ public static class CacheKeyHelper
     public static class Series
     {
         public static string GetAllSeriessKey() => $"{SeriesServicePrefix}:all";
-        
+
         public static string GetSeriesByIdKey(Guid seriesId) => $"{SeriesServicePrefix}:{seriesId}";
-        
+
         public static string GetSeriesBySlugKey(string slug) => $"{SeriesServicePrefix}:slug:{slug}";
-        
-        public static string GetSeriesPagingKey(int pageNumber, int pageSize) => $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
+
+        public static string GetSeriesPagingKey(int pageNumber, int pageSize) =>
+            $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion
@@ -104,7 +109,7 @@ public static class CacheKeyHelper
     public static class SeriesGrpc
     {
         public static string GetGrpcSeriesByIdKey(Guid seriesId) => $"{SeriesGrpcPrefix}:{seriesId}";
-        
+
         public static string GetGrpcSeriesBySlugKey(string slug) => $"{SeriesGrpcPrefix}:slug:{slug}";
     }
 

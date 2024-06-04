@@ -22,7 +22,7 @@ try
 
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     // Register AutoMapper
     builder.Services.AddAutoMapperConfiguration();
 

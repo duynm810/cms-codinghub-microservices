@@ -25,7 +25,7 @@ public static class ConfigureServices
 
         // Register pipeline behaviors
         services.AddPipelineBehaviors();
-    
+
         // Register infrastructure services
         services.AddAppInfrastructureServices();
     }
@@ -33,7 +33,7 @@ public static class ConfigureServices
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddTransient<IMappingHelper,MappingHelper>();
+        services.AddTransient<IMappingHelper, MappingHelper>();
     }
 
     private static void AddValidatorServices(this IServiceCollection services)

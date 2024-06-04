@@ -18,7 +18,6 @@ using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Post.Grpc.Protos;
 using Shared.Configurations;
-using Shared.Constants;
 using Shared.Settings;
 
 namespace Category.Api.Extensions;
@@ -37,7 +36,7 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
-        
+
         // Register Redis
         services.AddRedisConfiguration();
 

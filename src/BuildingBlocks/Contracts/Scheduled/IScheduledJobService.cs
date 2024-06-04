@@ -24,7 +24,7 @@ public interface IScheduledJobService
     /// <param name="functionCall">The method to call.</param>
     /// <returns>The ID of the enqueued job.</returns>
     string Enqueue(Expression<Action> functionCall);
-    
+
     /// <summary>
     /// Enqueue a fire-and-forget job with a parameter.
     /// </summary>
@@ -44,7 +44,7 @@ public interface IScheduledJobService
     /// <param name="delay">The delay after which the job will run.</param>
     /// <returns>The ID of the scheduled job.</returns>
     string Schedule(Expression<Action> functionCall, TimeSpan delay);
-    
+
     /// <summary>
     /// Schedule a job with a parameter to run after a delay.
     /// </summary>
@@ -63,7 +63,7 @@ public interface IScheduledJobService
     string Schedule(Expression<Action> functionCall, DateTimeOffset enqueueAt);
 
     #endregion
-    
+
     /// <summary>
     /// Delete a job by its ID.
     /// </summary>

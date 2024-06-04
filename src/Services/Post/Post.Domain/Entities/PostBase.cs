@@ -64,17 +64,17 @@ public class PostBase : EntityAuditBase<Guid>
     /// Số lượt xem bài viết
     /// </summary>
     public int ViewCount { get; set; }
-    
+
     /// <summary>
     /// Số lượng bình luận bài viết
     /// </summary>
     public int CommentCount { get; set; }
-    
+
     /// <summary>
     /// Số lượt thích bài viết
     /// </summary>
     public int LikeCount { get; set; }
-    
+
     /// <summary>
     /// Bài viết có được ghim lên đầu không
     /// </summary>
@@ -99,7 +99,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// Trạng thái của bài viết, ví dụ: Nháp, Chờ duyệt,..
     /// </summary>
     public PostStatusEnum Status { get; set; }
-    
+
     /// <summary>
     /// Ngày công bố bài viết
     /// </summary>
@@ -116,7 +116,7 @@ public class PostBase : EntityAuditBase<Guid>
     /// </summary>
     [Required]
     public Guid AuthorUserId { get; set; }
-    
+
     /// <summary>
     /// Ngày thanh toán cho bài viết, nếu là bài viết do người khác đăng
     /// </summary>

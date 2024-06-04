@@ -17,9 +17,9 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
-        
+
         app.UseStatusCodePagesWithReExecute("/HttpError/{0}");
-        
+
         app.UseStaticFiles();
 
         app.UseRouting();
@@ -27,7 +27,7 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
-        
+
         // Register routes
         RouteMap.RegisterRoutes(app);
     }

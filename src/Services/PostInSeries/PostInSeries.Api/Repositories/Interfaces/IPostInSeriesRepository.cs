@@ -1,4 +1,3 @@
-
 using Contracts.Domains.Repositories;
 using PostInSeries.Api.Entities;
 

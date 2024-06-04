@@ -23,7 +23,8 @@ public class BackgroundJobService(
         try
         {
             var jobId = scheduledJobService.Schedule(() => smtpEmailService.SendEmail(emailRequest), enqueueAt);
-            logger.Information("Scheduled email to {Email} with subject: {Subject} - Job Id: {JobId}", to, subject, jobId);
+            logger.Information("Scheduled email to {Email} with subject: {Subject} - Job Id: {JobId}", to, subject,
+                jobId);
             return jobId;
         }
         catch (Exception e)

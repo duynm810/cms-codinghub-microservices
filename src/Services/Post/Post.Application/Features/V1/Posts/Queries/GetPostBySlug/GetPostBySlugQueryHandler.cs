@@ -19,15 +19,14 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
     ICacheService cacheService,
     DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailModel>>
 {
-    public async Task<ApiResult<PostDetailModel>> Handle(GetPostBySlugQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDetailModel>> Handle(GetPostBySlugQuery request,
+        CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDetailModel>();
         const string methodName = nameof(GetPostBySlugQuery);
@@ -35,14 +34,15 @@ public class GetPostBySlugQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
-            
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
             var cachedPost = await cacheService.GetAsync<PostDetailModel>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
                 result.Success(cachedPost);
-                logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}", methodName, request.Slug);
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}",
+                    methodName, request.Slug);
                 return result;
             }
 
@@ -54,7 +54,7 @@ public class GetPostBySlugQueryHandler(
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             // Lấy danh mục và bài viết liên quan đồng thời
             var categoryTask = categoryGrpcService.GetCategoryById(post.CategoryId);
             var relatedPostsTask = postRepository.GetRelatedPosts(post,
@@ -69,12 +69,12 @@ public class GetPostBySlugQueryHandler(
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             var data = new PostDetailModel()
             {
                 DetailPost = mappingHelper.MapPostWithCategory(post, category)
             };
-            
+
             var relatedPosts = relatedPostsTask.Result.ToList();
             if (relatedPosts.IsNotNullOrEmpty())
             {
@@ -83,9 +83,9 @@ public class GetPostBySlugQueryHandler(
 
                 data.RelatedPosts = mappingHelper.MapPostsWithCategories(relatedPosts, categories);
             }
-            
+
             result.Success(data);
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 

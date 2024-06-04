@@ -21,13 +21,13 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
-        
+
         // Register gRPC services
         services.AddGrpcServices();
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
-        
+
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
 
@@ -69,7 +69,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<ICategoryRepository, CategoryRepository>();
     }
-    
+
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));

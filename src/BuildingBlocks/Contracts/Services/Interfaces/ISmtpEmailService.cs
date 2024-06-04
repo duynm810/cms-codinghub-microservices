@@ -4,5 +4,4 @@ namespace Contracts.Services.Interfaces;
 
 public interface ISmtpEmailService : IEmailService<MailRequest>
 {
-    
 }

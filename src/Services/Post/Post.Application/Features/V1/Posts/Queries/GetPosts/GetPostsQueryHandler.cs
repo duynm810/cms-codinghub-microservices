@@ -18,8 +18,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 public class GetPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -34,9 +32,9 @@ public class GetPostsQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
-            
+
             // Kiểm tra cache
-            var cacheKey =  CacheKeyHelper.Post.GetAllPostsKey();
+            var cacheKey = CacheKeyHelper.Post.GetAllPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
@@ -55,7 +53,7 @@ public class GetPostsQueryHandler(
 
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
-                
+
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 

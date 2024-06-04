@@ -14,30 +14,33 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
-        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>() 
+
+        var grpcSettings = configuration.GetSection(nameof(GrpcSettings)).Get<GrpcSettings>()
                            ?? throw new ArgumentNullException($"{nameof(GrpcSettings)} is not configured properly");
-        
+
         services.AddSingleton(grpcSettings);
-        
-        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>() 
-                           ?? throw new ArgumentNullException($"{nameof(EventBusSettings)} is not configured properly");
+
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(EventBusSettings)} is not configured properly");
 
         services.AddSingleton(eventBusSetings);
-        
-        var emailTemplateSettings = configuration.GetSection(nameof(EmailTemplateSettings)).Get<EmailTemplateSettings>() 
-                              ?? throw new ArgumentNullException($"{nameof(EmailTemplateSettings)} is not configured properly");
+
+        var emailTemplateSettings = configuration.GetSection(nameof(EmailTemplateSettings)).Get<EmailTemplateSettings>()
+                                    ?? throw new ArgumentNullException(
+                                        $"{nameof(EmailTemplateSettings)} is not configured properly");
 
         services.AddSingleton(emailTemplateSettings);
-        
+
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
-                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+                                ?? throw new ArgumentNullException(
+                                    $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
-        
+
         var displaySettings = configuration.GetSection(nameof(DisplaySettings)).Get<DisplaySettings>()
-                                  ?? throw new ArgumentNullException(
-                                      $"{nameof(DisplaySettings)} is not configured properly");
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(DisplaySettings)} is not configured properly");
 
         services.AddSingleton(displaySettings);
     }

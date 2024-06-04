@@ -30,14 +30,16 @@ public class GetLatestPostsPagingQueryHandler(
             logger.Information(
                 "BEGIN {MethodName} - Retrieving latest posts for page {PageNumber} with page size {PageSize}",
                 methodName, request.PageNumber, request.PageSize);
-            
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Post.GetLatestPostsPagingKey(request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
-                logger.Information("END {MethodName} - Successfully retrieved latest posts from cache for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved latest posts from cache for page {PageNumber} with page size {PageSize}",
+                    methodName, request.PageNumber, request.PageSize);
                 return result;
             }
 
@@ -50,10 +52,10 @@ public class GetLatestPostsPagingQueryHandler(
 
                 var data = mappingHelper.MapPostsWithCategories(posts, categories);
                 result.Success(data);
-                
+
                 // Lưu cache
-                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken); 
-                     
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
+
                 logger.Information(
                     "END {MethodName} - Successfully retrieved {PostCount} latest posts for page {PageNumber} with page size {PageSize}",
                     methodName, data.MetaData.TotalItems, request.PageNumber, request.PageSize);

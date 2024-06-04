@@ -17,8 +17,10 @@ public class SmtpEmailService(ILogger logger, SmtpEmailSettings smtpEmailSetting
 
         try
         {
-            await _smtpClient.ConnectAsync(smtpEmailSettings.SmtpServer, smtpEmailSettings.Port, smtpEmailSettings.UseSsl, cancellationToken);
-            await _smtpClient.AuthenticateAsync(smtpEmailSettings.Username, smtpEmailSettings.Password, cancellationToken);
+            await _smtpClient.ConnectAsync(smtpEmailSettings.SmtpServer, smtpEmailSettings.Port,
+                smtpEmailSettings.UseSsl, cancellationToken);
+            await _smtpClient.AuthenticateAsync(smtpEmailSettings.Username, smtpEmailSettings.Password,
+                cancellationToken);
             await _smtpClient.SendAsync(emailMessage, cancellationToken);
             await _smtpClient.DisconnectAsync(true, cancellationToken);
         }
@@ -36,7 +38,7 @@ public class SmtpEmailService(ILogger logger, SmtpEmailSettings smtpEmailSetting
     public void SendEmail(MailRequest request)
     {
         var emailMessage = GetMimeMessage(request);
-        
+
         try
         {
             _smtpClient.Connect(smtpEmailSettings.SmtpServer, smtpEmailSettings.Port, smtpEmailSettings.UseSsl);

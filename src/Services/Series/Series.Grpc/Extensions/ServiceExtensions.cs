@@ -34,7 +34,7 @@ public static class ServiceExtensions
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
-        
+
         // Register AutoMapper
         services.AddAutoMapperConfiguration();
 
@@ -83,7 +83,7 @@ public static class ServiceExtensions
     {
         services.AddScoped<ISeriesRepository, SeriesRepository>();
     }
-    
+
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));

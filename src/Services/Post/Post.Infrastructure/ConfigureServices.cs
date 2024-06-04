@@ -30,7 +30,7 @@ public static class ConfigureServices
 
         // Register database context
         services.AddDatabaseContext();
-        
+
         // Register Redis
         services.AddRedisConfiguration();
 

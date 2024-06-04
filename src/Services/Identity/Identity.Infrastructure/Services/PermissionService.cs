@@ -12,7 +12,8 @@ using Shared.Utilities;
 
 namespace Identity.Infrastructure.Services;
 
-public class PermissionService(IIdentityReposityManager reposityManager, IMapper mapper, ILogger logger) : IPermissionService
+public class PermissionService(IIdentityReposityManager reposityManager, IMapper mapper, ILogger logger)
+    : IPermissionService
 {
     #region CRUD
 
@@ -26,7 +27,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
             logger.Information(
                 "BEGIN {MethodName} - Creating permission for role: {RoleId} with function: {Function} and command: {Command}",
                 methodName, roleId, request.Function, request.Command);
-            
+
             var permission = mapper.Map<Permission>(request);
             permission.RoleId = roleId;
 
@@ -39,7 +40,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
             }
 
             permission.Id = executeResult;
-            
+
             var permissionDto = mapper.Map<PermissionDto>(permission);
 
             result.Success(permissionDto);
@@ -57,7 +58,8 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionDto> permissions)
+    public async Task<ApiResult<bool>> UpdatePermissions(string roleId,
+        IEnumerable<CreateOrUpdatePermissionDto> permissions)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePermissions);
@@ -68,7 +70,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
 
             var permissionList = permissions.ToList();
             var updatePermissions = permissionList.Select(mapper.Map<Permission>).ToList();
-            
+
             var dt = new DataTable();
 
             dt.Columns.Add("RoleId", typeof(string));
@@ -162,7 +164,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
     {
         var result = new ApiResult<List<PermissionDto>>();
         const string methodName = nameof(GetPermissionsByUser);
-        
+
         try
         {
             var permissions = await reposityManager.Permissions.GetPermissionsByUser(user);

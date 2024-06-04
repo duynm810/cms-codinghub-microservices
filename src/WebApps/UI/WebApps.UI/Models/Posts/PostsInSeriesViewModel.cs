@@ -8,6 +8,6 @@ namespace WebApps.UI.Models.Posts;
 public class PostsInSeriesViewModel : BaseViewModel
 {
     public SeriesDto Series { get; set; } = default!;
-    
+
     public PagedResponse<PostInSeriesDto> PostInSeries { set; get; } = default!;
 }

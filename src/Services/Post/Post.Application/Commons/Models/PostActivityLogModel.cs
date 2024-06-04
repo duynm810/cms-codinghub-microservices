@@ -12,7 +12,7 @@ public class PostActivityLogModel : IMapFrom<PostActivityLog>
     public PostStatusEnum FromStatus { get; set; }
 
     public PostStatusEnum ToStatus { get; set; }
-   
+
     public Guid PostId { get; set; }
 
     public Guid UserId { get; set; }

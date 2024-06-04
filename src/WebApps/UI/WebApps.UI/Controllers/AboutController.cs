@@ -11,7 +11,7 @@ public class AboutController : Controller
         {
             MainClass = "bg-grey pb-30"
         };
-        
+
         return View(viewModel);
     }
 }

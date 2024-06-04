@@ -8,7 +8,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
     #region CRUD
 
     Task<SeriesBase?> GetSeriesById(Guid id);
-    
+
     #endregion
 
     #region OTHERS

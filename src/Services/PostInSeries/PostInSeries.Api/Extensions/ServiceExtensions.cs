@@ -32,7 +32,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register database context
         services.AddDatabaseContext();
 
@@ -59,7 +59,7 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcConfiguration();
-        
+
         // Register authentication services
         services.AddAuthenticationServices();
 
@@ -72,16 +72,16 @@ public static class ServiceExtensions
         var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
                                ?? throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
-        
+
         services.AddSingleton(databaseSettings);
-        
+
         var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
                             ?? throw new ArgumentNullException(
                                 $"{nameof(CacheSettings)} is not configured properly");
 
         services.AddSingleton(cacheSettings);
     }
-    
+
     private static void AddDatabaseContext(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
@@ -106,7 +106,7 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
-    
+
     private static void AddCoreInfrastructure(this IServiceCollection services)
     {
         services
@@ -158,11 +158,10 @@ public static class ServiceExtensions
             x.Address = new Uri(grpcSettings.SeriesUrl));
 
         services.AddScoped<ISeriesGrpcService, SeriesGrpcService>();
-        
+
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
 
         services.AddScoped<ICategoryGrpcService, CategoryGrpcService>();
-
     }
 }

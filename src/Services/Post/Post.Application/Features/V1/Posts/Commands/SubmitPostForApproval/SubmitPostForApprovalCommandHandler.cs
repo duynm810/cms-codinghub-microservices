@@ -18,7 +18,6 @@ public class SubmitPostForApprovalCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
-    IDistributedCache redisCacheService,
     ILogger logger) : IRequestHandler<SubmitPostForApprovalCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(SubmitPostForApprovalCommand request, CancellationToken cancellationToken)
@@ -74,7 +73,7 @@ public class SubmitPostForApprovalCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-                
+
                 // Xóa cache liên quan
 
                 result.Success(true);

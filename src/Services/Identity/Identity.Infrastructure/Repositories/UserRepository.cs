@@ -10,7 +10,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     #region CRUD
 
     public async Task CreateUser(User user, string password)
-    { 
+    {
         var result = await userManager.CreateAsync(user, password);
         if (!result.Succeeded)
         {
@@ -25,7 +25,7 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
         {
             throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
-        
+
         return result.Succeeded;
     }
 

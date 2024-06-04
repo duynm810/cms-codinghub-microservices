@@ -12,7 +12,7 @@ public static class ServiceExtensions
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
-    
+
     public static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??

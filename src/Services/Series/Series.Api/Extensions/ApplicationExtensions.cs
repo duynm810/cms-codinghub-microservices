@@ -30,7 +30,7 @@ public static class ApplicationExtensions
         });
 
         app.UseMiddleware<ErrorWrappingMiddleware>();
-        
+
         // Enables routing in the application.
         app.UseRouting();
 

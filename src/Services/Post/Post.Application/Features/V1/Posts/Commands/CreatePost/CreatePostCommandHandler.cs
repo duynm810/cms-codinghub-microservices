@@ -17,7 +17,6 @@ namespace Post.Application.Features.V1.Posts.Commands.CreatePost;
 public class CreatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
@@ -53,14 +52,14 @@ public class CreatePostCommandHandler(
             }
 
             var post = mapper.Map<PostBase>(request);
-            
+
             // Set category id get by categories services
             post.CategoryId = category.Id;
 
             var id = postRepository.CreatePost(post);
             await postRepository.SaveChangesAsync();
             result.Success(id);
-            
+
             // Xóa cache liên quan
             var cacheKeys = new List<string>
             {
@@ -71,7 +70,7 @@ public class CreatePostCommandHandler(
             };
 
             await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
-            
+
             logger.Information("END {MethodName} - Post created successfully with ID: {PostId}", methodName, id);
         }
         catch (Exception e)

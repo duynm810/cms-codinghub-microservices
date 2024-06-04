@@ -8,7 +8,11 @@ using ILogger = Serilog.ILogger;
 
 namespace PostInSeries.Api.GrpcServices;
 
-public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoServiceClient, ICacheService cacheService, IMapper mapper, ILogger logger)
+public class PostGrpcService(
+    PostProtoService.PostProtoServiceClient postProtoServiceClient,
+    ICacheService cacheService,
+    IMapper mapper,
+    ILogger logger)
     : IPostGrpcService
 {
     public async Task<IEnumerable<PostInSeriesDto>> GetPostsByIds(IEnumerable<Guid> ids)
@@ -24,7 +28,7 @@ public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoSe
             {
                 return cachedPosts;
             }
-            
+
             // Convert each GUID to its string representation
             var request = new GetPostsByIdsRequest();
             request.Ids.AddRange(idList.Select(id => id.ToString()));
@@ -32,12 +36,12 @@ public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoSe
             var result = await postProtoServiceClient.GetPostsByIdsAsync(request);
             if (result != null && result.Posts.Count != 0)
             {
-                var postsByIds =  mapper.Map<IEnumerable<PostInSeriesDto>>(result.Posts);
+                var postsByIds = mapper.Map<IEnumerable<PostInSeriesDto>>(result.Posts);
                 var data = postsByIds.ToList();
-                
+
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data);
-                
+
                 return data;
             }
         }

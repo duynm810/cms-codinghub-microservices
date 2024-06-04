@@ -37,15 +37,16 @@ public class GetMostCommentPostsQueryHandler(
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
-                logger.Information("END {MethodName} - Successfully retrieved most commented posts from cache", methodName);
+                logger.Information("END {MethodName} - Successfully retrieved most commented posts from cache",
+                    methodName);
                 return result;
             }
 
             var posts = await postRepository.GetMostCommentPosts(
                 displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.MostCommentsPosts, 0));
-            
+
             var postList = posts.ToList();
-            
+
             if (postList.Count != 0)
             {
                 var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
@@ -53,11 +54,12 @@ public class GetMostCommentPostsQueryHandler(
 
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
-                
+
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} most commented posts", methodName, data.Count);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} most commented posts",
+                    methodName, data.Count);
             }
         }
         catch (Exception e)

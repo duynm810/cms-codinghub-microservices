@@ -17,10 +17,10 @@ try
 
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(configuration);
-    
+
     var app = builder.Build();
 
     // Set up middleware and request handling pipeline

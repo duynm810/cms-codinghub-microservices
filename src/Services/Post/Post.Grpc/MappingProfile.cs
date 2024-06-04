@@ -10,7 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<PostBase, PostModel>();
 
-        CreateMap<IEnumerable<PostBase>, GetPostsByIdsResponse>().ForMember(dest => dest.Posts, 
+        CreateMap<IEnumerable<PostBase>, GetPostsByIdsResponse>().ForMember(dest => dest.Posts,
             opt => opt.MapFrom(src => src));
     }
 }

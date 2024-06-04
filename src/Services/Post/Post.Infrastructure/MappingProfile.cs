@@ -21,7 +21,7 @@ public class MappingProfile : Profile
 
         CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
             .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
-        
+
         CreateMap<GetAllNonStaticPageCategoriesResponse, IEnumerable<CategoryDto>>()
             .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
     }

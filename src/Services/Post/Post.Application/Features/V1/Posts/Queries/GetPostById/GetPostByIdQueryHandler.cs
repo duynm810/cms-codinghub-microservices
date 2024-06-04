@@ -19,8 +19,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
 public class GetPostByIdQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -34,14 +32,15 @@ public class GetPostByIdQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with ID: {PostId}", methodName, request.Id);
-            
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Post.GetPostByIdKey(request.Id);
             var cachedPost = await cacheService.GetAsync<PostModel>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
                 result.Success(cachedPost);
-                logger.Information("END {MethodName} - Successfully retrieved post from cache with ID: {PostId}", methodName, request.Id);
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with ID: {PostId}",
+                    methodName, request.Id);
                 return result;
             }
 
@@ -61,10 +60,10 @@ public class GetPostByIdQueryHandler(
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             var data = mappingHelper.MapPostWithCategory(post, category);
             result.Success(data);
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 

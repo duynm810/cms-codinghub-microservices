@@ -24,7 +24,8 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
     public async Task DeleteSeries(SeriesBase series) => await DeleteAsync(series);
 
-    public async Task<IEnumerable<SeriesBase>> GetSeries(int count = int.MaxValue) => await FindAll().Take(count).ToListAsync();
+    public async Task<IEnumerable<SeriesBase>> GetSeries(int count = int.MaxValue) =>
+        await FindAll().Take(count).ToListAsync();
 
     public async Task<SeriesBase?> GetSeriesById(Guid id) => await GetByIdAsync(id) ?? null;
 
@@ -35,7 +36,7 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
     public async Task<PagedResponse<SeriesBase>> GetSeriesPaging(int pageNumber, int pageSize)
     {
         var query = FindAll();
-        
+
         var items = await PagedList<SeriesBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
 
         var response = new PagedResponse<SeriesBase>
@@ -46,8 +47,9 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
         return response;
     }
-    
-    public async Task<SeriesBase?> GetSeriesBySlug(string slug) => await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
+
+    public async Task<SeriesBase?> GetSeriesBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync() ?? null;
 
     #endregion
 }

@@ -53,7 +53,7 @@ public class PagedList<T> : List<T>
 
         return new PagedList<T>(items, count, pageNumber, pageSize);
     }
-    
+
     public static async Task<PagedList<T>> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize)
     {
         var count = await source.CountAsync();

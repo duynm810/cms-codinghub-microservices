@@ -31,15 +31,15 @@ public class PagerViewComponent : ViewComponent
             // Xây dựng URL bình thường cho các trang khác
             urlTemplate.Append(Url.Action(actionName, controllerName) + "?page={0}");
         }
-        
+
         var queryParameters = HttpUtility.ParseQueryString(HttpContext.Request.QueryString.ToString());
 
         foreach (var key in queryParameters.AllKeys)
         {
             // Omit the "page" parameter to avoid repetition (Bỏ qua tham số "page" để tránh lặp lại)
-            if (key == "page") 
-                continue; 
-            
+            if (key == "page")
+                continue;
+
             var value = queryParameters[key];
             if (value != null)
             {

@@ -17,7 +17,6 @@ public class ApprovePostCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
-    IDistributedCache redisCacheService,
     ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
@@ -59,16 +58,18 @@ public class ApprovePostCommandHandler(
                 try
                 {
                     // Send email to author
-                    await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
+                    await postEmailTemplateService
+                        .SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
                 }
                 catch (Exception emailEx)
                 {
-                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}", methodName, request.Id, emailEx);
+                    logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
+                        methodName, request.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-                
+
                 // Xóa cache liên quan
 
                 result.Success(true);

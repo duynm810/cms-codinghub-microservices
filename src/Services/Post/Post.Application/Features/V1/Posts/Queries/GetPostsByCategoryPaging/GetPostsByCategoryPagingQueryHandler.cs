@@ -18,8 +18,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 public class GetPostsByCategoryPagingQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PagedResponse<PostModel>>>
@@ -35,14 +33,17 @@ public class GetPostsByCategoryPagingQueryHandler(
             logger.Information(
                 "BEGIN {MethodName} - Retrieving posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
                 methodName, request.CategorySlug, request.PageNumber, request.PageSize);
-            
+
             // Kiểm tra cache
-            var cacheKey = CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber, request.PageSize);
+            var cacheKey =
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber,
+                    request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
-                logger.Information("END {MethodName} - Successfully retrieved posts from cache for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved posts from cache for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
                     methodName, request.CategorySlug, request.PageNumber, request.PageSize);
                 return result;
             }

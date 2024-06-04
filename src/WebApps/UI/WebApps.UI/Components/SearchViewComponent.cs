@@ -14,7 +14,7 @@ public class SearchViewComponent(IErrorService errorService, ILogger logger) : B
             var items = new SearchViewModel
             {
             };
-            
+
             return View(items);
         }
         catch (Exception e)

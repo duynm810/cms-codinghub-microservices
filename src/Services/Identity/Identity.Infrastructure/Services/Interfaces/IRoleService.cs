@@ -16,6 +16,6 @@ public interface IRoleService
     Task<ApiResult<IEnumerable<RoleDto>>> GetRoles();
 
     Task<ApiResult<RoleDto>> GetRoleById(Guid roleId);
-    
+
     #endregion
 }

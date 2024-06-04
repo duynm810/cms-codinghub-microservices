@@ -6,7 +6,7 @@ public static class ErrorMessagesConsts
     {
         public const string UnhandledException = "Unhandled exception";
     }
-    
+
     public static class Authentication
     {
         public const string InvalidCredentials = "Invalid credentials provided.";
@@ -62,7 +62,7 @@ public static class ErrorMessagesConsts
             public const string RoleUpdateFailed = "Failed to update role";
             public const string RoleDeleteFailed = "Failed to delete role";
         }
-        
+
         public static class User
         {
             public const string UserNotFound = "User not found";
@@ -72,7 +72,7 @@ public static class ErrorMessagesConsts
             public const string UserChangePasswordFailed = "Failed to change password user";
         }
     }
-    
+
     public static class Media
     {
         public const string FileNotUploaded = "No files have been uploaded";

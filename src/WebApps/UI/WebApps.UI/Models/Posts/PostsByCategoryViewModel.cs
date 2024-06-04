@@ -8,7 +8,6 @@ namespace WebApps.UI.Models.Posts;
 public class PostsByCategoryViewModel : BaseViewModel
 {
     public CategoryDto Category { get; set; } = default!;
-    
+
     public PagedResponse<PostDto> Posts { get; set; } = default!;
-    
 }

@@ -133,12 +133,12 @@ public class CategoryService(
                 await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id));
                 await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug));
             }
-            
+
             // Delete category list cache when deleting (Xóa cache danh sách category khi xóa dữ liệu)
             await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
 
             result.Success(true);
-            
+
             logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
                 methodName, string.Join(", ", ids));
         }

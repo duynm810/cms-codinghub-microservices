@@ -18,7 +18,6 @@ public class RejectPostWithReasonCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
-    IDistributedCache redisCacheService,
     ILogger logger) : IRequestHandler<RejectPostWithReasonCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(RejectPostWithReasonCommand request, CancellationToken cancellationToken)
@@ -72,7 +71,7 @@ public class RejectPostWithReasonCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-                
+
                 // Xóa cache liên quan
 
                 result.Success(true);

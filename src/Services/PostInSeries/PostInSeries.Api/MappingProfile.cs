@@ -34,7 +34,7 @@ public class MappingProfile : Profile
         #endregion
 
         #region Category Grpc
-        
+
         CreateMap<CategoryDto, CategoryModel>()
             .ForMember(dest => dest.Icon,
                 opt => opt.MapFrom(src => src.Icon ?? string.Empty))
@@ -47,12 +47,12 @@ public class MappingProfile : Profile
 
         CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
             .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
-        
+
         // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
         CreateMap<CategoryDto, PostInSeriesDto>()
-            .ForMember(dest => dest.Id, 
+            .ForMember(dest => dest.Id,
                 opt => opt.Ignore())
-            .ForMember(dest => dest.Slug, 
+            .ForMember(dest => dest.Slug,
                 opt => opt.Ignore())
             .ForMember(dest => dest.CategoryId,
                 opt => opt.MapFrom(src => src.Id))

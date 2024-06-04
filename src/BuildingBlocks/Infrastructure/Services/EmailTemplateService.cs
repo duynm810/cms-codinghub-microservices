@@ -7,7 +7,8 @@ public class EmailTemplateService(EmailTemplateSettings emailTemplateSettings) :
 {
     public string ReadEmailTemplate(string templateName)
     {
-        var templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, emailTemplateSettings.TemplateDirectory, $"{templateName}.html");
+        var templatePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, emailTemplateSettings.TemplateDirectory,
+            $"{templateName}.html");
         return File.ReadAllText(templatePath);
     }
 }

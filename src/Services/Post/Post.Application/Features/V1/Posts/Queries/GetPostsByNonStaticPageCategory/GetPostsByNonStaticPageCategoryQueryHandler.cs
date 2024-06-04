@@ -28,30 +28,35 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts by non-static page categories", methodName);
-            
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<CategoryWithPostsModel>>(cacheKey, cancellationToken);
+            var cachedPosts =
+                await cacheService.GetAsync<IEnumerable<CategoryWithPostsModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
-                logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories from cache", methodName);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved posts by non-static page categories from cache",
+                    methodName);
                 return result;
             }
 
             var nonStaticPageCategories = await categoryGrpcService.GetAllNonStaticPageCategories();
-            
+
             var data = new List<CategoryWithPostsModel>();
-            
+
             foreach (var category in nonStaticPageCategories)
             {
-                if (category == null) 
+                if (category == null)
                     continue;
-                
-                var posts = await postRepository.GetPostsByCategoryId(category.Id, displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.PostsByNonStaticPageCategory, 0));
+
+                var posts = await postRepository.GetPostsByCategoryId(category.Id,
+                    displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.PostsByNonStaticPageCategory,
+                        0));
 
                 var postList = posts.ToList();
-                
+
                 if (postList.Count != 0)
                 {
                     var postSummaries = postList.Select(post => new PostModel
@@ -75,13 +80,14 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                     data.Add(categoryWithPosts);
                 }
             }
-            
+
             result.Success(data);
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories", methodName);
+            logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories",
+                methodName);
         }
         catch (Exception e)
         {

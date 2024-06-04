@@ -17,7 +17,7 @@ public static class ServiceExtensions
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
-        
+
         // Register Ocelot services
         services.AddOcelotConfiguration(configuration);
 
@@ -29,15 +29,16 @@ public static class ServiceExtensions
 
         // Register additional necessary services
         services.AddAdditionalServices();
-        
+
         // Register authentication services
         services.AddAuthenticationServices();
     }
-    
+
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
-                                ?? throw new ArgumentNullException($"{nameof(ApiConfigurations)} is not configured properly");
+                                ?? throw new ArgumentNullException(
+                                    $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
     }

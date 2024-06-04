@@ -26,7 +26,7 @@ try
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
-    
+
     // Seed user sample data
     UserSeedData.EnsureSeedData(configuration);
 
@@ -36,7 +36,7 @@ catch (Exception e)
 {
     var type = e.GetType().Name;
     if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
-    
+
     Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally

@@ -11,7 +11,7 @@ public class PostActivityLog : EntityAuditBase<Guid>
     /// <summary>
     /// Ghi chú liên quan đến hoạt động bài viết
     /// </summary>
-    [MaxLength(500)] 
+    [MaxLength(500)]
     public string? Note { get; set; }
 
     /// <summary>
@@ -23,7 +23,7 @@ public class PostActivityLog : EntityAuditBase<Guid>
     /// Trạng thái bài viết sau khi thay đổi
     /// </summary>
     public PostStatusEnum ToStatus { get; set; }
-    
+
     /// <summary>
     ///  Khóa ngoại thuộc về bài viết nào
     /// </summary>

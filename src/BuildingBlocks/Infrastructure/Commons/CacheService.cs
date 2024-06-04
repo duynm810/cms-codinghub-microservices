@@ -11,7 +11,8 @@ public class CacheService(IDistributedCache distributedCache, ISerializeService 
         return !string.IsNullOrEmpty(cachedData) ? serializeService.Deserialize<T>(cachedData) : default;
     }
 
-    public async Task SetAsync<T>(string cacheKey, T data, TimeSpan? expiration = null, CancellationToken cancellationToken = default)
+    public async Task SetAsync<T>(string cacheKey, T data, TimeSpan? expiration = null,
+        CancellationToken cancellationToken = default)
     {
         var serializedData = serializeService.Serialize(data);
         var options = new DistributedCacheEntryOptions

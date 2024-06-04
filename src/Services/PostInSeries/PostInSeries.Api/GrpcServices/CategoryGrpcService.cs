@@ -8,12 +8,16 @@ using ILogger = Serilog.ILogger;
 
 namespace PostInSeries.Api.GrpcServices;
 
-public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient, ICacheService cacheService, IMapper mapper, ILogger logger) : ICategoryGrpcService
+public class CategoryGrpcService(
+    CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
+    ICacheService cacheService,
+    IMapper mapper,
+    ILogger logger) : ICategoryGrpcService
 {
     public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids)
     {
         var idList = ids as long[] ?? ids.ToArray();
-        
+
         try
         {
             // Kiểm tra cache
@@ -23,13 +27,13 @@ public class CategoryGrpcService(CategoryProtoService.CategoryProtoServiceClient
             {
                 return cachedCategories;
             }
-            
+
             var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
-            
+
             var data = categoriesByIds.ToList();
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data);
 

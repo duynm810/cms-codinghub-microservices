@@ -11,7 +11,10 @@ using Shared.Constants;
 
 namespace Identity.Api.Services;
 
-public class IdentityProfileService(IUserClaimsPrincipalFactory<User> claimsFactory, UserManager<User> userManager, IPermissionRepository permissionRepository)
+public class IdentityProfileService(
+    IUserClaimsPrincipalFactory<User> claimsFactory,
+    UserManager<User> userManager,
+    IPermissionRepository permissionRepository)
     : IIdentityProfileService
 {
     public async Task GetProfileDataAsync(ProfileDataRequestContext context)
@@ -54,7 +57,7 @@ public class IdentityProfileService(IUserClaimsPrincipalFactory<User> claimsFact
         claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
         claims.Add(new Claim(InternalClaimTypesConsts.Claims.Roles, string.Join(";", roles)));
         claims.Add(new Claim(InternalClaimTypesConsts.Claims.Permissions, JsonSerializer.Serialize(permissions)));
-        
+
         context.IssuedClaims = claims;
     }
 

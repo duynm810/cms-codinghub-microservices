@@ -17,7 +17,8 @@ public class BaseApiClient(
 {
     #region CRUD
 
-    public async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(string url, TRequest data, bool requiredLogin = false)
+    public async Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(string url, TRequest data,
+        bool requiredLogin = false)
     {
         var client = await CreateClientAsync(requiredLogin);
         var jsonContent = serializeService.Serialize(data);
@@ -27,7 +28,8 @@ public class BaseApiClient(
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -41,7 +43,8 @@ public class BaseApiClient(
         return result;
     }
 
-    public async Task<ApiResult<TResponse>> PutAsync<TRequest, TResponse>(string url, TRequest data, bool requiredLogin = false)
+    public async Task<ApiResult<TResponse>> PutAsync<TRequest, TResponse>(string url, TRequest data,
+        bool requiredLogin = false)
     {
         var client = await CreateClientAsync(requiredLogin);
         var jsonContent = serializeService.Serialize(data);
@@ -51,7 +54,8 @@ public class BaseApiClient(
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -73,7 +77,8 @@ public class BaseApiClient(
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -95,7 +100,8 @@ public class BaseApiClient(
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
         }
 
         var responseContent = await response.Content.ReadAsStringAsync();
@@ -113,13 +119,14 @@ public class BaseApiClient(
     {
         var client = await CreateClientAsync(requiredLogin);
         var response = await client.GetAsync(url);
-        
+
         if (!response.IsSuccessStatusCode)
         {
             var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
         }
-        
+
         var responseContent = await response.Content.ReadAsStringAsync();
         var result = serializeService.Deserialize<ApiResult<T>>(responseContent);
 

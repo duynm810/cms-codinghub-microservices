@@ -31,7 +31,7 @@ public class GetFeaturedPostsQueryHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
-            
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Post.GetFeaturedPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
@@ -46,7 +46,7 @@ public class GetFeaturedPostsQueryHandler(
                 displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.FeaturedPosts, 0));
 
             var postList = posts.ToList();
-            
+
             if (postList.IsNotNullOrEmpty())
             {
                 var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
@@ -54,7 +54,7 @@ public class GetFeaturedPostsQueryHandler(
 
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
-                
+
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 

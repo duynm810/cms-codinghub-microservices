@@ -17,7 +17,7 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
-        
+
         // Configure the HTTP request pipeline.
         app.UseSwagger();
         app.UseSwaggerUI(c =>
@@ -30,7 +30,7 @@ public static class ApplicationExtensions
         });
 
         app.UseMiddleware<ErrorWrappingMiddleware>();
-        
+
         // Enables routing in the application.
         app.UseRouting();
 

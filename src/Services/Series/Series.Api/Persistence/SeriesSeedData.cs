@@ -8,7 +8,7 @@ public static class SeriesSeedData
     public static IHost SeedData(this IHost host)
     {
         using var scope = host.Services.CreateScope();
-        
+
         var seriesContext = scope.ServiceProvider.GetRequiredService<SeriesContext>();
         seriesContext.Database.MigrateAsync().GetAwaiter().GetResult();
 

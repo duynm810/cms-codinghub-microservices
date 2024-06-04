@@ -23,7 +23,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     #region OTHERS
 
     Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber = 1, int pageSize = 10);
-    
+
     Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
 
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
@@ -31,13 +31,13 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count);
 
     Task<PostBase?> GetPostBySlug(string slug);
-    
+
     Task<IEnumerable<PostBase>> GetPostsByIds(Guid[] ids);
-    
+
     Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count);
 
     Task<IEnumerable<PostBase>> GetFeaturedPosts(int count);
-    
+
     Task<IEnumerable<PostBase>> GetPinnedPosts(int count);
 
     Task<IEnumerable<PostBase>> GetMostCommentPosts(int count);

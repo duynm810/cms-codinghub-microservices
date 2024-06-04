@@ -63,8 +63,9 @@ public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     void DeleteList(IEnumerable<T> entities);
 
     Task DeleteListAsync(IEnumerable<T> entities);
-    
-    Task<int> ExecuteAsync(string sql, object? param, CommandType? commandType, IDbTransaction? transaction, int? commandTimeout);
+
+    Task<int> ExecuteAsync(string sql, object? param, CommandType? commandType, IDbTransaction? transaction,
+        int? commandTimeout);
 
     Task<int> SaveChangesAsync();
 
@@ -73,7 +74,7 @@ public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     Task EndTransactionAsync();
 
     Task RollbackTransactionAsync();
-    
+
     IExecutionStrategy CreateExecutionStrategy();
 }
 

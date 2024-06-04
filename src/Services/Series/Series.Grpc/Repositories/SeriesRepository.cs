@@ -21,7 +21,7 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
     #region OTHERS
 
     public async Task<SeriesBase?> GetSeriesBySlug(string slug) =>
-        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync(); 
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
 
     #endregion
 }

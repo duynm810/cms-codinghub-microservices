@@ -17,7 +17,7 @@ public class CreatePostCommand : CreateOrUpdateCommand, IMapFrom<CreatePostDto>,
     {
         profile.CreateMap<CreatePostDto, CreatePostCommand>();
         profile.CreateMap<CreatePostCommand, PostBase>()
-            .ForMember(dest => dest.AuthorUserId, 
+            .ForMember(dest => dest.AuthorUserId,
                 opt => opt.MapFrom(src => src.AuthorUserId));
     }
 }

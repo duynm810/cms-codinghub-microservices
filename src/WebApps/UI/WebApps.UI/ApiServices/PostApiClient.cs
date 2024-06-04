@@ -11,7 +11,7 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/featured");
     }
-    
+
     public async Task<ApiResult<List<PostDto>>> GetPinnedPosts()
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/pinned");
@@ -56,7 +56,7 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented");
     }
-    
+
     public async Task<ApiResult<List<PostDto>>> GetMostLikedPosts()
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/most-liked");

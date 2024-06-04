@@ -6,5 +6,4 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCate
 
 public class GetPostsByNonStaticPageCategoryQuery : IRequest<ApiResult<IEnumerable<CategoryWithPostsModel>>>
 {
-    
 }

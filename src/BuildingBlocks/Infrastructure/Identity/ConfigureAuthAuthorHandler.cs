@@ -26,7 +26,7 @@ public static class ConfigureAuthAuthorHandler
                 opt.SupportedTokens = SupportedTokens.Both;
             });
     }
-    
+
     public static void AddAuthorizationServices(this IServiceCollection services)
     {
         services.AddAuthorization(
@@ -34,7 +34,8 @@ public static class ConfigureAuthAuthorHandler
             {
                 options.AddPolicy(IdentityServerAuthenticationDefaults.AuthenticationScheme, policy =>
                 {
-                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults.AuthenticationScheme); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
+                    policy.AddAuthenticationSchemes(IdentityServerAuthenticationDefaults
+                        .AuthenticationScheme); // Specify the policy that will use the "Bearer" authentication scheme (Chỉ định policy sẽ sử dụng scheme xác thực "Bearer")
                     policy.RequireAuthenticatedUser(); // User authentication is required to meet this policy. (Yêu cầu người dùng phải xác thực để đáp ứng policy này.)
                 });
             });

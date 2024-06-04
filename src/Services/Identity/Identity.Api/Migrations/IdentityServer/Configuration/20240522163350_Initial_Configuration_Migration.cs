@@ -21,7 +21,8 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     DisplayName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
-                    AllowedAccessTokenSigningAlgorithms = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AllowedAccessTokenSigningAlgorithms =
+                        table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     ShowInDiscoveryDocument = table.Column<bool>(type: "bit", nullable: false),
                     RequireResourceIndicator = table.Column<bool>(type: "bit", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -29,10 +30,7 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     LastAccessed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NonEditable = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApiResources", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ApiResources", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "ApiScopes",
@@ -52,10 +50,7 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     LastAccessed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NonEditable = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ApiScopes", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_ApiScopes", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "Clients",
@@ -81,13 +76,16 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     RequireDPoP = table.Column<bool>(type: "bit", nullable: false),
                     DPoPValidationMode = table.Column<int>(type: "int", nullable: false),
                     DPoPClockSkew = table.Column<TimeSpan>(type: "time", nullable: false),
-                    FrontChannelLogoutUri = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    FrontChannelLogoutUri =
+                        table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     FrontChannelLogoutSessionRequired = table.Column<bool>(type: "bit", nullable: false),
-                    BackChannelLogoutUri = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    BackChannelLogoutUri =
+                        table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
                     BackChannelLogoutSessionRequired = table.Column<bool>(type: "bit", nullable: false),
                     AllowOfflineAccess = table.Column<bool>(type: "bit", nullable: false),
                     IdentityTokenLifetime = table.Column<int>(type: "int", nullable: false),
-                    AllowedIdentityTokenSigningAlgorithms = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    AllowedIdentityTokenSigningAlgorithms =
+                        table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
                     AccessTokenLifetime = table.Column<int>(type: "int", nullable: false),
                     AuthorizationCodeLifetime = table.Column<int>(type: "int", nullable: false),
                     ConsentLifetime = table.Column<int>(type: "int", nullable: true),
@@ -116,10 +114,7 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     PushedAuthorizationLifetime = table.Column<int>(type: "int", nullable: true),
                     RequirePushedAuthorization = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Clients", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_Clients", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "IdentityProviders",
@@ -137,10 +132,7 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     LastAccessed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NonEditable = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityProviders", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_IdentityProviders", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "IdentityResources",
@@ -159,10 +151,7 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                     Updated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     NonEditable = table.Column<bool>(type: "bit", nullable: false)
                 },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IdentityResources", x => x.Id);
-                });
+                constraints: table => { table.PrimaryKey("PK_IdentityResources", x => x.Id); });
 
             migrationBuilder.CreateTable(
                 name: "ApiResourceClaims",
@@ -377,7 +366,8 @@ namespace Identity.Api.Migrations.IdentityServer.Configuration
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PostLogoutRedirectUri = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
+                    PostLogoutRedirectUri =
+                        table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: false),
                     ClientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

@@ -5,9 +5,9 @@ namespace WebApps.UI.Models.Commons;
 public class HttpErrorViewModel : BaseViewModel
 {
     public int? Code { get; set; }
-    
+
     public HttpStatusCode? HttpStatusCode { get; set; }
-    
+
     public List<string> Alternates { get; set; } = new List<string>();
 
     public HttpErrorViewModel(int? code)

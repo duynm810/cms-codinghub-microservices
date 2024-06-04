@@ -46,7 +46,7 @@ public class GetMostLikedPostsQueryHandler(
                 displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.MostLikedPosts, 0));
 
             var postList = posts.ToList();
-            
+
             if (postList.Count != 0)
             {
                 var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
@@ -54,11 +54,12 @@ public class GetMostLikedPostsQueryHandler(
 
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
-                
+
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} most liked posts", methodName, data.Count);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} most liked posts", methodName,
+                    data.Count);
             }
         }
         catch (Exception e)

@@ -26,14 +26,14 @@ public class CategoryGrpcService(
             {
                 return cachedCategory;
             }
-            
+
             var request = new GetCategoryByIdRequest { Id = id };
             var result = await categoryProtoServiceClient.GetCategoryByIdAsync(request);
             var data = mapper.Map<CategoryDto>(result);
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data);
-            
+
             return data;
         }
         catch (Exception e)
@@ -46,10 +46,9 @@ public class CategoryGrpcService(
     public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids)
     {
         var idList = ids as long[] ?? ids.ToArray();
-        
+
         try
         {
-
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
@@ -57,13 +56,13 @@ public class CategoryGrpcService(
             {
                 return cachedCategories;
             }
-            
+
             var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
-            
+
             var data = categoriesByIds.ToList();
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data);
 
@@ -79,7 +78,7 @@ public class CategoryGrpcService(
     public async Task<CategoryDto?> GetCategoryBySlug(string slug)
     {
         try
-        { 
+        {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
 
             // Kiểm tra cache
@@ -88,14 +87,14 @@ public class CategoryGrpcService(
             {
                 return cachedCategory;
             }
-            
+
             var request = new GetCategoryBySlugRequest() { Slug = slug };
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
             var data = mapper.Map<CategoryDto>(result);
-            
+
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data);
-            
+
             return data;
         }
         catch (Exception e)
@@ -117,15 +116,15 @@ public class CategoryGrpcService(
             {
                 return cachedCategories;
             }
-            
+
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
             var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
-            
+
             var data = allNonStaticPageCategories.ToList();
 
             // Lưu cache
             await cacheService.SetAsync(cacheKey, data);
-            
+
             return data;
         }
         catch (Exception e)

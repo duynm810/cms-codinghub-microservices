@@ -268,13 +268,13 @@ public class PostInSeriesService(
                 if (postIdList.Count != 0)
                 {
                     var posts = await postGrpcService.GetPostsByIds(postIdList);
-                    
+
                     var postList = posts.ToList();
-                    
+
                     var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
                     var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
                     var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
-                    
+
                     foreach (var post in postList)
                     {
                         if (categoryDictionary.TryGetValue(post.CategoryId, out var category))
@@ -282,9 +282,9 @@ public class PostInSeriesService(
                             mapper.Map(category, post);
                         }
                     }
-                    
+
                     var items = PagedList<PostInSeriesDto>.ToPagedList(postList, pageNumber, pageSize, x => x.Id);
-                    
+
                     var data = new PagedResponse<PostInSeriesDto>
                     {
                         Items = items,

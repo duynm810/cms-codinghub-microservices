@@ -22,7 +22,8 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating user with username: {UserName}", methodName, request.UserName);
+            logger.Information("BEGIN {MethodName} - Creating user with username: {UserName}", methodName,
+                request.UserName);
 
             var user = mapper.Map<User>(request);
             await repositoryManager.Users.CreateUser(user, request.Password);
@@ -178,7 +179,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 
         return result;
     }
-    
+
     #endregion
 
     #region OTHERS
@@ -200,7 +201,8 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
                 return result;
             }
 
-            var changePasswordResult = await repositoryManager.Users.ChangePassword(user, request.CurrentPassword, request.NewPassword);
+            var changePasswordResult =
+                await repositoryManager.Users.ChangePassword(user, request.CurrentPassword, request.NewPassword);
             if (!changePasswordResult)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.User.UserChangePasswordFailed);
@@ -209,7 +211,8 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
             }
 
             result.Success(true);
-            logger.Information("END {MethodName} - Password changed successfully for user with ID {UserId}", methodName, userId);
+            logger.Information("END {MethodName} - Password changed successfully for user with ID {UserId}", methodName,
+                userId);
         }
         catch (Exception e)
         {

@@ -30,7 +30,7 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
-        
+
         // Register Redis
         services.AddRedisConfiguration();
 
@@ -51,7 +51,7 @@ public static class ServiceExtensions
 
         // Register health checks
         services.AddHealthCheckServices();
-        
+
         // Register authentication services
         services.AddAuthenticationServices();
 
@@ -66,7 +66,7 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
+
         var displaySettings = configuration.GetSection(nameof(DisplaySettings)).Get<DisplaySettings>()
                               ?? throw new ArgumentNullException(
                                   $"{nameof(DisplaySettings)} is not configured properly");
