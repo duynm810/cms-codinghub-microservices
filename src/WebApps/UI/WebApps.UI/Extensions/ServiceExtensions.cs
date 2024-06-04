@@ -177,7 +177,9 @@ public static class ServiceExtensions
                 options.Authority = identityServerSettings.AuthorityUrl;
                 options.RequireHttpsMetadata = false;
                 options.GetClaimsFromUserInfoEndpoint = true;
-
+                options.MetadataAddress = $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
+                options.TokenValidationParameters.ValidIssuer = identityServerSettings.AuthorityUrl;
+                
                 options.ClientId = identityServerSettings.ClientId;
                 options.ClientSecret = identityServerSettings.ClientSecret;
                 options.ResponseType = "code";
@@ -197,6 +199,18 @@ public static class ServiceExtensions
 
                 options.Events = new OpenIdConnectEvents
                 {
+                    OnRedirectToIdentityProvider = context =>
+                    {
+                        // Intercept the redirection so the browser navigates to the right URL in your host
+                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/authorize";
+                        return Task.CompletedTask;
+                    },
+                    OnRedirectToIdentityProviderForSignOut = context =>
+                    {
+                        // Intercept the redirection so the browser navigates to the right URL in your host
+                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/endsession";
+                        return Task.CompletedTask;
+                    },
                     OnTokenValidated = x =>
                     {
                         var identity = (ClaimsIdentity)x.Principal?.Identity!;
