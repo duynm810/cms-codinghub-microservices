@@ -4,9 +4,9 @@ using Category.Api.GrpcServices.Interfaces;
 using Category.Api.Repositories.Interfaces;
 using Category.Api.Services.Interfaces;
 using Contracts.Commons.Interfaces;
-using Microsoft.Extensions.Caching.Distributed;
 using Shared.Constants;
 using Shared.Dtos.Category;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -16,8 +16,7 @@ namespace Category.Api.Services;
 public class CategoryService(
     ICategoryRepository categoryRepository,
     IPostGrpcService postGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryService
 {
@@ -43,9 +42,9 @@ public class CategoryService(
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
-            
+
             // Xóa cache danh sách category khi tạo mới
-            await redisCacheService.RemoveAsync("categories");
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
 
             logger.Information("END {MethodName} - Category created successfully with ID {CategoryId}", methodName,
                 data.Id);
@@ -82,11 +81,11 @@ public class CategoryService(
 
             var data = mapper.Map<CategoryDto>(updateCategory);
             result.Success(data);
-            
-            // Xóa cache danh sách category khi cập nhật
-            await redisCacheService.RemoveAsync("categories");
-            await redisCacheService.RemoveAsync($"category_{id}");
-            await redisCacheService.RemoveAsync($"category_slug_{category.Slug}");
+
+            // Delete category list cache when updating (Xóa cache danh sách category khi cập nhật)
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id));
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug));
 
             logger.Information("END {MethodName} - Category with ID {CategoryId} updated successfully", methodName, id);
         }
@@ -129,16 +128,17 @@ public class CategoryService(
                 }
 
                 await categoryRepository.DeleteCategory(category);
-                
-                // Xóa cache category
-                await redisCacheService.RemoveAsync($"category_{id}");
-                await redisCacheService.RemoveAsync($"category_slug_{category.Slug}");
+
+                // Delete category cache when delete (Xóa cache category khi xoá dữ liệu)
+                await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id));
+                await cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug));
             }
             
-            // Xóa cache danh sách category khi xóa
-            await redisCacheService.RemoveAsync("categories");
-            result.Success(true);
+            // Delete category list cache when deleting (Xóa cache danh sách category khi xóa dữ liệu)
+            await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
 
+            result.Success(true);
+            
             logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
                 methodName, string.Join(", ", ids));
         }
@@ -162,17 +162,13 @@ public class CategoryService(
             logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
 
             // Kiểm tra cache
-            var cachedCategories = await redisCacheService.GetStringAsync("categories");
-            
-            if (!string.IsNullOrEmpty(cachedCategories))
+            var cacheKey = CacheKeyHelper.Category.GetAllCategoriesKey();
+            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
             {
-                var cachedData = serializeService.Deserialize<IEnumerable<CategoryDto>>(cachedCategories);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved categories from cache", methodName);
-                    return result;
-                }
+                result.Success(cachedCategories);
+                logger.Information("END {MethodName} - Successfully retrieved categories from cache", methodName);
+                return result;
             }
 
             var categories = await categoryRepository.GetCategories();
@@ -182,11 +178,7 @@ public class CategoryService(
                 result.Success(data);
 
                 // Lưu cache
-                var serializedData = serializeService.Serialize(data);
-                await redisCacheService.SetStringAsync("categories", serializedData, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-                });
+                await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information("END {MethodName} - Successfully retrieved {CategoryCount} categories", methodName,
                     data.Count);
@@ -210,18 +202,16 @@ public class CategoryService(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving category with ID: {CategoryId}", methodName, id);
-            
+
             // Kiểm tra cache
-            var cachedCategory = await redisCacheService.GetStringAsync($"category_{id}");
-            if (!string.IsNullOrEmpty(cachedCategory))
+            var cacheKey = CacheKeyHelper.Category.GetCategoryByIdKey(id);
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
             {
-                var cachedData = serializeService.Deserialize<CategoryDto>(cachedCategory);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId} from cache", methodName, id);
-                    return result;
-                }
+                result.Success(cachedCategory);
+                logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId} from cache",
+                    methodName, id);
+                return result;
             }
 
             var category = await categoryRepository.GetCategoryById(id);
@@ -234,13 +224,9 @@ public class CategoryService(
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
-            
+
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync($"category_{id}", serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId}", methodName,
                 id);
@@ -269,19 +255,17 @@ public class CategoryService(
             logger.Information(
                 "BEGIN {MethodName} - Retrieving categories for page {PageNumber} with page size {PageSize}",
                 methodName, pageNumber, pageSize);
-            
+
             // Kiểm tra cache
-            var cacheKey = $"categories_paging_{pageNumber}_{pageSize}";
-            var cachedCategories = await redisCacheService.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedCategories))
+            var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(pageNumber, pageSize);
+            var cachedCategories = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
             {
-                var cachedData = serializeService.Deserialize<PagedResponse<CategoryDto>>(cachedCategories);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved categories for page {PageNumber} from cache", methodName, pageNumber);
-                    return result;
-                }
+                result.Success(cachedCategories);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved categories for page {PageNumber} from cache", methodName,
+                    pageNumber);
+                return result;
             }
 
             var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
@@ -292,13 +276,9 @@ public class CategoryService(
             };
 
             result.Success(data);
-            
+
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            await cacheService.SetAsync(cacheKey, data);
 
             logger.Information(
                 "END {MethodName} - Successfully retrieved {CategoryCount} categories for page {PageNumber} with page size {PageSize}",
@@ -322,19 +302,17 @@ public class CategoryService(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving category with slug: {CategorySlug}", methodName, slug);
-            
+
             // Kiểm tra cache
-            var cacheKey = $"category_slug_{slug}";
-            var cachedDate = await redisCacheService.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedDate))
+            var cacheKey = CacheKeyHelper.Category.GetCategoryBySlugKey(slug);
+            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
+            if (cachedCategory != null)
             {
-                var cachedData = serializeService.Deserialize<CategoryDto>(cachedDate);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug} from cache", methodName,slug);
-                    return result;
-                }
+                result.Success(cachedCategory);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved category with slug {CategorySlug} from cache",
+                    methodName, slug);
+                return result;
             }
 
             var category = await categoryRepository.GetCategoryBySlug(slug);
@@ -347,13 +325,9 @@ public class CategoryService(
 
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
-            
+
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            });
+            await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}",
                 methodName,

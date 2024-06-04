@@ -80,13 +80,4 @@ public class GetPinnedPostsQueryHandler(
 
         return result;
     }
-
-    public GetPinnedPostsQueryHandler(IPostRepository postRepository,
-        ICategoryGrpcService categoryGrpcService,
-        ISerializeService serializeService,
-        DisplaySettings displaySettings,
-        IMappingHelper mappingHelper,
-        ILogger logger) : this(postRepository, categoryGrpcService, default(IDistributedCache), serializeService, displaySettings, mappingHelper, logger)
-    {
-    }
 }

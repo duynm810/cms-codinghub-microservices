@@ -122,7 +122,8 @@ public static class ServiceExtensions
         services
             .AddScoped<ICategoryRepository, CategoryRepository>()
             .AddScoped<ICategoryService, CategoryService>()
-            .AddScoped<ISerializeService, SerializeService>();
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
