@@ -1,11 +1,8 @@
 @model HomeViewModel
-@using System.Globalization
 
 @{
     var featuredPosts = Model.FeaturedPosts.ToList();
     var pinnedPosts = Model.PinnedPosts.ToList();
-    var delay = 0.2; // 0.2 second start delay (Độ trễ bắt đầu 0.2 giây)
-    const double increment = 0.1; // Each iteration will increase by 0.2 seconds (Giá trị tăng cho mỗi lần lặp)
 }
 
 <div class="container">
@@ -16,7 +13,7 @@
                     <h5 class="widget-title">Featured posts</h5>
                 </div>
                 <div class="col-md-8 text-md-end font-small align-self-center">
-                    <p class="d-inline-block mr-5 mb-0"><i class="elegant-icon  icon_tag_alt mr-5 text-muted"></i>Hot tags:</p>
+                    <p class="d-inline-block mr-5 mb-0"><i class="elegant-icon icon_tag_alt mr-5 text-muted"></i>Hot tags:</p>
                     <ul class="list-inline d-inline-block tags">
                         <li class="list-inline-item">
                             <a href="#"># Covid-19</a>
@@ -38,7 +35,7 @@
     <div class="loop-grid mb-30">
         <div class="row">
             <div class="col-lg-8 mb-30">
-                <div class="carausel-post-1 hover-up border-radius-10 overflow-hidden transition-normal position-relative wow fadeInUp animated">
+                <div class="carausel-post-1 hover-up border-radius-10 overflow-hidden transition-normal position-relative">
                     <div class="arrow-cover"></div>
                     <div class="slide-fade">
                         @if (pinnedPosts.Any())
@@ -82,8 +79,7 @@
                     var categoryUrl = "/category/" + item.CategorySlug;
                     var postUrl = "/post/" + item.Slug;
 
-                    // {delay:N1}s: định dạng độ trễ thành một chuỗi với một chữ số thập phân, theo đơn vị giây
-                    <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="@($"{delay:N1}s")">
+                    <article class="col-lg-4 col-md-6 mb-30">
                         <div class="post-card-1 border-radius-10 hover-up">
                             <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-1.jpg)">
                                 <a class="img-link" href="@postUrl"></a>
@@ -122,8 +118,6 @@
                             </div>
                         </div>
                     </article>
-                    // Increase the delay for the next iteration (Tăng độ trễ cho lần lặp tiếp theo)
-                    delay += increment;
                 }
             }
         </div>

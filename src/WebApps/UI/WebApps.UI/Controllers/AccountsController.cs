@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WebApps.UI.Models.Accounts;
 
 namespace WebApps.UI.Controllers;
 
@@ -36,6 +37,12 @@ public class AccountsController : Controller
 
     public IActionResult Profile()
     {
-        return View();
+        var viewModel = new ProfileViewModel()
+        {
+            MainClass = "",
+            ShowSiteBottom = false
+        };
+
+        return View(viewModel);
     }
 }

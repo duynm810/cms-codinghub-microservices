@@ -64,7 +64,7 @@ public static class CacheKeyHelper
             $"{PostServicePrefix}:latest:page:{pageNumber}:size:{pageSize}";
 
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
-            $"{PostServicePrefix}:category:{categorySlug}:page:{pageNumber}:size:{pageSize}";
+            $"{PostServicePrefix}:category:slug:{categorySlug}:page:{pageNumber}:size:{pageSize}";
 
         public static string GetPostsPagingKey(int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:page:{pageNumber}:size:{pageSize}";
@@ -90,7 +90,7 @@ public static class CacheKeyHelper
 
     public static class Series
     {
-        public static string GetAllSeriessKey() => $"{SeriesServicePrefix}:all";
+        public static string GetAllSeriesKey() => $"{SeriesServicePrefix}:all";
 
         public static string GetSeriesByIdKey(Guid seriesId) => $"{SeriesServicePrefix}:{seriesId}";
 
@@ -111,6 +111,25 @@ public static class CacheKeyHelper
         public static string GetGrpcSeriesByIdKey(Guid seriesId) => $"{SeriesGrpcPrefix}:{seriesId}";
 
         public static string GetGrpcSeriesBySlugKey(string slug) => $"{SeriesGrpcPrefix}:slug:{slug}";
+    }
+
+    #endregion
+
+    #region Post In Series
+
+    private const string PostInSeriesServicePrefix = "service:post-in-series";
+
+    public static class PostInSeries
+    {
+        public static string GetAllPostInSeriesByIdKey(Guid seriesId) => $"{PostInSeriesServicePrefix}:all:{seriesId}";
+        
+        public static string GetPostInSeriesBySlugKey(string slug) => $"{PostInSeriesServicePrefix}:slug:{slug}";
+        
+        public static string GetPostInSeriesByIdPagingKey(Guid seriesId, int pageNumber, int pageSize) =>
+            $"{PostInSeriesServicePrefix}:series:id:{seriesId}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostInSeriesBySlugPagingKey(string seriesSlug, int pageNumber, int pageSize) =>
+            $"{PostInSeriesServicePrefix}:series:slug:{seriesSlug}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion

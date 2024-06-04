@@ -3,6 +3,8 @@ namespace Shared.Settings;
 public class IdentityServerSettings
 {
     public string AuthorityUrl { get; set; } = default!;
+    
+    public string IssuerUri { get; set; } = default!;
 
     public string ClientId { get; set; } = default!;
 

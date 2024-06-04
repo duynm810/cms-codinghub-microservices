@@ -3,7 +3,7 @@
     var posts = Model.Posts.ToList();
 }
 
-<div class="sidebar-widget widget-about mb-50 pt-30 pr-30 pb-30 pl-30 bg-white border-radius-5 has-border wow fadeInUp animated">
+<div class="sidebar-widget widget-about mb-50 pt-30 pr-30 pb-30 pl-30 bg-white border-radius-5 has-border">
     <img class="about-author-img mb-25" src="~/imgs/authors/author.jpg" alt="">
     <h5 class="mb-20">Hello, I'm Duy Nguyen</h5>
     <p class="font-medium text-muted">
@@ -11,7 +11,7 @@
         Skilled in both frontend and backend development, I am dedicated to continuous learning and high-quality solutions.
     </p>
 </div>
-<div class="sidebar-widget widget-latest-posts mb-50 wow fadeInUp animated">
+<div class="sidebar-widget widget-latest-posts mb-50">
     <div class="widget-header-1 position-relative mb-30">
         <h5 class="mt-5 mb-30">Most popular</h5>
     </div>
@@ -22,14 +22,14 @@
                 foreach (var item in posts)
                 {
                     var postUrl = "/post/" + item.Slug;
-                    <li class="mb-30 wow fadeInUp animated">
+                    <li class="mb-30">
                         <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                             <div class="post-content media-body">
                                 <h6 class="post-title mb-15 text-limit-2-row font-medium">
                                     <a href="@postUrl">@item.Title</a>
                                 </h6>
                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                    <span class="post-on">05 August</span>
+                                    <span class="post-on">@item.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
                                     <span class="post-by has-dot">150 views</span>
                                 </div>
                             </div>
@@ -46,13 +46,13 @@
     </div>
 </div>
 <!-- Comments -->
-<div class="sidebar-widget widget-latest-posts mb-50 wow fadeInUp animated">
+<div class="sidebar-widget widget-latest-posts mb-50">
     <div class="widget-header-1 position-relative mb-30">
         <h5 class="mt-5 mb-30">Last comments</h5>
     </div>
     <div class="post-block-list post-module-2">
         <ul class="list-post">
-            <li class="mb-30 wow fadeInUp animated">
+            <li class="mb-30">
                 <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                     <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
                         <a class="color-white" href="single.html">
@@ -70,7 +70,7 @@
                     </div>
                 </div>
             </li>
-            <li class="mb-30 wow fadeInUp animated">
+            <li class="mb-30">
                 <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                     <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
                         <a class="color-white" href="single.html">
@@ -88,7 +88,7 @@
                     </div>
                 </div>
             </li>
-            <li class="mb-30 wow fadeInUp animated">
+            <li class="mb-30">
                 <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                     <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
                         <a class="color-white" href="single.html">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
             </li>
-            <li class="wow fadeInUp animated">
+            <li>
                 <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                     <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
                         <a class="color-white" href="single.html">

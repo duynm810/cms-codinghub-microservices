@@ -9,6 +9,8 @@ public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoSe
 {
     public async Task<bool> HasPostsInCategory(long categoryId)
     {
+        const string methodName = nameof(HasPostsInCategory);
+        
         try
         {
             var request = new HasPostsInCategoryRequest() { CategoryId = categoryId };
@@ -17,7 +19,7 @@ public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoSe
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(HasPostsInCategory), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             return false;
         }
     }

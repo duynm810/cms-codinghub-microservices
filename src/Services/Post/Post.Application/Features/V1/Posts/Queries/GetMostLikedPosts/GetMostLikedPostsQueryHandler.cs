@@ -64,7 +64,7 @@ public class GetMostLikedPostsQueryHandler(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             result.Messages.Add(e.Message);
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

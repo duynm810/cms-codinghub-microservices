@@ -1,9 +1,8 @@
-@using System.Globalization
 @model HomeViewModel
 @{
     var mostLikedPosts = Model.MostLikedPosts.ToList();
 }
-<div class="widget-header-1 position-relative mb-30  wow fadeInUp animated">
+<div class="widget-header-1 position-relative mb-30">
     <h5 class="mt-5 mb-30">Liked Posts</h5>
 </div>
 <div class="loop-list loop-list-style-1">
@@ -14,7 +13,7 @@
             {
                 var postUrl = "/post/" + item.Slug;
 
-                <article class="col-md-6 mb-40 wow fadeInUp  animated">
+                <article class="col-md-6 mb-40">
                     <div class="post-card-1 border-radius-10 hover-up">
                         <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-6.jpg)">
                             <a class="img-link" href="@postUrl"></a>

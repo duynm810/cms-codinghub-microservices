@@ -1,4 +1,3 @@
-@using System.Globalization
 @model BottomViewModel
 @{
     var postsWithCategory = Model.PostsWithCategory.ToList();
@@ -11,7 +10,7 @@
             foreach (var item in postsWithCategory)
             {
                 <div class="col-lg-4 col-md-6">
-                    <div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated">
+                    <div class="sidebar-widget widget-latest-posts mb-30">
                         <div class="widget-header-2 position-relative mb-30">
                             <h5 class="mt-5 mb-30">@item.CategoryName</h5>
                         </div>

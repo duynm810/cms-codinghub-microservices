@@ -17,10 +17,12 @@ public class PostGrpcService(
 {
     public async Task<IEnumerable<PostInSeriesDto>> GetPostsByIds(IEnumerable<Guid> ids)
     {
-        var idList = ids as Guid[] ?? ids.ToArray();
+        const string methodName = nameof(GetPostsByIds);
 
         try
         {
+            var idList = ids as Guid[] ?? ids.ToArray();
+
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
@@ -47,7 +49,7 @@ public class PostGrpcService(
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", nameof(GetPostsByIds), e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             throw;
         }
 

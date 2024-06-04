@@ -17,6 +17,19 @@ public static class ClaimsPrincipalExtensions
             ? default
             : Guid.Parse(value);
     }
+    
+    /// <summary>
+    /// Get fullname from first name and last name
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    /// <exception cref="Exception"></exception>
+    public static string GetFullName(this ClaimsPrincipal user)
+    {
+        var userClaim = user.FindFirst(InternalClaimTypesConsts.Claims.FullName);
+        if (userClaim == null) throw new Exception("User is not authenticated");
+        return userClaim.Value;
+    }
 
     /// <summary>
     /// Get device id from claims.

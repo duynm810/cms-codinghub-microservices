@@ -1,5 +1,8 @@
 using System.Net;
+using System.Security.Claims;
+using Duende.IdentityServer.Extensions;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Extensions;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
@@ -24,7 +27,9 @@ public class HeaderViewComponent(ICategoryApiClient categoryApiClient, IErrorSer
 
                 return View(viewModel);
             }
-
+            
+            var user = User as ClaimsPrincipal;
+            
             return HandleError((HttpStatusCode)categories.StatusCode, nameof(InvokeAsync));
         }
         catch (Exception e)
