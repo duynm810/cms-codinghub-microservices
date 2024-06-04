@@ -21,13 +21,10 @@ public class IdentityRepositoryManager(
 
     public IPermissionRepository Permissions => _permissionRepository.Value;
     
-    public IRoleRepository Roles => _roleRepository.Value;
-    
     public IUserRepository Users => _userRepository.Value;
 
     public IRoleRepository Roles => _roleRepository.Value;
 
-    public IUserRepository Users => _userRepository.Value;
 
     public UserManager<User> UserManager { get; } = userManager;
 
