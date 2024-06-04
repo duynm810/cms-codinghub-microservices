@@ -1,15 +1,16 @@
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.DeletePost;
 
-public class DeletePostCommandHandler(IPostRepository postRepository, IDistributedCache redisCacheService, ILogger logger)
+public class DeletePostCommandHandler(IPostRepository postRepository, ICacheService cacheService, ILogger logger)
     : IRequestHandler<DeletePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
@@ -34,9 +35,15 @@ public class DeletePostCommandHandler(IPostRepository postRepository, IDistribut
             result.Success(true);
             
             // Xóa cache liên quan
-            await redisCacheService.RemoveAsync("all_posts", cancellationToken);
-            await redisCacheService.RemoveAsync($"post_{request.Id}", cancellationToken);
-            await redisCacheService.RemoveAsync($"posts_by_category_{post.CategoryId}_page_1_size_10", cancellationToken);
+            var cacheKeys = new List<string>
+            {
+                CacheKeyHelper.Post.GetAllPostsKey(),
+                CacheKeyHelper.Post.GetPostByIdKey(request.Id),
+                CacheKeyHelper.Post.GetPinnedPostsKey(),
+                CacheKeyHelper.Post.GetFeaturedPostsKey()
+            };
+
+            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
 
             logger.Information("END {MethodName} - Post with ID {PostId} deleted successfully", methodName, request.Id);
         }

@@ -76,9 +76,6 @@ public class SubmitPostForApprovalCommandHandler(
                 }
                 
                 // Xóa cache liên quan
-                await redisCacheService.RemoveAsync("all_posts");
-                await redisCacheService.RemoveAsync($"post_{request.Id}");
-                await redisCacheService.RemoveAsync($"posts_by_category_{post.CategoryId}_page_1_size_10");
 
                 result.Success(true);
             }

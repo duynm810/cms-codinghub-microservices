@@ -1,13 +1,13 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Settings;
 using Shared.Utilities;
@@ -17,8 +17,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
-    ISerializeService serializeService,
+    ICacheService cacheService,
     DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostModel>>>
@@ -34,17 +33,13 @@ public class GetFeaturedPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
             
             // Kiểm tra cache
-            var cacheKey = "featured_posts";
-            var cachedPosts = await redisCacheService.GetStringAsync(cacheKey, cancellationToken);
-            if (!string.IsNullOrEmpty(cachedPosts))
+            var cacheKey = CacheKeyHelper.Post.GetFeaturedPostsKey();
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
+            if (cachedPosts != null)
             {
-                var cachedData = serializeService.Deserialize<IEnumerable<PostModel>>(cachedPosts);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved featured posts from cache", methodName);
-                    return result;
-                }
+                result.Success(cachedPosts);
+                logger.Information("END {MethodName} - Successfully retrieved featured posts from cache", methodName);
+                return result;
             }
 
             var posts = await postRepository.GetFeaturedPosts(
@@ -61,11 +56,7 @@ public class GetFeaturedPostsQueryHandler(
                 result.Success(data);
                 
                 // Lưu cache
-                var serializedData = serializeService.Serialize(data);
-                await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-                }, cancellationToken);
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} featured posts", methodName,
                     data.Count);

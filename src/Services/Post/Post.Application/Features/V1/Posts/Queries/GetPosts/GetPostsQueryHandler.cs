@@ -9,6 +9,7 @@ using Post.Domain.Entities;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -19,6 +20,7 @@ public class GetPostsQueryHandler(
     ICategoryGrpcService categoryGrpcService,
     IDistributedCache redisCacheService,
     ISerializeService serializeService,
+    ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostModel>>>
@@ -33,19 +35,14 @@ public class GetPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
             
-            var cacheKey = "all_posts";
-            
             // Kiểm tra cache
-            var cachedPosts = await redisCacheService.GetStringAsync(cacheKey, cancellationToken);
-            if (!string.IsNullOrEmpty(cachedPosts))
+            var cacheKey =  CacheKeyHelper.Post.GetAllPostsKey();
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
+            if (cachedPosts != null)
             {
-                var cachedData = serializeService.Deserialize<IEnumerable<PostModel>>(cachedPosts);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved all posts from cache", methodName);
-                    return result;
-                }
+                result.Success(cachedPosts);
+                logger.Information("END {MethodName} - Successfully retrieved all posts from cache", methodName);
+                return result;
             }
 
             var posts = await postRepository.GetPosts();
@@ -60,11 +57,7 @@ public class GetPostsQueryHandler(
                 result.Success(data);
                 
                 // Lưu cache
-                var serializedData = serializeService.Serialize(data);
-                await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-                {
-                    AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-                }, cancellationToken);
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts", methodName,
                     data.Count);

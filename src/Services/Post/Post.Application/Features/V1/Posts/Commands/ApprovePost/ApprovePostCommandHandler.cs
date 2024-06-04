@@ -70,9 +70,6 @@ public class ApprovePostCommandHandler(
                 }
                 
                 // Xóa cache liên quan
-                await redisCacheService.RemoveAsync("all_posts", cancellationToken);
-                await redisCacheService.RemoveAsync($"post_{request.Id}", cancellationToken);
-                await redisCacheService.RemoveAsync($"posts_by_category_{post.CategoryId}_page_1_size_10", cancellationToken);
 
                 result.Success(true);
             }

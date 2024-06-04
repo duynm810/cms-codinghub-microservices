@@ -4,8 +4,6 @@ public static class CacheKeyHelper
 {
     #region Category
     
-    private const string CategoryGrpcPrefix = "grpc:category";
-    
     private const string CategoryServicePrefix = "service:category";
 
     public static class Category
@@ -18,6 +16,12 @@ public static class CacheKeyHelper
 
         public static string GetCategoriesPagingKey(int pageNumber, int pageSize) => $"{CategoryServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
+
+    #endregion
+
+    #region Category Grpc
+
+    private const string CategoryGrpcPrefix = "grpc:category";
 
     public static class CategoryGrpc
     {
@@ -34,18 +38,33 @@ public static class CacheKeyHelper
 
     #region Post
 
+    private const string PostServicePrefix = "service:post";
+    
     public static class Post
     {
-        public static string GetAllPostsKey() => "posts:all";
+        public static string GetAllPostsKey() => $"{PostServicePrefix}:all";
 
-        public static string GetPinnedPostsKey() => "posts:pinned";
+        public static string GetPinnedPostsKey() => $"{PostServicePrefix}:pinned";
 
-        public static string GetFeaturedPostsKey() => "posts:featured";
+        public static string GetFeaturedPostsKey() => $"{PostServicePrefix}:featured";
+        
+        public static string GetMostLikedPostsKey() => $"{PostServicePrefix}:most_liked";
+        
+        public static string GetMostCommentPostsKey() => $"{PostServicePrefix}:most_commented";
 
-        public static string GetPostByIdKey(Guid postId) => $"post:{postId}";
+        public static string GetPostByIdKey(Guid postId) => $"{PostServicePrefix}:{postId}";
+        
+        public static string GetPostsByNonStaticPageCategoryKey() => $"{PostServicePrefix}:category:non_static_page";
 
+        public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
+
+        public static string GetLatestPostsPagingKey(int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:latest:page:{pageNumber}:size:{pageSize}";
+        
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
-            $"posts:category:{categorySlug}:page:{pageNumber}:size:{pageSize}";
+            $"{PostServicePrefix}:category:{categorySlug}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostsPagingKey(int pageNumber, int pageSize) => $"{PostServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion

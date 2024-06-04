@@ -1,4 +1,5 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
@@ -7,6 +8,7 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -16,6 +18,7 @@ public class CreatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     IDistributedCache redisCacheService,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
     : IRequestHandler<CreatePostCommand, ApiResult<Guid>>
@@ -59,9 +62,16 @@ public class CreatePostCommandHandler(
             result.Success(id);
             
             // Xóa cache liên quan
-            await redisCacheService.RemoveAsync("all_posts", cancellationToken);
-            await redisCacheService.RemoveAsync($"posts_by_category_{category.Slug}_page_1_size_10", cancellationToken);
+            var cacheKeys = new List<string>
+            {
+                CacheKeyHelper.Post.GetAllPostsKey(),
+                CacheKeyHelper.Post.GetPostByIdKey(id),
+                CacheKeyHelper.Post.GetPinnedPostsKey(),
+                CacheKeyHelper.Post.GetFeaturedPostsKey()
+            };
 
+            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            
             logger.Information("END {MethodName} - Post created successfully with ID: {PostId}", methodName, id);
         }
         catch (Exception e)

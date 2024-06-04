@@ -9,6 +9,7 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Settings;
 using Shared.Utilities;
@@ -20,6 +21,7 @@ public class GetPostBySlugQueryHandler(
     ICategoryGrpcService categoryGrpcService,
     IDistributedCache redisCacheService,
     ISerializeService serializeService,
+    ICacheService cacheService,
     DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -34,18 +36,14 @@ public class GetPostBySlugQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
             
-            var cacheKey = $"post_slug_{request.Slug}";
             // Kiểm tra cache
-            var cachedPost = await redisCacheService.GetStringAsync(cacheKey, cancellationToken);
-            if (!string.IsNullOrEmpty(cachedPost))
+            var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
+            var cachedPost = await cacheService.GetAsync<PostDetailModel>(cacheKey, cancellationToken);
+            if (cachedPost != null)
             {
-                var cachedData = serializeService.Deserialize<PostDetailModel>(cachedPost);
-                if (cachedData != null)
-                {
-                    result.Success(cachedData);
-                    logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}", methodName, request.Slug);
-                    return result;
-                }
+                result.Success(cachedPost);
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}", methodName, request.Slug);
+                return result;
             }
 
             var post = await postRepository.GetPostBySlug(request.Slug);
@@ -89,11 +87,7 @@ public class GetPostBySlugQueryHandler(
             result.Success(data);
             
             // Lưu cache
-            var serializedData = serializeService.Serialize(data);
-            await redisCacheService.SetStringAsync(cacheKey, serializedData, new DistributedCacheEntryOptions
-            {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5) // Cache trong 5 phút
-            }, cancellationToken);
+            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName,
                 request.Slug);

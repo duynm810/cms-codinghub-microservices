@@ -1,4 +1,5 @@
 using AutoMapper;
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
@@ -8,6 +9,7 @@ using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Post;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -16,7 +18,7 @@ namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 public class UpdatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
-    IDistributedCache redisCacheService,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
     : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
@@ -71,9 +73,15 @@ public class UpdatePostCommandHandler(
             result.Success(data);
 
             // Xóa cache liên quan
-            await redisCacheService.RemoveAsync("all_posts", cancellationToken);
-            await redisCacheService.RemoveAsync($"post_{request.Id}", cancellationToken);
-            await redisCacheService.RemoveAsync($"posts_by_category_{category.Slug}_page_1_size_10", cancellationToken);
+            var cacheKeys = new List<string>
+            {
+                CacheKeyHelper.Post.GetAllPostsKey(),
+                CacheKeyHelper.Post.GetPostByIdKey(request.Id),
+                CacheKeyHelper.Post.GetPinnedPostsKey(),
+                CacheKeyHelper.Post.GetFeaturedPostsKey()
+            };
+
+            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
 
             logger.Information("END {MethodName} - Post with ID {PostId} updated successfully", methodName, request.Id);
         }
