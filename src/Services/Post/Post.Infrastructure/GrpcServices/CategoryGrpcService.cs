@@ -11,8 +11,8 @@ namespace Post.Infrastructure.GrpcServices;
 
 public class CategoryGrpcService(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
-    IMapper mapper,
     ICacheService cacheService,
+    IMapper mapper,
     ILogger logger) : ICategoryGrpcService
 {
     public async Task<CategoryDto?> GetCategoryById(long id)
