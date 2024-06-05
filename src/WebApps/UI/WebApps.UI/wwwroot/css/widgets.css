@@ -81,7 +81,7 @@ span.has-dot::before{content:"";width:3px;height:3px;background:#999;border-radi
 /*featured-slider-1*/
 .featured-1{padding:80px 0;background:#f1f2f3;}
 .featured-1 h3{font-size:42px;font-weight:900;}
-.featured-1 h2{font-size:50px;font-weight:900;}
+.featured-1 h2{font-size:48px;font-weight:900;}
 .featured-1 h2 span{color:var(--color-primary);}
 .tags{letter-spacing:0.5px}
 
