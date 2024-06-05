@@ -568,6 +568,75 @@
       "SwaggerKey": "post-in-series-service"
     },
     {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "GET",
@@ -642,6 +711,17 @@
           "Name": "PostInSeries.Api",
           "Version": "1.0",
           "Url": "http://localhost:5009/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Tag.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5010/swagger/v1/swagger.json"
         }
       ]
     },

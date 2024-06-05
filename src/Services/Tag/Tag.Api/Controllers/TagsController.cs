@@ -12,19 +12,19 @@ public static class TagsController
         {
             var result = await tagService.CreateTag(request);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-        });
+        }).RequireAuthorization("Bearer");
 
         app.MapPut("/api/tags/{id:guid}", async ([FromServices] ITagService tagService, Guid id, UpdateTagDto request) =>
         {
             var result = await tagService.UpdateTag(id, request);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-        });
+        }).RequireAuthorization("Bearer");
         
         app.MapDelete("/api/tags", async ([FromServices] ITagService tagService, [FromBody] List<Guid> ids) =>
         {
             var result = await tagService.DeleteTag(ids);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
-        });
+        }).RequireAuthorization("Bearer");
 
         app.MapGet("/api/tags", async ([FromServices] ITagService tagService) =>
         {
@@ -36,6 +36,6 @@ public static class TagsController
         {
             var result = await tagService.GetTagById(id);
             return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
-        });
+        }).RequireAuthorization("Bearer");
     }
 }

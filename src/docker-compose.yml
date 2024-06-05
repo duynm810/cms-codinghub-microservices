@@ -87,6 +87,12 @@ services:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
       
+  tag.api:
+    image: ${DOCKER_REGISTRY-}tag-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tag/Tag.Api/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
