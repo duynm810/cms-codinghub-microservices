@@ -12,6 +12,10 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Shared.Configurations;
 using Shared.Settings;
 using Tag.Api.Persistence;
+using Tag.Api.Repositories;
+using Tag.Api.Repositories.Interfaces;
+using Tag.Api.Services;
+using Tag.Api.Services.Interfaces;
 
 namespace Tag.Api.Extensions;
 
@@ -104,6 +108,8 @@ public static class ServiceExtensions
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
+            .AddScoped<ITagRepository, TagRepository>()
+            .AddScoped<ITagService, TagService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
     }
