@@ -1,15 +1,13 @@
 using Logging;
 using Serilog;
 using Shared.Constants;
-using Tag.Api.Extensions;
-using Tag.Api.Persistence;
+using Tag.Grpc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
-var configuration = builder.Configuration;
 
 // Initialize console logging for application startup
 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateBootstrapLogger();
-Log.Information("Starting up {ApplicationName}", builder.Environment.ApplicationName);
+Log.Information("Starting up {EnvironmentApplicationName}", builder.Environment.ApplicationName);
 
 try
 {
@@ -20,22 +18,17 @@ try
     builder.AddAppConfiguration();
 
     // Register application infrastructure services
-    builder.Services.AddInfrastructureServices(configuration);
+    builder.Services.AddInfrastructureServices(builder.Configuration);
 
     var app = builder.Build();
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    // Seed database with initial data and start the application
-    await app.MigrateDatabase<TagContext>((context, _) => { TagSeedData.TagSeedAsync(context, Log.Logger).Wait(); })
-        .RunAsync();
+    app.Run();
 }
 catch (Exception e)
 {
-    var type = e.GetType().Name;
-    if (type.Equals("HostAbortedException", StringComparison.Ordinal)) throw;
-
     Log.Fatal(e, $"{ErrorMessagesConsts.Common.UnhandledException}: {e.Message}");
 }
 finally

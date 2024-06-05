@@ -4,34 +4,28 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
+        <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
-        <PackageReference Include="Google.Protobuf" Version="3.26.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.27.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.57.0"/>
         <PackageReference Include="Grpc.AspNetCore.HealthChecks" Version="2.63.0" />
         <PackageReference Include="Grpc.AspNetCore.Server.Reflection" Version="2.63.0" />
         <PackageReference Include="Grpc.HealthCheck" Version="2.63.0" />
+        <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
-      <ProjectReference Include="..\Post.Application\Post.Application.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Protos\" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Remove="Protos\post.proto" />
-        <Protobuf Include="Protos\post.proto">
+        <None Remove="Protos\tag.proto" />
+        <Protobuf Include="Protos\tag.proto">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
             <GrpcServices>Server</GrpcServices>
             <Access>Public</Access>
@@ -41,12 +35,6 @@
             <OutputDir>obj\Debug/net8.0/</OutputDir>
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Include="..\..\..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
     </ItemGroup>
 
 </Project>

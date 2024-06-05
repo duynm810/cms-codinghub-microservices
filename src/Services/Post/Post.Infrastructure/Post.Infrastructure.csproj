@@ -7,38 +7,47 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.4" />
+        <PackageReference Include="EFCore.NamingConventions" Version="8.0.3"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.4"/>
         <PackageReference Include="System.Linq.Dynamic.Core" Version="1.3.14"/>
-        <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
+        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj" />
-      <ProjectReference Include="..\Post.Domain\Post.Domain.csproj" />
+        <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBus.csproj"/>
+        <ProjectReference Include="..\Post.Domain\Post.Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="Migrations\20240507041542_Initial.cs" />
-      <Compile Remove="Migrations\20240507041542_Initial.Designer.cs" />
+        <Compile Remove="Migrations\20240507041542_Initial.cs"/>
+        <Compile Remove="Migrations\20240507041542_Initial.Designer.cs"/>
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Protos\category.proto"/>
+        <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\category.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
-      <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
-        <GrpcServices>Client</GrpcServices>
-        <Access>Public</Access>
-        <ProtoCompile>True</ProtoCompile>
-        <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net8.0\</OutputDir>
-        <Generator>MSBuild:Compile</Generator>
-        <Link>Protos\category.proto</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Protobuf>
+        <Protobuf Include="..\..\Tag\Tag.Grpc\Protos\tag.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\tag.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
     </ItemGroup>
 
 </Project>
