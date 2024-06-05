@@ -2,6 +2,7 @@ using Logging;
 using Serilog;
 using Shared.Constants;
 using Tag.Api.Extensions;
+using Tag.Api.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
@@ -17,16 +18,18 @@ try
 
     // Load configuration from JSON files and environment variables
     builder.AddAppConfiguration();
-    
+
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(configuration);
-    
+
     var app = builder.Build();
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
-    
-    app.Run();
+
+    // Seed database with initial data and start the application
+    await app.MigrateDatabase<TagContext>((context, _) => { TagSeedData.TagSeedAsync(context, Log.Logger).Wait(); })
+        .RunAsync();
 }
 catch (Exception e)
 {
