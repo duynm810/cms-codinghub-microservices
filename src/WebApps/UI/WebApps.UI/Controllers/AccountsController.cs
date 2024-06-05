@@ -37,12 +37,7 @@ public class AccountsController : Controller
 
     public IActionResult Profile()
     {
-        var viewModel = new ProfileViewModel()
-        {
-            MainClass = "",
-            ShowSiteBottom = false
-        };
-
-        return View(viewModel);
+        var items = new ProfileViewModel();
+        return View(items);
     }
 }

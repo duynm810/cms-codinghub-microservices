@@ -13,6 +13,9 @@ services:
   post-in-series-db:
     image: postgres:alpine3.16
     
+  tagdb:
+    image: mysql:latest
+    
   hangfiredb:
     image: mongo
     
@@ -84,6 +87,12 @@ services:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
       
+  tag.api:
+    image: ${DOCKER_REGISTRY-}tag-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tag/Tag.Api/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -140,3 +149,5 @@ volumes:
     name: identity_sqlserver_data
   post_in_series_postgres_data:
     name: post_in_series_postgres_data
+  tag_mysql_data:
+    name: tag_mysql_data

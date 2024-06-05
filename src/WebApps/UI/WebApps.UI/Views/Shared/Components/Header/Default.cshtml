@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Shared.Extensions
 @model HeaderViewModel
 
@@ -16,18 +17,21 @@
                 <div class="dark-light-mode-cover">
                     <a class="dark-light-mode" href="#"></a>
                 </div>
-                <span class="vertical-divider mr-20 ml-20 d-none d-md-inline"></span>
+                <span class="vertical-divider mr-10 ml-10"></span>
                 @if (User.Identity is { IsAuthenticated: true })
                 {
-                    <ul class="list-inline nav-topbar d-none d-md-inline">
+                    <ul class="list-inline nav-topbar">
                         <li class="list-inline-item menu-item-has-children">
-                            <a href="#">Xin chào, @User.Identity.Name</a>
+                            <a href="#">
+                                <i class="elegant-icon icon_profile"></i> <!-- Sử dụng icon từ elegant-icon -->
+                                <span class="user-name">@User.GetFullName()</span>
+                            </a>
                             <ul class="sub-menu font-small">
                                 <li>
                                     <a asp-controller="Accounts" asp-action="Profile">Profile</a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Accounts" asp-action="Logout">Logout</a>
+                                    <a href="javascript:void(0)" onclick="confirmLogout('@Url.Action("Logout", "Accounts")')">Logout</a>
                                 </li>
                             </ul>
                         </li>
@@ -35,10 +39,12 @@
                 }
                 else
                 {
-                    <a asp-controller="Accounts" asp-action="Login" class="btn btn-success btn-sm shadow-sm ml-2">Login</a>
+                    <span class="ml-2 text-muted font-small" onclick="location.href='@Url.Action("Login", "Accounts")'">
+                        <i class="elegant-icon icon_profile mr-5"></i>Login
+                    </span>
                 }
             </div>
-        </div>
+        </div>  
     </div>
 </div>
 <div class="header-sticky">

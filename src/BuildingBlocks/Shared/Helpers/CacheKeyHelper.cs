@@ -133,4 +133,20 @@ public static class CacheKeyHelper
     }
 
     #endregion
+
+    #region Tag
+
+    private const string TagServicePrefix = "service:tag";
+    
+    public static class Tag
+    {
+        public static string GetAllTagsKey() => $"{TagServicePrefix}:all";
+
+        public static string GetTagByIdKey(Guid tagId) => $"{TagServicePrefix}:{tagId}";
+
+        public static string GetTagsPagingKey(int pageNumber, int pageSize) =>
+            $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
 }

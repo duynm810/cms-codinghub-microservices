@@ -19,16 +19,20 @@ public static class ClaimsPrincipalExtensions
     }
     
     /// <summary>
-    /// Get fullname from first name and last name
+    /// Get fullname from claims, fallback to lastname if fullname is not available.
     /// </summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
-    /// <exception cref="Exception"></exception>
+    /// <param name="user">Current claims principal.</param>
+    /// <returns>Full name or last name of the user.</returns>
     public static string GetFullName(this ClaimsPrincipal user)
     {
-        var userClaim = user.FindFirst(InternalClaimTypesConsts.Claims.FullName);
-        if (userClaim == null) throw new Exception("User is not authenticated");
-        return userClaim.Value;
+        var fullName = GetClaimValue(user, InternalClaimTypesConsts.Claims.FullName);
+        if (!string.IsNullOrEmpty(fullName))
+        {
+            return fullName;
+        }
+
+        var lastName = GetClaimValue(user, InternalClaimTypesConsts.Claims.LastName);
+        return string.IsNullOrEmpty(lastName) ? "User" : lastName;
     }
 
     /// <summary>

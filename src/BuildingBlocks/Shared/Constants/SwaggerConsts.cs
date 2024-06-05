@@ -9,4 +9,5 @@ public static class SwaggerConsts
     public const string HangfireApi = "Hangfire API";
     public const string IdentityApi = "Identity API";
     public const string MediaApi = "Media API";
+    public const string TagApi = "Tag API";
 }

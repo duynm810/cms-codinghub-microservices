@@ -50,6 +50,18 @@ services:
       - "5434:5432"
     volumes:
       - post_in_series_postgres_data:/var/lib/postgresql/data
+    
+  #tagdb: mysql
+  tagdb:
+    container_name: tagdb
+    environment:
+      MYSQL_ROOT_PASSWORD: "Passw0rd!"
+      MYSQL_DATABASE: "tag_service_db"
+    restart: always
+    volumes:
+      - tag_mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
   
   #hangfiredb: mongo
   hangfiredb:
@@ -137,6 +149,7 @@ services:
       - post.api
       - series.api
       - post-in-series.api
+      - tag.api
       - hangfire.api
     ports:
       - "6001:80"
@@ -238,6 +251,17 @@ services:
       - post-in-series-db
     ports:
       - "6009:80"
+    restart: always
+    
+  tag.api:
+    container_name: tag.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - tagdb
+    ports:
+      - "6010:80"
     restart: always
   
   hangfire.api:
