@@ -50,6 +50,18 @@ services:
       - "5434:5432"
     volumes:
       - post_in_series_postgres_data:/var/lib/postgresql/data
+    
+  #tagdb: mysql
+  tagdb:
+    container_name: tagdb
+    environment:
+      MYSQL_ROOT_PASSWORD: "Passw0rd!"
+      MYSQL_DATABASE: "tag_service_db"
+    restart: always
+    volumes:
+      - tag_mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
   
   #hangfiredb: mongo
   hangfiredb:

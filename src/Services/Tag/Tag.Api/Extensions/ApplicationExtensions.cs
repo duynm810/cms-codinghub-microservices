@@ -1,4 +1,6 @@
+using HealthChecks.UI.Client;
 using Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 
 namespace Tag.Api.Extensions;
@@ -35,6 +37,13 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
+        
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
+
 
         app.MapDefaultControllerRoute();
     }

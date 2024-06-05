@@ -5,9 +5,13 @@ using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MySqlConnector;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Shared.Configurations;
 using Shared.Settings;
+using Tag.Api.Persistence;
 
 namespace Tag.Api.Extensions;
 
@@ -56,12 +60,32 @@ public static class ServiceExtensions
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
     {
+        var databaseSettings = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>()
+                               ?? throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddSingleton(databaseSettings);
         
+        var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
+                                ?? throw new ArgumentNullException(
+                                    $"{nameof(ApiConfigurations)} is not configured properly");
+
+        services.AddSingleton(apiConfigurations);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)
     {
-        
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        var builder = new MySqlConnectionStringBuilder(databaseSettings.ConnectionString);
+        services.AddDbContext<TagContext>(m => m.UseMySql(builder.ConnectionString,
+            ServerVersion.AutoDetect(builder.ConnectionString), e =>
+            {
+                e.MigrationsAssembly(typeof(TagContext).Assembly.FullName);
+                e.SchemaBehavior(MySqlSchemaBehavior.Ignore);
+            }));
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
@@ -93,6 +117,12 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-       
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
+            name: "MySQL Health",
+            failureStatus: HealthStatus.Degraded);
     }
 }
