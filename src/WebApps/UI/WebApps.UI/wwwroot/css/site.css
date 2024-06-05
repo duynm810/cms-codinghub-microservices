@@ -11,3 +11,17 @@
         max-width: 500px;
     }
 }
+
+.text-muted {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.text-muted i {
+    margin-right: 5px;
+}
+
+.text-muted:hover {
+    color: #0056b3; /* Màu chữ khi hover */
+}
