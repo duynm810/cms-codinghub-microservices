@@ -12,7 +12,7 @@ using Tag.Api.Persistence;
 namespace Tag.Api.Migrations
 {
     [DbContext(typeof(TagContext))]
-    [Migration("20240605094436_Initial")]
+    [Migration("20240605102728_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -35,14 +35,16 @@ namespace Tag.Api.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateTimeOffset?>("LastModifiedDate")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 

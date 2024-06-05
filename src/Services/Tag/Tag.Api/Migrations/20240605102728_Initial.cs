@@ -19,9 +19,9 @@ namespace Tag.Api.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
+                    Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Description = table.Column<string>(type: "longtext", nullable: true)
+                    Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
                     LastModifiedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true)

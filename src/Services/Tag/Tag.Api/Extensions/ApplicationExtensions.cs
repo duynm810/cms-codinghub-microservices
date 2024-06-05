@@ -2,6 +2,8 @@ using HealthChecks.UI.Client;
 using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
+using Tag.Api.Controllers;
+using Tag.Api.Services.Interfaces;
 
 namespace Tag.Api.Extensions;
 
@@ -17,6 +19,9 @@ public static class ApplicationExtensions
         {
             app.UseHttpsRedirection();
         }
+        
+        // Minimal Api
+        app.MapTagApi();
 
         // Configure the HTTP request pipeline.
         app.UseSwagger();
