@@ -1,0 +1,13 @@
+/* wwwroot/css/site.css */
+
+.small-swal-popup {
+    max-width: 400px;
+    font-size: 0.9rem;
+    padding: 20px;
+}
+
+@media (min-width: 768px) {
+    .small-swal-popup {
+        max-width: 500px;
+    }
+}

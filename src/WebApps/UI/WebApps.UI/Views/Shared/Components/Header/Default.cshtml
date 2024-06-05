@@ -1,4 +1,3 @@
-@using Shared.Extensions
 @model HeaderViewModel
 
 <div class="header-top">
@@ -27,7 +26,7 @@
                                     <a asp-controller="Accounts" asp-action="Profile">Profile</a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Accounts" asp-action="Logout">Logout</a>
+                                    <a href="javascript:void(0)" onclick="confirmLogout('@Url.Action("Logout", "Accounts")')">Logout</a>
                                 </li>
                             </ul>
                         </li>
