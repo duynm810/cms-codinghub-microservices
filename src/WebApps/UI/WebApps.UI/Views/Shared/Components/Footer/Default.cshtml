@@ -29,9 +29,9 @@
                     {
                         foreach (var item in categories)
                         {
-                            var url = item.IsStaticPage ? "/" + item.Slug : "/category/" + item.Slug;
+                            var categoryUrl = item.IsStaticPage ? "/" + item.Slug : "/category/" + item.Slug;
                             <li class="cat-item cat-item-2">
-                                <a href="@url">@item.Name</a>
+                                <a href="@categoryUrl">@item.Name</a>
                             </li>
                         }
                     }
