@@ -84,7 +84,7 @@ public static class ServiceExtensions
         services.AddSingleton<HealthServiceImpl>();
         services.AddHostedService<StatusService>();
 
-        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
+        services.AddGrpcHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
                 name: "Category MySQL Health",
                 failureStatus: HealthStatus.Degraded)
             .AddCheck("Category gRPC Health", () => HealthCheckResult.Healthy());

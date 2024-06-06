@@ -1,5 +1,6 @@
 using Category.Grpc.Extensions;
 using Logging;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;
 using Shared.Constants;
 
@@ -19,6 +20,14 @@ try
 
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(builder.Configuration);
+
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5004, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
+        }
+    });
 
     var app = builder.Build();
 
