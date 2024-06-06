@@ -92,10 +92,11 @@ public static class ServiceExtensions
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
-        services.AddHealthChecks()
+
+        services.AddGrpcHealthChecks()
             .AddSqlServer(databaseSettings.ConnectionString,
                 name: "SqlServer Health",
                 failureStatus: HealthStatus.Degraded)
-            .AddCheck("Series gRPC Health", () => HealthCheckResult.Healthy());
+            .AddCheck("gRPC Health", () => HealthCheckResult.Healthy());
     }
 }

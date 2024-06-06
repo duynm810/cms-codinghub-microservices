@@ -21,6 +21,8 @@ try
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(builder.Configuration);
 
+    // Set up port and protocol that the Kestrel server listens on to receive requests to the application
+    // Thiết lập cổng và giao thức mà máy chủ Kestrel lắng nghe để tiếp nhận các yêu cầu đến ứng dụng
     builder.WebHost.ConfigureKestrel(options =>
     {
         if (builder.Environment.IsDevelopment())

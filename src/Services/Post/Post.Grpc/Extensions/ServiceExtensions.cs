@@ -22,10 +22,10 @@ public static class ServiceExtensions
         services.AddSingleton<HealthServiceImpl>();
         services.AddHostedService<StatusService>();
 
-        services.AddHealthChecks()
+        services.AddGrpcHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
                 failureStatus: HealthStatus.Degraded)
-            .AddCheck("Post gRPC Health", () => HealthCheckResult.Healthy());
+            .AddCheck("gRPC Health", () => HealthCheckResult.Healthy());
     }
 }
