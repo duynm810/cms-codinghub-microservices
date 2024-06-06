@@ -1,6 +1,7 @@
 using HealthChecks.UI.Client;
 using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Post.Application;
 using Post.Grpc.Extensions;
 using Post.Grpc.Services;
@@ -38,6 +39,19 @@ try
     // Add grpc services
     builder.Services.AddGrpc();
     builder.Services.AddGrpcReflection();
+    
+    // Set up port and protocol that the Kestrel server listens on to receive requests to the application
+    // Thiết lập cổng và giao thức mà máy chủ Kestrel lắng nghe để tiếp nhận các yêu cầu đến ứng dụng
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5006, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
+        }
+        
+        // Config port for docker environment and production
+        options.ListenAnyIP(80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
+    });
 
     var app = builder.Build();
 
@@ -54,7 +68,6 @@ try
     });
 
     app.MapGrpcHealthChecksService();
-
     app.MapGrpcReflectionService();
 
     app.Run();
