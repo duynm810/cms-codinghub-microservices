@@ -27,6 +27,9 @@ try
         {
             options.ListenAnyIP(5004, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
         }
+        
+        // Config port for docker environment and production
+        options.ListenAnyIP(80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
     });
 
     var app = builder.Build();
