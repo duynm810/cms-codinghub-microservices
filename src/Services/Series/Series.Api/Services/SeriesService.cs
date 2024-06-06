@@ -16,7 +16,6 @@ namespace Series.Api.Services;
 public class SeriesService(
     ISeriesRepository seriesRepository,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMapper mapper,
     ILogger logger) : ISeriesService
 {
@@ -146,7 +145,7 @@ public class SeriesService(
         return result;
     }
 
-    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries()
+    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries(int count)
     {
         var result = new ApiResult<IEnumerable<SeriesDto>>();
         const string methodName = nameof(GetSeries);
@@ -164,8 +163,6 @@ public class SeriesService(
                 logger.Information("END {MethodName} - Successfully retrieved series from cache", methodName);
                 return result;
             }
-
-            var count = displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Series.TopSeries, 0);
 
             var series = await seriesRepository.GetSeries(count);
             if (series.IsNotNullOrEmpty())

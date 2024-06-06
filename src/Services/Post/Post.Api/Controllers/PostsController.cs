@@ -123,9 +123,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostModel>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<ActionResult<PostModel>> GetPostBySlug([Required] string slug)
+    public async Task<ActionResult<PostModel>> GetPostBySlug([Required] string slug, int relatedCount)
     {
-        var query = new GetPostBySlugQuery(slug);
+        var query = new GetPostBySlugQuery(slug, relatedCount);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -133,9 +133,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("featured")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetFeaturedPosts()
+    public async Task<IActionResult> GetFeaturedPosts([FromQuery] int count = 4)
     {
-        var query = new GetFeaturedPostsQuery();
+        var query = new GetFeaturedPostsQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -143,9 +143,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("pinned")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPinnedPosts()
+    public async Task<IActionResult> GetPinnedPosts([FromQuery] int count = 4)
     {
-        var query = new GetPinnedPostsQuery();
+        var query = new GetPinnedPostsQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -153,9 +153,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("most-commented")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetMostCommentedPosts()
+    public async Task<IActionResult> GetMostCommentedPosts([FromQuery] int count = 6)
     {
-        var query = new GetMostCommentPostsQuery();
+        var query = new GetMostCommentPostsQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -163,9 +163,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("most-liked")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetMostLikedPosts()
+    public async Task<IActionResult> GetMostLikedPosts([FromQuery] int count = 4)
     {
-        var query = new GetMostLikedPostsQuery();
+        var query = new GetMostLikedPostsQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -173,9 +173,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("by-non-static-page-category")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<CategoryWithPostsModel>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostsByNonStaticPageCategory()
+    public async Task<IActionResult> GetPostsByNonStaticPageCategory([FromQuery] int count = 3)
     {
-        var query = new GetPostsByNonStaticPageCategoryQuery();
+        var query = new GetPostsByNonStaticPageCategoryQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }

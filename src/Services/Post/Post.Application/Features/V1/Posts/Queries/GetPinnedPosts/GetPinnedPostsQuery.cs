@@ -4,4 +4,7 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPinnedPosts;
 
-public class GetPinnedPostsQuery : IRequest<ApiResult<IEnumerable<PostModel>>>;
+public class GetPinnedPostsQuery(int count) : IRequest<ApiResult<IEnumerable<PostModel>>>
+{
+    public int Count { get; set; } = count;
+}

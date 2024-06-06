@@ -56,7 +56,7 @@ public class PostsController(
     {
         try
         {
-            var posts = await postApiClient.GetPostBySlug(slug);
+            var posts = await postApiClient.GetPostBySlug(slug, 2);
 
             if (posts is { IsSuccess: true, Data: not null })
             {

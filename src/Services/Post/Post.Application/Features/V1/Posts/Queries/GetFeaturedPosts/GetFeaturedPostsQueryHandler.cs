@@ -18,7 +18,6 @@ public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -42,8 +41,7 @@ public class GetFeaturedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetFeaturedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.FeaturedPosts, 0));
+            var posts = await postRepository.GetFeaturedPosts(request.Count);
 
             var postList = posts.ToList();
 

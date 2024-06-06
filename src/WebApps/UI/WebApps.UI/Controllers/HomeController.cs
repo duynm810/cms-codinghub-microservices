@@ -21,10 +21,10 @@ public class HomeController(
         {
             var pageSize = paginationSettings.LatestPostPageSize;
 
-            var featuredPosts = await postApiClient.GetFeaturedPosts();
-            var pinnedPosts = await postApiClient.GetPinnedPosts();
+            var featuredPosts = await postApiClient.GetFeaturedPosts(4);
+            var pinnedPosts = await postApiClient.GetPinnedPosts(4);
             var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
-            var mostLikedPosts = await postApiClient.GetMostLikedPosts();
+            var mostLikedPosts = await postApiClient.GetMostLikedPosts(4);
             var tags = await tagApiClient.GetTags();
 
             if (featuredPosts is { IsSuccess: true, Data: not null } &&

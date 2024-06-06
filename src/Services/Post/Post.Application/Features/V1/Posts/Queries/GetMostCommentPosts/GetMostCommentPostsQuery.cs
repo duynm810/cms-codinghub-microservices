@@ -4,4 +4,7 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetMostCommentPosts;
 
-public class GetMostCommentPostsQuery : IRequest<ApiResult<IEnumerable<PostModel>>>;
+public class GetMostCommentPostsQuery(int count) : IRequest<ApiResult<IEnumerable<PostModel>>>
+{
+    public int Count { get; set; } = count;
+}

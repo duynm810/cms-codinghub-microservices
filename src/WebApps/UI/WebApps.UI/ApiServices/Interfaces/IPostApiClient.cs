@@ -6,12 +6,12 @@ namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface IPostApiClient
 {
-    Task<ApiResult<List<PostDto>>> GetFeaturedPosts();
-    Task<ApiResult<List<PostDto>>> GetPinnedPosts();
+    Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
+    Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count);
 
     Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
 
-    Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug);
+    Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug, int relatedCount);
 
     Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
@@ -20,9 +20,9 @@ public interface IPostApiClient
     Task<ApiResult<PagedResponse<PostInSeriesDto>>> GetPostsInSeriesBySlugPaging(string seriesSlug, int pageNumber,
         int pageSize);
 
-    Task<ApiResult<List<PostDto>>> GetMostCommentedPosts();
+    Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count);
 
-    Task<ApiResult<List<PostDto>>> GetMostLikedPosts();
+    Task<ApiResult<List<PostDto>>> GetMostLikedPosts(int count);
 
-    Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory();
+    Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory(int count);
 }

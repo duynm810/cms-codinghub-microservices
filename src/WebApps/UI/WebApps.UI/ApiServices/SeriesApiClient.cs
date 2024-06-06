@@ -6,9 +6,9 @@ namespace WebApps.UI.ApiServices;
 
 public class SeriesApiClient(IBaseApiClient baseApiClient) : ISeriesApiClient
 {
-    public async Task<ApiResult<List<SeriesDto>>> GetSeries()
+    public async Task<ApiResult<List<SeriesDto>>> GetSeries(int count)
     {
-        return await baseApiClient.GetListAsync<SeriesDto>("/series");
+        return await baseApiClient.GetListAsync<SeriesDto>($"/series?count={count}");
     }
 
     public async Task<ApiResult<SeriesDto>> GetSeriesBySlug(string slug)

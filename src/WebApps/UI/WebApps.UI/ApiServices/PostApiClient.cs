@@ -7,14 +7,14 @@ namespace WebApps.UI.ApiServices;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {
-    public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts()
+    public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)
     {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/featured");
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/featured?count={count}");
     }
 
-    public async Task<ApiResult<List<PostDto>>> GetPinnedPosts()
+    public async Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count)
     {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/pinned");
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/pinned?count={count}");
     }
 
     public async Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCategoryPaging(string categorySlug,
@@ -24,9 +24,9 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
 
-    public async Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug)
+    public async Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug, int relatedCount)
     {
-        return await baseApiClient.GetAsync<PostDetailDto>($"/posts/by-slug/{slug}");
+        return await baseApiClient.GetAsync<PostDetailDto>($"/posts/by-slug/{slug}?relatedCount={relatedCount}");
     }
 
     public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)
@@ -52,18 +52,18 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/post-in-series/by-slug/{seriesSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
 
-    public async Task<ApiResult<List<PostDto>>> GetMostCommentedPosts()
+    public async Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count)
     {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented");
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented?count={count}");
     }
 
-    public async Task<ApiResult<List<PostDto>>> GetMostLikedPosts()
+    public async Task<ApiResult<List<PostDto>>> GetMostLikedPosts(int count)
     {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-liked");
+        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-liked?count={count}");
     }
 
-    public async Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory()
+    public async Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory(int count)
     {
-        return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category");
+        return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category?count={count}");
     }
 }

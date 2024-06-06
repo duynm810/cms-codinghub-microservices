@@ -18,7 +18,6 @@ public class GetPinnedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPinnedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -42,8 +41,7 @@ public class GetPinnedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetPinnedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.PinnedPosts, 0));
+            var posts = await postRepository.GetPinnedPosts(request.Count);
 
             var postList = posts.ToList();
 
