@@ -35,4 +35,27 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
             throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tags by IDs"));
         }
     }
+
+    public override async Task<GetTagsResponse> GetTags(GetTagsRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetTags);
+
+        try
+        {
+            logger.Information("{MethodName} - Beginning to retrieve tags", methodName);
+            
+            var tags = await tagRepository.GetTags();
+            
+            var data = mapper.Map<GetTagsResponse>(tags);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e,
+                "{MethodName}. Error occurred while getting tags. Message: {ErrorMessage}",
+                methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tags"));
+        }
+    }
 }
