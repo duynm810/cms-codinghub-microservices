@@ -93,6 +93,12 @@ services:
       context: .
       dockerfile: Services/Tag/Tag.Api/Dockerfile
       
+  tag.grpc:
+    image: ${DOCKER_REGISTRY-}tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tag/Tag.Grpc/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:

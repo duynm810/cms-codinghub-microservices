@@ -21,7 +21,7 @@
             <div class="col-lg-8">
                 <div class="post-module-3">
                     <div class="loop-list loop-list-style-1">
-                        @if (postInSeries.Items != null && postInSeries.Items.Any())
+                        @if (postInSeries.Items != null && postInSeries.Items.Count != 0)
                         {
                             foreach (var item in postInSeries.Items)
                             {
@@ -53,7 +53,7 @@
                                             <div class="post-content">
                                                 <div class="entry-meta meta-0 font-small mb-10">
                                                     <a href="@categoryUrl">
-                                                        <span class="post-cat text-primary">@item.CategoryName</span>
+                                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
                                                     </a>
                                                 </div>
                                                 <h5 class="post-title font-weight-900 mb-20">

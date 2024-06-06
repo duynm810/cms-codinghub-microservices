@@ -248,7 +248,7 @@ public class PostInSeriesService(
             }
 
             var postList = postIds.ToList();
-            if (postList.Count != 0)
+            if (postList.Any())
             {
                 var posts = await postGrpcService.GetPostsByIds(postList);
                 var items = PagedList<PostInSeriesDto>.ToPagedList(posts, pageNumber, pageSize, x => x.Id);
@@ -320,7 +320,7 @@ public class PostInSeriesService(
                 }
 
                 var postIdList = postIds.ToList();
-                if (postIdList.Count != 0)
+                if (postIdList.Any())
                 {
                     var posts = await postGrpcService.GetPostsByIds(postIdList);
 

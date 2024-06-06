@@ -19,6 +19,8 @@ public class PostDto
     public string? Source { get; set; }
 
     public string? Tags { get; set; }
+    
+    public List<string>? TagName { get; set; }
 
     public int ViewCount { get; set; }
 

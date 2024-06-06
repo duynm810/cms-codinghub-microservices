@@ -18,7 +18,7 @@
 <div class="container">
     <div class="loop-grid mb-30">
         <div class="row">
-            @if (posts.Items != null && posts.Items.Any())
+            @if (posts.Items != null && posts.Items.Count != 0)
             {
                 foreach (var item in posts.Items)
                 {

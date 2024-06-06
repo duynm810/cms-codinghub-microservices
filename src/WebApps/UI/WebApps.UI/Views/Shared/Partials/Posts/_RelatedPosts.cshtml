@@ -9,7 +9,7 @@
             <h5 class="mt-5 mb-30">Related posts</h5>
         </div>
         <div class="loop-list loop-list-style-1">
-            @if (posts.Any())
+            @if (posts.Count != 0)
             {
                 @foreach (var item in posts)
                 {

@@ -1,6 +1,9 @@
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 @using Shared.Extensions
 @model HeaderViewModel
+@{
+    var categories = Model.Categories.ToList();
+}
 
 <div class="header-top">
     <div class="container">
@@ -44,7 +47,7 @@
                     </span>
                 }
             </div>
-        </div>  
+        </div>
     </div>
 </div>
 <div class="header-sticky">
@@ -54,18 +57,18 @@
             <nav>
                 <!--Desktop menu-->
                 <ul class="main-menu d-none d-lg-inline font-small">
-                    @if (Model.Categories.Any())
+                    @if (categories.Count != 0)
                     {
-                        foreach (var category in Model.Categories)
+                        foreach (var item in categories)
                         {
-                            var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
+                            var url = item.IsStaticPage ? "/" + item.Slug : "/category/" + item.Slug;
                             <li>
                                 <a href="@url">
-                                    @if (!string.IsNullOrEmpty(category.Icon))
+                                    @if (!string.IsNullOrEmpty(item.Icon))
                                     {
-                                        <i class="elegant-icon @category.Icon mr-5"></i>
+                                        <i class="elegant-icon @item.Icon mr-5"></i>
                                     }
-                                    @category.Name
+                                    @item.Name
                                 </a>
                             </li>
                         }
@@ -73,13 +76,13 @@
                 </ul>
                 <!--Mobile menu-->
                 <ul id="mobile-menu" class="d-block d-lg-none text-muted">
-                    @if (Model.Categories.Any())
+                    @if (categories.Count != 0)
                     {
-                        foreach (var category in Model.Categories)
+                        foreach (var item in categories)
                         {
-                            var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
+                            var url = item.IsStaticPage ? "/" + item.Slug : "/category/" + item.Slug;
                             <li>
-                                <a href="@url">@category.Name</a>
+                                <a href="@url">@item.Name</a>
                             </li>
                         }
                     }

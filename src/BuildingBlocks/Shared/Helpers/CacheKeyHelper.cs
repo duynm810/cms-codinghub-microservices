@@ -149,4 +149,18 @@ public static class CacheKeyHelper
     }
 
     #endregion
+
+    #region Tag Grpc
+
+    private const string TagGrpcPrefix = "grpc:tag";
+
+    public static class TagGrpc
+    {
+        public static string GetAllTagsKey() => $"{TagGrpcPrefix}:all";
+        
+        public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) =>
+            $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
+    }
+
+    #endregion
 }

@@ -35,6 +35,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
             // Xóa cache danh sách tag khi tạo mới
             await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
 
             logger.Information("END {MethodName} - Tag created successfully with ID {TagId}", methodName,
                 data.Id);
@@ -75,6 +76,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             // Delete tag list cache when updating (Xóa cache danh sách tag khi cập nhật)
             await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
             await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id));
+            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
 
             logger.Information("END {MethodName} - Tag with ID {TagId} updated successfully", methodName, id);
         }
@@ -116,6 +118,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
             // Delete tag list cache when deleting (Xóa cache danh sách tag khi xóa dữ liệu)
             await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
+            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
 
             result.Success(true);
 

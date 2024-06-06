@@ -15,4 +15,6 @@ public class PostInSeriesDto
     public string? CategoryName { get; set; }
 
     public string? CategorySlug { get; set; }
+
+    public string? CategoryColor { get; set; }
 }
