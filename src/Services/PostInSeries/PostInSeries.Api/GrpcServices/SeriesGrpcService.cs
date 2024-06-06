@@ -20,7 +20,7 @@ public class SeriesGrpcService(
         
         try
         {
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
@@ -32,7 +32,7 @@ public class SeriesGrpcService(
             var result = await seriesProtoServiceClient.GetSeriesByIdAsync(request);
             var data = mapper.Map<SeriesDto>(result);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
@@ -52,7 +52,7 @@ public class SeriesGrpcService(
         {
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(slug);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
             {
@@ -63,7 +63,7 @@ public class SeriesGrpcService(
             var result = await seriesProtoServiceClient.GetSeriesBySlugAsync(request);
             var data = mapper.Map<SeriesDto>(result);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;

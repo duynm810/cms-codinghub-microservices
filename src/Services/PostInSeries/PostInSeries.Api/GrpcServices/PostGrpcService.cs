@@ -23,7 +23,7 @@ public class PostGrpcService(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
             if (cachedPosts != null)
@@ -41,7 +41,7 @@ public class PostGrpcService(
                 var postsByIds = mapper.Map<IEnumerable<PostInSeriesDto>>(result.Posts);
                 var data = postsByIds.ToList();
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data);
 
                 return data;

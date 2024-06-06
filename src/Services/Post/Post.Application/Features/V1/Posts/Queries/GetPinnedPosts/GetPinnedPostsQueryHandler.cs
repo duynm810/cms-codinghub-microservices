@@ -31,7 +31,7 @@ public class GetPinnedPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving pinned posts", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPinnedPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -53,7 +53,7 @@ public class GetPinnedPostsQueryHandler(
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} pinned posts", methodName,

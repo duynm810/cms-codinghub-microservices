@@ -23,7 +23,7 @@ public class TagGrpcService(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
             
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagsByIdsKey(idList);
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)
@@ -39,7 +39,7 @@ public class TagGrpcService(
 
             var data = tagsByIds.ToList();
             
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
@@ -57,7 +57,7 @@ public class TagGrpcService(
 
         try
         {
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.TagGrpc.GetAllTagsKey();
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)
@@ -72,7 +72,7 @@ public class TagGrpcService(
 
             var data = tags.ToList();
             
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;

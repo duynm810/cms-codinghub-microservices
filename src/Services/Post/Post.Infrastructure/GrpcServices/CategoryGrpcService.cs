@@ -21,7 +21,7 @@ public class CategoryGrpcService(
         
         try
         {
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryByIdKey(id);
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
@@ -33,7 +33,7 @@ public class CategoryGrpcService(
             var result = await categoryProtoServiceClient.GetCategoryByIdAsync(request);
             var data = mapper.Map<CategoryDto>(result);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
@@ -53,7 +53,7 @@ public class CategoryGrpcService(
         {
             var idList = ids as long[] ?? ids.ToArray();
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
@@ -67,7 +67,7 @@ public class CategoryGrpcService(
 
             var data = categoriesByIds.ToList();
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
@@ -87,7 +87,7 @@ public class CategoryGrpcService(
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
             {
@@ -98,7 +98,7 @@ public class CategoryGrpcService(
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
             var data = mapper.Map<CategoryDto>(result);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
@@ -118,7 +118,7 @@ public class CategoryGrpcService(
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
             {
@@ -130,7 +130,7 @@ public class CategoryGrpcService(
 
             var data = allNonStaticPageCategories.ToList();
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;
