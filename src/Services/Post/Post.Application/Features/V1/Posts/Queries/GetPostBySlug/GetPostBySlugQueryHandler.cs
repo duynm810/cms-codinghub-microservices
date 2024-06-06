@@ -16,6 +16,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
+    ITagGrpcService tagGrpcService,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -31,7 +32,7 @@ public class GetPostBySlugQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
             var cachedPost = await cacheService.GetAsync<PostDetailModel>(cacheKey, cancellationToken);
             if (cachedPost != null)
@@ -51,7 +52,7 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            // Lấy danh mục và bài viết liên quan đồng thời
+            // Get category and related posts at the same time (Lấy danh mục và bài viết liên quan đồng thời)
             var categoryTask = categoryGrpcService.GetCategoryById(post.CategoryId);
             var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
 
@@ -70,6 +71,14 @@ public class GetPostBySlugQueryHandler(
                 DetailPost = mappingHelper.MapPostWithCategory(post, category)
             };
 
+            // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
+            if (post.Tags != null)
+            {
+                var tagsIds = post.Tags.Split(',').Select(Guid.Parse).ToList();
+                var tags = await tagGrpcService.GetTagsByIds(tagsIds);
+                data.DetailPost.TagName = tags.Select(tag => tag.Name).ToList();
+            }
+
             var relatedPosts = relatedPostsTask.Result.ToList();
             if (relatedPosts.IsNotNullOrEmpty())
             {
@@ -81,7 +90,7 @@ public class GetPostBySlugQueryHandler(
 
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName,
