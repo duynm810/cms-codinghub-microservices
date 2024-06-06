@@ -7,7 +7,7 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class FooterViewComponent(ICategoryApiClient categoryApiClient, IErrorService errorService, ILogger logger)
+public class FooterViewComponent(ICategoryApiClient categoryApiClient, ITagApiClient tagApiClient, IErrorService errorService, ILogger logger)
     : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
@@ -15,11 +15,13 @@ public class FooterViewComponent(ICategoryApiClient categoryApiClient, IErrorSer
         try
         {
             var categories = await categoryApiClient.GetCategories();
-            if (categories is { IsSuccess: true, Data: not null })
+            var tags = await tagApiClient.GetTags(5);
+            if (categories is { IsSuccess: true, Data: not null } && tags is { IsSuccess: true, Data: not null })
             {
                 var viewModel = new FooterViewModel
                 {
-                    Categories = categories.Data
+                    Categories = categories.Data,
+                    Tags = tags.Data
                 };
 
                 return View(viewModel);

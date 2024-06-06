@@ -2,7 +2,9 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using Post.Domain.GrpcServices;
 using Serilog;
+using Shared.Dtos.Category;
 using Shared.Dtos.Tag;
+using Shared.Helpers;
 using Tag.Grpc.Protos;
 
 namespace Post.Infrastructure.GrpcServices;
@@ -20,6 +22,14 @@ public class TagGrpcService(
         try
         {
             var idList = ids as Guid[] ?? ids.ToArray();
+            
+            // Check existed cache (Kiểm tra cache)
+            var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagsByIdsKey(idList);
+            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cachedTags != null)
+            {
+                return cachedTags;
+            }
 
             var request = new GetTagsByIdsRequest();
             request.Ids.AddRange(idList.Select(id => id.ToString()));
@@ -28,6 +38,9 @@ public class TagGrpcService(
             var tagsByIds = mapper.Map<IEnumerable<TagDto>>(result);
 
             var data = tagsByIds.ToList();
+            
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
 
             return data;
         }
@@ -44,12 +57,23 @@ public class TagGrpcService(
 
         try
         {
+            // Check existed cache (Kiểm tra cache)
+            var cacheKey = CacheKeyHelper.TagGrpc.GetAllTagsKey();
+            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cachedTags != null)
+            {
+                return cachedTags;
+            }
+            
             var request = new GetTagsRequest();
             var result = await tagProtoServiceClient.GetTagsAsync(request);
 
             var tags = mapper.Map<IEnumerable<TagDto>>(result);
 
             var data = tags.ToList();
+            
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
 
             return data;
         }

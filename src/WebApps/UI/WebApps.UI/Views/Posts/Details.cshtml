@@ -18,7 +18,7 @@
             <div class="post-content">
                 <div class="entry-meta meta-0 mb-15 font-small">
                     <a href="@categoryUrl">
-                        <span class="post-cat position-relative text-info">@detail.CategoryName</span>
+                        <span class="post-cat position-relative @detail.CategoryColor">@detail.CategoryName</span>
                     </a>
                 </div>
                 <h1 class="entry-title mb-30 font-weight-900">
@@ -134,12 +134,17 @@
         <!--End Subcrible-->
         <p>Yet more some certainly yet alas abandonedly whispered intriguingly well extensive one howled talkative admonishingly below a rethought overlaid dear gosh activated less however hawk yet oh scratched ostrich some outside crud irrespective lightheartedly and much far amenably that the elephant since when.</p>
     </div>
+    <!-- Tags -->
     <div class="entry-bottom mt-50 mb-30">
         <div class="tags">
             <span>Tags: </span>
-            <a href="category.html" rel="tag">deer</a>
-            <a href="category.html" rel="tag">nature</a>
-            <a href="category.html" rel="tag">conserve</a>
+            @if (detail.TagName != null && detail.TagName.Count != 0)
+            {
+                @foreach (var item in detail.TagName)
+                {
+                    <a href="category.html" rel="tag">@item</a>
+                }
+            }
         </div>
     </div>
     <div class="single-social-share clearfix">

@@ -25,7 +25,7 @@ public class HomeController(
             var pinnedPosts = await postApiClient.GetPinnedPosts(4);
             var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
             var mostLikedPosts = await postApiClient.GetMostLikedPosts(4);
-            var tags = await tagApiClient.GetTags();
+            var tags = await tagApiClient.GetTags(4);
 
             if (featuredPosts is { IsSuccess: true, Data: not null } &&
                 pinnedPosts is { IsSuccess: true, Data: not null } &&

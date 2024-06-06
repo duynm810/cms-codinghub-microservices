@@ -13,7 +13,7 @@ public interface ITagRepository : IRepositoryCommandBase<TagBase, Guid>
 
     Task DeleteTag(TagBase tag);
 
-    Task<IEnumerable<TagBase>> GetTags();
+    Task<IEnumerable<TagBase>> GetTags(int count);
 
     Task<TagBase?> GetTagById(Guid id);
 

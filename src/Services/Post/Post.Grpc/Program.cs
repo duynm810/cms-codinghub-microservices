@@ -47,7 +47,7 @@ try
         // Config development environment (Cấu hình môi trường phát triển)
         if (builder.Environment.IsDevelopment())
         {
-            options.ListenAnyIP(5006, listenOptions => listenOptions.Protocols = HttpProtocols.Http1AndHttp2);
+            options.ListenAnyIP(5006, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         }
         
         // Config local(docker) environment (Cấu hình môi trường docker)

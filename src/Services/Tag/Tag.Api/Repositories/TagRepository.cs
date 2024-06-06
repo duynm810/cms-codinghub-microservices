@@ -16,7 +16,7 @@ public class TagRepository(TagContext dbContext, IUnitOfWork<TagContext> unitOfW
 
     public async Task DeleteTag(TagBase tag) => await DeleteAsync(tag);
 
-    public async Task<IEnumerable<TagBase>> GetTags() => await FindAll().ToListAsync();
+    public async Task<IEnumerable<TagBase>> GetTags(int count) => await FindAll().Take(count).ToListAsync();
 
     public async Task<TagBase?> GetTagById(Guid id) => await GetByIdAsync(id) ?? null;
 }

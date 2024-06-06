@@ -26,9 +26,9 @@ public static class TagsController
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
         }).RequireAuthorization("Bearer");
 
-        app.MapGet("/api/tags", async ([FromServices] ITagService tagService) =>
+        app.MapGet("/api/tags", async ([FromServices] ITagService tagService, [FromQuery] int count = 4) =>
         {
-            var result = await tagService.GetTags();
+            var result = await tagService.GetTags(count);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
         });
 

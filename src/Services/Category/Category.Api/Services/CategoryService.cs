@@ -161,7 +161,7 @@ public class CategoryService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Category.GetAllCategoriesKey();
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
@@ -177,7 +177,7 @@ public class CategoryService(
                 var data = mapper.Map<List<CategoryDto>>(categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information("END {MethodName} - Successfully retrieved {CategoryCount} categories", methodName,
@@ -203,7 +203,7 @@ public class CategoryService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving category with ID: {CategoryId}", methodName, id);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Category.GetCategoryByIdKey(id);
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
@@ -225,7 +225,7 @@ public class CategoryService(
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId}", methodName,
@@ -256,7 +256,7 @@ public class CategoryService(
                 "BEGIN {MethodName} - Retrieving categories for page {PageNumber} with page size {PageSize}",
                 methodName, pageNumber, pageSize);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(pageNumber, pageSize);
             var cachedCategories = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
@@ -277,7 +277,7 @@ public class CategoryService(
 
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information(
@@ -303,7 +303,7 @@ public class CategoryService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving category with slug: {CategorySlug}", methodName, slug);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Category.GetCategoryBySlugKey(slug);
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
@@ -326,7 +326,7 @@ public class CategoryService(
             var data = mapper.Map<CategoryDto>(category);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved category with slug {CategorySlug}",

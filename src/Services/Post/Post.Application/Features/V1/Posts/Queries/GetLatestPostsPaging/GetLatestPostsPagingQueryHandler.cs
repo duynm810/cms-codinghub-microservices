@@ -31,7 +31,7 @@ public class GetLatestPostsPagingQueryHandler(
                 "BEGIN {MethodName} - Retrieving latest posts for page {PageNumber} with page size {PageSize}",
                 methodName, request.PageNumber, request.PageSize);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetLatestPostsPagingKey(request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -53,7 +53,7 @@ public class GetLatestPostsPagingQueryHandler(
                 var data = mappingHelper.MapPostsWithCategories(posts, categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information(

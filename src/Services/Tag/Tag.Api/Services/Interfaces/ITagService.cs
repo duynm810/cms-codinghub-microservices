@@ -13,7 +13,7 @@ public interface ITagService
 
     Task<ApiResult<bool>> DeleteTag(List<Guid> ids);
 
-    Task<ApiResult<IEnumerable<TagDto>>> GetTags();
+    Task<ApiResult<IEnumerable<TagDto>>> GetTags(int count);
 
     Task<ApiResult<TagDto>> GetTagById(Guid id);
 

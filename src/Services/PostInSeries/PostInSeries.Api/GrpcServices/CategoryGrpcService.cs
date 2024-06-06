@@ -22,7 +22,7 @@ public class CategoryGrpcService(
         {
             var idList = ids as long[] ?? ids.ToArray();
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
@@ -36,7 +36,7 @@ public class CategoryGrpcService(
 
             var data = categoriesByIds.ToList();
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             return data;

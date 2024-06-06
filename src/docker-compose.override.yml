@@ -253,8 +253,20 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - tagdb
+      - tag.grpc
     ports:
       - "6010:80"
+    restart: always
+    
+  tag.grpc:
+    container_name: tag.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - tagdb
+    ports:
+      - "6011:80"
     restart: always
   
   hangfire.api:

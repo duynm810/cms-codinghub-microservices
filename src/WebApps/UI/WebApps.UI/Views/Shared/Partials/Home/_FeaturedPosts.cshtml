@@ -37,7 +37,7 @@
             <div class="carausel-post-1 hover-up border-radius-10 overflow-hidden transition-normal position-relative">
                 <div class="arrow-cover"></div>
                 <div class="slide-fade">
-                    @if (pinnedPosts.Any())
+                    @if (pinnedPosts.Count != 0)
                     {
                         foreach (var item in pinnedPosts)
                         {
@@ -53,7 +53,7 @@
                                     <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
                                         <div class="entry-meta meta-0 font-small mb-20">
                                             <a href="@categoryUrl">
-                                                <span class="post-cat text-info text-uppercase">@item.CategoryName</span>
+                                                <span class="post-cat @item.CategoryColor text-uppercase">@item.CategoryName</span>
                                             </a>
                                         </div>
                                         <h3 class="post-title font-weight-900 mb-20">
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-        @if (featuredPosts.Any())
+        @if (featuredPosts.Count != 0)
         {
             foreach (var item in featuredPosts)
             {
