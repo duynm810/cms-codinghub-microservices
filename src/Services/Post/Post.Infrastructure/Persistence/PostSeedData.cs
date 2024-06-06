@@ -31,7 +31,7 @@ public class PostSeedData : IDatabaseSeeder
             .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
                 (exception, timeSpan, retryCount) =>
                 {
-                    _logger.Error($"Retry {retryCount} of EnsureTagServiceReadyAsync due to: {exception}.");
+                    _logger.Error($"Retry {retryCount} of EnsureTagGrpcReadyAsync due to: {exception}.");
                 });
     }
 
@@ -55,9 +55,9 @@ public class PostSeedData : IDatabaseSeeder
     {
         try
         {
-            _logger.Information("Starting EnsureTagServiceReadyAsync.");
+            _logger.Information("Starting EnsureTagGrpcReadyAsync.");
 
-            await EnsureTagServiceReadyAsync();
+            await EnsureTagGrpcReadyAsync();
 
             _logger.Information("Tag service is ready. Starting to seed data.");
 
@@ -432,7 +432,7 @@ public class PostSeedData : IDatabaseSeeder
         }
     }
 
-    private async Task EnsureTagServiceReadyAsync()
+    private async Task EnsureTagGrpcReadyAsync()
     {
         _tags = await _retryPolicy.ExecuteAsync(async () =>
         {
