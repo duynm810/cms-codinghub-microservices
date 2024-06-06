@@ -194,12 +194,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DisplaySettings:Config:Post.Related=2"
-      - "DisplaySettings:Config:Post.Featured=4"
-      - "DisplaySettings:Config:Post.Pinned=4"
-      - "DisplaySettings:Config:Post.MostComments=6"
-      - "DisplaySettings:Config:Post.MostLiked=4"
-      - "DisplaySettings:Config:Post.NonStaticPageCategory=3"
     depends_on:
       - postdb
       - post.grpc
@@ -223,7 +217,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DisplaySettings:Config:Series.Top=4"
     depends_on:
       - seriesdb
       - series.grpc

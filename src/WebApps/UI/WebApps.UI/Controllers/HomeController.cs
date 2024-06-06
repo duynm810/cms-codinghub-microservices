@@ -10,6 +10,7 @@ namespace WebApps.UI.Controllers;
 
 public class HomeController(
     IPostApiClient postApiClient,
+    ITagApiClient tagApiClient,
     PaginationSettings paginationSettings,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
@@ -20,22 +21,25 @@ public class HomeController(
         {
             var pageSize = paginationSettings.LatestPostPageSize;
 
-            var featuredPosts = await postApiClient.GetFeaturedPosts();
-            var pinnedPosts = await postApiClient.GetPinnedPosts();
+            var featuredPosts = await postApiClient.GetFeaturedPosts(4);
+            var pinnedPosts = await postApiClient.GetPinnedPosts(4);
             var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
-            var mostLikedPosts = await postApiClient.GetMostLikedPosts();
+            var mostLikedPosts = await postApiClient.GetMostLikedPosts(4);
+            var tags = await tagApiClient.GetTags();
 
             if (featuredPosts is { IsSuccess: true, Data: not null } &&
                 pinnedPosts is { IsSuccess: true, Data: not null } &&
                 latestPosts is { IsSuccess: true, Data: not null } &&
-                mostLikedPosts is { IsSuccess: true, Data: not null })
+                mostLikedPosts is { IsSuccess: true, Data: not null } &&
+                tags is { IsSuccess: true, Data: not null })
             {
                 var items = new HomeViewModel
                 {
                     FeaturedPosts = featuredPosts.Data,
                     PinnedPosts = featuredPosts.Data,
                     LatestPosts = latestPosts.Data,
-                    MostLikedPosts = mostLikedPosts.Data
+                    MostLikedPosts = mostLikedPosts.Data,
+                    Tags = tags.Data
                 };
 
                 return View(items);

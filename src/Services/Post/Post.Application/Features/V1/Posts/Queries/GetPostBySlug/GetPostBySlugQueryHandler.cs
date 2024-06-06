@@ -1,8 +1,6 @@
-using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
@@ -11,7 +9,6 @@ using Serilog;
 using Shared.Constants;
 using Shared.Helpers;
 using Shared.Responses;
-using Shared.Settings;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
@@ -20,7 +17,6 @@ public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger)
     : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailModel>>
@@ -57,8 +53,7 @@ public class GetPostBySlugQueryHandler(
 
             // Lấy danh mục và bài viết liên quan đồng thời
             var categoryTask = categoryGrpcService.GetCategoryById(post.CategoryId);
-            var relatedPostsTask = postRepository.GetRelatedPosts(post,
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.RelatedPosts, 0));
+            var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
 
             await Task.WhenAll(categoryTask, relatedPostsTask);
 

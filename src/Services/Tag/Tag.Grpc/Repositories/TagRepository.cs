@@ -11,4 +11,6 @@ public class TagRepository(TagContext dbContext)
 {
     public async Task<IEnumerable<TagBase>> GetTagsByIds(Guid[] ids) =>
         await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
+
+    public async Task<IEnumerable<TagBase>> GetTags() => await FindAll().ToListAsync();
 }

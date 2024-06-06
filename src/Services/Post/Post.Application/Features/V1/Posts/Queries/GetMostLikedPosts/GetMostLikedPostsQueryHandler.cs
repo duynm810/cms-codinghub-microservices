@@ -1,16 +1,13 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
-using Shared.Constants;
 using Shared.Helpers;
 using Shared.Responses;
-using Shared.Settings;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetMostLikedPosts;
 
@@ -18,7 +15,6 @@ public class GetMostLikedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetMostLikedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -42,8 +38,7 @@ public class GetMostLikedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetMostLikedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.MostLikedPosts, 0));
+            var posts = await postRepository.GetMostLikedPosts(request.Count);
 
             var postList = posts.ToList();
 

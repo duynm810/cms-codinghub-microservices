@@ -13,5 +13,9 @@ public class MappingProfile : Profile
         CreateMap<IEnumerable<TagBase>, GetTagsByIdsResponse>()
             .ForMember(dest => dest.Tags,
                 opt => opt.MapFrom(src => src));
+        
+        CreateMap<IEnumerable<TagBase>, GetTagsResponse>()
+            .ForMember(dest => dest.Tags,
+                opt => opt.MapFrom(src => src));
     }
 }

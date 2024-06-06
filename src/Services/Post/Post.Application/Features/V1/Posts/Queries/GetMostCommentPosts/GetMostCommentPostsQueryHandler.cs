@@ -17,7 +17,6 @@ public class GetMostCommentPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetMostCommentPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -42,8 +41,7 @@ public class GetMostCommentPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetMostCommentPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.MostCommentsPosts, 0));
+            var posts = await postRepository.GetMostCommentPosts(request.Count);
 
             var postList = posts.ToList();
 

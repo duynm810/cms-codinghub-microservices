@@ -14,7 +14,7 @@ public class BottomViewComponent(IPostApiClient postApiClient, IErrorService err
     {
         try
         {
-            var postsByNonStaticPageCategory = await postApiClient.GetPostsByNonStaticPageCategory();
+            var postsByNonStaticPageCategory = await postApiClient.GetPostsByNonStaticPageCategory(3);
             if (postsByNonStaticPageCategory is { IsSuccess: true, Data: not null })
             {
                 var viewModel = new BottomViewModel

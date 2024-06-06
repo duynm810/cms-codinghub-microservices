@@ -37,4 +37,26 @@ public class TagGrpcService(
             throw;
         }
     }
+
+    public async Task<IEnumerable<TagDto>> GetTags()
+    {
+        const string methodName = nameof(GetTags);
+
+        try
+        {
+            var request = new GetTagsRequest();
+            var result = await tagProtoServiceClient.GetTagsAsync(request);
+
+            var tags = mapper.Map<IEnumerable<TagDto>>(result);
+
+            var data = tags.ToList();
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw;
+        }
+    }
 }

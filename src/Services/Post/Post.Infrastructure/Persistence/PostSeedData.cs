@@ -1,12 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
+using Post.Domain.GrpcServices;
 using Post.Domain.Interfaces;
 using Serilog;
 using Shared.Enums;
 
 namespace Post.Infrastructure.Persistence;
 
-public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
+public class PostSeedData(PostContext context, ITagGrpcService tagGrpcService, ILogger logger) : IDatabaseSeeder
 {
     private static readonly Random Random = new Random();
 
@@ -397,5 +398,10 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
             logger.Information("Seeded data for Post database associated with context {DbContextName}",
                 nameof(PostContext));
         }
+    }
+    
+    private async Task EnsureTagServiceReadyAsync()
+    {
+        await tagGrpcService.GetTags();
     }
 }
