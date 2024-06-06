@@ -6,8 +6,8 @@ namespace WebApps.UI.ApiServices;
 
 public class TagApiClient(IBaseApiClient baseApiClient) : ITagApiClient
 {
-    public async Task<ApiResult<List<TagDto>>> GetTags()
+    public async Task<ApiResult<List<TagDto>>> GetTags(int count)
     {
-        return await baseApiClient.GetListAsync<TagDto>("/tags");
+        return await baseApiClient.GetListAsync<TagDto>($"/tags?count={count}");
     }
 }

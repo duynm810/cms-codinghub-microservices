@@ -132,7 +132,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         return result;
     }
 
-    public async Task<ApiResult<IEnumerable<TagDto>>> GetTags()
+    public async Task<ApiResult<IEnumerable<TagDto>>> GetTags(int count)
     {
         var result = new ApiResult<IEnumerable<TagDto>>();
         const string methodName = nameof(GetTags);
@@ -151,7 +151,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                 return result;
             }
 
-            var categories = await tagRepository.GetTags();
+            var categories = await tagRepository.GetTags(count);
             if (categories.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<TagDto>>(categories);
