@@ -142,7 +142,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
+            logger.Information("BEGIN {MethodName} - Retrieving all tags", methodName);
 
             // Kiểm tra cache
             var cacheKey = CacheKeyHelper.Tag.GetAllTagsKey();
@@ -150,7 +150,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             if (cachedTags != null)
             {
                 result.Success(cachedTags);
-                logger.Information("END {MethodName} - Successfully retrieved categories from cache", methodName);
+                logger.Information("END {MethodName} - Successfully retrieved tags from cache", methodName);
                 return result;
             }
 
@@ -163,7 +163,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                 // Lưu cache
                 await cacheService.SetAsync(cacheKey, data);
 
-                logger.Information("END {MethodName} - Successfully retrieved {TagCount} categories", methodName,
+                logger.Information("END {MethodName} - Successfully retrieved {TagCount} tags", methodName,
                     data.Count);
             }
         }
