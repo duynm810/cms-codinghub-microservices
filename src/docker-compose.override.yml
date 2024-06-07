@@ -63,6 +63,19 @@ services:
     ports:
       - "3308:3306"
   
+  #post-in-tag-db: postgresql
+  post-in-tag-db:
+    container_name: post-in-tag-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_in_tag_service_db
+    restart: always
+    ports:
+      - "5435:5432"
+    volumes:
+      - post_in_tag_postgres_data:/var/lib/postgresql/data
+  
   #hangfiredb: mongo
   hangfiredb:
     container_name: hangfiredb
@@ -267,6 +280,17 @@ services:
       - tagdb
     ports:
       - "6011:80"
+    restart: always
+    
+  post-in-tag.api:
+    container_name: post-in-tag.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - post-in-tag-db
+    ports:
+      - "6012:80"
     restart: always
   
   hangfire.api:

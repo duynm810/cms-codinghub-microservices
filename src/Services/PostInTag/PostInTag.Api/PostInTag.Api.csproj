@@ -8,36 +8,32 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="EFCore.NamingConventions" Version="8.0.3" />
-        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1" />
-        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
+        <PackageReference Include="EFCore.NamingConventions" Version="8.0.3"/>
+        <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1"/>
+        <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1"/>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.4" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.4"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
-      <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
+        <ProjectReference Include="..\..\..\BuildingBlocks\Contracts\Contracts.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj"/>
+        <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj"/>
     </ItemGroup>
-
+    
     <ItemGroup>
-        <None Remove="Protos\series.proto"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <Protobuf Include="..\..\Series\Series.Grpc\Protos\series.proto">
+        <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
             <GrpcServices>Client</GrpcServices>
             <Access>Public</Access>
             <ProtoCompile>True</ProtoCompile>
             <CompileOutputs>True</CompileOutputs>
             <OutputDir>obj\Debug\net8.0\</OutputDir>
             <Generator>MSBuild:Compile</Generator>
-            <Link>Protos\series.proto</Link>
+            <Link>Protos\category.proto</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Protobuf>
     </ItemGroup>
@@ -56,14 +52,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="..\..\Category\Category.Grpc\Protos\category.proto">
+        <Protobuf Include="..\..\Tag\Tag.Grpc\Protos\tag.proto">
             <GrpcServices>Client</GrpcServices>
             <Access>Public</Access>
             <ProtoCompile>True</ProtoCompile>
             <CompileOutputs>True</CompileOutputs>
             <OutputDir>obj\Debug\net8.0\</OutputDir>
             <Generator>MSBuild:Compile</Generator>
-            <Link>Protos\category.proto</Link>
+            <Link>Protos\tag.proto</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Protobuf>
     </ItemGroup>
@@ -73,5 +69,5 @@
         <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
-    
+
 </Project>

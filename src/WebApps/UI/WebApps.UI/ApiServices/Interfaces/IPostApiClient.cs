@@ -1,5 +1,6 @@
 using Shared.Dtos.Post;
 using Shared.Dtos.PostInSeries;
+using Shared.Dtos.PostInTag;
 using Shared.Responses;
 
 namespace WebApps.UI.ApiServices.Interfaces;
@@ -20,6 +21,9 @@ public interface IPostApiClient
     Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(string keyword, int pageNumber, int pageSize);
 
     Task<ApiResult<PagedResponse<PostInSeriesDto>>> GetPostsInSeriesBySlugPaging(string seriesSlug, int pageNumber,
+        int pageSize);
+    
+    Task<ApiResult<PagedResponse<PostInTagDto>>> GetPostsInTagBySlugPaging(string tagSlug, int pageNumber,
         int pageSize);
 
     Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count);

@@ -53,6 +53,12 @@ public static class ErrorMessagesConsts
         public const string TagNotFound = "Tag not found";
         public const string InvalidTagId = "Invalid tag ID";
     }
+    
+    public static class PostInTag
+    {
+        public const string PostIdsNotFound = "Post Ids not found";
+        public const string PostNotFoundInTag = "No posts found in this tag";
+    }
 
     public static class Identity
     {

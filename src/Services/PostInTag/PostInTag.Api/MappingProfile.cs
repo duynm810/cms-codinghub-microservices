@@ -2,13 +2,14 @@ using AutoMapper;
 using Category.Grpc.Protos;
 using Google.Protobuf.Collections;
 using Post.Grpc.Protos;
-using PostInSeries.Api.Entities;
-using Series.Grpc.Protos;
+using PostInTag.Api.Entities;
 using Shared.Dtos.Category;
 using Shared.Dtos.PostInSeries;
-using Shared.Dtos.Series;
+using Shared.Dtos.PostInTag;
+using Shared.Dtos.Tag;
+using Tag.Grpc.Protos;
 
-namespace PostInSeries.Api;
+namespace PostInTag.Api;
 
 public class MappingProfile : Profile
 {
@@ -16,20 +17,20 @@ public class MappingProfile : Profile
     {
         #region Post
 
-        CreateMap<PostModel, PostInSeriesDto>();
+        CreateMap<PostModel, PostInTagDto>();
 
         #endregion
 
-        #region Series
+        #region Tag
 
-        CreateMap<SeriesModel, SeriesDto>().ReverseMap();
+        CreateMap<TagModel, TagDto>().ReverseMap();
 
         #endregion
 
-        #region Post In Series
+        #region Post In Tag
 
-        CreateMap<CreatePostInSeriesDto, PostInSeriesBase>();
-        CreateMap<DeletePostInSeriesDto, PostInSeriesBase>();
+        CreateMap<CreatePostInTagDto, PostInTagBase>();
+        CreateMap<DeletePostInTagDto, PostInTagBase>();
 
         #endregion
 

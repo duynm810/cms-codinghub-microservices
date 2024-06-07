@@ -656,6 +656,86 @@
       "SwaggerKey": "tag-service"
     },
     {
+      "UpstreamPathTemplate": "/post-in-tag",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/by-slug",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/by-slug",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/by-slug/{slug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/by-slug/{slug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "GET",
@@ -741,6 +821,17 @@
           "Name": "Tag.Api",
           "Version": "1.0",
           "Url": "http://localhost:5010/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "post-in-tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "PostInTag.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5012/swagger/v1/swagger.json"
         }
       ]
     },
