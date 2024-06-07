@@ -43,7 +43,14 @@ namespace Tag.Api.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasColumnType("varchar(250)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
 
                     b.ToTable("Tags");
                 });

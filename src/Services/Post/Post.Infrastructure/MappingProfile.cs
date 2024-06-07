@@ -54,7 +54,8 @@ public class MappingProfile : Profile
         return tags.Select(x => new TagDto()
         {
             Id = Guid.Parse(x.Id),
-            Name = x.Name
+            Name = x.Name,
+            Slug = x.Slug
         }).ToList();
     }
 }

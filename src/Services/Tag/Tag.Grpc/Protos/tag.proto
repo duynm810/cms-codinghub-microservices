@@ -10,6 +10,7 @@ service TagProtoService {
 message TagModel {
   string id = 1;
   string name = 2;
+  string slug = 3;
 }
 
 message GetTagsByIdsRequest {
