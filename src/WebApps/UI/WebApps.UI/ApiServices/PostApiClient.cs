@@ -1,5 +1,6 @@
 using Shared.Dtos.Post;
 using Shared.Dtos.PostInSeries;
+using Shared.Dtos.PostInTag;
 using Shared.Responses;
 using WebApps.UI.ApiServices.Interfaces;
 
@@ -59,6 +60,12 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/post-in-series/by-slug/{seriesSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
 
+    public async Task<ApiResult<PagedResponse<PostInTagDto>>> GetPostsInTagBySlugPaging(string tagSlug, int pageNumber, int pageSize)
+    {
+        return await baseApiClient.GetAsync<PagedResponse<PostInTagDto>>(
+            $"/post-in-tag/by-slug/{tagSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+    }
+    
     public async Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count)
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented?count={count}");
@@ -73,4 +80,5 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category?count={count}");
     }
+    
 }
