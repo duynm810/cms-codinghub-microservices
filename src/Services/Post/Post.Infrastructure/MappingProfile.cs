@@ -11,52 +11,79 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        #region Category
+        ConfigureCategoryMappings();
+        ConfigureTagMappings();
+    }
 
+    private void ConfigureCategoryMappings()
+    {
         CreateMap<CategoryDto, CategoryModel>()
-            .ForMember(dest => dest.Icon,
-                opt => opt.MapFrom(src => src.Icon ?? string.Empty))
-            .ForMember(dest => dest.Color,
-                opt => opt.MapFrom(src => src.Color ?? string.Empty))
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon ?? string.Empty))
+            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color ?? string.Empty))
             .ReverseMap();
 
-        CreateMap<RepeatedField<CategoryModel>, IEnumerable<CategoryDto>>().ConvertUsing(src => ConvertCategoryModelToDto(src));
-        CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>().ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
-        CreateMap<GetAllNonStaticPageCategoriesResponse, IEnumerable<CategoryDto>>().ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
+        CreateMap<RepeatedField<CategoryModel>, IEnumerable<CategoryDto>>()
+            .ConvertUsing(src => src.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
-        #endregion
+        CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
+            .ConvertUsing(src => src.Categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
-        #region Tag
+        CreateMap<GetAllNonStaticPageCategoriesResponse, IEnumerable<CategoryDto>>()
+            .ConvertUsing(src => src.Categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
+    }
 
+    private void ConfigureTagMappings()
+    {
         CreateMap<TagDto, TagModel>().ReverseMap();
+
         CreateMap<TagDto, GetTagsResponse>().ReverseMap();
-        CreateMap<RepeatedField<TagModel>, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src));
-        CreateMap<GetTagsByIdsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
-        CreateMap<GetTagsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
 
-        #endregion
-    }
-    
-    private IEnumerable<CategoryDto> ConvertCategoryModelToDto(IEnumerable<CategoryModel> categories)
-    {
-        return categories.Select(x => new CategoryDto
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Slug = x.Slug,
-            SeoDescription = x.SeoDescription,
-            Icon = x.Icon,
-            Color = x.Color,
-        }).ToList();
-    }
+        CreateMap<RepeatedField<TagModel>, IEnumerable<TagDto>>()
+            .ConvertUsing(src => src.Select(t => new TagDto
+            {
+                Id = Guid.Parse(t.Id),
+                Name = t.Name,
+                Slug = t.Slug
+            }).ToList());
 
-    private IEnumerable<TagDto> ConvertTagModelToDto(IEnumerable<TagModel> tags)
-    {
-        return tags.Select(x => new TagDto()
-        {
-            Id = Guid.Parse(x.Id),
-            Name = x.Name,
-            Slug = x.Slug
-        }).ToList();
+        CreateMap<GetTagsByIdsResponse, IEnumerable<TagDto>>()
+            .ConvertUsing(src => src.Tags.Select(t => new TagDto
+            {
+                Id = Guid.Parse(t.Id),
+                Name = t.Name,
+                Slug = t.Slug
+            }).ToList());
+
+        CreateMap<GetTagsResponse, IEnumerable<TagDto>>()
+            .ConvertUsing(src => src.Tags.Select(t => new TagDto
+            {
+                Id = Guid.Parse(t.Id),
+                Name = t.Name,
+                Slug = t.Slug
+            }).ToList());
     }
 }

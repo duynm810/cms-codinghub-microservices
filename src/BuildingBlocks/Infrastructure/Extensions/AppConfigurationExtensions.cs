@@ -1,4 +1,7 @@
-namespace WebApps.HealthCheck.Extensions;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+
+namespace Infrastructure.Extensions;
 
 public static class AppConfigurationExtensions
 {

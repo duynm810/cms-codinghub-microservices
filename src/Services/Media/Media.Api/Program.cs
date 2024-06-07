@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using Media.Api.Extensions;
 using Serilog;

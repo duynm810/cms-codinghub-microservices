@@ -1,4 +1,5 @@
 using Category.Grpc.Extensions;
+using Infrastructure.Extensions;
 using Logging;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Serilog;

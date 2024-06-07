@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using PostInTag.Api.Extensions;
 using PostInTag.Api.Persistence;

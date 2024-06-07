@@ -5,7 +5,6 @@ using Post.Grpc.Protos;
 using PostInTag.Api.Entities;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post;
-using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
 using Shared.Dtos.Tag;
 using Tag.Grpc.Protos;
@@ -16,95 +15,79 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        #region Post In Tag
+        ConfigurePostInTagMappings();
+        ConfigurePostGrpcMappings();
+        ConfigureTagGrpcMappings();
+        ConfigureCategoryGrpcMappings();
+    }
 
+    private void ConfigurePostInTagMappings()
+    {
         CreateMap<CreatePostInTagDto, PostInTagBase>();
         CreateMap<DeletePostInTagDto, PostInTagBase>();
+    }
 
-        #endregion
-
-        #region Post Grpc
-
+    private void ConfigurePostGrpcMappings()
+    {
         CreateMap<PostModel, PostInTagDto>().ReverseMap();
         CreateMap<PostModel, PostDto>().ReverseMap();
         CreateMap<PostDto, GetTop10PostsResponse>().ReverseMap();
-        CreateMap<GetTop10PostsResponse, IEnumerable<PostDto>>().ConvertUsing(src => ConvertPostModelToDto(src.Posts));
+        CreateMap<GetTop10PostsResponse, IEnumerable<PostDto>>()
+            .ConvertUsing(src => src.Posts.Select(p => new PostDto
+            {
+                Id = Guid.Parse(p.Id),
+                Title = p.Title,
+                Slug = p.Slug
+            }).ToList());
+    }
 
-        #endregion
-
-        #region Tag Grpc
-
+    private void ConfigureTagGrpcMappings()
+    {
         CreateMap<TagModel, TagDto>().ReverseMap();
         CreateMap<TagDto, GetTagsResponse>().ReverseMap();
-        CreateMap<GetTagsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
+        CreateMap<GetTagsResponse, IEnumerable<TagDto>>()
+            .ConvertUsing(src => src.Tags.Select(t => new TagDto
+            {
+                Id = Guid.Parse(t.Id),
+                Name = t.Name,
+                Slug = t.Slug
+            }).ToList());
+    }
 
-        #endregion
-
-        #region Category Grpc
-
+    private void ConfigureCategoryGrpcMappings()
+    {
         CreateMap<CategoryDto, CategoryModel>()
-            .ForMember(dest => dest.Icon,
-                opt => opt.MapFrom(src => src.Icon ?? string.Empty))
-            .ForMember(dest => dest.Color,
-                opt => opt.MapFrom(src => src.Color ?? string.Empty))
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon ?? string.Empty))
+            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color ?? string.Empty))
             .ReverseMap();
 
         CreateMap<RepeatedField<CategoryModel>, IEnumerable<CategoryDto>>()
-            .ConvertUsing(src => ConvertCategoryModelToDto(src));
+            .ConvertUsing(src => src.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
         CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
-            .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
+            .ConvertUsing(src => src.Categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
-        // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
         CreateMap<CategoryDto, PostInTagDto>()
-            .ForMember(dest => dest.Id,
-                opt => opt.Ignore())
-            .ForMember(dest => dest.Slug,
-                opt => opt.Ignore())
-            .ForMember(dest => dest.CategoryId,
-                opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.CategoryName,
-                opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.CategorySlug,
-                opt => opt.MapFrom(src => src.Slug));
-
-        #endregion
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Slug, opt => opt.Ignore())
+            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.CategorySlug, opt => opt.MapFrom(src => src.Slug));
     }
-
-    #region HELPERS
-
-    private IEnumerable<CategoryDto> ConvertCategoryModelToDto(IEnumerable<CategoryModel> categories)
-    {
-        return categories.Select(x => new CategoryDto
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Slug = x.Slug,
-            SeoDescription = x.SeoDescription,
-            Icon = x.Icon,
-            Color = x.Color,
-        }).ToList();
-    }
-
-    private IEnumerable<PostDto> ConvertPostModelToDto(IEnumerable<PostModel> posts)
-    {
-        return posts.Select(x => new PostDto()
-        {
-            Id = Guid.Parse(x.Id),
-            Title = x.Title,
-            Slug = x.Slug
-        }).ToList();
-    }
-
-    private IEnumerable<TagDto> ConvertTagModelToDto(IEnumerable<TagModel> tags)
-    {
-        return tags.Select(x => new TagDto()
-        {
-            Id = Guid.Parse(x.Id),
-            Name = x.Name,
-            Slug = x.Slug
-        }).ToList();
-    }
-
-    #endregion
 }
