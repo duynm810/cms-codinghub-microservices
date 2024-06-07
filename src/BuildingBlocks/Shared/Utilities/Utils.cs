@@ -51,4 +51,9 @@ public static class Utils
         while (str2.Contains("--")) str2 = str2.Replace("--", "-").ToLower();
         return str2.ToLower();
     }
+    
+    public static bool ContainsId(this string list, string id)
+    {
+        return !string.IsNullOrEmpty(list) && list.Split(',').Contains(id);
+    }
 }

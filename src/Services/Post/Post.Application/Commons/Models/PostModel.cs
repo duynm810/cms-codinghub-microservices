@@ -3,6 +3,7 @@ using Post.Application.Commons.Mappings;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.Entities;
 using Shared.Dtos.Category;
+using Shared.Dtos.Tag;
 using Shared.Enums;
 
 namespace Post.Application.Commons.Models;
@@ -25,9 +26,7 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
 
     public string? Source { get; set; }
 
-    public string? Tags { get; set; }
-    
-    public List<string>? TagName { get; set; }
+    public List<TagDto>? TagDetails { get; set; }
 
     public int ViewCount { get; set; }
 

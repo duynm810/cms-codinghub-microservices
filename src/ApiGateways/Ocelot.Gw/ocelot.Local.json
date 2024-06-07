@@ -615,6 +615,25 @@
           "Port": 6010
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
       "SwaggerKey": "tag-service"
     },
     {

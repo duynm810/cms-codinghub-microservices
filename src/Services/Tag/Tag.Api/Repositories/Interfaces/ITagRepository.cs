@@ -18,4 +18,10 @@ public interface ITagRepository : IRepositoryCommandBase<TagBase, Guid>
     Task<TagBase?> GetTagById(Guid id);
 
     #endregion
+
+    #region OTHERS
+
+    Task<TagBase?> GetTagBySlug(string slug);
+
+    #endregion
 }

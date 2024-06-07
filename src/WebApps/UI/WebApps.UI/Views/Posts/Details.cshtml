@@ -138,11 +138,12 @@
     <div class="entry-bottom mt-50 mb-30">
         <div class="tags">
             <span>Tags: </span>
-            @if (detail.TagName != null && detail.TagName.Count != 0)
+            @if (detail.TagDetails != null && detail.TagDetails.Count != 0)
             {
-                @foreach (var item in detail.TagName)
+                @foreach (var item in detail.TagDetails)
                 {
-                    <a href="category.html" rel="tag">@item</a>
+                    var tagUrl = "/tag/" + item.Slug;
+                    <a href="@tagUrl" rel="tag">@item.Name</a>
                 }
             }
         </div>
