@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using PostInSeries.Api.Extensions;
 using Serilog;

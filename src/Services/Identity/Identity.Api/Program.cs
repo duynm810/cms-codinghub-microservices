@@ -1,5 +1,6 @@
 using Identity.Api.Extensions;
 using Identity.Api.Seeds;
+using Infrastructure.Extensions;
 using Logging;
 using Serilog;
 using Shared.Constants;

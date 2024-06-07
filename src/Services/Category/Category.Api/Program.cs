@@ -1,5 +1,6 @@
 using Category.Api.Extensions;
 using Category.Api.Persistence;
+using Infrastructure.Extensions;
 using Logging;
 using Serilog;
 using Shared.Constants;

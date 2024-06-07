@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Logging;
 using Series.Api.Extensions;
 using Series.Api.Persistence;

@@ -1,4 +1,5 @@
 using HealthChecks.UI.Client;
+using Infrastructure.Extensions;
 using Logging;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
