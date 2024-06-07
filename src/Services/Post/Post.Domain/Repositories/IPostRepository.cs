@@ -44,6 +44,8 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<IEnumerable<PostBase>> GetMostLikedPosts(int count);
 
+    Task<IEnumerable<PostBase>> GetTop10Posts();
+
     Task<bool> SlugExists(string slug, Guid? currentId = null);
 
     Task<bool> HasPostsInCategory(long categoryId);

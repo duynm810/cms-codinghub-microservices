@@ -193,6 +193,15 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return await query.ToListAsync();
     }
+    
+    public async Task<IEnumerable<PostBase>> GetTop10Posts()
+    {
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.CreatedDate)
+            .Take(10);
+
+        return await query.ToListAsync();
+    }
 
     public async Task<bool> SlugExists(string slug, Guid? currentId = null)
     {

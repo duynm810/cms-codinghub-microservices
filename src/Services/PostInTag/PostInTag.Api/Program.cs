@@ -1,5 +1,6 @@
 using Logging;
 using PostInTag.Api.Extensions;
+using PostInTag.Api.Persistence;
 using Serilog;
 using Shared.Constants;
 
@@ -26,7 +27,8 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    app.Run();
+    // Seed database with initial data and start the application
+    app.SeedData().Run();
 }
 catch (Exception e)
 {

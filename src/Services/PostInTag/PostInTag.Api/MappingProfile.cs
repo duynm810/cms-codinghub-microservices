@@ -4,6 +4,7 @@ using Google.Protobuf.Collections;
 using Post.Grpc.Protos;
 using PostInTag.Api.Entities;
 using Shared.Dtos.Category;
+using Shared.Dtos.Post;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
 using Shared.Dtos.Tag;
@@ -15,22 +16,27 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        #region Post
-
-        CreateMap<PostModel, PostInTagDto>();
-
-        #endregion
-
-        #region Tag
-
-        CreateMap<TagModel, TagDto>().ReverseMap();
-
-        #endregion
-
         #region Post In Tag
 
         CreateMap<CreatePostInTagDto, PostInTagBase>();
         CreateMap<DeletePostInTagDto, PostInTagBase>();
+
+        #endregion
+
+        #region Post Grpc
+
+        CreateMap<PostModel, PostInTagDto>().ReverseMap();
+        CreateMap<PostModel, PostDto>().ReverseMap();
+        CreateMap<PostDto, GetTop10PostsResponse>().ReverseMap();
+        CreateMap<GetTop10PostsResponse, IEnumerable<PostDto>>().ConvertUsing(src => ConvertPostModelToDto(src.Posts));
+
+        #endregion
+
+        #region Tag Grpc
+
+        CreateMap<TagModel, TagDto>().ReverseMap();
+        CreateMap<TagDto, GetTagsResponse>().ReverseMap();
+        CreateMap<GetTagsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
 
         #endregion
 
@@ -77,6 +83,26 @@ public class MappingProfile : Profile
             SeoDescription = x.SeoDescription,
             Icon = x.Icon,
             Color = x.Color,
+        }).ToList();
+    }
+
+    private IEnumerable<PostDto> ConvertPostModelToDto(IEnumerable<PostModel> posts)
+    {
+        return posts.Select(x => new PostDto()
+        {
+            Id = Guid.Parse(x.Id),
+            Title = x.Title,
+            Slug = x.Slug
+        }).ToList();
+    }
+
+    private IEnumerable<TagDto> ConvertTagModelToDto(IEnumerable<TagModel> tags)
+    {
+        return tags.Select(x => new TagDto()
+        {
+            Id = Guid.Parse(x.Id),
+            Name = x.Name,
+            Slug = x.Slug
         }).ToList();
     }
 
