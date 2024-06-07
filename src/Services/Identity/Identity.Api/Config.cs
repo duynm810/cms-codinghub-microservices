@@ -67,12 +67,14 @@ public static class Config
                     "http://localhost:5005/swagger/oauth2-redirect.html",
                     "http://localhost:5007/swagger/oauth2-redirect.html",
                     "http://localhost:5009/swagger/oauth2-redirect.html",
+                    "http://localhost:5012/swagger/oauth2-redirect.html",
                     "http://localhost:6001/swagger/oauth2-redirect.html",
                     "http://localhost:6002/swagger/oauth2-redirect.html",
                     "http://localhost:6003/swagger/oauth2-redirect.html",
                     "http://localhost:6005/swagger/oauth2-redirect.html",
                     "http://localhost:6007/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
+                    "http://localhost:6012/swagger/oauth2-redirect.html",
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
@@ -82,12 +84,14 @@ public static class Config
                     "http://localhost:5005/swagger/oauth2-redirect.html",
                     "http://localhost:5007/swagger/oauth2-redirect.html",
                     "http://localhost:5009/swagger/oauth2-redirect.html",
+                    "http://localhost:5012/swagger/oauth2-redirect.html",
                     "http://localhost:6001/swagger/oauth2-redirect.html",
                     "http://localhost:6002/swagger/oauth2-redirect.html",
                     "http://localhost:6003/swagger/oauth2-redirect.html",
                     "http://localhost:6005/swagger/oauth2-redirect.html",
                     "http://localhost:6007/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
+                    "http://localhost:6012/swagger/oauth2-redirect.html",
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
@@ -97,12 +101,14 @@ public static class Config
                     "http://localhost:5005",
                     "http://localhost:5007",
                     "http://localhost:5009",
+                    "http://localhost:5012",
                     "http://localhost:6001",
                     "http://localhost:6002",
                     "http://localhost:6003",
                     "http://localhost:6005",
                     "http://localhost:6007",
                     "http://localhost:6009",
+                    "http://localhost:6012",
                 },
                 AllowedScopes =
                 {
