@@ -10,8 +10,6 @@ public class MappingProfile : Profile
     {
         CreateMap<TagBase, TagModel>();
         
-        CreateMap<TagBase, GetTagBySlugResponse>();
-
         CreateMap<IEnumerable<TagBase>, GetTagsByIdsResponse>()
             .ForMember(dest => dest.Tags,
                 opt => opt.MapFrom(src => src));

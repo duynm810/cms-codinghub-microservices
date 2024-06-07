@@ -50,7 +50,7 @@ public class MappingProfile : Profile
             .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
 
         // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
-        CreateMap<CategoryDto, PostInSeriesDto>()
+        CreateMap<CategoryDto, PostInTagDto>()
             .ForMember(dest => dest.Id,
                 opt => opt.Ignore())
             .ForMember(dest => dest.Slug,

@@ -27,6 +27,12 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
 
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}. RPC error occurred while getting tags for IDs. : {TagsIds} Status: {StatusCode}, Detail: {Detail}",
+                methodName, request.Ids, rpcEx.StatusCode, rpcEx.Status.Detail);
+            throw;
+        }
         catch (Exception e)
         {
             logger.Error(e,
@@ -50,6 +56,12 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
             
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}. RPC error occurred while getting tags. Status: {StatusCode}, Detail: {Detail}",
+                methodName, rpcEx.StatusCode, rpcEx.Status.Detail);
+            throw;
+        }
         catch (Exception e)
         {
             logger.Error(e,
@@ -59,7 +71,7 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         }
     }
 
-    public override async Task<GetTagBySlugResponse> GetTagBySlug(GetTagBySlugRequest request, ServerCallContext context)
+    public override async Task<TagModel> GetTagBySlug(GetTagBySlugRequest request, ServerCallContext context)
     {
         const string methodName = nameof(GetTagBySlug);
 
@@ -76,19 +88,24 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
                     $"Tag with slug '{request.Slug}' not found."));
             }
 
-            var data = mapper.Map<GetTagBySlugResponse>(tag);
+            var data = mapper.Map<TagModel>(tag);
             
             logger.Information(
                 "END {MethodName} - Success: Retrieved Tag {TagId} - Name: {TagName} - Slug: {TagSlug}",
-                methodName, data.Tag.Id, data.Tag.Name, data.Tag.Slug);
+                methodName, data.Id, data.Name, data.Slug);
             
             return data;
         }
-        catch (Exception e)
+        catch (RpcException rpcEx)
         {
-            logger.Error(e,
-                "{MethodName}. Error occurred while getting tag by Slug: {TagSlug}. Message: {ErrorMessage}",
-                methodName, request.Slug, e.Message);
+            logger.Error(rpcEx, "{MethodName}. RPC error occurred while getting tag by Slug: {TagSlug}. Status: {StatusCode}, Detail: {Detail}",
+                methodName, request.Slug, rpcEx.StatusCode, rpcEx.Status.Detail);
+            throw;
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "{MethodName}. General error occurred while getting tag by Slug: {TagSlug}. Message: {ErrorMessage}",
+                methodName, request.Slug, ex.Message);
             throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tag by Slug"));
         }
     }

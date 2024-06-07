@@ -5,7 +5,7 @@ option csharp_namespace = "Tag.Grpc.Protos";
 service TagProtoService {
   rpc GetTagsByIds(GetTagsByIdsRequest) returns (GetTagsByIdsResponse);
   rpc GetTags(GetTagsRequest) returns (GetTagsResponse);
-  rpc GetTagBySlug(GetTagBySlugRequest) returns (GetTagBySlugResponse);
+  rpc GetTagBySlug(GetTagBySlugRequest) returns (TagModel);
 }
 
 message TagModel {
@@ -32,8 +32,4 @@ message GetTagsByIdsResponse {
 
 message GetTagsResponse {
   repeated TagModel tags = 1;
-}
-
-message GetTagBySlugResponse {
-  TagModel tag = 1;
 }

@@ -30,7 +30,15 @@ public class TagGrpcService(
             }
 
             var request = new GetTagBySlugRequest() { Slug = slug };
+            
+            // Log request data
+            logger.Information("Sending gRPC request for GetTagBySlug with Slug: {TagSlug}", slug);
+            
             var result = await tagProtoServiceClient.GetTagBySlugAsync(request);
+            
+            // Log response data
+            logger.Information("Received gRPC response for GetTagBySlug with Tag: {TagData}", result);
+            
             var data = mapper.Map<TagDto>(result);
 
             // Save cache (Lưu cache)
