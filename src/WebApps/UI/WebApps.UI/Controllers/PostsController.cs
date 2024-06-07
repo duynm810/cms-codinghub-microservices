@@ -165,6 +165,8 @@ public class PostsController(
                 {
                     var items = new PostsInTagViewModel
                     {
+                        Tag = tag.Data,
+                        PostInTags = postsInTag.Data
                     };
 
                     return View(items);

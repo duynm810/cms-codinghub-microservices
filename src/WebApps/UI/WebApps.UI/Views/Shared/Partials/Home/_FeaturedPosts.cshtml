@@ -21,8 +21,10 @@
                     {
                         @foreach (var item in tags)
                         {
+                            var tagUrl = "/tag/" + item.Slug;
+                            
                             <li class="list-inline-item">
-                                <a href="#"># @item.Name</a>
+                                <a href="@tagUrl"># @item.Name</a>
                             </li>
                         }
                     }
