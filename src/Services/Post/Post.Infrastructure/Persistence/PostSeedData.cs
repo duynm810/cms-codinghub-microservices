@@ -55,12 +55,6 @@ public class PostSeedData : IDatabaseSeeder
     {
         try
         {
-            _logger.Information("Starting EnsureTagGrpcReadyAsync.");
-
-            await EnsureTagGrpcReadyAsync();
-
-            _logger.Information("Tag service is ready. Starting to seed data.");
-
             await TrySeedAsync();
             await _context.SaveChangesAsync();
 
@@ -83,6 +77,12 @@ public class PostSeedData : IDatabaseSeeder
     {
         if (!_context.Posts.Any())
         {
+            _logger.Information("Starting EnsureTagGrpcReadyAsync.");
+
+            await EnsureTagGrpcReadyAsync();
+
+            _logger.Information("Tag service is ready. Starting to seed data.");
+
             var posts = new List<PostBase>
             {
                 new()
