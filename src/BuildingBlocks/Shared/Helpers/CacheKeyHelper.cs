@@ -80,6 +80,8 @@ public static class CacheKeyHelper
     {
         public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) =>
             $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
+        
+        public static string GetTop10PostsKey() => $"{PostGrpcPrefix}:top10";
     }
 
     #endregion

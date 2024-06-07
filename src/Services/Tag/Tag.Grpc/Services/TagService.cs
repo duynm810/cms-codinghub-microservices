@@ -1,5 +1,6 @@
 using AutoMapper;
 using Grpc.Core;
+using Shared.Constants;
 using Tag.Grpc.Protos;
 using Tag.Grpc.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
@@ -35,10 +36,8 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         }
         catch (Exception e)
         {
-            logger.Error(e,
-                "{MethodName}. Error occurred while getting tags by IDs: {TagIds}. Message: {ErrorMessage}",
-                methodName, request.Ids, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tags by IDs"));
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 
@@ -64,10 +63,8 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         }
         catch (Exception e)
         {
-            logger.Error(e,
-                "{MethodName}. Error occurred while getting tags. Message: {ErrorMessage}",
-                methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tags"));
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 
@@ -102,11 +99,10 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
                 methodName, request.Slug, rpcEx.StatusCode, rpcEx.Status.Detail);
             throw;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "{MethodName}. General error occurred while getting tag by Slug: {TagSlug}. Message: {ErrorMessage}",
-                methodName, request.Slug, ex.Message);
-            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting tag by Slug"));
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 }

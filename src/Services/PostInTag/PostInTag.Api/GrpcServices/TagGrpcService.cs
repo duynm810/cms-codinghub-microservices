@@ -52,4 +52,37 @@ public class TagGrpcService(
             throw;
         }
     }
+    
+    public async Task<IEnumerable<TagDto>> GetTags()
+    {
+        const string methodName = nameof(GetTags);
+
+        try
+        {
+            // Check existed cache (Kiểm tra cache)
+            var cacheKey = CacheKeyHelper.TagGrpc.GetAllTagsKey();
+            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cachedTags != null)
+            {
+                return cachedTags;
+            }
+            
+            var request = new GetTagsRequest();
+            var result = await tagProtoServiceClient.GetTagsAsync(request);
+
+            var tags = mapper.Map<IEnumerable<TagDto>>(result);
+
+            var data = tags.ToList();
+            
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw;
+        }
+    }
 }

@@ -12,5 +12,8 @@ public class MappingProfile : Profile
 
         CreateMap<IEnumerable<PostBase>, GetPostsByIdsResponse>().ForMember(dest => dest.Posts,
             opt => opt.MapFrom(src => src));
+
+        CreateMap<IEnumerable<PostBase>, GetTop10PostsResponse>().ForMember(dest => dest.Posts,
+            opt => opt.MapFrom(src => src));
     }
 }

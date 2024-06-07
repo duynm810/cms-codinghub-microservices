@@ -65,4 +65,25 @@ public class PostService(IPostRepository postRepository, IMapper mapper, ILogger
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
+
+    public override async Task<GetTop10PostsResponse> GetTop10Posts(GetTop10PostsRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetTop10Posts);
+
+        try
+        {
+            logger.Information("{MethodName} - Beginning to retrieve top 10 posts", methodName);
+            
+            var posts = await postRepository.GetTop10Posts();
+            
+            var data = mapper.Map<GetTop10PostsResponse>(posts);
+            
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+        }
+    }
 }
