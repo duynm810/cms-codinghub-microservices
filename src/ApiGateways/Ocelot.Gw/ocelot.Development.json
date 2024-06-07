@@ -603,6 +603,21 @@
       "SwaggerKey": "tag-service"
     },
     {
+      "UpstreamPathTemplate": "/tags/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
       "UpstreamPathTemplate": "/tags/{id}",
       "UpstreamHttpMethod": [
         "GET"
@@ -615,6 +630,10 @@
           "Port": 5010
         }
       ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "tag-service"
     },
     {

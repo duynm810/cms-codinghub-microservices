@@ -18,4 +18,10 @@ public interface ITagService
     Task<ApiResult<TagDto>> GetTagById(Guid id);
 
     #endregion
+
+    #region OTHERS
+
+    Task<ApiResult<TagDto>> GetTagBySlug(string slug);
+
+    #endregion
 }

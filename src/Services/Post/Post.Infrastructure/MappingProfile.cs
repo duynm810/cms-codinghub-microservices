@@ -29,6 +29,7 @@ public class MappingProfile : Profile
         #region Tag
 
         CreateMap<TagDto, TagModel>().ReverseMap();
+        CreateMap<TagDto, GetTagsResponse>().ReverseMap();
         CreateMap<RepeatedField<TagModel>, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src));
         CreateMap<GetTagsByIdsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
         CreateMap<GetTagsResponse, IEnumerable<TagDto>>().ConvertUsing(src => ConvertTagModelToDto(src.Tags));
@@ -54,7 +55,8 @@ public class MappingProfile : Profile
         return tags.Select(x => new TagDto()
         {
             Id = Guid.Parse(x.Id),
-            Name = x.Name
+            Name = x.Name,
+            Slug = x.Slug
         }).ToList();
     }
 }

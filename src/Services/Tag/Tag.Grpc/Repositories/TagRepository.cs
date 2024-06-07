@@ -13,4 +13,7 @@ public class TagRepository(TagContext dbContext)
         await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
 
     public async Task<IEnumerable<TagBase>> GetTags() => await FindAll().ToListAsync();
+    
+    public async Task<TagBase?> GetTagBySlug(string slug) =>
+        await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
 }

@@ -37,5 +37,11 @@ public static class TagsController
             var result = await tagService.GetTagById(id);
             return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
         }).RequireAuthorization("Bearer");
+        
+        app.MapGet("/api/tags/by-slug/{slug}", async ([FromServices] ITagService tagService, string slug) =>
+        {
+            var result = await tagService.GetTagBySlug(slug);
+            return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
+        });
     }
 }

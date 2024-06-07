@@ -225,4 +225,57 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
     }
 
     #endregion
+
+    #region OTHERS
+
+    public async Task<ApiResult<TagDto>> GetTagBySlug(string slug)
+    {
+        var result = new ApiResult<TagDto>();
+        const string methodName = nameof(GetTagBySlug);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving tag with slug: {TagSlug}", methodName, slug);
+
+            // Check existed cache (Kiểm tra cache)
+            var cacheKey = CacheKeyHelper.Tag.GetTagBySlugKey(slug);
+            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cachedTag != null)
+            {
+                result.Success(cachedTag);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved tag with slug {TagSlug} from cache",
+                    methodName, slug);
+                return result;
+            }
+
+            var tag = await tagRepository.GetTagBySlug(slug);
+            if (tag == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Tag.TagNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<TagDto>(tag);
+            result.Success(data);
+
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
+
+            logger.Information("END {MethodName} - Successfully retrieved tag with slug {TagSlug}",
+                methodName,
+                slug);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    #endregion
 }

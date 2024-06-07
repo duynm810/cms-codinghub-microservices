@@ -15,6 +15,13 @@ public class TagBase : EntityAuditBase<Guid>
     public required string Name { get; set; }
     
     /// <summary>
+    /// Đường dẫn tĩnh (SEO-friendly URL) của thẻ
+    /// </summary>
+    [Column(TypeName = "varchar(250)")]
+    [Required]
+    public required string Slug { get; set; }
+    
+    /// <summary>
     /// Mô tả thẻ
     /// </summary>
     [MaxLength(100)]

@@ -143,6 +143,8 @@ public static class CacheKeyHelper
         public static string GetAllTagsKey() => $"{TagServicePrefix}:all";
 
         public static string GetTagByIdKey(Guid tagId) => $"{TagServicePrefix}:{tagId}";
+        
+        public static string GetTagBySlugKey(string slug) => $"{TagServicePrefix}:slug:{slug}";
 
         public static string GetTagsPagingKey(int pageNumber, int pageSize) =>
             $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
@@ -160,6 +162,8 @@ public static class CacheKeyHelper
         
         public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) =>
             $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
+        
+        public static string GetGrpcTagBySlugKey(string slug) => $"{TagGrpcPrefix}:slug:{slug}";
     }
 
     #endregion

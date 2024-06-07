@@ -17,6 +17,8 @@ public class HomeController(
 {
     public async Task<IActionResult> Index(int page = 1)
     {
+        const string methodName = nameof(Index);
+        
         try
         {
             var pageSize = paginationSettings.LatestPostPageSize;
@@ -45,11 +47,11 @@ public class HomeController(
                 return View(items);
             }
 
-            return HandleError(HttpStatusCode.NotFound, nameof(Index));
+            return HandleError(HttpStatusCode.NotFound, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, nameof(Index));
+            return HandleException(e, methodName);
         }
     }
 

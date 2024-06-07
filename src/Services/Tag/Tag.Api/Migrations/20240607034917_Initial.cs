@@ -21,6 +21,8 @@ namespace Tag.Api.Migrations
                     Id = table.Column<Guid>(type: "char(36)", nullable: false, collation: "ascii_general_ci"),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Slug = table.Column<string>(type: "varchar(250)", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Description = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedDate = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: false),
@@ -31,6 +33,12 @@ namespace Tag.Api.Migrations
                     table.PrimaryKey("PK_Tags", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tags_Slug",
+                table: "Tags",
+                column: "Slug",
+                unique: true);
         }
 
         /// <inheritdoc />

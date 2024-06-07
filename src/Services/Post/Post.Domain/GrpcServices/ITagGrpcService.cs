@@ -7,4 +7,6 @@ public interface ITagGrpcService
     Task<IEnumerable<TagDto>> GetTagsByIds(IEnumerable<Guid> ids);
     
     Task<IEnumerable<TagDto>> GetTags();
+
+    Task<TagDto?> GetTagBySlug(string slug);
 }

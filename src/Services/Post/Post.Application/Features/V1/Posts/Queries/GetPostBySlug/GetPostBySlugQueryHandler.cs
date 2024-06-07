@@ -7,6 +7,7 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -76,7 +77,13 @@ public class GetPostBySlugQueryHandler(
             {
                 var tagsIds = post.Tags.Split(',').Select(Guid.Parse).ToList();
                 var tags = await tagGrpcService.GetTagsByIds(tagsIds);
-                data.DetailPost.TagName = tags.Select(tag => tag.Name).ToList();
+
+                data.DetailPost.TagDetails = tags.Select(tag => new TagDto()
+                {
+                    Id = tag.Id,
+                    Name = tag.Name,
+                    Slug = tag.Slug
+                }).ToList();
             }
 
             var relatedPosts = relatedPostsTask.Result.ToList();
