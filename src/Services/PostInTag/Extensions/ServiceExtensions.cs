@@ -1,3 +1,4 @@
+using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
 using Infrastructure.Commons;
@@ -7,12 +8,16 @@ using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Post.Grpc.Protos;
+using PostInTag.Api.GrpcServices;
+using PostInTag.Api.GrpcServices.Interfaces;
 using PostInTag.Api.Persistence;
 using PostInTag.Api.Repositories;
 using PostInTag.Api.Repositories.Interfaces;
 using PostInTag.Api.Services;
 using PostInTag.Api.Services.Interfaces;
 using Shared.Settings;
+using Tag.Grpc.Protos;
 
 namespace PostInTag.Api.Extensions;
 
@@ -143,5 +148,20 @@ public static class ServiceExtensions
         var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
                            throw new ArgumentNullException(
                                $"{nameof(GrpcSettings)} is not configured properly");
+        
+        services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostUrl));
+
+        services.AddScoped<IPostGrpcService, PostGrpcService>();
+
+        services.AddGrpcClient<TagProtoService.TagProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.TagUrl));
+
+        services.AddScoped<ITagGrpcService, TagGrpcService>();
+
+        services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.CategoryUrl));
+
+        services.AddScoped<ICategoryGrpcService, CategoryGrpcService>();
     }
 }

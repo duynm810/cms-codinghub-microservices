@@ -21,6 +21,9 @@ services:
     
   identitydb:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    
+  post-in-tag-db:
+    image: postgres:alpine3.16
   
   ##infrastructure section
   rabbitmq:
@@ -99,6 +102,12 @@ services:
       context: .
       dockerfile: Services/Tag/Tag.Grpc/Dockerfile
       
+  post-in-tag.api:
+    image: ${DOCKER_REGISTRY-}post-in-tag-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PostInTag/PostInTag.Api/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -157,3 +166,5 @@ volumes:
     name: post_in_series_postgres_data
   tag_mysql_data:
     name: tag_mysql_data
+  post_in_tag_postgres_data:
+    name: post_in_tag_postgres_data
