@@ -163,7 +163,28 @@ public static class CacheKeyHelper
         public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) =>
             $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
         
+        public static string GetGrpcTagByIdKey(Guid tagId) => $"{TagGrpcPrefix}:{tagId}";
+        
         public static string GetGrpcTagBySlugKey(string slug) => $"{TagGrpcPrefix}:slug:{slug}";
+    }
+
+    #endregion
+    
+    #region Post In Tag
+
+    private const string PostInTagServicePrefix = "service:post-in-tag";
+
+    public static class PostInTag
+    {
+        public static string GetAllPostInTagByIdKey(Guid tagId) => $"{PostInTagServicePrefix}:all:{tagId}";
+        
+        public static string GetPostInTagBySlugKey(string slug) => $"{PostInTagServicePrefix}:slug:{slug}";
+        
+        public static string GetPostInTagByIdPagingKey(Guid tagId, int pageNumber, int pageSize) =>
+            $"{PostInTagServicePrefix}:tag:id:{tagId}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostInTagBySlugPagingKey(string tagSlug, int pageNumber, int pageSize) =>
+            $"{PostInTagServicePrefix}:tag:slug:{tagSlug}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion

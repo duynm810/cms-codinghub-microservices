@@ -33,20 +33,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Protos\post.proto"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
-        <GrpcServices>Client</GrpcServices>
-        <Access>Public</Access>
-        <ProtoCompile>True</ProtoCompile>
-        <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net8.0\</OutputDir>
-        <Generator>MSBuild:Compile</Generator>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <Link>Protos\post.proto</Link>
-      </Protobuf>
+        <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\post.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
     </ItemGroup>
 
 </Project>
