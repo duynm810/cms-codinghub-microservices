@@ -1,4 +1,3 @@
-using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
 
 namespace PostInTag.Api.GrpcServices.Interfaces;
