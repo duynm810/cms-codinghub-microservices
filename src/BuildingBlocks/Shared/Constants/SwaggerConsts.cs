@@ -2,12 +2,13 @@ namespace Shared.Constants;
 
 public static class SwaggerConsts
 {
-    public const string CategoryApi = "Category API";
-    public const string PostApi = "Post API";
-    public const string SeriesApi = "Series API";
-    public const string PostInSeriesApi = "PostInSeries API";
-    public const string HangfireApi = "Hangfire API";
-    public const string IdentityApi = "Identity API";
-    public const string MediaApi = "Media API";
-    public const string TagApi = "Tag API";
+    public const string CategoryApi = "Category Api";
+    public const string PostApi = "Post Api";
+    public const string SeriesApi = "Series Api";
+    public const string PostInSeriesApi = "Post In Series Api";
+    public const string PostInTagApi = "Post In Tag Api";
+    public const string HangfireApi = "Hangfire Api";
+    public const string IdentityApi = "Identity Api";
+    public const string MediaApi = "Media Api";
+    public const string TagApi = "Tag Api";
 }
