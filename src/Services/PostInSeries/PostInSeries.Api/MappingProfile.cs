@@ -26,7 +26,7 @@ public class MappingProfile : Profile
 
         #endregion
 
-        #region Post-In-Series
+        #region Post In Series
 
         CreateMap<CreatePostInSeriesDto, PostInSeriesBase>();
         CreateMap<DeletePostInSeriesDto, PostInSeriesBase>();
