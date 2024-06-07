@@ -281,6 +281,17 @@ services:
     ports:
       - "6011:80"
     restart: always
+    
+  post-in-tag.api:
+    container_name: post-in-tag.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - post-in-tag-db
+    ports:
+      - "6012:80"
+    restart: always
   
   hangfire.api:
     container_name: hangfire.api
