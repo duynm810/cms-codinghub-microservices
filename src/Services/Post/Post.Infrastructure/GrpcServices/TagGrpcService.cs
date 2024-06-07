@@ -3,7 +3,6 @@ using Contracts.Commons.Interfaces;
 using Post.Domain.GrpcServices;
 using Serilog;
 using Shared.Dtos.Tag;
-using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Tag.Grpc.Protos;
 
