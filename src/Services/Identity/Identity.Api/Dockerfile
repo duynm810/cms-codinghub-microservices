@@ -18,7 +18,6 @@ WORKDIR "/src/Services/Identity/Identity.Api"
 RUN dotnet build "Identity.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Identity.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final

@@ -6,6 +6,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["WebApps/HealthCheck/WebApps.HealthCheck/WebApps.HealthCheck.csproj", "WebApps/HealthCheck/WebApps.HealthCheck/"]
 COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
+COPY ["BuildingBlocks/Shared/Shared.csproj", "BuildingBlocks/Shared/"]
 COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Infrastructure/"]
 
 RUN dotnet restore "WebApps/HealthCheck/WebApps.HealthCheck/WebApps.HealthCheck.csproj"

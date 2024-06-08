@@ -16,7 +16,6 @@ WORKDIR "/src/Services/PostInTag/PostInTag.Api"
 RUN dotnet build "PostInTag.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "PostInTag.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final

@@ -42,8 +42,11 @@ public class SeriesService(
             var data = mapper.Map<SeriesDto>(series);
             result.Success(data);
 
-            // Xóa cache danh sách series khi tạo mới
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
+            // Clear series list cache when a new series is created (Xóa cache danh sách series khi tạo mới)
+            await Task.WhenAll(
+                cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(request.Slug))
+            );
 
             logger.Information("END {MethodName} - Series created successfully with ID {SeriesId}", methodName,
                 data.Id);
@@ -83,9 +86,13 @@ public class SeriesService(
             result.Success(data);
 
             // Delete series list cache when updating (Xóa cache danh sách series khi cập nhật)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id));
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug));
+            await Task.WhenAll(
+                cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)),
+                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug)),
+                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id)),
+                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(series.Slug))
+            );
 
             logger.Information("END {MethodName} - Series with ID {SeriesId} updated successfully", methodName, id);
         }
@@ -109,6 +116,8 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Deleting series with IDs: {SeriesIds}", methodName,
                 string.Join(", ", ids));
 
+            var tasks = new List<Task>();
+            
             foreach (var id in ids)
             {
                 var series = await seriesRepository.GetSeriesById(id);
@@ -120,13 +129,18 @@ public class SeriesService(
                     return result;
                 }
 
-                await seriesRepository.DeleteSeries(series);
+                tasks.Add(seriesRepository.DeleteSeries(series));
 
-                // Delete series cache when delete (Xóa cache series khi xoá dữ liệu)
-                await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id));
-                await cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug));
+                // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)));
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug)));
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id)));
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(series.Slug)));
             }
 
+            // Execute all tasks in parallel
+            await Task.WhenAll(tasks);
+            
             // Delete series list cache when deleting (Xóa cache danh sách series khi xóa dữ liệu)
             await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
 
