@@ -568,6 +568,174 @@
       "SwaggerKey": "post-in-series-service"
     },
     {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6010
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/by-slug",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/by-slug",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6012
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag/by-slug/{slug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag/by-slug/{slug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6012
+        }
+      ],
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "GET",
@@ -642,6 +810,28 @@
           "Name": "PostInSeries.Api",
           "Version": "1.0",
           "Url": "http://post-in-series.api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Tag.Api",
+          "Version": "1.0",
+          "Url": "http://tag.api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "post-in-tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "PostInTag.Api",
+          "Version": "1.0",
+          "Url": "http://post-in-tag.api/swagger/v1/swagger.json"
         }
       ]
     },

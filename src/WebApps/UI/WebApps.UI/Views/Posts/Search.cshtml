@@ -19,7 +19,7 @@
             <div class="col-lg-8">
                 <div class="post-module-3">
                     <div class="loop-list loop-list-style-1">
-                        @if (posts.Items != null && posts.Items.Any())
+                        @if (posts.Items != null && posts.Items.Count != 0)
                         {
                             foreach (var item in posts.Items)
                             {

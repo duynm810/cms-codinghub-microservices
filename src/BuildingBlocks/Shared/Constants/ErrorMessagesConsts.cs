@@ -47,6 +47,18 @@ public static class ErrorMessagesConsts
         public const string PostIdsNotFound = "Post Ids not found";
         public const string PostNotFoundInSeries = "No posts found in this series";
     }
+    
+    public static class Tag
+    {
+        public const string TagNotFound = "Tag not found";
+        public const string InvalidTagId = "Invalid tag ID";
+    }
+    
+    public static class PostInTag
+    {
+        public const string PostIdsNotFound = "Post Ids not found";
+        public const string PostNotFoundInTag = "No posts found in this tag";
+    }
 
     public static class Identity
     {

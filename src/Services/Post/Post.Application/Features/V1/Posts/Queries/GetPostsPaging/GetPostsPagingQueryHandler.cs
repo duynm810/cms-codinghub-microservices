@@ -30,7 +30,7 @@ public class GetPostsPagingQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving posts for page {PageNumber} with page size {PageSize}",
                 methodName, request.PageNumber, request.PageSize);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostsPagingKey(request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -51,7 +51,7 @@ public class GetPostsPagingQueryHandler(
 
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information(

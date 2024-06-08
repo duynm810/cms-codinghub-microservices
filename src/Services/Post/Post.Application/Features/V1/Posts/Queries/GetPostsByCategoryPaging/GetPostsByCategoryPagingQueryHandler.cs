@@ -34,7 +34,7 @@ public class GetPostsByCategoryPagingQueryHandler(
                 "BEGIN {MethodName} - Retrieving posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
                 methodName, request.CategorySlug, request.PageNumber, request.PageSize);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey =
                 CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber,
                     request.PageSize);
@@ -64,7 +64,7 @@ public class GetPostsByCategoryPagingQueryHandler(
             var data = mappingHelper.MapPostsWithCategory(posts, category);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information(

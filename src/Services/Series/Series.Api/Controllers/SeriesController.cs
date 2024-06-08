@@ -42,9 +42,9 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<SeriesDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetSeries()
+    public async Task<IActionResult> GetSeries([FromQuery] int count = 4)
     {
-        var result = await seriesService.GetSeries();
+        var result = await seriesService.GetSeries(count);
         return Ok(result);
     }
 

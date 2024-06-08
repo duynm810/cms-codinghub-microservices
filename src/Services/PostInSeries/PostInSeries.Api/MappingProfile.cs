@@ -14,70 +14,62 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        #region Post
+        ConfigurePostMappings();
+        ConfigureSeriesMappings();
+        ConfigurePostInSeriesMappings();
+        ConfigureCategoryGrpcMappings();
+    }
 
+    private void ConfigurePostMappings()
+    {
         CreateMap<PostModel, PostInSeriesDto>();
+    }
 
-        #endregion
-
-        #region Series
-
+    private void ConfigureSeriesMappings()
+    {
         CreateMap<SeriesModel, SeriesDto>().ReverseMap();
+    }
 
-        #endregion
-
-        #region Post-In-Series
-
+    private void ConfigurePostInSeriesMappings()
+    {
         CreateMap<CreatePostInSeriesDto, PostInSeriesBase>();
         CreateMap<DeletePostInSeriesDto, PostInSeriesBase>();
+    }
 
-        #endregion
-
-        #region Category Grpc
-
+    private void ConfigureCategoryGrpcMappings()
+    {
         CreateMap<CategoryDto, CategoryModel>()
-            .ForMember(dest => dest.Icon,
-                opt => opt.MapFrom(src => src.Icon ?? string.Empty))
-            .ForMember(dest => dest.Color,
-                opt => opt.MapFrom(src => src.Color ?? string.Empty))
+            .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon ?? string.Empty))
+            .ForMember(dest => dest.Color, opt => opt.MapFrom(src => src.Color ?? string.Empty))
             .ReverseMap();
 
         CreateMap<RepeatedField<CategoryModel>, IEnumerable<CategoryDto>>()
-            .ConvertUsing(src => ConvertCategoryModelToDto(src));
+            .ConvertUsing(src => src.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
         CreateMap<GetCategoriesByIdsResponse, IEnumerable<CategoryDto>>()
-            .ConvertUsing(src => ConvertCategoryModelToDto(src.Categories));
+            .ConvertUsing(src => src.Categories.Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name,
+                Slug = c.Slug,
+                SeoDescription = c.SeoDescription,
+                Icon = c.Icon,
+                Color = c.Color
+            }).ToList());
 
-        // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
         CreateMap<CategoryDto, PostInSeriesDto>()
-            .ForMember(dest => dest.Id,
-                opt => opt.Ignore())
-            .ForMember(dest => dest.Slug,
-                opt => opt.Ignore())
-            .ForMember(dest => dest.CategoryId,
-                opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.CategoryName,
-                opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.CategorySlug,
-                opt => opt.MapFrom(src => src.Slug));
-
-        #endregion
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.Slug, opt => opt.Ignore())
+            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.CategorySlug, opt => opt.MapFrom(src => src.Slug));
     }
-
-    #region HELPERS
-
-    private IEnumerable<CategoryDto> ConvertCategoryModelToDto(IEnumerable<CategoryModel> categories)
-    {
-        return categories.Select(x => new CategoryDto
-        {
-            Id = x.Id,
-            Name = x.Name,
-            Slug = x.Slug,
-            SeoDescription = x.SeoDescription,
-            Icon = x.Icon,
-            Color = x.Color,
-        }).ToList();
-    }
-
-    #endregion
 }

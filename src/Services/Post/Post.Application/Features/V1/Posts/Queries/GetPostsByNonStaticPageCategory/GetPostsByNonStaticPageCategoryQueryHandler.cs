@@ -16,7 +16,6 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     ILogger logger)
     : IRequestHandler<GetPostsByNonStaticPageCategoryQuery, ApiResult<IEnumerable<CategoryWithPostsModel>>>
 {
@@ -29,7 +28,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts by non-static page categories", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey();
             var cachedPosts =
                 await cacheService.GetAsync<IEnumerable<CategoryWithPostsModel>>(cacheKey, cancellationToken);
@@ -51,9 +50,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                 if (category == null)
                     continue;
 
-                var posts = await postRepository.GetPostsByCategoryId(category.Id,
-                    displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.PostsByNonStaticPageCategory,
-                        0));
+                var posts = await postRepository.GetPostsByCategoryId(category.Id, request.Count);
 
                 var postList = posts.ToList();
 
@@ -83,7 +80,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
 
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories",

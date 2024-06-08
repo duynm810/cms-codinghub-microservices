@@ -14,7 +14,7 @@ public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService er
     {
         try
         {
-            var posts = await postApiClient.GetMostCommentedPosts();
+            var posts = await postApiClient.GetMostCommentedPosts(6);
             if (posts is { IsSuccess: true, Data: not null })
             {
                 var items = new SidebarViewModel

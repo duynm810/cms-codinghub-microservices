@@ -1,27 +1,52 @@
+using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
+using Polly;
+using Polly.Retry;
 using Post.Domain.Entities;
+using Post.Domain.GrpcServices;
 using Post.Domain.Interfaces;
 using Serilog;
+using Shared.Dtos.Tag;
 using Shared.Enums;
 
 namespace Post.Infrastructure.Persistence;
 
-public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
+public class PostSeedData : IDatabaseSeeder
 {
-    private static readonly Random Random = new Random();
+    private readonly PostContext _context;
+    private readonly ITagGrpcService _tagGrpcService;
+    private readonly AsyncRetryPolicy _retryPolicy;
+    private readonly ILogger _logger;
+
+    private static readonly Random Random = new();
+    private IEnumerable<TagDto> _tags = new List<TagDto>();
+
+    public PostSeedData(PostContext context, ITagGrpcService tagGrpcService, ILogger logger)
+    {
+        _context = context;
+        _tagGrpcService = tagGrpcService;
+        _logger = logger;
+
+        _retryPolicy = Policy.Handle<RpcException>()
+            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (exception, timeSpan, retryCount) =>
+                {
+                    _logger.Error($"Retry {retryCount} of EnsureTagGrpcReadyAsync due to: {exception}.");
+                });
+    }
 
     public async Task InitialiseAsync()
     {
         try
         {
-            if (context.Database.IsNpgsql())
+            if (_context.Database.IsNpgsql())
             {
-                await context.Database.MigrateAsync();
+                await _context.Database.MigrateAsync();
             }
         }
         catch (Exception e)
         {
-            logger.Error(e, "An error occurred while initialising the database.");
+            _logger.Error(e, "An error occurred while initialising the database.");
             throw;
         }
     }
@@ -31,25 +56,33 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
         try
         {
             await TrySeedAsync();
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
+
+            _logger.Information("Data seeding completed successfully.");
         }
         catch (Exception e)
         {
-            logger.Error(e, "An error occurred while seeding the database.");
+            _logger.Error(e, "An error occurred while seeding the database.");
             throw;
         }
     }
 
     private static DateTimeOffset RandomDate()
     {
-        var range = (DateTime.Today - DateTime.Today.AddYears(-2)).Days;
-        return DateTime.Today.AddDays(-Random.Next(range));
+        var range = (DateTime.UtcNow.Date - DateTime.UtcNow.AddYears(-2).Date).Days;
+        return DateTime.UtcNow.AddDays(-Random.Next(range));
     }
 
     private async Task TrySeedAsync()
     {
-        if (!context.Posts.Any())
+        if (!_context.Posts.Any())
         {
+            _logger.Information("Starting EnsureTagGrpcReadyAsync.");
+
+            await EnsureTagGrpcReadyAsync();
+
+            _logger.Information("Tag service is ready. Starting to seed data.");
+
             var posts = new List<PostBase>
             {
                 new()
@@ -61,7 +94,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Kinh nghiệm thực tế khi sử dụng .NET trong dự án...",
                     Thumbnail = "thumbnail1.jpg",
                     SeoDescription = "Kinh nghiệm làm việc với .NET...",
-                    Tags = "NET, Kinh nghiệm",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 100,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -83,7 +116,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Kiến trúc hệ thống với microservices...",
                     Thumbnail = "thumbnail2.jpg",
                     SeoDescription = "Kiến trúc microservices...",
-                    Tags = "Microservices, Kiến trúc",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 150,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -105,7 +138,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Thủ thuật Angular giúp tăng hiệu suất...",
                     Thumbnail = "thumbnail3.jpg",
                     SeoDescription = "Thủ thuật sử dụng Angular...",
-                    Tags = "Angular, Thủ thuật",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 200,
                     IsPaid = true,
                     RoyaltyAmount = 50,
@@ -129,7 +162,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Tối ưu hóa .NET để cải thiện hiệu suất hệ thống...",
                     Thumbnail = "thumbnail4.jpg",
                     SeoDescription = "Tối ưu hóa hiệu suất .NET...",
-                    Tags = "NET, Tối ưu hóa",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 120,
                     IsPaid = true,
                     RoyaltyAmount = 75,
@@ -153,7 +186,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các phương pháp và công cụ để xây dựng hệ thống chịu tải cao...",
                     Thumbnail = "thumbnail5.jpg",
                     SeoDescription = "Xây dựng hệ thống chịu tải cao...",
-                    Tags = "Hệ thống, Chịu tải",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 180,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -175,7 +208,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các kinh nghiệm quý báu khi phát triển ứng dụng di động...",
                     Thumbnail = "thumbnail6.jpg",
                     SeoDescription = "Kinh nghiệm phát triển ứng dụng di động...",
-                    Tags = "Ứng dụng di động, Kinh nghiệm",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 220,
                     IsPaid = false,
                     Status = PostStatusEnum.Draft,
@@ -196,7 +229,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Tối ưu hóa ReactJS để tăng tốc độ tải và hiệu suất...",
                     Thumbnail = "thumbnail7.jpg",
                     SeoDescription = "Thủ thuật tối ưu hóa ReactJS...",
-                    Tags = "ReactJS, Thủ thuật",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 160,
                     IsPaid = true,
                     RoyaltyAmount = 60,
@@ -220,7 +253,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Lợi ích và thách thức của kiến trúc serverless...",
                     Thumbnail = "thumbnail8.jpg",
                     SeoDescription = "Kiến trúc serverless...",
-                    Tags = "Serverless, Kiến trúc",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 110,
                     IsPaid = false,
                     Status = PostStatusEnum.WaitingForApproval,
@@ -241,7 +274,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các mẹo và chiến lược học lập trình nhanh chóng...",
                     Thumbnail = "thumbnail9.jpg",
                     SeoDescription = "Kinh nghiệm học lập trình...",
-                    Tags = "Lập trình, Kinh nghiệm",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 130,
                     IsPaid = false,
                     Status = PostStatusEnum.Rejected,
@@ -262,7 +295,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Tối ưu hóa Docker để quản lý container hiệu quả...",
                     Thumbnail = "thumbnail10.jpg",
                     SeoDescription = "Thủ thuật sử dụng Docker...",
-                    Tags = "Docker, Thủ thuật",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 190,
                     IsPaid = true,
                     RoyaltyAmount = 80,
@@ -286,7 +319,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các bước và kinh nghiệm trong việc phát triển ứng dụng web với .NET và Angular...",
                     Thumbnail = "thumbnail11.jpg",
                     SeoDescription = "Phát triển ứng dụng web với .NET và Angular...",
-                    Tags = ".NET, Angular, Web",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 240,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -308,7 +341,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Tìm hiểu về cách thiết kế API RESTful để đảm bảo tính dễ dùng và hiệu quả...",
                     Thumbnail = "thumbnail12.jpg",
                     SeoDescription = "Thiết kế API RESTful hiệu quả...",
-                    Tags = "API, RESTful",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 210,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -330,7 +363,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các biện pháp và kỹ thuật để tối ưu hóa hiệu suất hệ thống...",
                     Thumbnail = "thumbnail13.jpg",
                     SeoDescription = "Thủ thuật nâng cao hiệu suất hệ thống...",
-                    Tags = "Hiệu suất, Thủ thuật",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 220,
                     IsPaid = true,
                     RoyaltyAmount = 90,
@@ -354,7 +387,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Các bước và chiến lược để phát triển dự án thành công theo Agile...",
                     Thumbnail = "thumbnail14.jpg",
                     SeoDescription = "Kinh nghiệm phát triển dự án Agile...",
-                    Tags = "Agile, Kinh nghiệm",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 140,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -376,7 +409,7 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                     Summary = "Lợi ích và thách thức của kiến trúc micro frontends...",
                     Thumbnail = "thumbnail15.jpg",
                     SeoDescription = "Kiến trúc micro frontends...",
-                    Tags = "Micro frontends, Kiến trúc",
+                    Tags = GetRandomTagsString(),
                     ViewCount = 170,
                     IsPaid = false,
                     Status = PostStatusEnum.Published,
@@ -391,11 +424,40 @@ public class PostSeedData(PostContext context, ILogger logger) : IDatabaseSeeder
                 }
             };
 
-            await context.Posts.AddRangeAsync(posts);
-            await context.SaveChangesAsync();
+            await _context.Posts.AddRangeAsync(posts);
+            await _context.SaveChangesAsync();
 
-            logger.Information("Seeded data for Post database associated with context {DbContextName}",
+            _logger.Information("Seeded data for Post database associated with _context {DbContextName}",
                 nameof(PostContext));
         }
+    }
+
+    private async Task EnsureTagGrpcReadyAsync()
+    {
+        _tags = await _retryPolicy.ExecuteAsync(async () =>
+        {
+            _logger.Information("Calling tag gRPC service to get tags.");
+
+            var tags = await _tagGrpcService.GetTags();
+
+            _logger.Information("Successfully retrieved tags from tag gRPC service.");
+
+            return tags;
+        });
+    }
+
+    private string GetRandomTagsString()
+    {
+        var tagList = _tags.ToList();
+
+        // Đảm bảo không vượt quá số lượng tags hiện có
+        var maxTagCount = Math.Min(tagList.Count, 4);
+
+        // Random số lượng tags từ 2 tag đến maxTagCount
+        var tagCount = Random.Next(2, maxTagCount + 1);
+
+        var selectedTags = tagList.OrderBy(x => Random.Next()).Take(tagCount).Select(t => t.Id.ToString());
+
+        return string.Join(",", selectedTags);
     }
 }

@@ -7,6 +7,7 @@ using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
 using Shared.Enums;
 using Shared.Responses;
+using Shared.Utilities;
 
 namespace Post.Infrastructure.Repositories;
 
@@ -189,6 +190,15 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.LikeCount)
             .Take(count);
+
+        return await query.ToListAsync();
+    }
+    
+    public async Task<IEnumerable<PostBase>> GetTop10Posts()
+    {
+        var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.CreatedDate)
+            .Take(10);
 
         return await query.ToListAsync();
     }

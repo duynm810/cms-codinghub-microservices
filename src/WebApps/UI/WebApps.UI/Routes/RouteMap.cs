@@ -36,6 +36,11 @@ public static class RouteMap
             "posts-by-category",
             "/category/{categorySlug}",
             new { controller = "Posts", action = "PostsByCategory" });
+        
+        app.MapControllerRoute(
+            "posts-by-tag",
+            "/tag/{tagSlug}",
+            new { controller = "Posts", action = "PostsByTag" });
 
         app.MapControllerRoute(
             "post-detail",

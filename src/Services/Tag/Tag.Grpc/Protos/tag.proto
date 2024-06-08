@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "Tag.Grpc.Protos";
+
+service TagProtoService {
+  rpc GetTagsByIds(GetTagsByIdsRequest) returns (GetTagsByIdsResponse);
+  rpc GetTags(GetTagsRequest) returns (GetTagsResponse);
+  rpc GetTagBySlug(GetTagBySlugRequest) returns (TagModel);
+}
+
+message TagModel {
+  string id = 1;
+  string name = 2;
+  string slug = 3;
+}
+
+message GetTagsByIdsRequest {
+  repeated string ids = 1;
+}
+
+message GetTagsRequest {
+
+}
+
+message GetTagBySlugRequest {
+  string slug = 1;
+}
+
+message GetTagsByIdsResponse {
+  repeated TagModel tags = 1;
+}
+
+message GetTagsResponse {
+  repeated TagModel tags = 1;
+}

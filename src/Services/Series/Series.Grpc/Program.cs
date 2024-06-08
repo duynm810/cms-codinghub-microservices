@@ -1,4 +1,6 @@
+using Infrastructure.Extensions;
 using Logging;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Series.Grpc.Extensions;
 using Serilog;
 using Shared.Constants;
@@ -19,6 +21,27 @@ try
 
     // Register application infrastructure services
     builder.Services.AddInfrastructureServices(builder.Configuration);
+
+    // Set up port and protocol that the Kestrel server listens on to receive requests to the application
+    // Thiết lập cổng và giao thức mà máy chủ Kestrel lắng nghe để tiếp nhận các yêu cầu đến ứng dụng
+    builder.WebHost.ConfigureKestrel(options =>
+    {
+        // Config development environment (Cấu hình môi trường phát triển)
+        if (builder.Environment.IsDevelopment())
+        {
+            options.ListenAnyIP(5008, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+        }
+        
+        // Config local(docker) environment (Cấu hình môi trường docker)
+        if (builder.Environment.IsEnvironment(EnvironmentConsts.Local))
+        {
+            // Configure health checks to use port 80 with HTTP/1. (Cấu hình health checks sử dụng cổng 80 với HTTP/1.)
+            options.ListenAnyIP(80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
+            
+            // Configure http client to use with HTTP/2 (Cấu hình HttpClient để gửi yêu cầu gRPC sử dụng HTTP/2.)
+            options.ListenAnyIP(6008, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+        }
+    });
 
     var app = builder.Build();
 

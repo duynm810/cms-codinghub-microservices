@@ -50,6 +50,31 @@ services:
       - "5434:5432"
     volumes:
       - post_in_series_postgres_data:/var/lib/postgresql/data
+    
+  #tagdb: mysql
+  tagdb:
+    container_name: tagdb
+    environment:
+      MYSQL_ROOT_PASSWORD: "Passw0rd!"
+      MYSQL_DATABASE: "tag_service_db"
+    restart: always
+    volumes:
+      - tag_mysql_data:/var/lib/mysql
+    ports:
+      - "3308:3306"
+  
+  #post-in-tag-db: postgresql
+  post-in-tag-db:
+    container_name: post-in-tag-db
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin1234
+      - POSTGRES_DB=post_in_tag_service_db
+    restart: always
+    ports:
+      - "5435:5432"
+    volumes:
+      - post_in_tag_postgres_data:/var/lib/postgresql/data
   
   #hangfiredb: mongo
   hangfiredb:
@@ -137,6 +162,7 @@ services:
       - post.api
       - series.api
       - post-in-series.api
+      - tag.api
       - hangfire.api
     ports:
       - "6001:80"
@@ -181,12 +207,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DisplaySettings:Config:Post.Related=2"
-      - "DisplaySettings:Config:Post.Featured=4"
-      - "DisplaySettings:Config:Post.Pinned=4"
-      - "DisplaySettings:Config:Post.MostComments=6"
-      - "DisplaySettings:Config:Post.MostLiked=4"
-      - "DisplaySettings:Config:Post.NonStaticPageCategory=3"
     depends_on:
       - postdb
       - post.grpc
@@ -210,7 +230,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
-      - "DisplaySettings:Config:Series.Top=4"
     depends_on:
       - seriesdb
       - series.grpc
@@ -238,6 +257,40 @@ services:
       - post-in-series-db
     ports:
       - "6009:80"
+    restart: always
+    
+  tag.api:
+    container_name: tag.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - tagdb
+      - tag.grpc
+    ports:
+      - "6010:80"
+    restart: always
+    
+  tag.grpc:
+    container_name: tag.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - tagdb
+    ports:
+      - "6011:80"
+    restart: always
+    
+  post-in-tag.api:
+    container_name: post-in-tag.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - post-in-tag-db
+    ports:
+      - "6012:80"
     restart: always
   
   hangfire.api:

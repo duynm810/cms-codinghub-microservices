@@ -3,6 +3,7 @@ using Post.Application.Commons.Mappings;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.Entities;
 using Shared.Dtos.Category;
+using Shared.Dtos.Tag;
 using Shared.Enums;
 
 namespace Post.Application.Commons.Models;
@@ -25,7 +26,7 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
 
     public string? Source { get; set; }
 
-    public string? Tags { get; set; }
+    public List<TagDto>? TagDetails { get; set; }
 
     public int ViewCount { get; set; }
 
@@ -67,7 +68,8 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
     {
         profile.CreateMap<PostBase, PostModel>();
 
-        // Bỏ qua ánh xạ Id, Slug vì sẽ nhầm lẫn trùng field với các bảng với nhau
+        // Ignore the Id, Slug, and SeoDescription mapping because it will confuse duplicate fields with each other
+        // Bỏ qua ánh xạ Id, Slug, SeoDescription vì sẽ nhầm lẫn trùng field với các bảng với nhau
         profile.CreateMap<CategoryDto, PostModel>()
             .ForMember(dest => dest.Id,
                 opt => opt.Ignore())

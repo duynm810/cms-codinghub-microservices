@@ -80,6 +80,8 @@ public static class CacheKeyHelper
     {
         public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) =>
             $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
+        
+        public static string GetTop10PostsKey() => $"{PostGrpcPrefix}:top10";
     }
 
     #endregion
@@ -130,6 +132,61 @@ public static class CacheKeyHelper
         
         public static string GetPostInSeriesBySlugPagingKey(string seriesSlug, int pageNumber, int pageSize) =>
             $"{PostInSeriesServicePrefix}:series:slug:{seriesSlug}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
+
+    #region Tag
+
+    private const string TagServicePrefix = "service:tag";
+    
+    public static class Tag
+    {
+        public static string GetAllTagsKey() => $"{TagServicePrefix}:all";
+
+        public static string GetTagByIdKey(Guid tagId) => $"{TagServicePrefix}:{tagId}";
+        
+        public static string GetTagBySlugKey(string slug) => $"{TagServicePrefix}:slug:{slug}";
+
+        public static string GetTagsPagingKey(int pageNumber, int pageSize) =>
+            $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
+
+    #region Tag Grpc
+
+    private const string TagGrpcPrefix = "grpc:tag";
+
+    public static class TagGrpc
+    {
+        public static string GetAllTagsKey() => $"{TagGrpcPrefix}:all";
+        
+        public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) =>
+            $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
+        
+        public static string GetGrpcTagByIdKey(Guid tagId) => $"{TagGrpcPrefix}:{tagId}";
+        
+        public static string GetGrpcTagBySlugKey(string slug) => $"{TagGrpcPrefix}:slug:{slug}";
+    }
+
+    #endregion
+    
+    #region Post In Tag
+
+    private const string PostInTagServicePrefix = "service:post-in-tag";
+
+    public static class PostInTag
+    {
+        public static string GetAllPostInTagByIdKey(Guid tagId) => $"{PostInTagServicePrefix}:all:{tagId}";
+        
+        public static string GetPostInTagBySlugKey(string slug) => $"{PostInTagServicePrefix}:slug:{slug}";
+        
+        public static string GetPostInTagByIdPagingKey(Guid tagId, int pageNumber, int pageSize) =>
+            $"{PostInTagServicePrefix}:tag:id:{tagId}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostInTagBySlugPagingKey(string tagSlug, int pageNumber, int pageSize) =>
+            $"{PostInTagServicePrefix}:tag:slug:{tagSlug}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion

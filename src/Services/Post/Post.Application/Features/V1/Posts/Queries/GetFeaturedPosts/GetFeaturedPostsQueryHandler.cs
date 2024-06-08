@@ -18,7 +18,6 @@ public class GetFeaturedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -32,7 +31,7 @@ public class GetFeaturedPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetFeaturedPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -42,8 +41,7 @@ public class GetFeaturedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetFeaturedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.FeaturedPosts, 0));
+            var posts = await postRepository.GetFeaturedPosts(request.Count);
 
             var postList = posts.ToList();
 
@@ -55,7 +53,7 @@ public class GetFeaturedPostsQueryHandler(
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} featured posts", methodName,

@@ -1,4 +1,8 @@
 @model FooterViewModel
+@{
+    var categories = Model.Categories.ToList();
+    var tags = Model.Tags.ToList();
+}
 
 <div class="container">
     <div class="row">
@@ -21,12 +25,15 @@
                     <h5 class="mt-5 mb-30">Quick link</h5>
                 </div>
                 <ul class="font-small">
-                    @foreach (var category in Model.Categories)
+                    @if (categories.Count != 0)
                     {
-                        var url = category.IsStaticPage ? "/" + category.Slug : "/category/" + category.Slug;
-                        <li class="cat-item cat-item-2">
-                            <a href="@url">@category.Name</a>
-                        </li>
+                        foreach (var item in categories)
+                        {
+                            var categoryUrl = item.IsStaticPage ? "/" + item.Slug : "/category/" + item.Slug;
+                            <li class="cat-item cat-item-2">
+                                <a href="@categoryUrl">@item.Name</a>
+                            </li>
+                        }
                     }
                 </ul>
             </div>
@@ -37,13 +44,15 @@
                     <h5 class="mt-5 mb-30">Tagcloud</h5>
                 </div>
                 <div class="tagcloud mt-50">
-                    <a class="tag-cloud-link" href="category.html">beautiful</a>
-                    <a class="tag-cloud-link" href="category.html">New York</a>
-                    <a class="tag-cloud-link" href="category.html">droll</a>
-                    <a class="tag-cloud-link" href="category.html">intimate</a>
-                    <a class="tag-cloud-link" href="category.html">loving</a>
-                    <a class="tag-cloud-link" href="category.html">travel</a>
-                    <a class="tag-cloud-link" href="category.html">fighting </a>
+                    @if (tags.Count != 0)
+                    {
+                        foreach (var item in tags)
+                        {
+                            var tagUrl = "/tag/" + item.Slug;
+                            
+                            <a class="tag-cloud-link" href="@tagUrl">@item.Name</a>
+                        }
+                    }
                 </div>
             </div>
         </div>
@@ -66,7 +75,7 @@
     <div class="footer-copy-right pt-30 mt-20">
         <p class="float-md-start font-small text-muted">© 2024, Coding Hub - Personal Blog </p>
         <p class="float-md-end font-small text-muted">
-            Development by <a href="/" target="_blank">Duy Nguyen</a> | All rights reserved
+            Development by <a href="/" target="_blank"> Duy Nguyen</a> | All rights reserved
         </p>
     </div>
 </div>

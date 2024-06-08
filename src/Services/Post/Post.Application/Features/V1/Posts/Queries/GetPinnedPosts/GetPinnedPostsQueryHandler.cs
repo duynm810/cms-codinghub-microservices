@@ -18,7 +18,6 @@ public class GetPinnedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPinnedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -32,7 +31,7 @@ public class GetPinnedPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving pinned posts", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPinnedPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -42,8 +41,7 @@ public class GetPinnedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetPinnedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.PinnedPosts, 0));
+            var posts = await postRepository.GetPinnedPosts(request.Count);
 
             var postList = posts.ToList();
 
@@ -55,7 +53,7 @@ public class GetPinnedPostsQueryHandler(
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} pinned posts", methodName,

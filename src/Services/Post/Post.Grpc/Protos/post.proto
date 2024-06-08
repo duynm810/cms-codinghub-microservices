@@ -5,6 +5,7 @@ option csharp_namespace = "Post.Grpc.Protos";
 service PostProtoService {
   rpc HasPostsInCategory(HasPostsInCategoryRequest) returns (HasPostsInCategoryResponse);
   rpc GetPostsByIds(GetPostsByIdsRequest) returns (GetPostsByIdsResponse);
+  rpc GetTop10Posts(GetTop10PostsRequest) returns (GetTop10PostsResponse);
 }
 
 message PostModel {
@@ -30,6 +31,14 @@ message GetPostsByIdsRequest {
 }
 
 message GetPostsByIdsResponse {
+  repeated PostModel posts = 1;
+}
+
+message GetTop10PostsRequest {
+
+}
+
+message GetTop10PostsResponse {
   repeated PostModel posts = 1;
 }
 

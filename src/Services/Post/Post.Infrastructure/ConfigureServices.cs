@@ -5,7 +5,6 @@ using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
-using MassTransit.Internals.Caching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +17,7 @@ using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
 using Shared.Settings;
+using Tag.Grpc.Protos;
 
 namespace Post.Infrastructure;
 
@@ -97,6 +97,7 @@ public static class ConfigureServices
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
+            .AddScoped<ITagGrpcService, TagGrpcService>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
@@ -111,7 +112,8 @@ public static class ConfigureServices
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
 
-        services.AddScoped<CategoryGrpcService>();
+        services.AddGrpcClient<TagProtoService.TagProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.TagUrl));
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)

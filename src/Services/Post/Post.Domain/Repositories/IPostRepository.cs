@@ -25,7 +25,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber = 1, int pageSize = 10);
 
     Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
-
+    
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
     Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count);
@@ -43,6 +43,8 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task<IEnumerable<PostBase>> GetMostCommentPosts(int count);
 
     Task<IEnumerable<PostBase>> GetMostLikedPosts(int count);
+
+    Task<IEnumerable<PostBase>> GetTop10Posts();
 
     Task<bool> SlugExists(string slug, Guid? currentId = null);
 

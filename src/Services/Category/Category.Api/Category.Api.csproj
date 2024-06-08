@@ -10,9 +10,9 @@
     <ItemGroup>
         <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
-        <PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.5" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.5">
+        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0" />
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.6">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
@@ -33,20 +33,16 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Remove="Protos\post.proto"/>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
-        <GrpcServices>Client</GrpcServices>
-        <Access>Public</Access>
-        <ProtoCompile>True</ProtoCompile>
-        <CompileOutputs>True</CompileOutputs>
-        <OutputDir>obj\Debug\net8.0\</OutputDir>
-        <Generator>MSBuild:Compile</Generator>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-        <Link>Protos\post.proto</Link>
-      </Protobuf>
+        <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\post.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
     </ItemGroup>
 
 </Project>

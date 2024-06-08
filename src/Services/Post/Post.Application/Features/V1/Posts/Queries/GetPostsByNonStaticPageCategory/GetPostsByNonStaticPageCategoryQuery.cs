@@ -4,6 +4,7 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
 
-public class GetPostsByNonStaticPageCategoryQuery : IRequest<ApiResult<IEnumerable<CategoryWithPostsModel>>>
+public class GetPostsByNonStaticPageCategoryQuery(int count) : IRequest<ApiResult<IEnumerable<CategoryWithPostsModel>>>
 {
+    public int Count { get; set; } = count;
 }

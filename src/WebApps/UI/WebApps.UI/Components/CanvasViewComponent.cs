@@ -14,7 +14,7 @@ public class CanvasViewComponent(ISeriesApiClient seriesApiClient, IErrorService
     {
         try
         {
-            var series = await seriesApiClient.GetSeries();
+            var series = await seriesApiClient.GetSeries(4);
             if (series is { IsSuccess: true, Data: not null })
             {
                 var items = new CanvasViewModel

@@ -33,7 +33,7 @@ public class GetPostByIdQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with ID: {PostId}", methodName, request.Id);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostByIdKey(request.Id);
             var cachedPost = await cacheService.GetAsync<PostModel>(cacheKey, cancellationToken);
             if (cachedPost != null)
@@ -64,7 +64,7 @@ public class GetPostByIdQueryHandler(
             var data = mappingHelper.MapPostWithCategory(post, category);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved post with ID: {PostId}", methodName,

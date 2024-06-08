@@ -1,4 +1,5 @@
 using Hangfire.Api.Extensions;
+using Infrastructure.Extensions;
 using Logging;
 using Serilog;
 using Shared.Constants;

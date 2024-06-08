@@ -18,7 +18,7 @@
 <div class="container">
     <div class="loop-grid mb-30">
         <div class="row">
-            @if (posts.Items != null && posts.Items.Any())
+            @if (posts.Items != null && posts.Items.Count != 0)
             {
                 foreach (var item in posts.Items)
                 {
@@ -41,16 +41,6 @@
                                     <li>
                                         <a class="fb" href="#" title="Share on Facebook" target="_blank">
                                             <i class="elegant-icon social_facebook"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="tw" href="#" target="_blank" title="Tweet now">
-                                            <i class="elegant-icon social_twitter"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="pt" href="#" target="_blank" title="Pin it">
-                                            <i class="elegant-icon social_pinterest"></i>
                                         </a>
                                     </li>
                                 </ul>

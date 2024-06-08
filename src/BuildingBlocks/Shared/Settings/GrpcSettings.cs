@@ -7,4 +7,6 @@ public class GrpcSettings
     public string PostUrl { get; set; } = default!;
 
     public string SeriesUrl { get; set; } = default!;
+        
+    public string TagUrl { get; set; } = default!;
 }

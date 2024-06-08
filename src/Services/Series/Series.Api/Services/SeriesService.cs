@@ -16,7 +16,6 @@ namespace Series.Api.Services;
 public class SeriesService(
     ISeriesRepository seriesRepository,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMapper mapper,
     ILogger logger) : ISeriesService
 {
@@ -146,7 +145,7 @@ public class SeriesService(
         return result;
     }
 
-    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries()
+    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries(int count)
     {
         var result = new ApiResult<IEnumerable<SeriesDto>>();
         const string methodName = nameof(GetSeries);
@@ -155,7 +154,7 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetAllSeriesKey();
             var cachedSeries = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
@@ -165,15 +164,13 @@ public class SeriesService(
                 return result;
             }
 
-            var count = displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Series.TopSeries, 0);
-
             var series = await seriesRepository.GetSeries(count);
             if (series.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<SeriesDto>>(series);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data);
 
                 logger.Information("END {MethodName} - Successfully retrieved {SeriesCount} series", methodName,
@@ -199,7 +196,7 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving series with ID: {SeriesId}", methodName, id);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesByIdKey(id);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
@@ -221,7 +218,7 @@ public class SeriesService(
             var data = mapper.Map<SeriesDto>(series);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved series with ID {SeriesId}", methodName, id);
@@ -250,7 +247,7 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series for page {PageNumber} with page size {PageSize}",
                 methodName, pageNumber, pageSize);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(pageNumber, pageSize);
             var cachedSeries = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
@@ -270,7 +267,7 @@ public class SeriesService(
 
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information(
@@ -296,7 +293,7 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving series with Slug: {SeriesSlug}", methodName, slug);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesBySlugKey(slug);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
@@ -318,7 +315,7 @@ public class SeriesService(
             var data = mapper.Map<SeriesDto>(series);
             result.Success(data);
 
-            // Lưu cache
+            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
             logger.Information("END {MethodName} - Successfully retrieved series Slug ID {SeriesSlug}", methodName,

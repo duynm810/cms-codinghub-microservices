@@ -1,16 +1,13 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
-using Shared.Constants;
 using Shared.Helpers;
 using Shared.Responses;
-using Shared.Settings;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetMostLikedPosts;
 
@@ -18,7 +15,6 @@ public class GetMostLikedPostsQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ICacheService cacheService,
-    DisplaySettings displaySettings,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetMostLikedPostsQuery, ApiResult<IEnumerable<PostModel>>>
 {
@@ -32,7 +28,7 @@ public class GetMostLikedPostsQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving most liked posts", methodName);
 
-            // Kiểm tra cache
+            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetMostLikedPostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
@@ -42,8 +38,7 @@ public class GetMostLikedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetMostLikedPosts(
-                displaySettings.Config.GetValueOrDefault(DisplaySettingsConsts.Post.MostLikedPosts, 0));
+            var posts = await postRepository.GetMostLikedPosts(request.Count);
 
             var postList = posts.ToList();
 
@@ -55,7 +50,7 @@ public class GetMostLikedPostsQueryHandler(
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);
 
-                // Lưu cache
+                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} most liked posts", methodName,

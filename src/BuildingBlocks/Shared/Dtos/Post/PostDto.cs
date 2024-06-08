@@ -1,3 +1,5 @@
+using Shared.Dtos.Tag;
+
 namespace Shared.Dtos.Post;
 
 public class PostDto
@@ -18,7 +20,7 @@ public class PostDto
 
     public string? Source { get; set; }
 
-    public string? Tags { get; set; }
+    public List<TagDto>? TagDetails { get; set; }
 
     public int ViewCount { get; set; }
 
