@@ -16,7 +16,6 @@ WORKDIR "/src/WebApps/UI/WebApps.UI"
 RUN dotnet build "WebApps.UI.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "WebApps.UI.csproj" -c Release -o /app/publish
 
 FROM base AS final

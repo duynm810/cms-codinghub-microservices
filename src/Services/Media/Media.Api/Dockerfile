@@ -16,7 +16,6 @@ WORKDIR "/src/Services/Media/Media.Api"
 RUN dotnet build "Media.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "Media.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final

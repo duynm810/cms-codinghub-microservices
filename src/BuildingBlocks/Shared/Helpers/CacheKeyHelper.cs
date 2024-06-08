@@ -98,8 +98,7 @@ public static class CacheKeyHelper
 
         public static string GetSeriesBySlugKey(string slug) => $"{SeriesServicePrefix}:slug:{slug}";
 
-        public static string GetSeriesPagingKey(int pageNumber, int pageSize) =>
-            $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
+        public static string GetSeriesPagingKey(int pageNumber, int pageSize) => $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion
@@ -148,8 +147,7 @@ public static class CacheKeyHelper
         
         public static string GetTagBySlugKey(string slug) => $"{TagServicePrefix}:slug:{slug}";
 
-        public static string GetTagsPagingKey(int pageNumber, int pageSize) =>
-            $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
+        public static string GetTagsPagingKey(int pageNumber, int pageSize) => $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
     }
 
     #endregion
@@ -162,8 +160,7 @@ public static class CacheKeyHelper
     {
         public static string GetAllTagsKey() => $"{TagGrpcPrefix}:all";
         
-        public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) =>
-            $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
+        public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) => $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
         
         public static string GetGrpcTagByIdKey(Guid tagId) => $"{TagGrpcPrefix}:{tagId}";
         
