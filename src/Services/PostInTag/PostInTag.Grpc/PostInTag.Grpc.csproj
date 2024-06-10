@@ -7,7 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\post-in-tag.proto" GrpcServices="Server" />
+        <Protobuf Include="Protos\post-in-tag.proto">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <GrpcServices>Server</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot />
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug/net8.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
