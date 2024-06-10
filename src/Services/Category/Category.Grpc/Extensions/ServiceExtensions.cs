@@ -2,7 +2,10 @@ using Category.Grpc.Persistence;
 using Category.Grpc.Repositories;
 using Category.Grpc.Repositories.Interfaces;
 using Category.Grpc.Services.BackgroundServices;
+using Contracts.Domains.Repositories;
 using Grpc.HealthCheck;
+using Infrastructure.Domains;
+using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -24,6 +27,9 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcServices();
+        
+        // Register core services
+        services.AddCoreInfrastructure();
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
@@ -64,7 +70,7 @@ public static class ServiceExtensions
         services.AddGrpc();
         services.AddGrpcReflection();
     }
-
+    
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<ICategoryRepository, CategoryRepository>();

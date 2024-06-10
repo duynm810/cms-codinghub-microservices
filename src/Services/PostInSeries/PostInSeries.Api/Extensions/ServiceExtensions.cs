@@ -107,14 +107,6 @@ public static class ServiceExtensions
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-    }
-
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
