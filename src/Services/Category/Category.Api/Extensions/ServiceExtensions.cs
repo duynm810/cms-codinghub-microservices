@@ -131,9 +131,9 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(CacheSettings)} is not configured properly");
         
-        var elasticsearchSettings = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                    throw new ArgumentNullException(
-                                        $"{nameof(ElasticConfigurations)} is not configured properly");
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddHealthChecks()
             .AddMySql(connectionString: databaseSettings.ConnectionString,
@@ -145,10 +145,10 @@ public static class ServiceExtensions
                 failureStatus: HealthStatus.Degraded,
                 tags: new[] { "cache", "redis" })
             .AddElasticsearch(
-                elasticsearchSettings.Uri,
+                elasticsearchConfigurations.Uri,
                 name: "Elasticsearch Health",
                 failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });;
+                tags: new[] { "search", "elasticsearch" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)

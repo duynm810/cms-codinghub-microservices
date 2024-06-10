@@ -7,6 +7,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Series.Grpc.Persistence;
 using Series.Grpc.Repositories;
 using Series.Grpc.Repositories.Interfaces;
+using Shared.Configurations;
 using Shared.Settings;
 
 namespace Series.Grpc.Extensions;
@@ -83,12 +84,26 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddGrpcHealthChecks()
             .AddSqlServer(databaseSettings.ConnectionString,
                 name: "SqlServer Health",
-                failureStatus: HealthStatus.Degraded)
-            .AddCheck("gRPC Health", () => HealthCheckResult.Healthy());
+                failureStatus: HealthStatus.Degraded,
+                tags: new [] { "db", "sqlserver" })
+            .AddCheck("gRPC Health", 
+                () => HealthCheckResult.Healthy(),
+                new[] { "grpc" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }
