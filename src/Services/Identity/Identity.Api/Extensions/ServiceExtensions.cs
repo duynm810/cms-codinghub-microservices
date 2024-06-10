@@ -269,6 +269,7 @@ public static class ServiceExtensions
         services.AddHealthChecks()
             .AddSqlServer(databaseSettings.ConnectionString,
                 name: "SqlServer Health",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "sqlserver" });
     }
 }

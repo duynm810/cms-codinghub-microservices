@@ -105,10 +105,22 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings));
+        var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(DatabaseSettings)} is not configured properly");
+
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                            throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
+
         services.AddHealthChecks()
             .AddSqlServer(databaseSettings.ConnectionString,
                 name: "SqlServer Health",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "sqlserver" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" });
     }
 }

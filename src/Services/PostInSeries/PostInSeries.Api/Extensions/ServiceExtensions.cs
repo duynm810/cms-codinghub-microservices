@@ -128,11 +128,20 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                            throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
 
         services.AddHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "postgre" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)
