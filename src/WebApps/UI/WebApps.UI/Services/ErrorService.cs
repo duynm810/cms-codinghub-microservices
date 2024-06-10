@@ -19,10 +19,10 @@ public class ErrorService : IErrorService
     {
         return statusCode switch
         {
-            404 => "HttpError-NotFound",
-            400 => "HttpError-BadRequest",
-            500 => "HttpError-InternalServerError",
-            _ => "HttpError"
+            404 => "~/Views/Shared/HttpError-NotFound.cshtml",
+            400 => "~/Views/Shared/HttpError-BadRequest.cshtml",
+            500 => "~/Views/Shared/HttpError-InternalServerError.cshtml",
+            _ => "~/Views/Shared/HttpError.cshtml"
         };
     }
 }
