@@ -4,7 +4,7 @@ namespace Tag.Api.Extensions;
 
 public static class HostExtensions
 {
-    public static IHost MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder)
+    public static void MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder)
         where TContext : DbContext
     {
         using var scope = host.Services.CreateScope();
@@ -31,8 +31,6 @@ public static class HostExtensions
         {
             logger.LogError(e, "An error occurred while migrating the MySQL database");
         }
-
-        return host;
     }
 
     private static void ExcuteMigrations<TContext>(TContext context) where TContext : DbContext

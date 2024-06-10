@@ -16,6 +16,7 @@ using PostInTag.Api.Repositories;
 using PostInTag.Api.Repositories.Interfaces;
 using PostInTag.Api.Services;
 using PostInTag.Api.Services.Interfaces;
+using Shared.Configurations;
 using Shared.Settings;
 using Tag.Grpc.Protos;
 
@@ -129,10 +130,28 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                            throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
+        
         services.AddHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "postgre" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)

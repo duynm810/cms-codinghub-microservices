@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using Shared.Configurations;
 using Shared.Settings;
 
 namespace Category.Grpc.Extensions;
@@ -86,13 +87,26 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddSingleton<HealthServiceImpl>();
         services.AddHostedService<StatusService>();
 
-        services.AddGrpcHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
+        services.AddGrpcHealthChecks()
+            .AddMySql(connectionString: databaseSettings.ConnectionString,
                 name: "MySQL Health",
-                failureStatus: HealthStatus.Degraded)
-            .AddCheck("gRPC Health", () => HealthCheckResult.Healthy());
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "mysql" })
+            .AddCheck("gRPC Health",
+                () => HealthCheckResult.Healthy(),
+                new[] { "grpc" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }

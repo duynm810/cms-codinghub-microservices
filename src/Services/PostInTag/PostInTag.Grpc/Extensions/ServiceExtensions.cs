@@ -9,6 +9,7 @@ using PostInTag.Grpc.Persistence;
 using PostInTag.Grpc.Repositories;
 using PostInTag.Grpc.Repositories.Interfaces;
 using PostInTag.Grpc.Services.BackgroundServices;
+using Shared.Configurations;
 using Shared.Settings;
 
 namespace PostInTag.Grpc.Extensions;
@@ -89,13 +90,26 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddSingleton<HealthServiceImpl>();
         services.AddHostedService<StatusService>();
 
-        services.AddGrpcHealthChecks().AddNpgSql(connectionString: databaseSettings.ConnectionString,
+        services.AddGrpcHealthChecks()
+            .AddNpgSql(connectionString: databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
-                failureStatus: HealthStatus.Degraded)
-            .AddCheck("gRPC Health", () => HealthCheckResult.Healthy());
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "postgre" })
+            .AddCheck("gRPC Health",
+                () => HealthCheckResult.Healthy(),
+                new[] { "grpc" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }
