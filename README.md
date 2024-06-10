@@ -62,7 +62,7 @@ dotnet ef database update
 - Post Api
 
 ```Powershell
- dotnet ef migrations add "Remove_Tags_Field" --project Post.Infrastructure --startup-project Post.Api
+ dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ```Powershell
