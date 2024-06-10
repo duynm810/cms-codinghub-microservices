@@ -73,18 +73,7 @@ public class GetPostBySlugQueryHandler(
             };
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
-            if (post.Tags != null)
-            {
-                var tagsIds = post.Tags.Split(',').Select(Guid.Parse).ToList();
-                var tags = await tagGrpcService.GetTagsByIds(tagsIds);
-
-                data.DetailPost.TagDetails = tags.Select(tag => new TagDto()
-                {
-                    Id = tag.Id,
-                    Name = tag.Name,
-                    Slug = tag.Slug
-                }).ToList();
-            }
+            
 
             var relatedPosts = relatedPostsTask.Result.ToList();
             if (relatedPosts.IsNotNullOrEmpty())
