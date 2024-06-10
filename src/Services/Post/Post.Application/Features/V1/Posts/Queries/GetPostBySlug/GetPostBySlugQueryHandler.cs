@@ -7,7 +7,6 @@ using Post.Domain.GrpcServices;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -18,6 +17,7 @@ public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcService categoryGrpcService,
     ITagGrpcService tagGrpcService,
+    IPostInTagGrpcService postInTagGrpcService,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -73,17 +73,16 @@ public class GetPostBySlugQueryHandler(
             };
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
-            if (post.Tags != null)
+            var tagIds = await postInTagGrpcService.GetTagIdsByPostIdAsync(post.Id);
+            var tagIdList = tagIds.ToList();
+            if (tagIdList.IsNotNullOrEmpty())
             {
-                var tagsIds = post.Tags.Split(',').Select(Guid.Parse).ToList();
-                var tags = await tagGrpcService.GetTagsByIds(tagsIds);
-
-                data.DetailPost.TagDetails = tags.Select(tag => new TagDto()
+                var tagsInfo = await tagGrpcService.GetTagsByIds(tagIdList);
+                var tagList = tagsInfo.ToList();
+                if (tagList.IsNotNullOrEmpty())
                 {
-                    Id = tag.Id,
-                    Name = tag.Name,
-                    Slug = tag.Slug
-                }).ToList();
+                    data.DetailPost.Tags = tagList.ToList();
+                }
             }
 
             var relatedPosts = relatedPostsTask.Result.ToList();

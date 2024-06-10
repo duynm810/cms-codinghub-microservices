@@ -47,8 +47,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
             query = query.Where(x => (x.Title.Contains(filter))
                                      || (x.Slug.Contains(filter))
                                      || (x.Content != null && x.Content.Contains(filter))
-                                     || (x.Summary != null && x.Summary.Contains(filter))
-                                     || (x.Tags != null && x.Tags.Contains(filter)));
+                                     || (x.Summary != null && x.Summary.Contains(filter)));
         }
 
         query = query.OrderByDescending(x => x.PublishedDate);

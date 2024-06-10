@@ -9,4 +9,6 @@ public class GrpcSettings
     public string SeriesUrl { get; set; } = default!;
         
     public string TagUrl { get; set; } = default!;
+
+    public string PostInTagUrl { get; set; } = default!;
 }

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "PostInTag.Grpc.Protos";
+
+service PostInTagService {
+  rpc GetTagsByPostId(GetTagsByPostIdRequest) returns (GetTagsByPostIdResponse);
+}
+
+message GetTagsByPostIdRequest {
+  string post_id = 1;
+}
+
+message GetTagsByPostIdResponse {
+  repeated string tag_ids = 1;
+}

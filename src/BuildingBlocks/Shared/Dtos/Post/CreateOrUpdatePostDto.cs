@@ -16,8 +16,6 @@ public class CreateOrUpdatePostDto
 
     public string? Source { get; set; }
 
-    public string? Tags { get; set; }
-
     public double RoyaltyAmount { get; set; }
 
     public long CategoryId { get; set; }

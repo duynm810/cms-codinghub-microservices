@@ -22,8 +22,6 @@ public class CreateOrUpdateCommand : IMapFrom<PostBase>
 
     public string? Source { get; set; }
 
-    public string? Tags { get; set; }
-
     public int ViewCount { get; set; }
 
     public bool IsPaid { get; set; }
