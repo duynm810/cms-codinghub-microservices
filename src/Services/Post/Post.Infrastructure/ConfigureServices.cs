@@ -16,6 +16,7 @@ using Post.Infrastructure.GrpcServices;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
+using PostInTag.Grpc.Protos;
 using Shared.Settings;
 using Tag.Grpc.Protos;
 
@@ -84,20 +85,13 @@ public static class ConfigureServices
         services.AddScoped<IDatabaseSeeder, PostSeedData>();
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-    }
-
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
             .AddScoped<ITagGrpcService, TagGrpcService>()
+            .AddScoped<IPostInTagGrpcService, PostInTagGrpcService>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
@@ -114,6 +108,9 @@ public static class ConfigureServices
 
         services.AddGrpcClient<TagProtoService.TagProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.TagUrl));
+        
+        services.AddGrpcClient<PostInTagService.PostInTagServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostInTagUrl));
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)

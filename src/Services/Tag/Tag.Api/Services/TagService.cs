@@ -33,9 +33,11 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             var data = mapper.Map<TagDto>(tag);
             result.Success(data);
 
-            // Xóa cache danh sách tag khi tạo mới
-            await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
-            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
+            // Clear tag list cache when a new tag is created (Xóa cache danh sách tag khi tạo mới)
+            await Task.WhenAll(
+                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey())
+            );
 
             logger.Information("END {MethodName} - Tag created successfully with ID {TagId}", methodName,
                 data.Id);
@@ -74,9 +76,12 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             result.Success(data);
 
             // Delete tag list cache when updating (Xóa cache danh sách tag khi cập nhật)
-            await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
-            await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id));
-            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
+            await Task.WhenAll(
+                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id)),
+                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id))
+            );
 
             logger.Information("END {MethodName} - Tag with ID {TagId} updated successfully", methodName, id);
         }
@@ -99,6 +104,8 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         {
             logger.Information("BEGIN {MethodName} - Deleting categories with IDs: {TagIds}", methodName,
                 string.Join(", ", ids));
+            
+            var tasks = new List<Task>();
 
             foreach (var id in ids)
             {
@@ -109,16 +116,22 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
-
-                await tagRepository.DeleteTag(tag);
-
-                // Delete tag cache when delete (Xóa cache tag khi xoá dữ liệu)
-                await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id));
+                
+                tasks.Add(tagRepository.DeleteTag(tag));
+                
+                // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id)));
+                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id)));
             }
+            
+            // Execute all tasks in parallel (Thực hiện tất cả các nhiệm vụ song song)
+            await Task.WhenAll(tasks);
 
-            // Delete tag list cache when deleting (Xóa cache danh sách tag khi xóa dữ liệu)
-            await cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey());
-            await cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey());
+            // Delete tag list cache when deleting  (Xóa cache danh sách tag khi xóa dữ liệu)
+            await Task.WhenAll(
+                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
+                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey())
+            );
 
             result.Success(true);
 

@@ -108,6 +108,12 @@ services:
       context: .
       dockerfile: Services/PostInTag/PostInTag.Api/Dockerfile
       
+  post-in-tag.grpc:
+    image: ${DOCKER_REGISTRY-}post-in-tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PostInTag/PostInTag.Grpc/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:

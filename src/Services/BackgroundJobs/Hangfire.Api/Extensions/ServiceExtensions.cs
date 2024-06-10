@@ -7,6 +7,7 @@ using Infrastructure.Scheduled;
 using Infrastructure.Services;
 using Infrastructure.Settings;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Shared.Configurations;
 using Shared.Constants;
 using Shared.Settings;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -80,13 +81,6 @@ public static class ServiceExtensions
         });
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services.AddTransient<IScheduledJobService, HangfireService>()
-            .AddScoped<ISmtpEmailService, SmtpEmailService>()
-            .AddScoped<IBackgroundJobService, BackgroundJobService>();
-    }
-
     private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllers();
@@ -99,9 +93,20 @@ public static class ServiceExtensions
         var hangfireSettings = services.GetOptions<HangfireSettings>(nameof(HangfireSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(HangfireSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
-        services.AddHealthChecks().AddMongoDb(hangfireSettings.Storage.ConnectionString,
-            name: "MongoDb Health",
-            failureStatus: HealthStatus.Degraded);
+        services.AddHealthChecks()
+            .AddMongoDb(hangfireSettings.Storage.ConnectionString,
+                name: "MongoDb Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "mongo" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }

@@ -62,7 +62,7 @@ dotnet ef database update
 - Post Api
 
 ```Powershell
- dotnet ef migrations add "Add_Some_New_Field_Post" --project Post.Infrastructure --startup-project Post.Api
+ dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ```Powershell
@@ -98,28 +98,33 @@ dotnet ef database update -c IdentityContext --project Identity.Infrastructure -
 - Ocelot GW: http://localhost:5001/swagger/index.html
 - Identity Api: http://localhost:5002/swagger/index.html
 - Category Api: http://localhost:5003/swagger/index.html
-- Category GRPC: http://localhost:5004/swagger/index.html
+- Category Grpc: http://localhost:5004/swagger/index.html
 - Post Api: http://localhost:5005/swagger/index.html
-- Post GRPC: http://localhost:5006/swagger/index.html
+- Post Grpc: http://localhost:5006/swagger/index.html
 - Series Api: http://localhost:5007/swagger/index.html
-- Series GRPC: http://localhost:5008/swagger/index.html
+- Series Grpc: http://localhost:5008/swagger/index.html
 - Post In Series Api: http://localhost:5009/swagger/index.html
-- Hangfire Api: http://localhost:5015/swagger/index.html
+- Tag Api: http://localhost:5010/swagger/index.html
+- Tag Grpc: http://localhost:5011/swagger/index.html
+- Post In Tag Api: http://localhost:5012/swagger/index.html
 
 ---
 
 ## Application URLs - LOCAL Environment (Docker Container):
 
 - Ocelot GW: http://localhost:6001/swagger/index.html
-- Identity API: http://localhost:6002/swagger/index.html
-- Category API: http://localhost:6003/swagger/index.html
+- Identity Api: http://localhost:6002/swagger/index.html
+- Category Api: http://localhost:6003/swagger/index.html
 - Category GRPC: http://localhost:6004/swagger/index.html
 - Post API: http://localhost:6005/swagger/index.html
 - Post GRPC: http://localhost:6006/swagger/index.html
-- Series API: http://localhost:6007/swagger/index.html
+- Series Api: http://localhost:6007/swagger/index.html
 - Series GRPC: http://localhost:6008/swagger/index.html
-- Post In Series API: http://localhost:6009/swagger/index.html
-- Hangfire API: http://localhost:6015/swagger/index.html
+- Post In Series Api: http://localhost:6009/swagger/index.html
+- Tag Api: http://localhost:6010/swagger/index.html
+- Tag Grpc: http://localhost:6011/swagger/index.html
+- Post In Tag Api: http://localhost:6012/swagger/index.html
+
 ---
 
 ## Docker Application URLs - LOCAL Environment (Docker Container):
@@ -127,4 +132,5 @@ dotnet ef database update -c IdentityContext --project Identity.Infrastructure -
 - Portainer: http://localhost:9000 - username: admin ; pass: "Admin123456@"
 - Kibana: http://localhost:5601 - username: elastic ; pass: admin
 - RabbitMQ: http://localhost:15672 - username: guest ; pass: guest
-- HangfireUI: http://localhost:6009/jobs (docker)
+- HangfireUI: http://localhost:6015/jobs (docker)
+- WebUI: http://localhost:6100 (docker)

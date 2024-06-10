@@ -26,8 +26,6 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
 
     public string? Source { get; set; }
 
-    public List<TagDto>? TagDetails { get; set; }
-
     public int ViewCount { get; set; }
 
     public int CommentCount { get; set; }
@@ -63,6 +61,9 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
     public DateTimeOffset? PaidDate { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
+    
+    // Custom property
+    public List<TagDto>? Tags { get; set; }
 
     public void Mapping(Profile profile)
     {

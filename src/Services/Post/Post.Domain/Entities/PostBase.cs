@@ -55,12 +55,6 @@ public class PostBase : EntityAuditBase<Guid>
     public string? Source { get; set; }
 
     /// <summary>
-    /// Tags cho bài viết
-    /// </summary>
-    [MaxLength(250)]
-    public string? Tags { get; set; }
-
-    /// <summary>
     /// Số lượt xem bài viết
     /// </summary>
     public int ViewCount { get; set; }

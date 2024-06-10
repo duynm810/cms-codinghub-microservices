@@ -6,10 +6,7 @@ using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
 using Contracts.Commons.Interfaces;
-using Contracts.Domains.Repositories;
 using Infrastructure.Commons;
-using Infrastructure.Domains;
-using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -108,14 +105,6 @@ public static class ServiceExtensions
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-    }
-
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
@@ -137,10 +126,29 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                               throw new ArgumentNullException(
+                                   $"{nameof(CacheSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
-        services.AddHealthChecks().AddMySql(connectionString: databaseSettings.ConnectionString,
-            name: "MySQL Health",
-            failureStatus: HealthStatus.Degraded);
+        services.AddHealthChecks()
+            .AddMySql(connectionString: databaseSettings.ConnectionString,
+                name: "MySQL Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "mysql" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)

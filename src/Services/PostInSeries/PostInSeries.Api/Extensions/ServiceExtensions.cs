@@ -17,6 +17,7 @@ using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services;
 using PostInSeries.Api.Services.Interfaces;
 using Series.Grpc.Protos;
+using Shared.Configurations;
 using Shared.Settings;
 
 namespace PostInSeries.Api.Extensions;
@@ -107,14 +108,6 @@ public static class ServiceExtensions
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-    }
-
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
@@ -136,11 +129,29 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
+        
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                            throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
-                failureStatus: HealthStatus.Degraded);
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "postgre" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)

@@ -28,8 +28,15 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    // Seed database with initial data and start the application
-    app.SeedData().Run();
+    // Seed database with initial data only in Development or Local environment
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment(EnvironmentConsts.Local))
+    {
+        // Seed database with initial data and start the application
+        app.SeedData();
+    }
+    
+    // Run the application
+    await app.RunAsync();
 }
 catch (Exception e)
 {
