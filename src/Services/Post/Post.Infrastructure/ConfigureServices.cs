@@ -85,14 +85,6 @@ public static class ConfigureServices
         services.AddScoped<IDatabaseSeeder, PostSeedData>();
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
-    }
-
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IPostRepository, PostRepository>()

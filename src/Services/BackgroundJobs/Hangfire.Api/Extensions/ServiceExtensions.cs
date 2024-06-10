@@ -80,13 +80,6 @@ public static class ServiceExtensions
         });
     }
 
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services.AddTransient<IScheduledJobService, HangfireService>()
-            .AddScoped<ISmtpEmailService, SmtpEmailService>()
-            .AddScoped<IBackgroundJobService, BackgroundJobService>();
-    }
-
     private static void AddAdditionalServices(this IServiceCollection services)
     {
         services.AddControllers();

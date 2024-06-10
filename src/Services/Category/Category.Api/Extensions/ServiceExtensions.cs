@@ -6,10 +6,7 @@ using Category.Api.Repositories.Interfaces;
 using Category.Api.Services;
 using Category.Api.Services.Interfaces;
 using Contracts.Commons.Interfaces;
-using Contracts.Domains.Repositories;
 using Infrastructure.Commons;
-using Infrastructure.Domains;
-using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -106,14 +103,6 @@ public static class ServiceExtensions
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-    }
-
-    private static void AddCoreInfrastructure(this IServiceCollection services)
-    {
-        services
-            .AddScoped(typeof(IRepositoryQueryBase<,,>), typeof(RepositoryQueryBase<,,>))
-            .AddScoped(typeof(IRepositoryCommandBase<,,>), typeof(RepositoryCommandBase<,,>))
-            .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
