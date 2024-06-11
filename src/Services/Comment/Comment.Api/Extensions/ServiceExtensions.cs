@@ -1,8 +1,7 @@
-using Contracts.Commons.Interfaces;
-using Infrastructure.Commons;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Driver;
 using Shared.Configurations;
 using Shared.Settings;
 
@@ -21,7 +20,7 @@ public static class ServiceExtensions
         services.AddConfigurationSettings(configuration);
 
         // Register database context
-        services.AddDatabaseContext();
+        services.ConfigureMongoDbClient();
 
         // Register Redis
         services.AddRedisConfiguration();
@@ -76,6 +75,18 @@ public static class ServiceExtensions
         // Return the MongoDB connection string.
         return mongodbConnectionString;
     }
+    
+    private static void ConfigureMongoDbClient(this IServiceCollection services)
+    {
+        services.AddSingleton<IMongoClient>(new MongoClient(GetMongoConnectionString(services)))
+            .AddScoped(x => x.GetService<IMongoClient>()?.StartSession() 
+                            ?? throw new ArgumentNullException(nameof(IMongoClient), "Mongo client instance is null"));
+    }
+
+    private static void ConfigureAutoMapper(this IServiceCollection services)
+    {
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+    }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
@@ -95,6 +106,32 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
+        var mongodbSettings = services.GetOptions<MongoDbSettings>(nameof(MongoDbSettings)) ??
+                              throw new ArgumentNullException(
+                                  $"{nameof(MongoDbSettings)} is not configured properly");
+        
+        var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
+                            throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
+        
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
+
+        services.AddHealthChecks()
+            .AddMongoDb(mongodbSettings.ConnectionString,
+                name: "MongoDb Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "db", "mongo" })
+            .AddRedis(cacheSettings.ConnectionString,
+                name: "Redis Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "cache", "redis" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 
     private static void AddGrpcConfiguration(this IServiceCollection services)
