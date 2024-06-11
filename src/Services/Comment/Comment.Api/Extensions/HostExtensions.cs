@@ -1,46 +1,23 @@
-using Microsoft.EntityFrameworkCore;
+using Comment.Api.Persistence;
+using MongoDB.Driver;
+using Shared.Settings;
 
-namespace Category.Api.Extensions;
+namespace Comment.Api.Extensions;
 
 public static class HostExtensions
 {
-    public static void MigrateDatabase<TContext>(this IHost host, Action<TContext, IServiceProvider> seeder)
-        where TContext : DbContext
+    public static IHost MigrateDatabase(this IHost host)
     {
         using var scope = host.Services.CreateScope();
-
         var services = scope.ServiceProvider;
-        var logger = services.GetRequiredService<ILogger<TContext>>();
-        var context = services.GetService<TContext>();
 
-        try
-        {
-            if (context == null)
-            {
-                throw new Exception(
-                    "Database context not found. Ensure the database context is registered and configured correctly.");
-            }
+        var mongodbSettings = services.GetService<MongoDbSettings>() ??
+                              throw new ArgumentNullException(
+                                  $"{nameof(MongoDbSettings)} is not configured properly");
 
-            logger.LogInformation("Migrating MySQL database");
-            ExcuteMigrations(context);
+        var mongoClient = services.GetRequiredService<IMongoClient>();
+        new CommentSeedData().SeedDataAsync(mongoClient, mongodbSettings).Wait();
 
-            logger.LogInformation("Migrated MySQL database");
-            InvokeSeeder(seeder, context, services);
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e, "An error occurred while migrating the MySQL database");
-        }
-    }
-
-    private static void ExcuteMigrations<TContext>(TContext context) where TContext : DbContext
-    {
-        context.Database.Migrate();
-    }
-
-    private static void InvokeSeeder<TContext>(Action<TContext, IServiceProvider> seeder, TContext context,
-        IServiceProvider services) where TContext : DbContext?
-    {
-        seeder(context, services);
+        return host;
     }
 }

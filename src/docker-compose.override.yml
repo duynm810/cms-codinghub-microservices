@@ -76,6 +76,18 @@ services:
     volumes:
       - post_in_tag_postgres_data:/var/lib/postgresql/data
   
+  #commentdb: mongo
+  commentdb:
+    container_name: commentdb
+    ports:
+      - "27019:27017"
+    volumes:
+      - comment_mongo_data:/data/db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
+  
   #hangfiredb: mongo
   hangfiredb:
     container_name: hangfiredb

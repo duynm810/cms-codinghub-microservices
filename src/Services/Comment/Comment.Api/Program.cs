@@ -28,7 +28,7 @@ try
     app.ConfigurePipeline();
     
     // Start the application
-    await app.RunAsync();
+    app.MigrateDatabase().Run();
 }
 catch (Exception e)
 {

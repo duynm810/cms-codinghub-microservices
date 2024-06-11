@@ -16,14 +16,17 @@ services:
   tagdb:
     image: mysql:latest
     
+  post-in-tag-db:
+    image: postgres:alpine3.16
+    
+  commentdb:
+    image: mongo
+    
   hangfiredb:
     image: mongo
     
   identitydb:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    
-  post-in-tag-db:
-    image: postgres:alpine3.16
   
   ##infrastructure section
   rabbitmq:
@@ -174,3 +177,5 @@ volumes:
     name: tag_mysql_data
   post_in_tag_postgres_data:
     name: post_in_tag_postgres_data
+  comment_mongo_data:
+    name: comment_mongo_data
