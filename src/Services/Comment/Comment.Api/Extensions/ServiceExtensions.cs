@@ -1,7 +1,12 @@
+using Comment.Api.GrpcServices;
+using Comment.Api.GrpcServices.Interfaces;
+using Contracts.Commons.Interfaces;
+using Infrastructure.Commons;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MongoDB.Driver;
+using Post.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Settings;
 
@@ -60,6 +65,12 @@ public static class ServiceExtensions
                                    $"{nameof(MongoDbSettings)} is not configured properly");
 
         services.AddSingleton(mongodbSettings);
+        
+        var cacheSettings = configuration.GetSection(nameof(CacheSettings)).Get<CacheSettings>()
+                            ?? throw new ArgumentNullException(
+                                $"{nameof(CacheSettings)} is not configured properly");
+
+        services.AddSingleton(cacheSettings);
     }
 
     private static string GetMongoConnectionString(this IServiceCollection services)
@@ -95,6 +106,9 @@ public static class ServiceExtensions
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
+        services
+            .AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
@@ -136,5 +150,14 @@ public static class ServiceExtensions
 
     private static void AddGrpcConfiguration(this IServiceCollection services)
     {
+        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
+                           throw new ArgumentNullException(
+                               $"{nameof(GrpcSettings)} is not configured properly");
+        
+        services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostUrl));
+
+        services.AddScoped<IPostGrpcService, PostGrpcService>();
+
     }
 }

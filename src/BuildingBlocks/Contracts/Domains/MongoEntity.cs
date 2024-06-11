@@ -7,7 +7,7 @@ public abstract class MongoEntity
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; protected init; } = default!;
+    public string Id { get; set; } = default!;
 
     [BsonElement("createdDate")]
     [BsonDateTimeOptions(Kind = DateTimeKind.Utc)]

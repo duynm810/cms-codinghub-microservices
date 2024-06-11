@@ -1,6 +1,8 @@
+using Comment.Api.GrpcServices.Interfaces;
 using Comment.Api.Persistence;
 using MongoDB.Driver;
 using Shared.Settings;
+using ILogger = Serilog.ILogger;
 
 namespace Comment.Api.Extensions;
 
@@ -16,7 +18,10 @@ public static class HostExtensions
                                   $"{nameof(MongoDbSettings)} is not configured properly");
 
         var mongoClient = services.GetRequiredService<IMongoClient>();
-        new CommentSeedData().SeedDataAsync(mongoClient, mongodbSettings).Wait();
+        var postGrpcService = services.GetRequiredService<IPostGrpcService>();
+        var logger = services.GetRequiredService<ILogger>();
+        
+        new CommentSeedData(postGrpcService, logger).SeedDataAsync(mongoClient, mongodbSettings).Wait();
 
         return host;
     }

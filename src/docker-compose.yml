@@ -117,6 +117,12 @@ services:
       context: .
       dockerfile: Services/PostInTag/PostInTag.Grpc/Dockerfile
       
+  comment.api:
+    image: ${DOCKER_REGISTRY-}comment-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Comment/Comment.Api/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:

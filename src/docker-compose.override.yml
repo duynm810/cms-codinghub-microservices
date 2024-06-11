@@ -315,6 +315,17 @@ services:
     ports:
       - "6013:80"
     restart: always
+    
+  comment.api:
+    container_name: comment.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - commentdb
+    ports:
+      - "6014:80"
+    restart: always
   
   hangfire.api:
     container_name: hangfire.api

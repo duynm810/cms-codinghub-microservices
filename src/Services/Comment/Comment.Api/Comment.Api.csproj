@@ -4,6 +4,7 @@
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +13,7 @@
         <PackageReference Include="AspNetCore.HealthChecks.MongoDb" Version="8.0.1" />
         <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.3"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.63.0"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -19,6 +21,25 @@
       <ProjectReference Include="..\..\..\BuildingBlocks\Infrastructure\Infrastructure.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Logging\Logging.csproj" />
       <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\..\Post\Post.Grpc\Protos\post.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\post.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\..\..\..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

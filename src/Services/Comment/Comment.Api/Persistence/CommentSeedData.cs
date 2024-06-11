@@ -1,12 +1,35 @@
 using Comment.Api.Entities;
+using Comment.Api.GrpcServices.Interfaces;
+using Grpc.Core;
+using MongoDB.Bson;
 using MongoDB.Driver;
+using Polly;
+using Polly.Retry;
 using Shared.Enums;
 using Shared.Settings;
+using ILogger = Serilog.ILogger;
 
 namespace Comment.Api.Persistence;
 
 public class CommentSeedData
 {
+    private readonly IPostGrpcService _postGrpcService;
+    private readonly AsyncRetryPolicy _retryPolicy;
+    private readonly ILogger _logger;
+
+    public CommentSeedData(IPostGrpcService postGrpcService, ILogger logger)
+    {
+        _postGrpcService = postGrpcService;
+        _logger = logger;
+
+        _retryPolicy = Policy.Handle<RpcException>()
+            .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                (exception, timeSpan, retryCount) =>
+                {
+                    _logger.Error($"Retry {retryCount} of EnsureGrpcServicesReadyAsync due to: {exception}.");
+                });
+    }
+
     public async Task SeedDataAsync(IMongoClient mongoClient, MongoDbSettings settings)
     {
         var databaseName = settings.DatabaseName;
@@ -18,98 +41,69 @@ public class CommentSeedData
         {
             return; // Nếu có dữ liệu thì không cần seed thêm
         }
-
-        await commentCollection.InsertManyAsync(GetComments());
-    }
-    
-    private IEnumerable<CommentBase> GetComments()
-    {
-        var postId1 = Guid.NewGuid();
-        var postId2 = Guid.NewGuid();
-        var postId3 = Guid.NewGuid();
         
-        return new List<CommentBase>
+        var postIds = await GetPostIdsAsync();
+        
+        if (postIds == null || postIds.Count == 0)
         {
-            new()
+            throw new Exception("Unable to retrieve posts from Post.GRPC service.");
+        }
+        
+        await commentCollection.InsertManyAsync(GetComments(postIds));
+    }
+
+    private static IEnumerable<CommentBase> GetComments(List<Guid> postIds)
+    {
+        var comments = new List<CommentBase>();
+        var random = new Random();
+
+        foreach (var postId in postIds)
+        {
+            var parentCommentCount = random.Next(1, 3); // 1-2 comments cha
+
+            for (var i = 0; i < parentCommentCount; i++)
             {
-                UserId = Guid.NewGuid(),
-                PostId = postId1,
-                Content = "Đây là một bài viết tuyệt vời!",
-                ParentId = null,
-                Likes = 10,
-                RepliesCount = 2,
-                Status = CommentStatusEnum.Approved
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId1,
-                Content = "Tôi hoàn toàn đồng ý với điều này.",
-                ParentId = null,
-                Likes = 5,
-                RepliesCount = 0,
-                Status = CommentStatusEnum.Pending
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId2,
-                Content = "Quan điểm thú vị.",
-                ParentId = null,
-                Likes = 3,
-                RepliesCount = 1,
-                Status = CommentStatusEnum.Approved
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId3,
-                Content = "Bạn có thể cung cấp thêm chi tiết không?",
-                ParentId = null,
-                Likes = 2,
-                RepliesCount = 1,
-                Status = CommentStatusEnum.Approved
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId2,
-                Content = "Cảm ơn bạn đã chia sẻ!",
-                ParentId = null,
-                Likes = 8,
-                RepliesCount = 3,
-                Status = CommentStatusEnum.Approved
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId3,
-                Content = "Tôi không đồng ý với quan điểm của bạn.",
-                ParentId = null,
-                Likes = 1,
-                RepliesCount = 1,
-                Status = CommentStatusEnum.Approved
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId1,
-                Content = "Đây là spam!",
-                ParentId = null,
-                Likes = 0,
-                RepliesCount = 0,
-                Status = CommentStatusEnum.Spam
-            },
-            new()
-            {
-                UserId = Guid.NewGuid(),
-                PostId = postId2,
-                Content = "Những hiểu biết tuyệt vời!",
-                ParentId = null,
-                Likes = 12,
-                RepliesCount = 4,
-                Status = CommentStatusEnum.Approved
+                var parentCommentId = ObjectId.GenerateNewId().ToString();
+                comments.Add(new CommentBase
+                {
+                    Id = parentCommentId,
+                    UserId = Guid.NewGuid(),
+                    PostId = postId,
+                    Content = $"Đây là bình luận cha {i + 1} cho bài viết {postId}",
+                    ParentId = null,
+                    Likes = random.Next(0, 20),
+                    RepliesCount = 1,
+                    Status = CommentStatusEnum.Approved
+                });
+
+                comments.Add(new CommentBase
+                {
+                    Id = ObjectId.GenerateNewId().ToString(),
+                    UserId = Guid.NewGuid(),
+                    PostId = postId,
+                    Content = $"Đây là bình luận con cho bình luận cha {i + 1} của bài viết {postId}",
+                    ParentId = parentCommentId,
+                    Likes = random.Next(0, 20),
+                    RepliesCount = 0,
+                    Status = CommentStatusEnum.Approved
+                });
             }
-        };
+        }
+
+        return comments;
+    }
+
+    private async Task<List<Guid>> GetPostIdsAsync()
+    {
+        return await _retryPolicy.ExecuteAsync(async () =>
+        {
+            _logger.Information("Calling post gRPC service to get posts.");
+
+            var posts = await _postGrpcService.GetTop10Posts();
+
+            _logger.Information("Successfully retrieved posts from post gRPC service.");
+
+            return posts.Select(p => p.Id).ToList();
+        });
     }
 }
