@@ -1,5 +1,7 @@
 using Contracts.Domains;
 using Infrastructure.Attributes;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using Shared.Enums;
 
 namespace Comment.Api.Entities;
@@ -10,11 +12,13 @@ public class CommentBase : MongoEntity
     /// <summary>
     /// ID người dùng
     /// </summary>
+    [BsonRepresentation(BsonType.String)]
     public required Guid UserId { get; set; }
 
     /// <summary>
     /// ID bài viết
     /// </summary>
+    [BsonRepresentation(BsonType.String)]
     public required Guid PostId { get; set; }
 
     /// <summary>

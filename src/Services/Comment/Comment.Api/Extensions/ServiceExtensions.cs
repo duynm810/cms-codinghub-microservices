@@ -1,10 +1,17 @@
 using Comment.Api.GrpcClients;
 using Comment.Api.GrpcClients.Interfaces;
+using Comment.Api.Repositories;
+using Comment.Api.Repositories.Interfaces;
+using Comment.Api.Services;
+using Comment.Api.Services.Interfaces;
 using Contracts.Commons.Interfaces;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Post.Grpc.Protos;
 using Shared.Configurations;
@@ -92,13 +99,11 @@ public static class ServiceExtensions
         services.AddSingleton<IMongoClient>(new MongoClient(GetMongoConnectionString(services)))
             .AddScoped(x => x.GetService<IMongoClient>()?.StartSession() 
                             ?? throw new ArgumentNullException(nameof(IMongoClient), "Mongo client instance is null"));
+        
+        // Register the GuidSerializer configuration for MongoDB (Đăng ký cấu hình GuidSerializer cho MongoDB)
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
     }
-
-    private static void ConfigureAutoMapper(this IServiceCollection services)
-    {
-        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-    }
-
+    
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
@@ -107,6 +112,8 @@ public static class ServiceExtensions
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services
+            .AddScoped<ICommentRepository, CommentRepository>()
+            .AddScoped<ICommentService, CommentService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
     }
