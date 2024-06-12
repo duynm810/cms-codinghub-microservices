@@ -9,8 +9,8 @@ using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Post.Grpc.Protos;
-using PostInTag.Api.GrpcServices;
-using PostInTag.Api.GrpcServices.Interfaces;
+using PostInTag.Api.GrpcClients;
+using PostInTag.Api.GrpcClients.Interfaces;
 using PostInTag.Api.Persistence;
 using PostInTag.Api.Repositories;
 using PostInTag.Api.Repositories.Interfaces;
@@ -163,16 +163,16 @@ public static class ServiceExtensions
         services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostUrl));
 
-        services.AddScoped<IPostGrpcService, PostGrpcService>();
+        services.AddScoped<IPostGrpcClient, PostGrpcClient>();
 
         services.AddGrpcClient<TagProtoService.TagProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.TagUrl));
 
-        services.AddScoped<ITagGrpcService, TagGrpcService>();
+        services.AddScoped<ITagGrpcClient, TagGrpcClient>();
 
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
 
-        services.AddScoped<ICategoryGrpcService, CategoryGrpcService>();
+        services.AddScoped<ICategoryGrpcClient, CategoryGrpcClient>();
     }
 }

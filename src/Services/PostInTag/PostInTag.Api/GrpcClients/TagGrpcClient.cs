@@ -1,18 +1,18 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
-using PostInTag.Api.GrpcServices.Interfaces;
+using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Tag.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
-namespace PostInTag.Api.GrpcServices;
+namespace PostInTag.Api.GrpcClients;
 
-public class TagGrpcService(
+public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
-    ILogger logger) : ITagGrpcService
+    ILogger logger) : ITagGrpcClient
 {
     public async Task<TagDto?> GetTagBySlug(string slug)
     {

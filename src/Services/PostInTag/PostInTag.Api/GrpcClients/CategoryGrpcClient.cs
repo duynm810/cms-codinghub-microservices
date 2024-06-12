@@ -1,18 +1,18 @@
 using AutoMapper;
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
-using PostInTag.Api.GrpcServices.Interfaces;
+using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Dtos.Category;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
-namespace PostInTag.Api.GrpcServices;
+namespace PostInTag.Api.GrpcClients;
 
-public class CategoryGrpcService(
+public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
-    ILogger logger) : ICategoryGrpcService
+    ILogger logger) : ICategoryGrpcClient
 {
     public async Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids)
     {

@@ -1,8 +1,8 @@
 using Shared.Dtos.Category;
 
-namespace PostInTag.Api.GrpcServices.Interfaces;
+namespace PostInTag.Api.GrpcClients.Interfaces;
 
-public interface ICategoryGrpcService
+public interface ICategoryGrpcClient
 {
     Task<IEnumerable<CategoryDto>> GetCategoriesByIds(IEnumerable<long> ids);
 }

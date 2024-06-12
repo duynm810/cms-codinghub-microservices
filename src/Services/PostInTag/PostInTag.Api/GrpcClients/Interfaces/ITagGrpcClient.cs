@@ -1,8 +1,8 @@
 using Shared.Dtos.Tag;
 
-namespace PostInTag.Api.GrpcServices.Interfaces;
+namespace PostInTag.Api.GrpcClients.Interfaces;
 
-public interface ITagGrpcService
+public interface ITagGrpcClient
 {
     Task<TagDto?> GetTagBySlug(string slug);
 
