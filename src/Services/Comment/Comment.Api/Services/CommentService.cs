@@ -50,7 +50,10 @@ public class CommentService(ICommentRepository commentRepository, IMapper mapper
             logger.Information("BEGIN {MethodName} - Retrieving comment with post ID: {PostId}", methodName, postId);
 
             var comments = await commentRepository.GetCommentsByPostId(postId);
-            var data = mapper.Map<IEnumerable<CommentDto>>(comments);
+            var commentList = mapper.Map<IEnumerable<CommentDto>>(comments);
+            
+            var data = BuildCommentTree(commentList.ToList());
+            
             result.Success(data);
             
             logger.Information("END {MethodName} - Successfully retrieved comment with post ID: {PostId}", methodName,
@@ -64,5 +67,26 @@ public class CommentService(ICommentRepository commentRepository, IMapper mapper
         }
 
         return result;
+    }
+    
+    private List<CommentDto> BuildCommentTree(List<CommentDto> comments)
+    {
+        var commentDictionary = comments.ToDictionary(c => c.Id);
+        var treeComments = new List<CommentDto>();
+
+        foreach (var comment in comments)
+        {
+            if (comment.ParentId == null)
+            {
+                treeComments.Add(comment);
+            }
+            else if (commentDictionary.TryGetValue(comment.ParentId, out var parent))
+            {
+                parent.Replies ??= [];
+                parent.Replies.Add(comment);
+            }
+        }
+
+        return treeComments;
     }
 }

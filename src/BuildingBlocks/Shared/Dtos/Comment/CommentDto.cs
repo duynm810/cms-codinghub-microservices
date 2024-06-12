@@ -19,4 +19,6 @@ public class CommentDto
     public int RepliesCount { get; set; }
 
     public CommentStatusEnum Status { get; set; }
+
+    public List<CommentDto>? Replies { get; set; }
 }
