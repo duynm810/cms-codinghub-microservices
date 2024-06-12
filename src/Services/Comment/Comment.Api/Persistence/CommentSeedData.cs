@@ -1,5 +1,5 @@
 using Comment.Api.Entities;
-using Comment.Api.GrpcServices.Interfaces;
+using Comment.Api.GrpcClients.Interfaces;
 using Grpc.Core;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,13 +13,13 @@ namespace Comment.Api.Persistence;
 
 public class CommentSeedData
 {
-    private readonly IPostGrpcService _postGrpcService;
+    private readonly IPostGrpcClient _postGrpcClient;
     private readonly AsyncRetryPolicy _retryPolicy;
     private readonly ILogger _logger;
 
-    public CommentSeedData(IPostGrpcService postGrpcService, ILogger logger)
+    public CommentSeedData(IPostGrpcClient postGrpcClient, ILogger logger)
     {
-        _postGrpcService = postGrpcService;
+        _postGrpcClient = postGrpcClient;
         _logger = logger;
 
         _retryPolicy = Policy.Handle<RpcException>()
@@ -99,7 +99,7 @@ public class CommentSeedData
         {
             _logger.Information("Calling post gRPC service to get posts.");
 
-            var posts = await _postGrpcService.GetTop10Posts();
+            var posts = await _postGrpcClient.GetTop10Posts();
 
             _logger.Information("Successfully retrieved posts from post gRPC service.");
 

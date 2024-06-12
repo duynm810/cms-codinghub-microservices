@@ -1,5 +1,5 @@
-using Comment.Api.GrpcServices;
-using Comment.Api.GrpcServices.Interfaces;
+using Comment.Api.GrpcClients;
+using Comment.Api.GrpcClients.Interfaces;
 using Contracts.Commons.Interfaces;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
@@ -157,7 +157,7 @@ public static class ServiceExtensions
         services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostUrl));
 
-        services.AddScoped<IPostGrpcService, PostGrpcService>();
+        services.AddScoped<IPostGrpcClient, PostGrpcClient>();
 
     }
 }

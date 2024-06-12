@@ -1,19 +1,19 @@
 using AutoMapper;
-using Comment.Api.GrpcServices.Interfaces;
+using Comment.Api.GrpcClients.Interfaces;
 using Contracts.Commons.Interfaces;
 using Post.Grpc.Protos;
 using Shared.Dtos.Post;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
-namespace Comment.Api.GrpcServices;
+namespace Comment.Api.GrpcClients;
 
-public class PostGrpcService(
+public class PostGrpcClient(
     PostProtoService.PostProtoServiceClient postProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
-    : IPostGrpcService
+    : IPostGrpcClient
 {
     public async Task<IEnumerable<PostDto>> GetTop10Posts()
     {

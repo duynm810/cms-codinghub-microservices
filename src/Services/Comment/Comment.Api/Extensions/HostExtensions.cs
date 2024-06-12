@@ -1,4 +1,4 @@
-using Comment.Api.GrpcServices.Interfaces;
+using Comment.Api.GrpcClients.Interfaces;
 using Comment.Api.Persistence;
 using MongoDB.Driver;
 using Shared.Settings;
@@ -18,7 +18,7 @@ public static class HostExtensions
                                   $"{nameof(MongoDbSettings)} is not configured properly");
 
         var mongoClient = services.GetRequiredService<IMongoClient>();
-        var postGrpcService = services.GetRequiredService<IPostGrpcService>();
+        var postGrpcService = services.GetRequiredService<IPostGrpcClient>();
         var logger = services.GetRequiredService<ILogger>();
         
         new CommentSeedData(postGrpcService, logger).SeedDataAsync(mongoClient, mongodbSettings).Wait();
