@@ -176,6 +176,7 @@ services:
       - post-in-series.api
       - tag.api
       - hangfire.api
+      - comment.api
     ports:
       - "6001:80"
     restart: always

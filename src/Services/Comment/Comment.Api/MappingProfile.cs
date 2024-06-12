@@ -1,5 +1,7 @@
 using AutoMapper;
+using Comment.Api.Entities;
 using Post.Grpc.Protos;
+using Shared.Dtos.Comment;
 using Shared.Dtos.Post;
 
 namespace Comment.Api;
@@ -8,7 +10,14 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        ConfigureCommentMappings();
         ConfigurePostGrpcMappings();
+    }
+
+    private void ConfigureCommentMappings()
+    {
+        CreateMap<CommentBase, CommentDto>().ReverseMap();
+        CreateMap<CommentBase, CreateCommentDto>().ReverseMap();
     }
 
     private void ConfigurePostGrpcMappings()
