@@ -1,11 +1,11 @@
-using Category.Api.GrpcServices.Interfaces;
+using Category.Api.GrpcClients.Interfaces;
 using Post.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
-namespace Category.Api.GrpcServices;
+namespace Category.Api.GrpcClients;
 
-public class PostGrpcService(PostProtoService.PostProtoServiceClient postProtoServiceClient, ILogger logger)
-    : IPostGrpcService
+public class PostGrpcClient(PostProtoService.PostProtoServiceClient postProtoServiceClient, ILogger logger)
+    : IPostGrpcClient
 {
     public async Task<bool> HasPostsInCategory(long categoryId)
     {

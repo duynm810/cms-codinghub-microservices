@@ -1,6 +1,6 @@
 using AutoMapper;
  using Category.Api.Entities;
- using Category.Api.GrpcServices.Interfaces;
+ using Category.Api.GrpcClients.Interfaces;
  using Category.Api.Repositories.Interfaces;
  using Category.Api.Services.Interfaces;
  using Contracts.Commons.Interfaces;
@@ -15,7 +15,7 @@ using AutoMapper;
  
  public class CategoryService(
      ICategoryRepository categoryRepository,
-     IPostGrpcService postGrpcService,
+     IPostGrpcClient postGrpcClient,
      ICacheService cacheService,
      IMapper mapper,
      ILogger logger) : ICategoryService
@@ -129,7 +129,7 @@ using AutoMapper;
                      return result;
                  }
  
-                 var existedPost = await postGrpcService.HasPostsInCategory(id);
+                 var existedPost = await postGrpcClient.HasPostsInCategory(id);
                  if (existedPost)
                  {
                      result.Messages.Add(ErrorMessagesConsts.Category.CategoryContainsPost);

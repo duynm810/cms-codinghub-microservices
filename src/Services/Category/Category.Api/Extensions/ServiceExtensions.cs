@@ -1,5 +1,5 @@
-using Category.Api.GrpcServices;
-using Category.Api.GrpcServices.Interfaces;
+using Category.Api.GrpcClients;
+using Category.Api.GrpcClients.Interfaces;
 using Category.Api.Persistence;
 using Category.Api.Repositories;
 using Category.Api.Repositories.Interfaces;
@@ -160,6 +160,6 @@ public static class ServiceExtensions
         services.AddGrpcClient<PostProtoService.PostProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostUrl));
 
-        services.AddScoped<IPostGrpcService, PostGrpcService>();
+        services.AddScoped<IPostGrpcClient, PostGrpcClient>();
     }
 }
