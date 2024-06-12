@@ -17,6 +17,7 @@ public class MappingProfile : Profile
     private void ConfigureCommentMappings()
     {
         CreateMap<CommentBase, CommentDto>().ReverseMap();
+        CreateMap<CommentBase, CreateCommentDto>().ReverseMap();
     }
 
     private void ConfigurePostGrpcMappings()

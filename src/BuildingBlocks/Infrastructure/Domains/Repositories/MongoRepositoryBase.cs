@@ -20,6 +20,13 @@ public class MongoRepositoryBase<T>(IMongoClient client, MongoDbSettings setting
             .WithReadPreference(readPreference ?? ReadPreference.Primary)
             .GetCollection<T>(GetCollectionName());
     }
+    
+    public async Task<T> FindByIdAsync(string id, ReadPreference? readPreference = null)
+    {
+        var filter = Builders<T>.Filter.Eq("Id", id);
+        return await Database.WithReadPreference(readPreference ?? ReadPreference.Primary)
+            .GetCollection<T>(GetCollectionName()).Find(filter).FirstOrDefaultAsync();
+    }
 
     public async Task CreateAsync(T entity) => await Collection.InsertOneAsync(entity);
 

@@ -60,6 +60,13 @@ public static class ErrorMessagesConsts
         public const string PostNotFoundInTag = "No posts found in this tag";
     }
 
+    public static class Comment
+    {
+        public const string ParentIdNotFound = "Parent Id not found";
+        public const string CommentCreationFailed = "Failed to create comment";
+        public const string RepliesCountUpdateFailed = "Failed to update replies count";
+    }
+
     public static class Identity
     {
         public static class Permission
