@@ -1,8 +1,8 @@
 using Shared.Dtos.Series;
 
-namespace PostInSeries.Api.GrpcServices.Interfaces;
+namespace PostInSeries.Api.GrpcClients.Interfaces;
 
-public interface ISeriesGrpcService
+public interface ISeriesGrpcClient
 {
     Task<SeriesDto?> GetSeriesById(Guid id);
 

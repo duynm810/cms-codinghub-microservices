@@ -1,19 +1,19 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
 using Post.Grpc.Protos;
-using PostInSeries.Api.GrpcServices.Interfaces;
+using PostInSeries.Api.GrpcClients.Interfaces;
 using Shared.Dtos.PostInSeries;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
-namespace PostInSeries.Api.GrpcServices;
+namespace PostInSeries.Api.GrpcClients;
 
-public class PostGrpcService(
+public class PostGrpcClient(
     PostProtoService.PostProtoServiceClient postProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
-    : IPostGrpcService
+    : IPostGrpcClient
 {
     public async Task<IEnumerable<PostInSeriesDto>> GetPostsByIds(IEnumerable<Guid> ids)
     {

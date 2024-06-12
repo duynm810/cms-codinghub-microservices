@@ -1,8 +1,8 @@
 using Shared.Dtos.PostInSeries;
 
-namespace PostInSeries.Api.GrpcServices.Interfaces;
+namespace PostInSeries.Api.GrpcClients.Interfaces;
 
-public interface IPostGrpcService
+public interface IPostGrpcClient
 {
     Task<IEnumerable<PostInSeriesDto>> GetPostsByIds(IEnumerable<Guid> ids);
 }
