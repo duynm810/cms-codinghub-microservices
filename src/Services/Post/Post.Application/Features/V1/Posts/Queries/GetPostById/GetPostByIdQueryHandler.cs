@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
@@ -18,7 +18,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostById;
 
 public class GetPostByIdQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -53,7 +53,7 @@ public class GetPostByIdQueryHandler(
                 return result;
             }
 
-            var category = await categoryGrpcService.GetCategoryById(post.CategoryId);
+            var category = await categoryGrpcClient.GetCategoryById(post.CategoryId);
             if (category == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);

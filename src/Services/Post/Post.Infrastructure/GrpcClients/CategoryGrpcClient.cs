@@ -2,18 +2,18 @@ using AutoMapper;
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Google.Protobuf.WellKnownTypes;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Serilog;
 using Shared.Dtos.Category;
 using Shared.Helpers;
 
-namespace Post.Infrastructure.GrpcServices;
+namespace Post.Infrastructure.GrpcClients;
 
-public class CategoryGrpcService(
+public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
-    ILogger logger) : ICategoryGrpcService
+    ILogger logger) : ICategoryGrpcClient
 {
     public async Task<CategoryDto?> GetCategoryById(long id)
     {

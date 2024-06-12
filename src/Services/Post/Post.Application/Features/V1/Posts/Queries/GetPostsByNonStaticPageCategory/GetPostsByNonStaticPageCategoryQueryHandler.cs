@@ -2,7 +2,7 @@ using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Models;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
@@ -14,7 +14,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCate
 
 public class GetPostsByNonStaticPageCategoryQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     ILogger logger)
     : IRequestHandler<GetPostsByNonStaticPageCategoryQuery, ApiResult<IEnumerable<CategoryWithPostsModel>>>
@@ -41,7 +41,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                 return result;
             }
 
-            var nonStaticPageCategories = await categoryGrpcService.GetAllNonStaticPageCategories();
+            var nonStaticPageCategories = await categoryGrpcClient.GetAllNonStaticPageCategories();
 
             var data = new List<CategoryWithPostsModel>();
 

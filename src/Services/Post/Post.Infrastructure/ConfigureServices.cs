@@ -8,11 +8,11 @@ using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Interfaces;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
-using Post.Infrastructure.GrpcServices;
+using Post.Infrastructure.GrpcClients;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
@@ -89,9 +89,9 @@ public static class ConfigureServices
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
-            .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
-            .AddScoped<ITagGrpcService, TagGrpcService>()
-            .AddScoped<IPostInTagGrpcService, PostInTagGrpcService>()
+            .AddScoped<ICategoryGrpcClient, CategoryGrpcClient>()
+            .AddScoped<ITagGrpcClient, TagGrpcClient>()
+            .AddScoped<IPostInTagGrpcClient, PostInTagGrpcClient>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();

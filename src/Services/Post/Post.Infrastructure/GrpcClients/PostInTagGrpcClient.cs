@@ -1,10 +1,10 @@
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using PostInTag.Grpc.Protos;
 using Serilog;
 
-namespace Post.Infrastructure.GrpcServices;
+namespace Post.Infrastructure.GrpcClients;
 
-public class PostInTagGrpcService(PostInTagService.PostInTagServiceClient postInTagServiceClient, ILogger logger) : IPostInTagGrpcService
+public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ILogger logger) : IPostInTagGrpcClient
 {
     public async Task<IEnumerable<Guid>> GetTagIdsByPostIdAsync(Guid postId)
     {

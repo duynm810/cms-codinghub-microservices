@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Helpers;
@@ -14,7 +14,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 
 public class GetLatestPostsPagingQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetLatestPostsPagingQuery, ApiResult<PagedResponse<PostModel>>>
@@ -48,7 +48,7 @@ public class GetLatestPostsPagingQueryHandler(
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
                 var data = mappingHelper.MapPostsWithCategories(posts, categories);
                 result.Success(data);

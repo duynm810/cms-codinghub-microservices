@@ -1,8 +1,8 @@
 using Shared.Dtos.Category;
 
-namespace Post.Domain.GrpcServices;
+namespace Post.Domain.GrpcClients;
 
-public interface ICategoryGrpcService
+public interface ICategoryGrpcClient
 {
     Task<CategoryDto?> GetCategoryById(long id);
 

@@ -1,8 +1,8 @@
 using Shared.Dtos.Tag;
 
-namespace Post.Domain.GrpcServices;
+namespace Post.Domain.GrpcClients;
 
-public interface ITagGrpcService
+public interface ITagGrpcClient
 {
     Task<IEnumerable<TagDto>> GetTagsByIds(IEnumerable<Guid> ids);
     

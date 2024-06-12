@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
@@ -15,9 +15,9 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
-    ITagGrpcService tagGrpcService,
-    IPostInTagGrpcService postInTagGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
+    ITagGrpcClient tagGrpcClient,
+    IPostInTagGrpcClient postInTagGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -54,7 +54,7 @@ public class GetPostBySlugQueryHandler(
             }
 
             // Get category and related posts at the same time (Lấy danh mục và bài viết liên quan đồng thời)
-            var categoryTask = categoryGrpcService.GetCategoryById(post.CategoryId);
+            var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
             var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
 
             await Task.WhenAll(categoryTask, relatedPostsTask);
@@ -73,11 +73,11 @@ public class GetPostBySlugQueryHandler(
             };
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
-            var tagIds = await postInTagGrpcService.GetTagIdsByPostIdAsync(post.Id);
+            var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
             var tagIdList = tagIds.ToList();
             if (tagIdList.IsNotNullOrEmpty())
             {
-                var tagsInfo = await tagGrpcService.GetTagsByIds(tagIdList);
+                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
                 var tagList = tagsInfo.ToList();
                 if (tagList.IsNotNullOrEmpty())
                 {
@@ -89,7 +89,7 @@ public class GetPostBySlugQueryHandler(
             if (relatedPosts.IsNotNullOrEmpty())
             {
                 var categoryIds = relatedPosts.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
                 data.RelatedPosts = mappingHelper.MapPostsWithCategories(relatedPosts, categories);
             }

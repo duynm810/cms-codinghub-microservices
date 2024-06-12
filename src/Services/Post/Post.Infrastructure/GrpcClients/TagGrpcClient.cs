@@ -1,18 +1,18 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Serilog;
 using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Tag.Grpc.Protos;
 
-namespace Post.Infrastructure.GrpcServices;
+namespace Post.Infrastructure.GrpcClients;
 
-public class TagGrpcService(
+public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
     ICacheService cacheService,
     IMapper mapper,
-    ILogger logger) : ITagGrpcService
+    ILogger logger) : ITagGrpcClient
 {
     public async Task<IEnumerable<TagDto>> GetTagsByIds(IEnumerable<Guid> ids)
     {
