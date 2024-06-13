@@ -13,6 +13,7 @@ public class PostsController(
     ICategoryApiClient categoryApiClient,
     ISeriesApiClient seriesApiClient,
     ITagApiClient tagApiClient,
+    ICommentApiClient commentApiClient,
     PaginationSettings paginationSettings,
     IErrorService errorService,
     ILogger logger)
@@ -61,20 +62,27 @@ public class PostsController(
 
         try
         {
-            var posts = await postApiClient.GetPostBySlug(slug, 2);
-
-            if (posts is { IsSuccess: true, Data: not null })
+            var post = await postApiClient.GetPostBySlug(slug, 2);
+            
+            if (post is { IsSuccess: true, Data: not null })
             {
+                var comments = await commentApiClient.GetCommentsByPostId(post.Data.DetailPost.Id);
+                
                 var items = new PostDetailViewModel()
                 {
                     MainClass = "bg-grey pb-30",
-                    Post = posts.Data
+                    Post = post.Data
                 };
+                
+                if (comments is { IsSuccess: true, Data: not null })
+                {
+                    items.Comments = comments.Data;
+                }
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+            return HandleError((HttpStatusCode)post.StatusCode, methodName);
         }
         catch (Exception e)
         {

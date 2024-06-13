@@ -77,7 +77,8 @@ public static class ServiceExtensions
             .AddScoped<ICategoryApiClient, CategoryApiClient>()
             .AddScoped<IPostApiClient, PostApiClient>()
             .AddScoped<ISeriesApiClient, SeriesApiClient>()
-            .AddScoped<ITagApiClient, TagApiClient>();
+            .AddScoped<ITagApiClient, TagApiClient>()
+            .AddScoped<ICommentApiClient, CommentApiClient>();
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
