@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Comment;
 using Shared.Settings;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Posts;
@@ -66,19 +67,12 @@ public class PostsController(
             
             if (post is { IsSuccess: true, Data: not null })
             {
-                var comments = await commentApiClient.GetCommentsByPostId(post.Data.DetailPost.Id);
-                
                 var items = new PostDetailViewModel()
                 {
                     MainClass = "bg-grey pb-30",
                     Post = post.Data
                 };
                 
-                if (comments is { IsSuccess: true, Data: not null })
-                {
-                    items.Comments = comments.Data;
-                }
-
                 return View(items);
             }
 
@@ -189,5 +183,19 @@ public class PostsController(
         {
             return HandleException(e, methodName);
         }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCommentsByPostId(Guid postId)
+    {
+        var comments = await commentApiClient.GetCommentsByPostId(postId);
+        return Ok(new { data = comments.Data });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
+    {
+        var newComment = await commentApiClient.CreateComment(comment);
+        return Ok(new { data = newComment });
     }
 }

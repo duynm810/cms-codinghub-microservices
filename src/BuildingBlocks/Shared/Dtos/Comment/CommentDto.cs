@@ -17,6 +17,8 @@ public class CommentDto
     public int? Likes { get; set; }
 
     public int RepliesCount { get; set; }
+    
+    public DateTime CreatedDate { get; set; }
 
     public CommentStatusEnum Status { get; set; }
 

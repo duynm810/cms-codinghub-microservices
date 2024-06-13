@@ -10,4 +10,9 @@ public class CommentApiClient(IBaseApiClient baseApiClient) : ICommentApiClient
     {
         return await baseApiClient.GetListAsync<CommentDto>($"/comments/by-post/{postId}");
     }
+
+    public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment)
+    {
+        return await baseApiClient.PostAsync<CreateCommentDto, CommentDto>($"/comments", comment);
+    }
 }
