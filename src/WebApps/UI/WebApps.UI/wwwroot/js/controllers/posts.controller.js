@@ -3,7 +3,6 @@ const postsController = function () {
         const postId = $('#hid_post_id').val();
         console.log('Initializing postsController with postId:', postId); // Kiểm tra postId
         loadComments(postId);
-        registerEvents();
     }
 
     function loadComments(id) {
@@ -11,16 +10,26 @@ const postsController = function () {
             if (xhr.status === 200) {
                 const template = $('#tmpl_comments').html();
                 const childrenTemplate = $('#tmpl_children_comments').html();
-                if (response) {
+                
+                if (!template || !childrenTemplate) {
+                    console.error('Templates tmpl_comments or tmpl_children_comments not found');
+                    return;
+                }
+                
+                if (response && response.data && response.data.length > 0) {
                     let html = '';
+                    
                     $.each(response.data, function (index, item) {
                         let childrenHtml = '';
-                        if (item.Replies && item.Replies.length > 0) {
-                            $.each(item.Replies, function (childIndex, childItem) {
+                        
+                        if (item.replies && item.replies.length > 0) {
+                            console.log('Item has replies:', item.replies); // Log dữ liệu replies
+                            
+                            $.each(item.replies, function (childIndex, childItem) {
                                 childrenHtml += Mustache.render(childrenTemplate, {
                                     Id: childItem.id,
                                     Content: childItem.content,
-                                    CreatedDate: formatRelativeTime(childItem.createDate),
+                                    CreatedDate: formatRelativeTime(childItem.createdDate),
                                     UserId: childItem.userId
                                 });
                             });
@@ -29,7 +38,7 @@ const postsController = function () {
                             childrenHtml: childrenHtml,
                             Id: item.id,
                             Content: item.content,
-                            CreatedDate: formatRelativeTime(item.createDate),
+                            CreatedDate: formatRelativeTime(item.createdDate),
                             UserId: item.userId
                         });
                     });
