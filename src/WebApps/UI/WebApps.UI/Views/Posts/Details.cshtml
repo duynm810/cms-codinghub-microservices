@@ -6,6 +6,18 @@
     var categoryUrl = "/category/" + detail.CategorySlug;
 }
 
+@section scripts
+{
+    <script src="~/lib/mustache.js/mustache.min.js"></script>
+    <script src="~/js/controllers/posts.controller.js" asp-append-version="true"></script>
+    <script>
+        let controller = new postsController();
+        controller.initialize();
+    </script>
+}
+
+<input type="hidden" id="hid_post_id" value="@detail.Id"/>
+
 <div class="container single-content">
 <div class="entry-header pt-80 pb-30 mb-20">
     <div class="row">
@@ -46,6 +58,7 @@
 </div>
 <!--end single header-->
 <!--figure-->
+
 <article class="entry-wraper mb-50">
     <div class="excerpt mb-30">
         <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>
@@ -226,7 +239,15 @@
     @await Html.PartialAsync("Partials/Posts/_MorePosts")
 
     <!--Comments-->
-    @await Html.PartialAsync("Partials/Posts/_Comments")
+    <div class="comments-area">
+        <div class="widget-header-2 position-relative mb-30">
+            <h5 class="mt-5 mb-30">Comments</h5>
+        </div>
+        <ul class="comments" id="comment_list">
+            <!-- comment item sẽ được render bởi JavaScript -->
+        </ul>
+    </div>
+    
 </article>
 </div>
 <!--container-->
