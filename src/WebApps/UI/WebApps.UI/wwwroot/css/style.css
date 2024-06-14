@@ -502,20 +502,25 @@ blockquote ol:last-child{margin-bottom:0;}
 .comments-area .date{font-size:14px;color:#999999;margin-bottom:0;margin-left:20px;}
 .comments-area .comment{margin-bottom:10px;color:#777777;font-size:15px;}
 .comments-area .btn-reply{background-color:transparent;color:#888888;font-size:14px;display:block;font-weight:400;border-bottom:1px solid rgb(225,225,225);font-style:italic;}
-.comment-form{padding-top:45px;margin-top:50px;margin-bottom:20px;}
-.form-group{margin-bottom:1rem;}
-.form-group textarea{min-height: 200px;}
+/*.comment-form{padding-top:45px;margin-top:50px;margin-bottom:20px;}*/
+.comment-form{margin-top:30px;}
+/*.form-group{margin-bottom:1rem;}*/
+.form-group{margin-bottom:1rem;display: flex;align-items: center;}
+/*.form-group textarea{min-height: 200px;}*/
+.form-group textarea{min-height: 60px;}
 .comment-form h4{margin-bottom:40px;font-size:18px;line-height:22px;color:#2a2a2a;}
 .comment-form .name{padding-left:0px;}
 .form-control{border:1px solid rgb(225,225,225);border-radius:30px;height:48px;padding-left:18px;font-size:14px;background:transparent;background: #fff}
-textarea.form-control {border-radius: 10px}
+/*textarea.form-control {border-radius: 10px}*/
+textarea.form-control {min-height: 60px;border-radius: 10px;flex-grow: 1;}
 .form-control:focus{outline:0;box-shadow:none;}
 .form-control::placeholder{font-weight:300;color:#999999;}
 .form-control::placeholder{color:#777777;}
 .custom_select{position:relative;width:100%;}
 .custom_select .nice-select{width:100%;margin-bottom:1rem;}
 .nice-select .list{width:100%;}
-.comment-form textarea{padding-top:18px;border-radius:10px;height:100%!important;background: #fff}
+/*.comment-form textarea{padding-top:18px;border-radius:10px;height:100%!important;background: #fff}*/
+.comment-form textarea{padding-top:18px;border-radius:10px;background: #fff}
 .comment-form::-webkit-input-placeholder{	/* Chrome/Opera/Safari */
 font-size:13px;color:#777;}
 .comment-form::-moz-placeholder{	/* Firefox 19+ */
