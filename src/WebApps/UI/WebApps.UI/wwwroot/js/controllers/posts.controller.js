@@ -135,33 +135,20 @@ const postsController = function () {
             });
         });
     }
-    
-    function formatRelativeTime(fromDate) {
-        if (fromDate === undefined)
-            fromDate = new Date();
-        if (!(fromDate instanceof Date))
-            fromDate = new Date(fromDate);
 
-        const msPerMinute = 60 * 1000;
-        const msPerHour = msPerMinute * 60;
-        const msPerDay = msPerHour * 24;
-        const msPerMonth = msPerDay * 30;
-        const msPerYear = msPerDay * 365;
-        const elapsed = new Date() - fromDate;
-
-        if (elapsed < msPerMinute) {
-            return Math.round(elapsed / 1000) + ' giây trước';
-        } else if (elapsed < msPerHour) {
-            return Math.round(elapsed / msPerMinute) + ' phút trước';
-        } else if (elapsed < msPerDay) {
-            return Math.round(elapsed / msPerHour) + ' giờ trước';
-        } else if (elapsed < msPerMonth) {
-            return 'approximately ' + Math.round(elapsed / msPerDay) + ' ngày trước';
-        } else if (elapsed < msPerYear) {
-            return 'approximately ' + Math.round(elapsed / msPerMonth) + ' tháng trước';
-        } else {
-            return 'approximately ' + Math.round(elapsed / msPerYear) + ' năm trước';
+    function formatRelativeTime(date) {
+        const now = new Date();
+        const diff = Math.abs(now - date);
+        const minutes = Math.floor(diff / 60000);
+        if (minutes < 60) {
+            return `${minutes} phút trước`;
         }
+        const hours = Math.floor(minutes / 60);
+        if (hours < 24) {
+            return `${hours} giờ trước`;
+        }
+        const days = Math.floor(hours / 24);
+        return `${days} ngày trước`;
     }
 
     function generateCommentHtml(id, content, createdDate, userId, childrenHtml = '') {
