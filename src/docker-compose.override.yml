@@ -336,7 +336,7 @@ services:
     depends_on:
       - hangfiredb
     ports:
-      - "6015:80"
+      - "6018:80"
     restart: always
        
   media.api:
@@ -345,7 +345,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6016:80"
+      - "6019:80"
     restart: always
     volumes:
       - ./wwwroot:/app/wwwroot

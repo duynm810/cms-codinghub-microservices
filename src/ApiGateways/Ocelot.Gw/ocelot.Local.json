@@ -807,7 +807,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6016
+          "Port": 6019
         }
       ],
       "AuthenticationOptions": {
