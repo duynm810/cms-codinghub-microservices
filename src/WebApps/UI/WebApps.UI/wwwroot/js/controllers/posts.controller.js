@@ -153,50 +153,56 @@ const postsController = function () {
 
     function generateCommentHtml(id, content, createdDate, userId, childrenHtml = '') {
         return `
-        <div class="single-comment justify-content-between d-flex">
-            <div class="user justify-content-between d-flex">
-                <div class="thumb">
-                    <img src="../imgs/authors/author-2.jpg" alt="">
-                </div>
-                <div class="desc">
-                    <p class="comment">${content}</p>
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <h5><a href="#">${userId}</a></h5>
-                            <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
+            <li class="comment-item">
+                <div class="single-comment justify-content-between d-flex">
+                    <div class="user justify-content-between d-flex">
+                        <div class="thumb">
+                            <img src="../imgs/authors/author-2.jpg" alt="">
                         </div>
-                        <div class="reply-btn">
-                            <a href="#" class="btn-reply comment-reply-link" data-commentid="${id}">Reply</a>
+                        <div class="desc">
+                            <p class="comment">${content}</p>
+                            <div class="d-flex justify-content-between align-items-center info-row">
+                                <div class="d-flex align-items-center">
+                                    <h5><a href="#">${userId}</a></h5>
+                                    <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
+                                </div>
+                                <div class="reply-btn">
+                                    <a href="#" class="btn-reply comment-reply-link" data-commentid="${id}">
+                                        <i class="fas fa-reply"></i>
+                                    </a>
+                                </div>
+                            </div>
+                            <div id="reply_comment_${id}"></div>
                         </div>
                     </div>
-                <div id="reply_comment_${id}"></div>
                 </div>
-            </div>
-        </div>
-        <ul class="children" id="children_comments_${id}">
-            ${childrenHtml}
-        </ul>
+                <ul class="children" id="children_comments_${id}">
+                    ${childrenHtml}
+                </ul>
+            </li>
         `;
     }
 
     function generateReplyHtml(id, content, createdDate, userId) {
         return `
-        <div class="single-comment depth-2 justify-content-between d-flex mt-50">
-            <div class="user justify-content-between d-flex">
-                <div class="thumb">
-                    <img src="../imgs/authors/author.jpg" alt="">
-                </div>
-                <div class="desc">
-                    <p class="comment">${content}</p>
-                    <div class="d-flex justify-content-between">
-                        <div class="d-flex align-items-center">
-                            <h5><a href="#">${userId}</a></h5>
-                            <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
+            <li class="comment-item">
+                <div class="single-comment depth-2 justify-content-between d-flex mt-30">
+                    <div class="user justify-content-between d-flex">
+                        <div class="thumb">
+                            <img src="../imgs/authors/author.jpg" alt="">
+                        </div>
+                        <div class="desc">
+                            <p class="comment">${content}</p>
+                            <div class="d-flex justify-content-between align-items-center info-row">
+                                <div class="d-flex align-items-center">
+                                    <h5><a href="#">${userId}</a></h5>
+                                    <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </li>
         `;
     }
 
@@ -211,7 +217,7 @@ const postsController = function () {
                     <div class="column col-md-12">
                         <div class="form-group d-flex align-items-center">
                             <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Xin nhập bình luận..." required="required"></textarea>
-                            <button type="submit" id="btn_send_reply" class="btn btn-default ml-2">
+                            <button type="submit" id="btn_send_reply" class="btn btn_send_reply ml-2">
                                <i class="fas fa-paper-plane"></i>
                             </button>
                         </div>

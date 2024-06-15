@@ -59,6 +59,7 @@ TABLE CONTENT
 	--color-dark: #000c2d;
 	--color-muted: #687385;
 	--color-white: #ffffff;
+	--color-black: #000;
 	--primary-border-color: #9b9b9b;
 	--secondary-border-color: #f0f8ff;
 	--mutted-border-color: #eaecee;
@@ -989,7 +990,7 @@ li.menu-item-has-children
 }
 .mobile_menu {
 	position: fixed;
-	right: 0px;
+	right: 0;
 	width: 100%;
 	z-index: 99;
 }
@@ -1172,7 +1173,7 @@ h1.page-404 {
 .loop-grid-3 .first-post .post-title::after,
 .divider-wave::after {
 	content: "";
-	background: url(../imgs/theme/wave-line-1.svg) center center no-repeat;
+	background: url(../imgs/theme/wave.svg) center center no-repeat;
 	width: 59px;
 	height: 5px;
 	position: absolute;
@@ -1182,7 +1183,7 @@ h1.page-404 {
 }
 .divider-wave-2::after {
 	content: "";
-	background: url(../imgs/theme/wave-line-2.svg) center center no-repeat;
+	background: url(../imgs/theme/wave.svg) center center no-repeat;
 	width: 59px;
 	height: 11px;
 	position: absolute;
@@ -1280,7 +1281,6 @@ h1.page-404 {
 	bottom: 0;
 }
 .social-sticky {
-	position: -webkit-sticky;
 	position: sticky;
 	top: 70px;
 }
@@ -1541,21 +1541,23 @@ blockquote ol:last-child {
 }
 .comments-area .thumb {
 	margin-right: 20px;
+	flex-shrink: 0; /* Đảm bảo hình ảnh không bị co lại */
 }
 .comments-area .thumb img {
-	width: 70px;
+	height: 50px; /* Thiết lập chiều cao để giữ tỉ lệ */
 	border-radius: 50%;
 }
 .comments-area .date {
 	font-size: 14px;
 	color: #999999;
 	margin-bottom: 0;
-	margin-left: 20px;
+	margin-left: 10px; /* Điều chỉnh khoảng cách */
 }
 .comments-area .comment {
 	margin-bottom: 10px;
 	color: #777777;
 	font-size: 15px;
+	width: 100%; /* Cho phép nội dung trải dài */
 }
 .comments-area .btn-reply {
 	background-color: transparent;
@@ -1563,20 +1565,23 @@ blockquote ol:last-child {
 	font-size: 14px;
 	display: block;
 	font-weight: 400;
-	border-bottom: 1px solid rgb(225, 225, 225);
 	font-style: italic;
+	margin-left: auto; /* Đẩy nút reply sang bên phải */
 }
-/*.comment-form{padding-top:45px;margin-top:50px;margin-bottom:20px;}*/
+.btn_send_reply {
+	background-color: transparent;
+	color: #888888;
+	margin-left: auto; /* Đẩy nút reply sang bên phải */
+}
+
 .comment-form {
 	margin-top: 30px;
 }
-/*.form-group{margin-bottom:1rem;}*/
 .form-group {
 	margin-bottom: 1rem;
 	display: flex;
 	align-items: center;
 }
-/*.form-group textarea{min-height: 200px;}*/
 .form-group textarea {
 	min-height: 60px;
 }
@@ -1598,7 +1603,6 @@ blockquote ol:last-child {
 	background: transparent;
 	background: #fff;
 }
-/*textarea.form-control {border-radius: 10px}*/
 textarea.form-control {
 	min-height: 60px;
 	border-radius: 10px;
@@ -1626,7 +1630,6 @@ textarea.form-control {
 .nice-select .list {
 	width: 100%;
 }
-/*.comment-form textarea{padding-top:18px;border-radius:10px;height:100%!important;background: #fff}*/
 .comment-form textarea {
 	padding-top: 18px;
 	border-radius: 10px;
@@ -1642,16 +1645,19 @@ textarea.form-control {
 	font-size: 13px;
 	color: #777;
 }
+
 .comment-form:-ms-input-placeholder {
 	/* IE 10+ */
 	font-size: 13px;
 	color: #777;
 }
+
 .comment-form:-moz-placeholder {
 	/* Firefox 18- */
 	font-size: 13px;
 	color: #777;
 }
+
 .button-contactForm {
 	background: #ef3f48;
 	color: #fff;
@@ -1677,7 +1683,39 @@ textarea.form-control {
 	border: 1px solid var(--color-danger);
 }
 .single-comment.depth-2 {
-	margin-left: 50px;
+	margin-left: 50px; /* Điều chỉnh khoảng cách giữa bình luận cha và con */
+}
+.single-comment {
+	margin-bottom: 20px; /* Thêm margin-bottom để cải thiện khoảng cách */
+	display: flex;
+}
+.single-comment .user {
+	display: flex;
+	align-items: flex-start; /* Căn chỉnh nội dung theo chiều trên */
+	width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+}
+.single-comment .desc {
+	flex-grow: 1;
+}
+.single-comment .desc .comment {
+	margin-bottom: 10px;
+	width: 100%;
+}
+.single-comment .desc .info-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.single-comment .desc .date,
+.single-comment .desc .reply-btn {
+	align-self: center;
+	white-space: nowrap; /* Ngăn không cho xuống dòng */
+}
+.comments-area .comment-item + .comment-item {
+	margin-top: 30px; /* Thêm khoảng cách giữa các comment cha */
+}
+.comments-area .comment-item {
+	margin-bottom: 20px; /* Thêm khoảng cách giữa bình luận cha và con */
 }
 
 /*BONUS: WORDPRESS STYPE*/
