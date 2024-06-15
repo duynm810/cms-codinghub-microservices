@@ -1,7 +1,9 @@
+using Identity.Grpc.Entities;
 using Identity.Grpc.Persistence;
 using Identity.Grpc.Repositories;
 using Identity.Grpc.Repositories.Interfaces;
 using Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Shared.Configurations;
@@ -71,6 +73,10 @@ public static class ServiceExtensions
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
+        services.AddIdentity<User, IdentityRole>()
+            .AddEntityFrameworkStores<IdentityContext>()
+            .AddDefaultTokenProviders();
+
         services.AddScoped<IUserRepository, UserRepository>();
     }
 
