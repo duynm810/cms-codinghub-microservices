@@ -1,5 +1,6 @@
 using AutoMapper;
 using Comment.Api.Entities;
+using Comment.Api.GrpcClients.Interfaces;
 using Comment.Api.Repositories.Interfaces;
 using Comment.Api.Services.Interfaces;
 using Shared.Constants;
@@ -10,7 +11,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Comment.Api.Services;
 
-public class CommentService(ICommentRepository commentRepository, IMapper mapper, ILogger logger) : ICommentService
+public class CommentService(ICommentRepository commentRepository, IIdentityGrpcClient identityGrpcClient, IMapper mapper, ILogger logger) : ICommentService
 {
     public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto request)
     {
@@ -52,7 +53,7 @@ public class CommentService(ICommentRepository commentRepository, IMapper mapper
 
             var comments = await commentRepository.GetCommentsByPostId(postId);
             var commentList = mapper.Map<IEnumerable<CommentDto>>(comments);
-
+            
             var data = BuildCommentTree(commentList.ToList());
 
             result.Success(data);

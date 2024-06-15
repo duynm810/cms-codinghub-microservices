@@ -5,6 +5,7 @@ using Comment.Api.Repositories.Interfaces;
 using Comment.Api.Services;
 using Comment.Api.Services.Interfaces;
 using Contracts.Commons.Interfaces;
+using Identity.Grpc.Protos;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
 using Infrastructure.Identity;
@@ -165,6 +166,11 @@ public static class ServiceExtensions
             x.Address = new Uri(grpcSettings.PostUrl));
 
         services.AddScoped<IPostGrpcClient, PostGrpcClient>();
+        
+        services.AddGrpcClient<UserProtoService.UserProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.IdentityUrl));
+
+        services.AddScoped<IIdentityGrpcClient, IdentityGrpcClient>();
 
     }
 }

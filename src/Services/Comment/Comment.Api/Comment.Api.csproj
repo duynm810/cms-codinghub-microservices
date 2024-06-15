@@ -37,6 +37,19 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Protobuf Include="..\..\Identity\Identity.Grpc\Protos\identity.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\identity.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>

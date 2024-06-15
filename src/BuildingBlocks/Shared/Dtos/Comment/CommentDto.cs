@@ -1,3 +1,4 @@
+using Shared.Dtos.Identity.User;
 using Shared.Enums;
 
 namespace Shared.Dtos.Comment;
@@ -21,6 +22,9 @@ public class CommentDto
     public DateTime CreatedDate { get; set; }
 
     public CommentStatusEnum Status { get; set; }
+    
+    public UserDto? User { get; set; }
 
     public List<CommentDto>? Replies { get; set; }
+    
 }
