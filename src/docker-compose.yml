@@ -134,6 +134,12 @@ services:
     build:
       context: .
       dockerfile: Services/Identity/Identity.Api/Dockerfile
+      
+  identity.grpc:
+    image: ${DOCKER_REGISTRY-}identity-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Grpc/Dockerfile
                 
   media.api:
     image: ${DOCKER_REGISTRY-}media-api:${PLATFORM:-linux}-${TAG:-latest}

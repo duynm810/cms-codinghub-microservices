@@ -191,6 +191,17 @@ services:
     ports:
       - "6002:80"
     restart: always
+    
+  identity.grpc:
+    container_name: identity.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6015:80"
+    restart: always
   
   category.api:
     container_name: category.api
