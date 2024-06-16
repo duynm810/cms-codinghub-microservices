@@ -5,6 +5,7 @@ using Comment.Api.Repositories.Interfaces;
 using Comment.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Comment;
+using Shared.Dtos.Identity.User;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -52,7 +53,22 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
             logger.Information("BEGIN {MethodName} - Retrieving comment with post ID: {PostId}", methodName, postId);
 
             var comments = await commentRepository.GetCommentsByPostId(postId);
-            var commentList = mapper.Map<IEnumerable<CommentDto>>(comments);
+            
+            // Get list of userIds from comments (Lấy danh sách userIds từ comments)
+            var userIds = comments.Select(c => c.UserId).Distinct().ToArray();
+            
+            var users = await identityGrpcClient.GetUsersInfo(userIds);
+            var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.UserId);
+            
+            var commentList = mapper.Map<List<CommentDto>>(comments);
+            
+            foreach (var comment in commentList)
+            {
+                if (userInfos.TryGetValue(comment.UserId, out var userInfo))
+                {
+                    comment.User = userInfo;
+                }
+            }
             
             var data = BuildCommentTree(commentList.ToList());
 

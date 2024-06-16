@@ -6,7 +6,7 @@ public interface ICommentRepository
 {
     Task<bool> CreateComment(CommentBase comment);
     
-    Task<IEnumerable<CommentBase>> GetCommentsByPostId(Guid postId);
+    Task<List<CommentBase>> GetCommentsByPostId(Guid postId);
 
     Task<CommentBase?> GetCommentById(string id);
 

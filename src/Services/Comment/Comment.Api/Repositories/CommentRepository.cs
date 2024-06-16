@@ -9,7 +9,7 @@ namespace Comment.Api.Repositories;
 public class CommentRepository(IMongoClient client, MongoDbSettings settings)
     : MongoRepositoryBase<CommentBase>(client, settings), ICommentRepository
 {
-    public async Task<IEnumerable<CommentBase>> GetCommentsByPostId(Guid postId) =>
+    public async Task<List<CommentBase>> GetCommentsByPostId(Guid postId) =>
         await FindAll().Find(x => x.PostId == postId).ToListAsync();
 
     public async Task<CommentBase?> GetCommentById(string id) => await FindByIdAsync(id);

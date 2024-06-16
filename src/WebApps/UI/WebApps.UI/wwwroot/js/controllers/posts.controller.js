@@ -19,11 +19,24 @@ const postsController = function () {
                             console.log('Item has replies:', item.replies); // Log dữ liệu replies
 
                             $.each(item.replies, function (childIndex, childItem) {
-                                childrenHtml += generateReplyHtml(childItem.id, childItem.content, childItem.createdDate, childItem.userId);
+                                let replyId = childItem.id || '';
+                                let replyContent = childItem.content || '';
+                                let replyCreatedDate = childItem.createdDate || '';
+                                let replyUserFullName = (childItem.user && childItem.user.fullName) || '';
+
+                                childrenHtml += generateReplyHtml(replyId, replyContent, replyCreatedDate, replyUserFullName);
                             });
                         }
-                        html += generateCommentHtml(item.id, item.content, item.createdDate, item.userId, childrenHtml);
+
+                        // Kiểm tra và gán giá trị mặc định nếu thuộc tính không tồn tại
+                        let commentId = item.id || '';
+                        let commentContent = item.content || '';
+                        let commentCreatedDate = item.createdDate || '';
+                        let commentUserFullName = (item.user && item.user.fullName) || '';
+
+                        html += generateCommentHtml(commentId, commentContent, commentCreatedDate, commentUserFullName, childrenHtml);
                     });
+
                     $('#comment_list').html(html);
                 }
             }
@@ -37,13 +50,13 @@ const postsController = function () {
         $("#commentform").submit(function (e) {
             e.preventDefault();
 
-            // Check form submisstion (Kiểm tra việc submit form)
+            // Check form submission (Kiểm tra việc submit form)
             console.log('Comment form submitted');
 
             const form = $(this);
             const url = form.attr('action');
 
-            // Check url (Kiểm tra URL)
+            // Check URL (Kiểm tra URL)
             console.log('Submitting form to URL:', url);
 
             $.post(url, form.serialize()).done(function (response) {
@@ -52,17 +65,20 @@ const postsController = function () {
 
                 // Generate the HTML for the new comment and add it to the comments list (Tạo HTML cho bình luận mới và thêm vào danh sách bình luận)
                 const content = $("#txt_new_comment_content").val();
-                const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), $('#hid_current_login_name').val());
+                const currentLoginName = $('#hid_current_login_name').val();
+                const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName);
 
                 // Reset form and update interface (Reset form và cập nhật giao diện)
-                $("#txt_new_comment_content").val('');
+                content.val('');
                 $('#comment_list').prepend(newCommentHtml);
-                
-                const numberOfComments = parseInt($('#hid_number_comments').val()) + 1;
-                $('#hid_number_comments').val(numberOfComments);
+
+                const $hiddenNumberOfComments = $('#hid_number_comments');
+                const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
+                $hiddenNumberOfComments.val(numberOfComments);
                 $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
             });
         });
+
 
         // Handle when the user clicks the "Reply" button (Xử lý khi người dùng nhấp vào nút "Reply")
         $('body').on('click', '.comment-reply-link', function (e) {
@@ -74,32 +90,36 @@ const postsController = function () {
             // Display comment reply form (Hiển thị form trả lời bình luận)
             const commentId = $(this).data('commentid');
             const replyFormHtml = generateReplyFormHtml(commentId);
+            const $replyComment = $('#reply_comment_' + commentId);
+            const $replyContent = $('#txt_reply_content_' + commentId);
+            const $childrenComments = $('#children_comments_' + commentId);
+            const $hiddenNumberOfComments = $('#hid_number_comments');
 
-            $('#reply_comment_' + commentId).html(replyFormHtml);
+            $replyComment.html(replyFormHtml);
 
             // Set a timeout to hide the reply form if there is no input after 10 seconds (Thiết lập thời gian chờ để ẩn form trả lời nếu không có nhập liệu sau 10 giây)
-            let replyTimeout = setTimeout(function() {
-                if ($('#txt_reply_content_' + commentId).val().trim() === '') {
-                    $('#reply_comment_' + commentId).html('');
+            let replyTimeout = setTimeout(function () {
+                if ($replyContent.val().trim() === '') {
+                    $replyComment.html('');
                 }
             }, 5000); // 10 giây
 
             // If the user starts typing, cancel the timeout (Nếu người dùng bắt đầu nhập, hủy bỏ thời gian chờ)
-            $('#txt_reply_content_' + commentId).on('input', function() {
+            $replyContent.on('input', function () {
                 clearTimeout(replyTimeout);
             });
 
             // Nếu người dùng rời khỏi textarea mà không nhập gì, thiết lập thời gian chờ để ẩn form
-            $('#txt_reply_content_' + commentId).on('blur', function() {
-                replyTimeout = setTimeout(function() {
-                    if ($('#txt_reply_content_' + commentId).val().trim() === '') {
-                        $('#reply_comment_' + commentId).html('');
+            $replyContent.on('blur', function () {
+                replyTimeout = setTimeout(function () {
+                    if ($replyContent.val().trim() === '') {
+                        $replyComment.html('');
                     }
                 }, 5000); // 10 giây
             });
 
             // Nếu người dùng quay lại textarea, hủy bỏ thời gian chờ
-            $('#txt_reply_content_' + commentId).on('focus', function() {
+            $replyContent.on('focus', function () {
                 clearTimeout(replyTimeout);
             });
 
@@ -120,16 +140,17 @@ const postsController = function () {
                     // Kiểm tra phản hồi
                     console.log('Reply form submission successful:', response);
 
-                    const content = $("#txt_reply_content_" + commentId).val();
-                    const newReplyHtml = generateReplyHtml(response.data.id, content, new Date(), $('#hid_current_login_name').val());
+                    const content = $replyContent.val();
+                    const currentLoginName = $('#hid_current_login_name').val();
+                    const newReplyHtml = generateReplyHtml(response.data.id, content, new Date(), currentLoginName);
 
                     // Reset form and update interface (Reset form và cập nhật giao diện)
-                    $("#txt_reply_content_" + commentId).val('');
-                    $('#reply_comment_' + commentId).html('');
-                    $('#children_comments_' + commentId).prepend(newReplyHtml);
+                    $replyContent.val('');
+                    $replyComment.html('');
+                    $childrenComments.prepend(newReplyHtml);
 
-                    const numberOfComments = parseInt($('#hid_number_comments').val()) + 1;
-                    $('#hid_number_comments').val(numberOfComments);
+                    const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
+                    $hiddenNumberOfComments.val(numberOfComments);
                     $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
                 });
             });
@@ -141,17 +162,17 @@ const postsController = function () {
         const diff = Math.abs(now - date);
         const minutes = Math.floor(diff / 60000);
         if (minutes < 60) {
-            return `${minutes} phút trước`;
+            return `${minutes} minute ago`;
         }
         const hours = Math.floor(minutes / 60);
         if (hours < 24) {
-            return `${hours} giờ trước`;
+            return `${hours} hour ago`;
         }
         const days = Math.floor(hours / 24);
-        return `${days} ngày trước`;
+        return `${days} day ago`;
     }
 
-    function generateCommentHtml(id, content, createdDate, userId, childrenHtml = '') {
+    function generateCommentHtml(id, content, createdDate, fullName, childrenHtml = '') {
         return `
             <li class="comment-item">
                 <div class="single-comment justify-content-between d-flex">
@@ -163,7 +184,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${userId}</a></h5>
+                                    <h5><a href="#">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                                 <div class="reply-btn">
@@ -183,7 +204,7 @@ const postsController = function () {
         `;
     }
 
-    function generateReplyHtml(id, content, createdDate, userId) {
+    function generateReplyHtml(id, content, createdDate, fullName) {
         return `
             <li class="comment-item">
                 <div class="single-comment depth-2 justify-content-between d-flex mt-30">
@@ -195,7 +216,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${userId}</a></h5>
+                                    <h5><a href="#">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                             </div>
@@ -216,7 +237,7 @@ const postsController = function () {
                 <div class="row">
                     <div class="column col-md-12">
                         <div class="form-group d-flex align-items-center">
-                            <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Xin nhập bình luận..." required="required"></textarea>
+                            <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
                             <button type="submit" id="btn_send_reply" class="btn btn_send_reply ml-2">
                                <i class="fas fa-paper-plane"></i>
                             </button>

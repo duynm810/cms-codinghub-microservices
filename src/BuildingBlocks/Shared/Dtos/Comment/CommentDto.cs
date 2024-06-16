@@ -23,8 +23,10 @@ public class CommentDto
 
     public CommentStatusEnum Status { get; set; }
     
+    /// <summary>
+    /// Thông tin người dùng
+    /// </summary>
     public UserDto? User { get; set; }
-
-    public List<CommentDto>? Replies { get; set; }
     
+    public List<CommentDto>? Replies { get; set; }
 }
