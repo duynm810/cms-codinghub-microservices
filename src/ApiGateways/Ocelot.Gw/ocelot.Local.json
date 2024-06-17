@@ -736,6 +736,66 @@
       "SwaggerKey": "post-in-tag-service"
     },
     {
+      "UpstreamPathTemplate": "/comments",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/by-post/{postId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/by-post/{postId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/like/{commentId}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/like/{commentId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/reply",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/reply",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "GET",
@@ -747,7 +807,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "host.docker.internal",
-          "Port": 6016
+          "Port": 6019
         }
       ],
       "AuthenticationOptions": {
@@ -832,6 +892,17 @@
           "Name": "PostInTag.Api",
           "Version": "1.0",
           "Url": "http://post-in-tag.api/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "comment-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Comment.Api",
+          "Version": "1.0",
+          "Url": "http://comment.api/swagger/v1/swagger.json"
         }
       ]
     },

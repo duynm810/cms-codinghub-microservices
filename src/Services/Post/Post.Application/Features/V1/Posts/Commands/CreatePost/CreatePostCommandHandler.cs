@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
@@ -16,7 +16,7 @@ namespace Post.Application.Features.V1.Posts.Commands.CreatePost;
 
 public class CreatePostCommandHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
@@ -42,7 +42,7 @@ public class CreatePostCommandHandler(
             }
 
             // Check valid category id
-            var category = await categoryGrpcService.GetCategoryById(request.CategoryId);
+            var category = await categoryGrpcClient.GetCategoryById(request.CategoryId);
             if (category == null)
             {
                 logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, request.CategoryId);

@@ -2,7 +2,7 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using Infrastructure.Paged;
 using PostInTag.Api.Entities;
-using PostInTag.Api.GrpcServices.Interfaces;
+using PostInTag.Api.GrpcClients.Interfaces;
 using PostInTag.Api.Repositories.Interfaces;
 using PostInTag.Api.Services.Interfaces;
 using Shared.Constants;
@@ -16,9 +16,9 @@ namespace PostInTag.Api.Services;
 
 public class PostInTagService(
     IPostInTagRepository postInTagRepository,
-    IPostGrpcService postGrpcService,
-    ITagGrpcService tagGrpcService,
-    ICategoryGrpcService categoryGrpcService,
+    IPostGrpcClient postGrpcClient,
+    ITagGrpcClient tagGrpcClient,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : IPostInTagService
@@ -119,7 +119,7 @@ public class PostInTagService(
             var postList = postIds.ToList();
             if (postList.Count != 0)
             {
-                var postInTagDtos = await postGrpcService.GetPostsByIds(postList);
+                var postInTagDtos = await postGrpcClient.GetPostsByIds(postList);
                 var data = postInTagDtos.ToList();
                 result.Success(data);
                 
@@ -165,7 +165,7 @@ public class PostInTagService(
                 return result;
             }
             
-            var tag = await tagGrpcService.GetTagBySlug(tagSlug);
+            var tag = await tagGrpcClient.GetTagBySlug(tagSlug);
             if (tag != null)
             {
                 var postIds = await postInTagRepository.GetPostIdsInTag(tag.Id);
@@ -181,7 +181,7 @@ public class PostInTagService(
                 var postList = postIds.ToList();
                 if (postList.Count != 0)
                 {
-                    var postInTagDtos = await postGrpcService.GetPostsByIds(postList);
+                    var postInTagDtos = await postGrpcClient.GetPostsByIds(postList);
                     var data = postInTagDtos.ToList();
                     result.Success(data);
                     
@@ -242,7 +242,7 @@ public class PostInTagService(
             var postList = postIds.ToList();
             if (postList.Any())
             {
-                var posts = await postGrpcService.GetPostsByIds(postList);
+                var posts = await postGrpcClient.GetPostsByIds(postList);
                 var items = PagedList<PostInTagDto>.ToPagedList(posts, pageNumber, pageSize, x => x.Id);
 
                 var data = new PagedResponse<PostInTagDto>
@@ -297,7 +297,7 @@ public class PostInTagService(
                 return result;
             }
 
-            var tag = await tagGrpcService.GetTagBySlug(tagSlug);
+            var tag = await tagGrpcClient.GetTagBySlug(tagSlug);
             if (tag != null)
             {
                 var postIds = await postInTagRepository.GetPostIdsInTag(tag.Id);
@@ -313,12 +313,12 @@ public class PostInTagService(
                 var postIdList = postIds.ToList();
                 if (postIdList.Any())
                 {
-                    var posts = await postGrpcService.GetPostsByIds(postIdList);
+                    var posts = await postGrpcClient.GetPostsByIds(postIdList);
 
                     var postList = posts.ToList();
 
                     var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-                    var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                    var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
                     var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
                     foreach (var post in postList)

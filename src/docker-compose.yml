@@ -16,14 +16,17 @@ services:
   tagdb:
     image: mysql:latest
     
+  post-in-tag-db:
+    image: postgres:alpine3.16
+    
+  commentdb:
+    image: mongo
+    
   hangfiredb:
     image: mongo
     
   identitydb:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    
-  post-in-tag-db:
-    image: postgres:alpine3.16
   
   ##infrastructure section
   rabbitmq:
@@ -114,6 +117,12 @@ services:
       context: .
       dockerfile: Services/PostInTag/PostInTag.Grpc/Dockerfile
       
+  comment.api:
+    image: ${DOCKER_REGISTRY-}comment-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Comment/Comment.Api/Dockerfile
+      
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -125,6 +134,12 @@ services:
     build:
       context: .
       dockerfile: Services/Identity/Identity.Api/Dockerfile
+      
+  identity.grpc:
+    image: ${DOCKER_REGISTRY-}identity-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Grpc/Dockerfile
                 
   media.api:
     image: ${DOCKER_REGISTRY-}media-api:${PLATFORM:-linux}-${TAG:-latest}
@@ -174,3 +189,5 @@ volumes:
     name: tag_mysql_data
   post_in_tag_postgres_data:
     name: post_in_tag_postgres_data
+  comment_mongo_data:
+    name: comment_mongo_data

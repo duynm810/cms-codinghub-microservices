@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
@@ -16,7 +16,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPinnedPosts;
 
 public class GetPinnedPostsQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcService categoryGrpcService,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPinnedPostsQuery, ApiResult<IEnumerable<PostModel>>>
@@ -48,7 +48,7 @@ public class GetPinnedPostsQueryHandler(
             if (postList.IsNotNullOrEmpty())
             {
                 var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
                 var data = mappingHelper.MapPostsWithCategories(postList, categories);
                 result.Success(data);

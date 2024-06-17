@@ -1,5 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Comment;
 using Shared.Settings;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Posts;
@@ -13,6 +14,7 @@ public class PostsController(
     ICategoryApiClient categoryApiClient,
     ISeriesApiClient seriesApiClient,
     ITagApiClient tagApiClient,
+    ICommentApiClient commentApiClient,
     PaginationSettings paginationSettings,
     IErrorService errorService,
     ILogger logger)
@@ -61,20 +63,20 @@ public class PostsController(
 
         try
         {
-            var posts = await postApiClient.GetPostBySlug(slug, 2);
-
-            if (posts is { IsSuccess: true, Data: not null })
+            var post = await postApiClient.GetPostBySlug(slug, 2);
+            
+            if (post is { IsSuccess: true, Data: not null })
             {
                 var items = new PostDetailViewModel()
                 {
                     MainClass = "bg-grey pb-30",
-                    Post = posts.Data
+                    Post = post.Data
                 };
-
+                
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+            return HandleError((HttpStatusCode)post.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -181,5 +183,19 @@ public class PostsController(
         {
             return HandleException(e, methodName);
         }
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetCommentsByPostId(Guid postId)
+    {
+        var comments = await commentApiClient.GetCommentsByPostId(postId);
+        return Ok(new { data = comments.Data });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
+    {
+        var newComment = await commentApiClient.CreateComment(comment);
+        return Ok(new { data = newComment });
     }
 }

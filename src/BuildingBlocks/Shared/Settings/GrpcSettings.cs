@@ -11,4 +11,6 @@ public class GrpcSettings
     public string TagUrl { get; set; } = default!;
 
     public string PostInTagUrl { get; set; } = default!;
+        
+    public string IdentityUrl { get; set; } = default!;
 }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Polly;
 using Polly.Retry;
 using PostInTag.Api.Entities;
-using PostInTag.Api.GrpcServices.Interfaces;
+using PostInTag.Api.GrpcClients.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.Persistence;
@@ -15,8 +15,8 @@ public static class PostInTagSeedData
         using var scope = host.Services.CreateScope();
 
         var postInTagContext = scope.ServiceProvider.GetRequiredService<PostInTagContext>();
-        var tagGrpcService = scope.ServiceProvider.GetRequiredService<ITagGrpcService>();
-        var postGrpcService = scope.ServiceProvider.GetRequiredService<IPostGrpcService>();
+        var tagGrpcService = scope.ServiceProvider.GetRequiredService<ITagGrpcClient>();
+        var postGrpcService = scope.ServiceProvider.GetRequiredService<IPostGrpcClient>();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger>();
         
         postInTagContext.Database.MigrateAsync().GetAwaiter().GetResult();
@@ -30,8 +30,8 @@ public static class PostInTagSeedData
     private class Seeder
     {
         private readonly PostInTagContext _context;
-        private readonly ITagGrpcService _tagGrpcService;
-        private readonly IPostGrpcService _postGrpcService;
+        private readonly ITagGrpcClient _tagGrpcClient;
+        private readonly IPostGrpcClient _postGrpcClient;
         private readonly AsyncRetryPolicy _retryPolicy;
         private readonly ILogger _logger;
         
@@ -39,11 +39,11 @@ public static class PostInTagSeedData
         private IEnumerable<Guid> _tags = new List<Guid>();
         private IEnumerable<Guid> _posts = new List<Guid>();
 
-        public Seeder(PostInTagContext context, ITagGrpcService tagGrpcService, IPostGrpcService postGrpcService, ILogger logger)
+        public Seeder(PostInTagContext context, ITagGrpcClient tagGrpcClient, IPostGrpcClient postGrpcClient, ILogger logger)
         {
             _context = context;
-            _tagGrpcService = tagGrpcService;
-            _postGrpcService = postGrpcService;
+            _tagGrpcClient = tagGrpcClient;
+            _postGrpcClient = postGrpcClient;
             _logger = logger;
 
             _retryPolicy = Policy.Handle<RpcException>()
@@ -98,7 +98,7 @@ public static class PostInTagSeedData
             {
                 _logger.Information("Calling tag gRPC service to get tags.");
 
-                var tags = await _tagGrpcService.GetTags();
+                var tags = await _tagGrpcClient.GetTags();
 
                 _logger.Information("Successfully retrieved tags from tag gRPC service.");
 
@@ -111,7 +111,7 @@ public static class PostInTagSeedData
             {
                 _logger.Information("Calling post gRPC service to get posts.");
 
-                var posts = await _postGrpcService.GetTop10Posts();
+                var posts = await _postGrpcClient.GetTop10Posts();
 
                 _logger.Information("Successfully retrieved posts from post gRPC service.");
 

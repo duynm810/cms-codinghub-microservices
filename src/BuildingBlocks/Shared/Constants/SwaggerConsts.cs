@@ -11,4 +11,5 @@ public static class SwaggerConsts
     public const string IdentityApi = "Identity Api";
     public const string MediaApi = "Media Api";
     public const string TagApi = "Tag Api";
+    public const string CommentApi = "Comment Api";
 }

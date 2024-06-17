@@ -1,6 +1,7 @@
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Identity.Grpc.Protos;
 using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
@@ -8,11 +9,11 @@ using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Post.Domain.GrpcServices;
+using Post.Domain.GrpcClients;
 using Post.Domain.Interfaces;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
-using Post.Infrastructure.GrpcServices;
+using Post.Infrastructure.GrpcClients;
 using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
@@ -89,9 +90,10 @@ public static class ConfigureServices
     {
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
-            .AddScoped<ICategoryGrpcService, CategoryGrpcService>()
-            .AddScoped<ITagGrpcService, TagGrpcService>()
-            .AddScoped<IPostInTagGrpcService, PostInTagGrpcService>()
+            .AddScoped<ICategoryGrpcClient, CategoryGrpcClient>()
+            .AddScoped<ITagGrpcClient, TagGrpcClient>()
+            .AddScoped<IPostInTagGrpcClient, PostInTagGrpcClient>()
+            .AddScoped<IIdentityGrpcClient, IdentityGrpcClient>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
@@ -111,6 +113,9 @@ public static class ConfigureServices
         
         services.AddGrpcClient<PostInTagService.PostInTagServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostInTagUrl));
+        
+        services.AddGrpcClient<UserProtoService.UserProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.IdentityUrl));
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)

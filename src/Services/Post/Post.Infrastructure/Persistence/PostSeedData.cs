@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
-using Post.Domain.GrpcServices;
 using Post.Domain.Interfaces;
 using Serilog;
 using Shared.Enums;

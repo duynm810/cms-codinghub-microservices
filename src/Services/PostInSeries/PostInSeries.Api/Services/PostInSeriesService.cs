@@ -2,7 +2,7 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using Infrastructure.Paged;
 using PostInSeries.Api.Entities;
-using PostInSeries.Api.GrpcServices.Interfaces;
+using PostInSeries.Api.GrpcClients.Interfaces;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
 using Shared.Constants;
@@ -17,9 +17,9 @@ namespace PostInSeries.Api.Services;
 
 public class PostInSeriesService(
     IPostInSeriesRepository postInSeriesRepository,
-    IPostGrpcService postGrpcService,
-    ISeriesGrpcService seriesGrpcService,
-    ICategoryGrpcService categoryGrpcService,
+    IPostGrpcClient postGrpcClient,
+    ISeriesGrpcClient seriesGrpcClient,
+    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : IPostInSeriesService
@@ -126,7 +126,7 @@ public class PostInSeriesService(
             var postList = postIds.ToList();
             if (postList.Count != 0)
             {
-                var postInSeriesDtos = await postGrpcService.GetPostsByIds(postList);
+                var postInSeriesDtos = await postGrpcClient.GetPostsByIds(postList);
                 var data = postInSeriesDtos.ToList();
                 result.Success(data);
                 
@@ -172,7 +172,7 @@ public class PostInSeriesService(
                 return result;
             }
             
-            var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
+            var series = await seriesGrpcClient.GetSeriesBySlug(seriesSlug);
             if (series != null)
             {
                 var postIds = await postInSeriesRepository.GetPostIdsInSeries(series.Id);
@@ -188,7 +188,7 @@ public class PostInSeriesService(
                 var postList = postIds.ToList();
                 if (postList.Count != 0)
                 {
-                    var postInSeriesDtos = await postGrpcService.GetPostsByIds(postList);
+                    var postInSeriesDtos = await postGrpcClient.GetPostsByIds(postList);
                     var data = postInSeriesDtos.ToList();
                     result.Success(data);
                     
@@ -250,7 +250,7 @@ public class PostInSeriesService(
             var postList = postIds.ToList();
             if (postList.Any())
             {
-                var posts = await postGrpcService.GetPostsByIds(postList);
+                var posts = await postGrpcClient.GetPostsByIds(postList);
                 var items = PagedList<PostInSeriesDto>.ToPagedList(posts, pageNumber, pageSize, x => x.Id);
 
                 var data = new PagedResponse<PostInSeriesDto>
@@ -306,7 +306,7 @@ public class PostInSeriesService(
                 return result;
             }
 
-            var series = await seriesGrpcService.GetSeriesBySlug(seriesSlug);
+            var series = await seriesGrpcClient.GetSeriesBySlug(seriesSlug);
             if (series != null)
             {
                 var postIds = await postInSeriesRepository.GetPostIdsInSeries(series.Id);
@@ -322,12 +322,12 @@ public class PostInSeriesService(
                 var postIdList = postIds.ToList();
                 if (postIdList.Any())
                 {
-                    var posts = await postGrpcService.GetPostsByIds(postIdList);
+                    var posts = await postGrpcClient.GetPostsByIds(postIdList);
 
                     var postList = posts.ToList();
 
                     var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-                    var categories = await categoryGrpcService.GetCategoriesByIds(categoryIds);
+                    var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
                     var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
                     foreach (var post in postList)

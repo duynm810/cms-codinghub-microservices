@@ -736,6 +736,66 @@
       "SwaggerKey": "post-in-tag-service"
     },
     {
+      "UpstreamPathTemplate": "/comments",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/by-post/{postId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/by-post/{postId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/like/{commentId}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/like/{commentId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/reply",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/reply",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "GET",
@@ -747,7 +807,7 @@
       "DownstreamHostAndPorts": [
         {
           "Host": "localhost",
-          "Port": 5016
+          "Port": 5019
         }
       ],
       "AuthenticationOptions": {
@@ -836,13 +896,24 @@
       ]
     },
     {
+      "Key": "comment-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Comment.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5014/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
       "Key": "media-service",
       "TransformByOcelotConfig": true,
       "Config": [
         {
           "Name": "Media.Api",
           "Version": "1.0",
-          "Url": "http://localhost:5016/swagger/v1/swagger.json"
+          "Url": "http://localhost:5019/swagger/v1/swagger.json"
         }
       ]
     }

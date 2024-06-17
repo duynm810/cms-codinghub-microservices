@@ -34,6 +34,7 @@ public static class ErrorMessagesConsts
     public static class Post
     {
         public const string PostNotFound = "Post not found";
+        public const string InvalidGetPostsByNonStaticPageCategoryNotFound = "Invalid get post by non static page category";
         public const string SlugExists = "Slug is exists";
     }
 
@@ -58,6 +59,13 @@ public static class ErrorMessagesConsts
     {
         public const string PostIdsNotFound = "Post Ids not found";
         public const string PostNotFoundInTag = "No posts found in this tag";
+    }
+
+    public static class Comment
+    {
+        public const string ParentIdNotFound = "Parent Id not found";
+        public const string CommentCreationFailed = "Failed to create comment";
+        public const string RepliesCountUpdateFailed = "Failed to update replies count";
     }
 
     public static class Identity

@@ -76,6 +76,18 @@ services:
     volumes:
       - post_in_tag_postgres_data:/var/lib/postgresql/data
   
+  #commentdb: mongo
+  commentdb:
+    container_name: commentdb
+    ports:
+      - "27019:27017"
+    volumes:
+      - comment_mongo_data:/data/db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: 'admin'
+      MONGO_INITDB_ROOT_PASSWORD: 'admin'
+  
   #hangfiredb: mongo
   hangfiredb:
     container_name: hangfiredb
@@ -164,6 +176,7 @@ services:
       - post-in-series.api
       - tag.api
       - hangfire.api
+      - comment.api
     ports:
       - "6001:80"
     restart: always
@@ -177,6 +190,17 @@ services:
       - identitydb
     ports:
       - "6002:80"
+    restart: always
+    
+  identity.grpc:
+    container_name: identity.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6015:80"
     restart: always
   
   category.api:
@@ -303,6 +327,17 @@ services:
     ports:
       - "6013:80"
     restart: always
+    
+  comment.api:
+    container_name: comment.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - commentdb
+    ports:
+      - "6014:80"
+    restart: always
   
   hangfire.api:
     container_name: hangfire.api
@@ -312,7 +347,7 @@ services:
     depends_on:
       - hangfiredb
     ports:
-      - "6015:80"
+      - "6018:80"
     restart: always
        
   media.api:
@@ -321,7 +356,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6016:80"
+      - "6019:80"
     restart: always
     volumes:
       - ./wwwroot:/app/wwwroot
