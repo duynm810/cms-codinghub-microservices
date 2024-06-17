@@ -1,4 +1,5 @@
 using Category.Api.GrpcClients.Interfaces;
+using Grpc.Core;
 using Post.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
@@ -10,17 +11,23 @@ public class PostGrpcClient(PostProtoService.PostProtoServiceClient postProtoSer
     public async Task<bool> HasPostsInCategory(long categoryId)
     {
         const string methodName = nameof(HasPostsInCategory);
-        
+
         try
         {
-            var request = new HasPostsInCategoryRequest() { CategoryId = categoryId };
+            var request = new HasPostsInCategoryRequest { CategoryId = categoryId };
             var result = await postProtoServiceClient.HasPostsInCategoryAsync(request);
             return result is { Exists: true };
         }
-        catch (Exception e)
+        catch (RpcException rpcEx)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while checking posts in category {CategoryId}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, categoryId, rpcEx.StatusCode, rpcEx.Message);
             return false;
         }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while checking posts in category {CategoryId}. Message: {ErrorMessage}", methodName, categoryId, e.Message);
+            throw;
+        }
     }
+
 }

@@ -2,6 +2,7 @@ using AutoMapper;
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Post.Domain.GrpcClients;
 using Serilog;
 using Shared.Dtos.Category;
@@ -18,10 +19,9 @@ public class CategoryGrpcClient(
     public async Task<CategoryDto?> GetCategoryById(long id)
     {
         const string methodName = nameof(GetCategoryById);
-        
+
         try
         {
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryByIdKey(id);
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
@@ -36,15 +36,21 @@ public class CategoryGrpcClient(
                 logger.Warning("{MethodName}: No category found by id {Id}", methodName, id);
                 return null;
             }
-            
-            var data = mapper.Map<CategoryDto>(result);
 
+            var data = mapper.Map<CategoryDto>(result);
             await cacheService.SetAsync(cacheKey, data);
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting category by id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, id, rpcEx.StatusCode, rpcEx.Message);
+            return null;
+        }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting category by id {Id}. Message: {ErrorMessage}", methodName, id, e.Message);
             throw;
         }
     }
@@ -57,7 +63,6 @@ public class CategoryGrpcClient(
         {
             var idList = ids as long[] ?? ids.ToArray();
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
@@ -65,24 +70,31 @@ public class CategoryGrpcClient(
                 return cachedCategories;
             }
 
-            var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
+            var request = new GetCategoriesByIdsRequest { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
-            if (result == null)
+            if (result == null || result.Categories.Count == 0)
             {
-                logger.Warning("{MethodName}: No categories found", methodName);
+                logger.Warning("{MethodName}: No categories found for the given ids", methodName);
                 return Enumerable.Empty<CategoryDto>();
             }
-            
+
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
-
             var data = categoriesByIds.ToList();
-
             await cacheService.SetAsync(cacheKey, data);
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting categories by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, rpcEx.StatusCode, rpcEx.Message);
+            return Enumerable.Empty<CategoryDto>();
+        }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting categories by ids. Message: {ErrorMessage}",
+                methodName, e.Message);
             throw;
         }
     }
@@ -90,34 +102,40 @@ public class CategoryGrpcClient(
     public async Task<CategoryDto?> GetCategoryBySlug(string slug)
     {
         const string methodName = nameof(GetCategoryBySlug);
-        
+
         try
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
-
-            // Check existed cache (Kiểm tra cache)
             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
             if (cachedCategory != null)
             {
                 return cachedCategory;
             }
 
-            var request = new GetCategoryBySlugRequest() { Slug = slug };
+            var request = new GetCategoryBySlugRequest { Slug = slug };
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
             if (result == null)
             {
                 logger.Warning("{MethodName}: No category found with slug {Slug}", methodName, slug);
                 return null;
             }
-            
+
             var data = mapper.Map<CategoryDto>(result);
-            
             await cacheService.SetAsync(cacheKey, data);
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting category by slug {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, slug, rpcEx.StatusCode, rpcEx.Message);
+            return null;
+        }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting category by slug {Slug}. Message: {ErrorMessage}",
+                methodName, slug, e.Message);
             throw;
         }
     }
@@ -125,12 +143,10 @@ public class CategoryGrpcClient(
     public async Task<IEnumerable<CategoryDto>> GetAllNonStaticPageCategories()
     {
         const string methodName = nameof(GetAllNonStaticPageCategories);
-        
+
         try
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
-
-            // Check existed cache (Kiểm tra cache)
             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
             if (cachedCategories != null)
             {
@@ -138,21 +154,29 @@ public class CategoryGrpcClient(
             }
 
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
-            if (result == null)
+            if (result == null || result.Categories.Count == 0)
             {
                 logger.Warning("{MethodName}: No categories found", methodName);
                 return Enumerable.Empty<CategoryDto>();
             }
-            
+
             var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = allNonStaticPageCategories.ToList();
-
             await cacheService.SetAsync(cacheKey, data);
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting all non-static page categories. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, rpcEx.StatusCode, rpcEx.Message);
+            return Enumerable.Empty<CategoryDto>();
+        }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting all non-static page categories. Message: {ErrorMessage}",
+                methodName, e.Message);
             throw;
         }
     }

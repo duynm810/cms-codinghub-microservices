@@ -4,5 +4,5 @@ namespace Comment.Api.GrpcClients.Interfaces;
 
 public interface IPostGrpcClient
 {
-    Task<IEnumerable<PostDto>> GetTop10Posts();
+    Task<IEnumerable<PostDto>?> GetTop10Posts();
 }

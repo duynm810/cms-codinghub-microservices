@@ -40,19 +40,18 @@
                     @detail.Summary
                 </p>
                 <div class="entry-meta align-items-center meta-2 font-small color-muted">
-                    <p class="mb-5">
-                        <a class="author-avatar" href="#">
-                            <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
-                        </a>
-                        By
-                        <a href="author.html">
-                            @if (detail.User != null)
-                            {
+                    @if (detail.User != null)
+                    {
+                        <p class="mb-5">
+                            <a class="author-avatar" href="#">
+                                <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
+                            </a>
+                            By
+                            <a href="author.html">
                                 <span class="author-name font-weight-bold">@detail.User.FullName</span>
-                            }
-                            <span class="author-name font-weight-bold"></span>
-                        </a>
-                    </p>
+                            </a>
+                        </p>
+                    }
                     <span class="mr-10">@detail.PublishedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
                     <span class="has-dot"> 8 mins read</span>
                 </div>
@@ -174,51 +173,50 @@
     </div>
     <!--author box-->
     <div class="author-bio p-30 mt-50 border-radius-10 bg-white">
-        <div class="author-image mb-30">
-            <a href="author.html">
-                <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
-            </a>
-        </div>
-        <div class="author-info">
-            <h4 class="font-weight-bold mb-20">
-                <span class="vcard author">
-                    <span class="fn">
-                        @if (detail.User != null) 
-                        {
-                            <a href="author.html" title="Posted by Barbara Cartland" rel="author">@detail.User.FullName</a>
-                        }
-                        <a href="author.html" title="Posted by Barbara Cartland" rel="author"></a>
-                    </span>
-                </span>
-            </h4>
-            <h5 class="text-muted">About author</h5>
-            <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
-            <a href="author.html" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
-            <div class="author-social">
-                <ul class="author-social-icons">
-                    <li class="author-social-link-facebook">
-                        <a href="#" target="_blank">
-                            <i class="ti-facebook"></i>
-                        </a>
-                    </li>
-                    <li class="author-social-link-twitter">
-                        <a href="#" target="_blank">
-                            <i class="ti-twitter-alt"></i>
-                        </a>
-                    </li>
-                    <li class="author-social-link-pinterest">
-                        <a href="#" target="_blank">
-                            <i class="ti-pinterest"></i>
-                        </a>
-                    </li>
-                    <li class="author-social-link-instagram">
-                        <a href="#" target="_blank">
-                            <i class="ti-instagram"></i>
-                        </a>
-                    </li>
-                </ul>
+        @if (detail.User != null)
+        {
+            <div class="author-image mb-30">
+                <a href="author.html">
+                    <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
+                </a>
             </div>
-        </div>
+            <div class="author-info">
+                <h4 class="font-weight-bold mb-20">
+                    <span class="vcard author">
+                        <span class="fn">
+                            <a href="author.html" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
+                        </span>
+                    </span>
+                </h4>
+                <h5 class="text-muted">About author</h5>
+                <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
+                <a href="author.html" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
+                <div class="author-social">
+                    <ul class="author-social-icons">
+                        <li class="author-social-link-facebook">
+                            <a href="#" target="_blank">
+                                <i class="ti-facebook"></i>
+                            </a>
+                        </li>
+                        <li class="author-social-link-twitter">
+                            <a href="#" target="_blank">
+                                <i class="ti-twitter-alt"></i>
+                            </a>
+                        </li>
+                        <li class="author-social-link-pinterest">
+                            <a href="#" target="_blank">
+                                <i class="ti-pinterest"></i>
+                            </a>
+                        </li>
+                        <li class="author-social-link-instagram">
+                            <a href="#" target="_blank">
+                                <i class="ti-instagram"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        }
     </div>
     <!--related posts-->
     @await Html.PartialAsync("Partials/Posts/_RelatedPosts")

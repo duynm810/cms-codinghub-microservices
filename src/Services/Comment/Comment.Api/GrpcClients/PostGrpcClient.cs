@@ -1,6 +1,7 @@
 using AutoMapper;
 using Comment.Api.GrpcClients.Interfaces;
 using Contracts.Commons.Interfaces;
+using Grpc.Core;
 using Post.Grpc.Protos;
 using Shared.Dtos.Post;
 using Shared.Helpers;
@@ -15,13 +16,13 @@ public class PostGrpcClient(
     ILogger logger)
     : IPostGrpcClient
 {
-    public async Task<IEnumerable<PostDto>> GetTop10Posts()
+    public async Task<IEnumerable<PostDto>?> GetTop10Posts()
     {
         const string methodName = nameof(GetTop10Posts);
 
         try
         {
-            // Check existed cache (Kiểm tra cache)
+            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
             if (cachedPosts != null)
@@ -37,18 +38,25 @@ public class PostGrpcClient(
                 var posts = mapper.Map<IEnumerable<PostDto>>(result.Posts);
                 var data = posts.ToList();
 
-                // Save cache (Lưu cache)
+                // Lưu cache
                 await cacheService.SetAsync(cacheKey, data);
 
                 return data;
             }
+
+            logger.Warning("{MethodName}: No posts found", methodName);
+            return Enumerable.Empty<PostDto>();
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting top 10 posts. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            return Enumerable.Empty<PostDto>();
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting top 10 posts. Message: {ErrorMessage}", methodName, e.Message);
             throw;
         }
-
-        return new List<PostDto>();
     }
+
 }
