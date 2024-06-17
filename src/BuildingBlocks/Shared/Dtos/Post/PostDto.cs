@@ -1,3 +1,4 @@
+using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
 
 namespace Shared.Dtos.Post;
@@ -50,6 +51,13 @@ public class PostDto
 
     public DateTimeOffset CreatedDate { get; set; }
     
-    //Custom property
+    /// <summary>
+    /// List of tags in the article (Danh sách các thẻ thuộc bài viết)
+    /// </summary>
     public List<TagDto>? Tags { get; set; }
+    
+    /// <summary>
+    /// Article author information (Thông tin tác giả bài viết)
+    /// </summary>
+    public UserDto? User { get; set; }
 }

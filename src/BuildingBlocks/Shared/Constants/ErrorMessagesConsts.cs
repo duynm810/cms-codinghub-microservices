@@ -34,6 +34,7 @@ public static class ErrorMessagesConsts
     public static class Post
     {
         public const string PostNotFound = "Post not found";
+        public const string InvalidGetPostsByNonStaticPageCategoryNotFound = "Invalid get post by non static page category";
         public const string SlugExists = "Slug is exists";
     }
 

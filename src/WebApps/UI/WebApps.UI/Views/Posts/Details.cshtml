@@ -46,7 +46,11 @@
                         </a>
                         By
                         <a href="author.html">
-                            <span class="author-name font-weight-bold">Barbara Cartland</span>
+                            @if (detail.User != null)
+                            {
+                                <span class="author-name font-weight-bold">@detail.User.FullName</span>
+                            }
+                            <span class="author-name font-weight-bold"></span>
                         </a>
                     </p>
                     <span class="mr-10">@detail.PublishedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
@@ -179,7 +183,11 @@
             <h4 class="font-weight-bold mb-20">
                 <span class="vcard author">
                     <span class="fn">
-                        <a href="author.html" title="Posted by Barbara Cartland" rel="author">Barbara Cartland</a>
+                        @if (detail.User != null) 
+                        {
+                            <a href="author.html" title="Posted by Barbara Cartland" rel="author">@detail.User.FullName</a>
+                        }
+                        <a href="author.html" title="Posted by Barbara Cartland" rel="author"></a>
                     </span>
                 </span>
             </h4>

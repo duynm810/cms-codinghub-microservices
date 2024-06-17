@@ -18,9 +18,13 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
             };
 
             var result = await postInTagServiceClient.GetTagsByPostIdAsync(request);
-
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No tag by post id {Id} not found", methodName, postId);
+                return Enumerable.Empty<Guid>();
+            }
+            
             var tagIds = result.TagIds.Select(Guid.Parse);
-
             return tagIds;
         }
         catch (Exception e)

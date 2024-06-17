@@ -18,6 +18,7 @@ public class GetPostBySlugQueryHandler(
     ICategoryGrpcClient categoryGrpcClient,
     ITagGrpcClient tagGrpcClient,
     IPostInTagGrpcClient postInTagGrpcClient,
+    IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger)
@@ -74,15 +75,28 @@ public class GetPostBySlugQueryHandler(
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
             var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
-            var tagIdList = tagIds.ToList();
-            if (tagIdList.IsNotNullOrEmpty())
+            if (tagIds != null)
             {
-                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
-                var tagList = tagsInfo.ToList();
-                if (tagList.IsNotNullOrEmpty())
+                var tagIdList = tagIds.ToList();
+                if (tagIdList.IsNotNullOrEmpty())
                 {
-                    data.DetailPost.Tags = tagList.ToList();
+                    var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
+                    if (tagsInfo != null)
+                    {
+                        var tagList = tagsInfo.ToList();
+                        if (tagList.IsNotNullOrEmpty())
+                        {
+                            data.DetailPost.Tags = tagList.ToList();
+                        }
+                    }
                 }
+            }
+
+            // Get user information belongs to the post (Lấy thông tin tác giả bài viết)
+            var authorUserInfo = await identityGrpcClient.GetUserInfo(post.AuthorUserId);
+            if (authorUserInfo != null)
+            {
+                data.DetailPost.User = authorUserInfo;
             }
 
             var relatedPosts = relatedPostsTask.Result.ToList();

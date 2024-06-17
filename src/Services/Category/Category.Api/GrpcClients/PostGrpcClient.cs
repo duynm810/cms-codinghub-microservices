@@ -15,7 +15,7 @@ public class PostGrpcClient(PostProtoService.PostProtoServiceClient postProtoSer
         {
             var request = new HasPostsInCategoryRequest() { CategoryId = categoryId };
             var result = await postProtoServiceClient.HasPostsInCategoryAsync(request);
-            return result.Exists;
+            return result is { Exists: true };
         }
         catch (Exception e)
         {

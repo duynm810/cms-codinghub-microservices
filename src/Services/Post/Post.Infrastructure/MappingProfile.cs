@@ -1,7 +1,9 @@
 using AutoMapper;
 using Category.Grpc.Protos;
 using Google.Protobuf.Collections;
+using Identity.Grpc.Protos;
 using Shared.Dtos.Category;
+using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
 using Tag.Grpc.Protos;
 
@@ -11,11 +13,12 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        ConfigureCategoryMappings();
-        ConfigureTagMappings();
+        ConfigureCategoryGrpcMappings();
+        ConfigureTagGrpcMappings();
+        ConfigureIdentityGrpcMappings();
     }
 
-    private void ConfigureCategoryMappings()
+    private void ConfigureCategoryGrpcMappings()
     {
         CreateMap<CategoryDto, CategoryModel>()
             .ForMember(dest => dest.Icon, opt => opt.MapFrom(src => src.Icon ?? string.Empty))
@@ -56,10 +59,9 @@ public class MappingProfile : Profile
             }).ToList());
     }
 
-    private void ConfigureTagMappings()
+    private void ConfigureTagGrpcMappings()
     {
         CreateMap<TagDto, TagModel>().ReverseMap();
-
         CreateMap<TagDto, GetTagsResponse>().ReverseMap();
 
         CreateMap<RepeatedField<TagModel>, IEnumerable<TagDto>>()
@@ -85,5 +87,14 @@ public class MappingProfile : Profile
                 Name = t.Name,
                 Slug = t.Slug
             }).ToList());
+    }
+
+    private void ConfigureIdentityGrpcMappings()
+    {
+        CreateMap<UserResponse, UserDto>()
+            .ForMember(dest => dest.UserId, opt =>
+                opt.MapFrom(src => Guid.Parse(src.UserId)));
+
+        CreateMap<UserRequest, UserDto>().ReverseMap();
     }
 }

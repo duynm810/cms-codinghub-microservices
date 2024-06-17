@@ -10,5 +10,5 @@ public interface ICategoryGrpcClient
 
     Task<CategoryDto?> GetCategoryBySlug(string slug);
 
-    Task<IEnumerable<CategoryDto?>> GetAllNonStaticPageCategories();
+    Task<IEnumerable<CategoryDto>> GetAllNonStaticPageCategories();
 }

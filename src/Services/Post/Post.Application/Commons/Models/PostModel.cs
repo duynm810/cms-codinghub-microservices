@@ -3,6 +3,7 @@ using Post.Application.Commons.Mappings;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.Entities;
 using Shared.Dtos.Category;
+using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
 using Shared.Enums;
 
@@ -56,14 +57,19 @@ public class PostModel : IMapFrom<PostBase>, IMapFrom<CategoryDto>
 
     public string? CategoryColor { get; set; }
 
-    public Guid AuthorUserId { get; set; }
-
     public DateTimeOffset? PaidDate { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
     
-    // Custom property
+    /// <summary>
+    /// List of tags in the article (Danh sách các thẻ thuộc bài viết)
+    /// </summary>
     public List<TagDto>? Tags { get; set; }
+    
+    /// <summary>
+    /// Article author information (Thông tin tác giả bài viết)
+    /// </summary>
+    public UserDto? User { get; set; }
 
     public void Mapping(Profile profile)
     {

@@ -31,11 +31,15 @@ public class CategoryGrpcClient(
 
             var request = new GetCategoryByIdRequest { Id = id };
             var result = await categoryProtoServiceClient.GetCategoryByIdAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No category found by id {Id}", methodName, id);
+                return null;
+            }
+            
             var data = mapper.Map<CategoryDto>(result);
 
-            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
-
             return data;
         }
         catch (Exception e)
@@ -63,13 +67,17 @@ public class CategoryGrpcClient(
 
             var request = new GetCategoriesByIdsRequest() { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No categories found", methodName);
+                return Enumerable.Empty<CategoryDto>();
+            }
+            
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
 
             var data = categoriesByIds.ToList();
 
-            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
-
             return data;
         }
         catch (Exception e)
@@ -96,11 +104,15 @@ public class CategoryGrpcClient(
 
             var request = new GetCategoryBySlugRequest() { Slug = slug };
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No category found with slug {Slug}", methodName, slug);
+                return null;
+            }
+            
             var data = mapper.Map<CategoryDto>(result);
-
-            // Save cache (Lưu cache)
+            
             await cacheService.SetAsync(cacheKey, data);
-
             return data;
         }
         catch (Exception e)
@@ -110,7 +122,7 @@ public class CategoryGrpcClient(
         }
     }
 
-    public async Task<IEnumerable<CategoryDto?>> GetAllNonStaticPageCategories()
+    public async Task<IEnumerable<CategoryDto>> GetAllNonStaticPageCategories()
     {
         const string methodName = nameof(GetAllNonStaticPageCategories);
         
@@ -126,13 +138,16 @@ public class CategoryGrpcClient(
             }
 
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No categories found", methodName);
+                return Enumerable.Empty<CategoryDto>();
+            }
+            
             var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
-
             var data = allNonStaticPageCategories.ToList();
 
-            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
-
             return data;
         }
         catch (Exception e)

@@ -14,7 +14,7 @@ public class TagGrpcClient(
     IMapper mapper,
     ILogger logger) : ITagGrpcClient
 {
-    public async Task<IEnumerable<TagDto>> GetTagsByIds(IEnumerable<Guid> ids)
+    public async Task<IEnumerable<TagDto>?> GetTagsByIds(IEnumerable<Guid> ids)
     {
         const string methodName = nameof(GetTagsByIds);
 
@@ -34,8 +34,13 @@ public class TagGrpcClient(
             request.Ids.AddRange(idList.Select(id => id.ToString()));
 
             var result = await tagProtoServiceClient.GetTagsByIdsAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No tags found", methodName);
+                return Enumerable.Empty<TagDto>();
+            }
+            
             var tagsByIds = mapper.Map<IEnumerable<TagDto>>(result);
-
             var data = tagsByIds.ToList();
             
             // Save cache (Lưu cache)
@@ -50,7 +55,7 @@ public class TagGrpcClient(
         }
     }
 
-    public async Task<IEnumerable<TagDto>> GetTags()
+    public async Task<IEnumerable<TagDto>?> GetTags()
     {
         const string methodName = nameof(GetTags);
 
@@ -63,14 +68,19 @@ public class TagGrpcClient(
             {
                 return cachedTags;
             }
-            
+        
             var request = new GetTagsRequest();
+        
             var result = await tagProtoServiceClient.GetTagsAsync(request);
-
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No tags found", methodName);
+                return Enumerable.Empty<TagDto>();
+            }
+        
             var tags = mapper.Map<IEnumerable<TagDto>>(result);
-
             var data = tags.ToList();
-            
+        
             // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data);
 
@@ -86,7 +96,7 @@ public class TagGrpcClient(
     public async Task<TagDto?> GetTagBySlug(string slug)
     {
         const string methodName = nameof(GetTagBySlug);
-        
+    
         try
         {
             var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(slug);
@@ -99,7 +109,14 @@ public class TagGrpcClient(
             }
 
             var request = new GetTagBySlugRequest() { Slug = slug };
+        
             var result = await tagProtoServiceClient.GetTagBySlugAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No tag found with slug {Slug}", methodName, slug);
+                return null;
+            }
+        
             var data = mapper.Map<TagDto>(result);
 
             // Save cache (Lưu cache)

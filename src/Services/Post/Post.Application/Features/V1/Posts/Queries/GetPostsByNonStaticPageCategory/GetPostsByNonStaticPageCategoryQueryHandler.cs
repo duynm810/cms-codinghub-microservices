@@ -6,6 +6,7 @@ using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Category;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Settings;
@@ -30,8 +31,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
 
             // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey();
-            var cachedPosts =
-                await cacheService.GetAsync<IEnumerable<CategoryWithPostsModel>>(cacheKey, cancellationToken);
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<CategoryWithPostsModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
@@ -44,47 +44,51 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
             var nonStaticPageCategories = await categoryGrpcClient.GetAllNonStaticPageCategories();
 
             var data = new List<CategoryWithPostsModel>();
-
-            foreach (var category in nonStaticPageCategories)
+            if (nonStaticPageCategories != null)
             {
-                if (category == null)
-                    continue;
-
-                var posts = await postRepository.GetPostsByCategoryId(category.Id, request.Count);
-
-                var postList = posts.ToList();
-
-                if (postList.Count != 0)
+                foreach (var category in nonStaticPageCategories)
                 {
-                    var postSummaries = postList.Select(post => new PostModel
-                    {
-                        Id = post.Id,
-                        Title = post.Title,
-                        Slug = post.Slug,
-                        Thumbnail = post.Thumbnail,
-                        PublishedDate = post.PublishedDate,
-                        ViewCount = post.ViewCount
-                    }).ToList();
+                    if (category == null)
+                        continue;
 
-                    var categoryWithPosts = new CategoryWithPostsModel
-                    {
-                        CategoryId = category.Id,
-                        CategoryName = category.Name,
-                        CategorySlug = category.Slug,
-                        Posts = postSummaries
-                    };
+                    var posts = await postRepository.GetPostsByCategoryId(category.Id, request.Count);
 
-                    data.Add(categoryWithPosts);
+                    var postList = posts.ToList();
+
+                    if (postList.Count != 0)
+                    {
+                        var postSummaries = postList.Select(post => new PostModel
+                        {
+                            Id = post.Id,
+                            Title = post.Title,
+                            Slug = post.Slug,
+                            Thumbnail = post.Thumbnail,
+                            PublishedDate = post.PublishedDate,
+                            ViewCount = post.ViewCount
+                        }).ToList();
+
+                        var categoryWithPosts = new CategoryWithPostsModel
+                        {
+                            CategoryId = category.Id,
+                            CategoryName = category.Name,
+                            CategorySlug = category.Slug,
+                            Posts = postSummaries
+                        };
+
+                        data.Add(categoryWithPosts);
+                    }
                 }
+                
+                result.Success(data);
+
+                // Save cache (Lưu cache)
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
+
+                logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories", methodName);
             }
 
-            result.Success(data);
-
-            // Save cache (Lưu cache)
-            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
-
-            logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories",
-                methodName);
+            result.Messages.Add(ErrorMessagesConsts.Post.InvalidGetPostsByNonStaticPageCategoryNotFound);
+            result.Failure(StatusCodes.Status400BadRequest,result.Messages);
         }
         catch (Exception e)
         {

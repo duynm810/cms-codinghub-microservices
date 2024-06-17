@@ -1,6 +1,7 @@
 using Category.Grpc.Protos;
 using Contracts.Commons.Interfaces;
 using Contracts.Domains.Repositories;
+using Identity.Grpc.Protos;
 using Infrastructure.Commons;
 using Infrastructure.Domains;
 using Infrastructure.Domains.Repositories;
@@ -92,6 +93,7 @@ public static class ConfigureServices
             .AddScoped<ICategoryGrpcClient, CategoryGrpcClient>()
             .AddScoped<ITagGrpcClient, TagGrpcClient>()
             .AddScoped<IPostInTagGrpcClient, PostInTagGrpcClient>()
+            .AddScoped<IIdentityGrpcClient, IdentityGrpcClient>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>();
@@ -111,6 +113,9 @@ public static class ConfigureServices
         
         services.AddGrpcClient<PostInTagService.PostInTagServiceClient>(x =>
             x.Address = new Uri(grpcSettings.PostInTagUrl));
+        
+        services.AddGrpcClient<UserProtoService.UserProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.IdentityUrl));
     }
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
