@@ -3,6 +3,7 @@ using Grpc.Core;
 using Identity.Grpc.Protos;
 using Post.Domain.GrpcClients;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Identity.User;
 
 namespace Post.Infrastructure.GrpcClients;
@@ -38,7 +39,7 @@ public class IdentityGrpcClient(
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting user info by ID: {Id}. Message: {ErrorMessage}", methodName, userId, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 }

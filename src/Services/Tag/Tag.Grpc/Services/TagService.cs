@@ -81,8 +81,7 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
             if (tag == null)
             {
                 logger.Warning("{MethodName} - Tag not found for Slug: {TagSlug}", methodName, request.Slug);
-                throw new RpcException(new Status(StatusCode.NotFound,
-                    $"Tag with slug '{request.Slug}' not found."));
+                throw new RpcException(new Status(StatusCode.NotFound, $"Tag with slug '{request.Slug}' not found."));
             }
 
             var data = mapper.Map<TagModel>(tag);

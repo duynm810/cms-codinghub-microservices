@@ -1,6 +1,8 @@
 using AutoMapper;
 using Comment.Api.GrpcClients.Interfaces;
+using Grpc.Core;
 using Identity.Grpc.Protos;
+using Shared.Constants;
 using Shared.Dtos.Identity.User;
 using ILogger = Serilog.ILogger;
 
@@ -11,30 +13,6 @@ public class IdentityGrpcClient(
     IMapper mapper,
     ILogger logger) : IIdentityGrpcClient
 {
-    public async Task<UserDto?> GetUserInfo(string userId)
-    {
-        const string methodName = nameof(GetUserInfo);
-
-        try
-        {
-            var request = new UserRequest() { UserId = userId };
-            var result = await userProtoServiceClient.GetUserInfoAsync(request);
-            if (result == null)
-            {
-                logger.Warning("{MethodName}: No user found with id {Id}", methodName, userId);
-                return null;
-            }
-            
-            var data = mapper.Map<UserDto>(result);
-            return data;
-        }
-        catch (Exception e)
-        {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw;
-        }
-    }
-
     public async Task<List<UserDto>> GetUsersInfo(IEnumerable<Guid> userIds)
     {
         const string methodName = nameof(GetUsersInfo);
@@ -56,10 +34,15 @@ public class IdentityGrpcClient(
             var data = mapper.Map<List<UserDto>>(result);
             return data;
         }
+        catch (RpcException rpcEx)
+        {
+            logger.Error("{MethodName}: gRPC error occurred while getting users info by IDs: {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, userIds, rpcEx.StatusCode, rpcEx.Message);
+            return [];
+        }
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 }

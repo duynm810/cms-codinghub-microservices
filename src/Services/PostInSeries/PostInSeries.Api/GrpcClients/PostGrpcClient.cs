@@ -1,7 +1,9 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
+using Grpc.Core;
 using Post.Grpc.Protos;
 using PostInSeries.Api.GrpcClients.Interfaces;
+using Shared.Constants;
 using Shared.Dtos.PostInSeries;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
@@ -23,7 +25,7 @@ public class PostGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            // Check existed cache (Kiểm tra cache)
+            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
             if (cachedPosts != null)
@@ -41,18 +43,24 @@ public class PostGrpcClient(
                 var postsByIds = mapper.Map<IEnumerable<PostInSeriesDto>>(result.Posts);
                 var data = postsByIds.ToList();
 
-                // Save cache (Lưu cache)
+                // Lưu cache
                 await cacheService.SetAsync(cacheKey, data);
 
                 return data;
             }
+
+            logger.Warning("{MethodName}: No posts found for the given ids", methodName);
+            return Enumerable.Empty<PostInSeriesDto>();
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting posts by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            return Enumerable.Empty<PostInSeriesDto>();
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw;
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting posts by ids. Message: {ErrorMessage}", methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
-
-        return new List<PostInSeriesDto>();
     }
 }

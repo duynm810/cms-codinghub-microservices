@@ -2,6 +2,7 @@ using Grpc.Core;
 using Post.Domain.GrpcClients;
 using PostInTag.Grpc.Protos;
 using Serilog;
+using Shared.Constants;
 
 namespace Post.Infrastructure.GrpcClients;
 
@@ -36,7 +37,7 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting tags by post id {Id}. Message: {ErrorMessage}", methodName, postId, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 

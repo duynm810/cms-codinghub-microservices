@@ -5,6 +5,7 @@ using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Post.Domain.GrpcClients;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Category;
 using Shared.Helpers;
 
@@ -51,7 +52,7 @@ public class CategoryGrpcClient(
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting category by id {Id}. Message: {ErrorMessage}", methodName, id, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 
@@ -95,7 +96,7 @@ public class CategoryGrpcClient(
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting categories by ids. Message: {ErrorMessage}",
                 methodName, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 
@@ -136,7 +137,7 @@ public class CategoryGrpcClient(
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting category by slug {Slug}. Message: {ErrorMessage}",
                 methodName, slug, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 
@@ -177,7 +178,7 @@ public class CategoryGrpcClient(
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting all non-static page categories. Message: {ErrorMessage}",
                 methodName, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
 }

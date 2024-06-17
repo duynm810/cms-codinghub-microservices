@@ -1,6 +1,7 @@
 using Category.Api.GrpcClients.Interfaces;
 using Grpc.Core;
 using Post.Grpc.Protos;
+using Shared.Constants;
 using ILogger = Serilog.ILogger;
 
 namespace Category.Api.GrpcClients;
@@ -26,8 +27,7 @@ public class PostGrpcClient(PostProtoService.PostProtoServiceClient postProtoSer
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while checking posts in category {CategoryId}. Message: {ErrorMessage}", methodName, categoryId, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
-
 }

@@ -3,6 +3,7 @@ using Comment.Api.GrpcClients.Interfaces;
 using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using Post.Grpc.Protos;
+using Shared.Constants;
 using Shared.Dtos.Post;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
@@ -55,8 +56,7 @@ public class PostGrpcClient(
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting top 10 posts. Message: {ErrorMessage}", methodName, e.Message);
-            throw;
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
-
 }
