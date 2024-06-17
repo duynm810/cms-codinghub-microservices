@@ -17,10 +17,10 @@ public class IdentityGrpcClient(
 
         try
         {
-            var request = new UserRequest { UserId = userId.ToString() };
+            var request = new UserRequest { UserId = userId.ToString("D") };
 
             var result = await userProtoServiceClient.GetUserInfoAsync(request);
-            if (result == null)
+            if (result == null || string.IsNullOrEmpty(result.Id))
             {
                 logger.Warning("{MethodName}: No user found with id {Id}", methodName, userId);
                 return null;

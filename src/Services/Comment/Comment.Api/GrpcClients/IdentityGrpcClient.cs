@@ -19,6 +19,12 @@ public class IdentityGrpcClient(
         {
             var request = new UserRequest() { UserId = userId };
             var result = await userProtoServiceClient.GetUserInfoAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No user found with id {Id}", methodName, userId);
+                return null;
+            }
+            
             var data = mapper.Map<UserDto>(result);
             return data;
         }
@@ -41,6 +47,12 @@ public class IdentityGrpcClient(
             request.UserIds.AddRange(idList.Select(id => id.ToString()));
             
             var result = await userProtoServiceClient.GetUsersInfoAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No users info not found", methodName);
+                return [];
+            }
+            
             var data = mapper.Map<List<UserDto>>(result);
             return data;
         }

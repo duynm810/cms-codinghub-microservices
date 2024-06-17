@@ -16,20 +16,26 @@ public class UserService(IUserRepository userRepository, IMapper mapper, ILogger
       {
          logger.Information("BEGIN {MethodName} - Getting user info by ID: {UserId}", methodName, request.UserId);
 
-         var user = await userRepository.GetUserById(Guid.Parse(request.UserId));
+         if (!Guid.TryParse(request.UserId, out var userId))
+         {
+            logger.Warning("{MethodName} - Invalid GUID format: {UserId}", methodName, request.UserId);
+            return new UserResponse(); // Return response if Guid invalid (Trả về response rỗng nếu GUID không hợp lệ)
+         }
+         
+         var user = await userRepository.GetUserById(userId);
          if (user == null)
          {
             logger.Warning("{MethodName} - User not found for ID: {UserId}", methodName, request.UserId);
-            return null;
+            return new UserResponse { Id = string.Empty }; // Make sure that Id is not null (Đảm bảo rằng Id không null)
          }
 
          var data = mapper.Map<UserResponse>(user);
 
-         logger.Information("END {MethodName} - Success: Retrieved User {UserId}", methodName, data.UserId);
+         logger.Information("END {MethodName} - Success: Retrieved User {UserId}", methodName, data.Id);
 
          return data;
       }
-      catch (Exception e)
+      catch (RpcException e)
       {
          logger.Error(e, "{MethodName}. Error occurred while getting user info by ID: {UserId}. Message: {ErrorMessage}", methodName, request.UserId, e.Message);
          throw new RpcException(new Status(StatusCode.Internal, "An occurred while getting user by ID"));
@@ -62,7 +68,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper, ILogger
 
          return new UsersResponse { Users = { users } };
       }
-      catch (Exception e)
+      catch (RpcException e)
       {
          logger.Error(e, "{MethodName}. Error occurred while getting user info by IDs: {UserId}. Message: {ErrorMessage}", methodName, userIds, e.Message);
          throw new RpcException(new Status(StatusCode.Internal, "An occurred while getting user by IDs"));

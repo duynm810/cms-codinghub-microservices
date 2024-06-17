@@ -58,7 +58,7 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
             var userIds = comments.Select(c => c.UserId).Distinct().ToArray();
             
             var users = await identityGrpcClient.GetUsersInfo(userIds);
-            var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.UserId);
+            var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.Id);
             
             var commentList = mapper.Map<List<CommentDto>>(comments);
             

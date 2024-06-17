@@ -38,16 +38,16 @@ public class MappingProfile : Profile
 
     private void ConfigureIdentityGrpcMappings()
     {
-        CreateMap<UserResponse, UserDto>()
-            .ForMember(dest => dest.UserId, opt =>
-                opt.MapFrom(src => Guid.Parse(src.UserId)));
-
         CreateMap<UserRequest, UserDto>().ReverseMap();
+
+        CreateMap<UserResponse, UserDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => string.IsNullOrEmpty(src.Id) ? Guid.Empty : Guid.Parse(src.Id)))
+            .ReverseMap();
 
         CreateMap<UsersResponse, List<UserDto>>()
             .ConvertUsing(src => src.Users.Select(u => new UserDto
             {
-                UserId = Guid.Parse(u.UserId),
+                Id = Guid.Parse(u.Id),
                 FirstName = u.FirstName,
                 LastName = u.LastName
             }).ToList());
