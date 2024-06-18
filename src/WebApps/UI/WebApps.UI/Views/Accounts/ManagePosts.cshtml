@@ -1,0 +1,78 @@
+@model ManagePostsViewModel
+@{
+    Layout = "_Layout";
+}
+
+<div class="container single-content">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            Manage posts
+        </h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-12 text-right-custom">
+            <button class="btn btn-primary btn-block" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
+                <i class="fa fa-edit"></i> Create new post
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-wrap">
+                <table class="table table-responsive-xl">
+                    <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Title</th>
+                        <th>Summary</th>
+                        <th>Status</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr class="alert" role="alert">
+                        <td>
+                            <label class="checkbox-wrap checkbox-primary">
+                                <input type="checkbox" checked>
+                                <span class="checkmark"></span>
+                            </label>
+                        </td>
+                        <td>Title 01</td>
+                        <td>Status 01</td>
+                        <td class="status">
+                            <span class="active">Approved</span>
+                        </td>
+                        <td>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="fa fa-close"></i>
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                    <tr class="alert" role="alert">
+                        <td>
+                            <label class="checkbox-wrap checkbox-primary">
+                                <input type="checkbox">
+                                <span class="checkmark"></span>
+                            </label>
+                        </td>
+                        <td>Title 02</td>
+                        <td>Status 02</td>
+                        <td class="status">
+                            <span class="waiting">Waiting for approval</span>
+                        </td>
+                        <td>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">
+                                    <i class="fa fa-close"></i>
+                                </span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

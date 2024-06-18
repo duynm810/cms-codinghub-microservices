@@ -27,6 +27,16 @@ public static class RouteMap
             "profile",
             "/accounts/profile",
             new { controller = "Accounts", action = "Profile" });
+        
+        app.MapControllerRoute(
+            "manage-posts",
+            "/accounts/manage-posts",
+            new { controller = "Accounts", action = "ManagePosts" });
+        
+        app.MapControllerRoute(
+            "create-new-post",
+            "/accounts/create-new-post",
+            new { controller = "Accounts", action = "CreatePost" });
 
         #endregion
 

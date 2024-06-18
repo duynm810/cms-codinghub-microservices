@@ -37,13 +37,33 @@ public class AccountsController : Controller
 
     public IActionResult Profile()
     {
-        var item = new ProfileViewModel();
+        var item = new ProfileViewModel()
+        {
+            ShowSiteBottom = false
+        };
+        
         return View(item);
+    }
+
+    public IActionResult ManagePosts()
+    {
+        var items = new ManagePostsViewModel()
+        {
+            MainClass = "bg-grey pb-30",
+            ShowSiteBottom = false
+        };
+
+        return View(items);
     }
 
     public IActionResult CreatePost()
     {
-        var item = new CreatePostViewModel();
+        var item = new CreatePostViewModel
+        {
+            MainClass = "bg-grey pb-30",
+            ShowSiteBottom = false
+        };
+        
         return View(item);
     }
 }

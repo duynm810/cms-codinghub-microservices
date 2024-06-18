@@ -70,98 +70,87 @@
     </script>
 }
 
-<main class="bg-grey pt-40 pb-40">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-xl-10 col-md-12">
-                <div class="post_wrap widget-taber-content p-30 bg-white border-radius-10">
-                    <div class="padding_eight_all bg-white">
-                        <div class="heading_s1 text-center">
-                            <h1 class="entry-title mb-20 font-weight-900 ">
-                                New post
-                            </h1>
-                        </div>
-                        <div class="bt-1 border-color-1 mt-30 mb-50"></div>
-                        <form method="post" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <select class="dropdown-custom" name="category" required="">
-                                            <option value="" disabled selected>Select category</option>
-                                            <option value="category1">Danh mục 1</option>
-                                            <option value="category2">Danh mục 2</option>
-                                            <option value="category3">Danh mục 3</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" required="" class="form-control" name="title" placeholder="Title">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <input type="text" required="" class="form-control" name="slug" placeholder="Slug (SEO)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" required="" name="summary" placeholder="Summary" rows="3"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" required="" name="content" placeholder="Content" rows="6"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" name="source" placeholder="Reference source (URL or source)">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <textarea class="form-control" required="" name="seo_description" placeholder="SEO description" rows="3"></textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="upload-container">
-                                        <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
-                                            <input type="file" id="thumbnail" name="thumbnail" required="" style="display:none;">
-                                            <div id="drop-area" class="drop-area">
-                                                <div class="drop-area-icon">
-                                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
-                                                </div>
-                                                <div class="drop-area-text">Drag and drop file here</div>
-                                            </div>
-                                        </label>
-                                        <div id="file-list" class="file-list"></div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <button type="submit" class="button button-contactForm btn-block">Submit</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+<div class="container single-content">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            New posts
+        </h1>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="dropdown-custom" name="category" required="">
+                        <option value="" disabled selected>Select category</option>
+                        <option value="category1">Danh mục 1</option>
+                        <option value="category2">Danh mục 2</option>
+                        <option value="category3">Danh mục 3</option>
+                    </select>
                 </div>
             </div>
         </div>
-    </div>
-</main>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" required="" class="form-control" name="title" placeholder="Title">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" required="" class="form-control" name="slug" placeholder="Slug (SEO)">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required="" name="summary" placeholder="Summary" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required="" name="content" placeholder="Content" rows="6"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input class="form-control" required="" name="seo_description" placeholder="SEO description" rows="3">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="source" placeholder="Reference source (URL or source)">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="upload-container">
+                    <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
+                        <input type="file" id="thumbnail" name="thumbnail" required="" style="display:none;">
+                        <div id="drop-area" class="drop-area">
+                            <div class="drop-area-icon">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                            </div>
+                            <div class="drop-area-text">Drag and drop file here</div>
+                        </div>
+                    </label>
+                    <div id="file-list" class="file-list"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="submit" class="button button-contactForm btn-block">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
