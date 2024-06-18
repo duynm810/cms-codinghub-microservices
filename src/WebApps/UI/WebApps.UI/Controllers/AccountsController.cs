@@ -1,8 +1,10 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Extensions;
 using WebApps.UI.Models.Accounts;
 
 namespace WebApps.UI.Controllers;
@@ -47,6 +49,8 @@ public class AccountsController : Controller
 
     public IActionResult ManagePosts()
     {
+        var user = User.GetUserId();
+        
         var items = new ManagePostsViewModel()
         {
             MainClass = "bg-grey pb-30",

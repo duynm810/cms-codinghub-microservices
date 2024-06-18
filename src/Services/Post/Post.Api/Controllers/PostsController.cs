@@ -20,6 +20,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPinnedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostById;
 using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
+using Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
@@ -107,6 +108,19 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
+    
+    [HttpGet("by-author/{authorId:guid}/paging")]
+    [ProducesResponseType(typeof(ApiResult<PagedResponse<PostModel>>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostsByAuthorPaging(
+        [FromRoute] Guid authorId,
+        [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetPostsByAuthorPagingQuery(authorId, pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
 
     [HttpGet("latest/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostModel>>), (int)HttpStatusCode.OK)]
@@ -119,7 +133,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var result = await mediator.Send(query);
         return Ok(result);
     }
-
+    
     [HttpGet("by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostModel>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]

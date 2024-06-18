@@ -1,8 +1,6 @@
-using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
@@ -35,9 +33,7 @@ public class GetPostsByCategoryPagingQueryHandler(
                 methodName, request.CategorySlug, request.PageNumber, request.PageSize);
 
             // Check existed cache (Kiểm tra cache)
-            var cacheKey =
-                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber,
-                    request.PageSize);
+            var cacheKey = CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
