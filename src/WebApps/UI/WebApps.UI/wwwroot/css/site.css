@@ -26,31 +26,91 @@
     color: #0056b3;
 }
 
-.thumbnail-preview-container {
-    position: relative;
-}
-
-.thumbnail-preview {
-    max-width: 50%;
-    height: auto;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    display: block;
-}
-
-.custom-file-upload {
-    display: inline-block;
-    padding: 6px 12px;
-    cursor: pointer;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
+.upload-container {
     background-color: #f8f9fa;
-    color: #495057;
-    transition: background-color 0.3s ease;
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    width: 100%;
 }
 
-.custom-file-upload:hover {
-    background-color: #e2e6ea;
+.drop-area {
+    border: 2px dashed #ced4da;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.drop-area.drag-over {
+    background-color: #e9ecef;
+}
+
+.drop-area-icon {
+    margin-bottom: 10px;
+}
+
+.drop-area-text {
+    font-size: 1.2rem;
+    color: #6c757d;
+}
+
+.file-list {
+    margin-top: 20px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    background-color: #ffffff;
+}
+
+.file-thumbnail img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    object-fit: cover;
+    margin-right: 10px;
+}
+
+.file-details {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.file-name {
+    display: block;
+    font-size: 0.9rem;
+    color: #495057;
+}
+
+.file-size {
+    display: block;
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.file-remove button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #dc3545;
+    font-size: 1.2rem;
+}
+
+.file-remove button:hover {
+    color: #c82333;
 }
 
 .dropdown-custom {

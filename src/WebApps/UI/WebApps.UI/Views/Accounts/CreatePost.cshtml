@@ -1,17 +1,3 @@
-@section scripts {
-    <script>
-        function previewThumbnail(event) {
-            let reader = new FileReader();
-            reader.onload = function() {
-                let output = document.getElementById('thumbnail-preview');
-                output.src = reader.result;
-                output.style.display = 'block';
-            };
-            reader.readAsDataURL(event.target.files[0]);
-        }
-    </script>
-}
-
 <main class="bg-grey pt-40 pb-40">
     <div class="container">
         <div class="row justify-content-center">
@@ -19,14 +5,17 @@
                 <div class="post_wrap widget-taber-content p-30 bg-white border-radius-10">
                     <div class="padding_eight_all bg-white">
                         <div class="heading_s1 text-center">
-                            <h3 class="mb-30 font-weight-900">Đăng bài viết mới</h3>
+                            <h1 class="entry-title mb-20 font-weight-900 ">
+                                New post
+                            </h1>
                         </div>
+                        <div class="bt-1 border-color-1 mt-30 mb-50"></div>
                         <form method="post" enctype="multipart/form-data">
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <select class="dropdown-custom" name="category" required="">
-                                            <option value="" disabled selected>Chọn danh mục bài viết</option>
+                                            <option value="" disabled selected>Select category</option>
                                             <option value="category1">Danh mục 1</option>
                                             <option value="category2">Danh mục 2</option>
                                             <option value="category3">Danh mục 3</option>
@@ -37,7 +26,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <input type="text" required="" class="form-control" name="title" placeholder="Tiêu đề bài viết">
+                                        <input type="text" required="" class="form-control" name="title" placeholder="Title">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -49,45 +38,52 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" required="" name="summary" placeholder="Mô tả ngắn gọn bài viết" rows="3"></textarea>
+                                        <textarea class="form-control" required="" name="summary" placeholder="Summary" rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" required="" name="content" placeholder="Nội dung bài viết" rows="6"></textarea>
+                                        <textarea class="form-control" required="" name="content" placeholder="Content" rows="6"></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="source" placeholder="Nguồn tham khảo (URL hoặc nguồn)">
+                                        <input type="text" class="form-control" name="source" placeholder="Reference source (URL or source)">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <textarea class="form-control" required="" name="seo_description" placeholder="Mô tả SEO" rows="3"></textarea>
+                                        <textarea class="form-control" required="" name="seo_description" placeholder="SEO description" rows="3"></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label for="thumbnail" class="custom-file-upload">
-                                            <input type="file" id="thumbnail" name="thumbnail" required="" onchange="previewThumbnail(event)">
-                                            Chọn ảnh đại diện
+                                <div class="col-md-12">
+                                    <div class="upload-container">
+                                        <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
+                                            <input type="file" id="thumbnail" name="thumbnail" required="" style="display:none;">
+                                            <div id="drop-area" class="drop-area">
+                                                <div class="drop-area-icon">
+                                                    <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                                                </div>
+                                                <div class="drop-area-text">Drag and drop file here</div>
+                                            </div>
                                         </label>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="button button-contactForm btn-block">Đăng bài viết</button>
+                                        <div id="file-list" class="file-list"></div>
                                     </div>
                                 </div>
-                                <div class="col-md-6 thumbnail-container">
-                                    <img id="thumbnail-preview" class="thumbnail-preview" src="" alt="Thumbnail Preview" style="display: none;">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <button type="submit" class="button button-contactForm btn-block">Submit</button>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -97,3 +93,70 @@
         </div>
     </div>
 </main>
+
+@section scripts {
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const fileInput = document.getElementById("thumbnail");
+        const dropArea = document.getElementById("drop-area");
+        const fileList = document.getElementById("file-list");
+
+        dropArea.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            dropArea.classList.add("drag-over");
+        });
+
+        dropArea.addEventListener("dragleave", () => {
+            dropArea.classList.remove("drag-over");
+        });
+
+        dropArea.addEventListener("drop", (event) => {
+            event.preventDefault();
+            dropArea.classList.remove("drag-over");
+            handleFiles(event.dataTransfer.files);
+        });
+
+        fileInput.addEventListener("change", () => {
+            handleFiles(fileInput.files);
+        });
+
+        function handleFiles(files) {
+            fileList.innerHTML = '';
+            [...files].forEach(file => {
+                const fileItem = document.createElement("div");
+                fileItem.className = "file-item";
+
+                const fileThumbnail = document.createElement("div");
+                fileThumbnail.className = "file-thumbnail";
+                const img = document.createElement("img");
+                img.src = URL.createObjectURL(file);
+                img.alt = "Thumbnail";
+                fileThumbnail.appendChild(img);
+
+                const fileDetails = document.createElement("div");
+                fileDetails.className = "file-details";
+                fileDetails.innerHTML = `
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                `;
+
+                const fileRemove = document.createElement("div");
+                fileRemove.className = "file-remove";
+                const removeButton = document.createElement("button");
+                removeButton.type = "button";
+                removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+                removeButton.addEventListener("click", () => {
+                    fileInput.value = '';
+                    fileList.innerHTML = '';
+                });
+
+                fileRemove.appendChild(removeButton);
+                fileItem.appendChild(fileThumbnail);
+                fileItem.appendChild(fileDetails);
+                fileItem.appendChild(fileRemove);
+                fileList.appendChild(fileItem);
+            });
+        }
+    });
+</script>
+}
