@@ -1,0 +1,99 @@
+@section scripts {
+    <script>
+        function previewThumbnail(event) {
+            let reader = new FileReader();
+            reader.onload = function() {
+                let output = document.getElementById('thumbnail-preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}
+
+<main class="bg-grey pt-40 pb-40">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-md-12">
+                <div class="post_wrap widget-taber-content p-30 bg-white border-radius-10">
+                    <div class="padding_eight_all bg-white">
+                        <div class="heading_s1 text-center">
+                            <h3 class="mb-30 font-weight-900">Đăng bài viết mới</h3>
+                        </div>
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <select class="dropdown-custom" name="category" required="">
+                                            <option value="" disabled selected>Chọn danh mục bài viết</option>
+                                            <option value="category1">Danh mục 1</option>
+                                            <option value="category2">Danh mục 2</option>
+                                            <option value="category3">Danh mục 3</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" required="" class="form-control" name="title" placeholder="Tiêu đề bài viết">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <input type="text" required="" class="form-control" name="slug" placeholder="Slug (SEO)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" required="" name="summary" placeholder="Mô tả ngắn gọn bài viết" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" required="" name="content" placeholder="Nội dung bài viết" rows="6"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="source" placeholder="Nguồn tham khảo (URL hoặc nguồn)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <textarea class="form-control" required="" name="seo_description" placeholder="Mô tả SEO" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="thumbnail" class="custom-file-upload">
+                                            <input type="file" id="thumbnail" name="thumbnail" required="" onchange="previewThumbnail(event)">
+                                            Chọn ảnh đại diện
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="button button-contactForm btn-block">Đăng bài viết</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 thumbnail-container">
+                                    <img id="thumbnail-preview" class="thumbnail-preview" src="" alt="Thumbnail Preview" style="display: none;">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -37,7 +37,13 @@ public class AccountsController : Controller
 
     public IActionResult Profile()
     {
-        var items = new ProfileViewModel();
-        return View(items);
+        var item = new ProfileViewModel();
+        return View(item);
+    }
+
+    public IActionResult CreatePost()
+    {
+        var item = new CreatePostViewModel();
+        return View(item);
     }
 }
