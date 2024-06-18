@@ -75,19 +75,16 @@ public class GetPostBySlugQueryHandler(
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
             var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
-            if (tagIds != null)
+            var tagIdList = tagIds.ToList();
+            if (tagIdList.IsNotNullOrEmpty())
             {
-                var tagIdList = tagIds.ToList();
-                if (tagIdList.IsNotNullOrEmpty())
+                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
+                if (tagsInfo != null)
                 {
-                    var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
-                    if (tagsInfo != null)
+                    var tagList = tagsInfo.ToList();
+                    if (tagList.IsNotNullOrEmpty())
                     {
-                        var tagList = tagsInfo.ToList();
-                        if (tagList.IsNotNullOrEmpty())
-                        {
-                            data.DetailPost.Tags = tagList.ToList();
-                        }
+                        data.DetailPost.Tags = tagList.ToList();
                     }
                 }
             }

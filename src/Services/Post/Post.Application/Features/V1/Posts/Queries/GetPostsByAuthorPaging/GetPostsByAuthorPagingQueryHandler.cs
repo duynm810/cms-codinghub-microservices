@@ -15,6 +15,7 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 public class GetPostsByAuthorPagingQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
+    IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
     IMappingHelper mappingHelper,
     ILogger logger) : IRequestHandler<GetPostsByAuthorPagingQuery, ApiResult<PagedResponse<PostModel>>>
@@ -46,6 +47,13 @@ public class GetPostsByAuthorPagingQueryHandler(
             
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
+                // Get user information belongs to the post (Lấy thông tin tác giả bài viết)
+                var authorUserInfo = await identityGrpcClient.GetUserInfo(request.AuthorId);
+                if (authorUserInfo != null)
+                {
+                    //TODO (Get user info for posts by author paging)
+                }
+                
                 var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
@@ -53,7 +61,7 @@ public class GetPostsByAuthorPagingQueryHandler(
                 result.Success(data);
 
                 // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
+                await cacheService.SetAsync(cacheKey, data.Items, cancellationToken: cancellationToken);
 
                 logger.Information(
                     "END {MethodName} - Successfully retrieved {PostCount} posts for author {AuthorId} for page {PageNumber} with page size {PageSize}",

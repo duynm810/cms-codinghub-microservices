@@ -297,6 +297,25 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/by-current-user/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/posts/by-non-static-page-category",
       "UpstreamHttpMethod": [
         "GET"
