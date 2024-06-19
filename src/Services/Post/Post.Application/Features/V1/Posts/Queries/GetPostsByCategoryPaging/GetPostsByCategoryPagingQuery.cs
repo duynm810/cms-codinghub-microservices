@@ -1,12 +1,11 @@
 using MediatR;
-using Post.Application.Commons.Models;
-using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 
 public class GetPostsByCategoryPagingQuery(string categorySlug, int pageNumber, int pageSize)
-    : IRequest<ApiResult<PagedResponse<PostModel>>>
+    : IRequest<ApiResult<PagedResponse<PostDto>>>
 {
     public string CategorySlug { get; set; } = categorySlug;
 

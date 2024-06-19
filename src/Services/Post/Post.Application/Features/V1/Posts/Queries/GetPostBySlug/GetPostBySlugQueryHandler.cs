@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Category;
@@ -21,14 +22,15 @@ public class GetPostBySlugQueryHandler(
     IPostInTagGrpcClient postInTagGrpcClient,
     IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
+    IPostService postService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostBySlugDto>>
+    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostsBySlugDto>>
 {
-    public async Task<ApiResult<PostBySlugDto>> Handle(GetPostBySlugQuery request,
+    public async Task<ApiResult<PostsBySlugDto>> Handle(GetPostBySlugQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostBySlugDto>();
+        var result = new ApiResult<PostsBySlugDto>();
         const string methodName = nameof(GetPostBySlugQuery);
 
         try
@@ -36,7 +38,7 @@ public class GetPostBySlugQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
 
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
-            var cachedPost = await cacheService.GetAsync<PostBySlugDto>(cacheKey, cancellationToken).ConfigureAwait(false);
+            var cachedPost = await cacheService.GetAsync<PostsBySlugDto>(cacheKey, cancellationToken).ConfigureAwait(false);
             if (cachedPost != null)
             {
                 logger.Information("Retrieved post from cache with slug: {PostSlug}", request.Slug);
@@ -69,7 +71,7 @@ public class GetPostBySlugQueryHandler(
             }
 
             postDetail.Category = mapper.Map<CategoryDto>(category);
-            var data = new PostBySlugDto { Detail = postDetail };
+            var data = new PostsBySlugDto { Detail = postDetail };
 
             var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id).ConfigureAwait(false);
             var tagIdList = tagIds.ToList();
@@ -91,20 +93,8 @@ public class GetPostBySlugQueryHandler(
             var relatedPosts = relatedPostsTask.Result.ToList();
             if (relatedPosts.IsNotNullOrEmpty())
             {
-                var categoryIds = relatedPosts.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds).ConfigureAwait(false);
-                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
-
-                var relatedPostDtos = mapper.Map<List<PostDto>>(relatedPosts);
-                foreach (var relatedPost in relatedPostDtos)
-                {
-                    if (categoryDictionary.TryGetValue(relatedPost.CategoryId, out var relatedCategory))
-                    {
-                        relatedPost.Category = relatedCategory;
-                    }
-                }
-
-                data.RelatedPosts = relatedPostDtos;
+                var relatedPostList= await postService.EnrichPostsWithCategories(relatedPosts, cancellationToken);
+                data.RelatedPosts = relatedPostList;
             }
 
             result.Success(data);

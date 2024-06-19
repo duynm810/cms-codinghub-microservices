@@ -24,7 +24,6 @@ public class TagGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
         
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagsByIdsKey(idList);
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)

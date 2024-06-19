@@ -22,7 +22,6 @@ public class SeriesGrpcClient(
 
         try
         {
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
@@ -66,7 +65,6 @@ public class SeriesGrpcClient(
         {
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(slug);
 
-            // Kiểm tra cache
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
             {

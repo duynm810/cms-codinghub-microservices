@@ -6,5 +6,5 @@ namespace WebApps.UI.Models.Posts;
 
 public class PostDetailViewModel
 {
-    public PostBySlugDto Post { get; set; } = default!;
+    public PostsBySlugDto Posts { get; set; } = default!;
 }

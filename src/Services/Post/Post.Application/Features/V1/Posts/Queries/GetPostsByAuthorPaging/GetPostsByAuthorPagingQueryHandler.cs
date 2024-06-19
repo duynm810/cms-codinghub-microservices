@@ -1,11 +1,11 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -14,58 +14,45 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 
 public class GetPostsByAuthorPagingQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcClient categoryGrpcClient,
     IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
-    IMappingHelper mappingHelper,
-    ILogger logger) : IRequestHandler<GetPostsByAuthorPagingQuery, ApiResult<PagedResponse<PostModel>>>
+    IPostService postService,
+    ILogger logger) : IRequestHandler<GetPostsByAuthorPagingQuery, ApiResult<PostsByAuthorDto>>
 {
-    public async Task<ApiResult<PagedResponse<PostModel>>> Handle(GetPostsByAuthorPagingQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostsByAuthorDto>> Handle(GetPostsByAuthorPagingQuery request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PagedResponse<PostModel>>();
+        var result = new ApiResult<PostsByAuthorDto>();
         const string methodName = nameof(GetPostsByAuthorPagingQuery);
 
         try
         {
-            logger.Information(
-                "BEGIN {MethodName} - Retrieving posts for author {AuthorId} on page {PageNumber} with page size {PageSize}",
-                methodName, request.AuthorId, request.PageNumber, request.PageSize);
+            logger.Information("BEGIN {MethodName} - Retrieving posts for author {AuthorId} on page {PageNumber} with page size {PageSize}", methodName, request.AuthorId, request.PageNumber, request.PageSize);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostsByAuthorPagingKey(request.AuthorId.ToString(), request.PageNumber, request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
+            var cachedPosts = await cacheService.GetAsync<PostsByAuthorDto>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
+                logger.Information("END {MethodName} - Successfully retrieved posts from cache for author {AuthorId} on page {PageNumber} with page size {PageSize}", methodName, request.AuthorId, request.PageNumber, request.PageSize);
                 result.Success(cachedPosts);
-                logger.Information(
-                    "END {MethodName} - Successfully retrieved posts from cache for author {AuthorId} on page {PageNumber} with page size {PageSize}",
-                    methodName, request.AuthorId, request.PageNumber, request.PageSize);
                 return result;
             }
             
-            var posts = await postRepository.GetPostsByAuthorPaging(request.AuthorId, request.PageNumber, request.PageSize);
+            // Get user belongs to the post (Lấy tác giả bài viết)
+            var authorUserInfo = await identityGrpcClient.GetUserInfo(request.AuthorId);
             
+            var data = new PostsByAuthorDto { User = authorUserInfo };
+            
+            var posts = await postRepository.GetPostsByAuthorPaging(request.AuthorId, request.PageNumber, request.PageSize);
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
-                // Get user information belongs to the post (Lấy thông tin tác giả bài viết)
-                var authorUserInfo = await identityGrpcClient.GetUserInfo(request.AuthorId);
-                if (authorUserInfo != null)
-                {
-                    //TODO (Get user info for posts by author paging)
-                }
+                data.Posts = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
                 
-                var categoryIds = posts.Items.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
-
-                var data = mappingHelper.MapPostsWithCategories(posts, categories);
                 result.Success(data);
 
                 // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data.Items, cancellationToken: cancellationToken);
+                await cacheService.SetAsync(cacheKey, data.Posts.Items, cancellationToken: cancellationToken);
 
-                logger.Information(
-                    "END {MethodName} - Successfully retrieved {PostCount} posts for author {AuthorId} for page {PageNumber} with page size {PageSize}",
-                    methodName, data.MetaData.TotalItems, request.AuthorId, request.PageNumber, request.PageSize);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for author {AuthorId} for page {PageNumber} with page size {PageSize}", methodName, data.Posts.MetaData.TotalItems, request.AuthorId, request.PageNumber, request.PageSize);
             }
         }
         catch (Exception e)

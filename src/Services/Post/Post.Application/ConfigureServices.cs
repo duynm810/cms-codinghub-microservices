@@ -33,7 +33,6 @@ public static class ConfigureServices
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
         services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
-        services.AddTransient<IMappingHelper, MappingHelper>();
     }
 
     private static void AddValidatorServices(this IServiceCollection services)

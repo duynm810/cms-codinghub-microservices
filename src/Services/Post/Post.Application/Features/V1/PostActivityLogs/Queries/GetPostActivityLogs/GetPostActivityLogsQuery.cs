@@ -1,6 +1,4 @@
 using MediatR;
-using Post.Application.Commons.Models;
-using Shared.Dtos.Post;
 using Shared.Dtos.PostActivity;
 using Shared.Responses;
 

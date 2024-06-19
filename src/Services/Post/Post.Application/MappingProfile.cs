@@ -22,8 +22,9 @@ public class MappingProfile : Profile
     private void ConfigurePostMappings()
     {
         CreateMap<PostBase, PostDto>();
+        CreateMap<CategoryDto, CategoryDto>();
         CreateMap<CategoryDto, PostDto>()
-            .ForMember(dest => dest.Category, 
-                opt => opt.MapFrom(src => src));
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src))
+            .ReverseMap();
     }
 }

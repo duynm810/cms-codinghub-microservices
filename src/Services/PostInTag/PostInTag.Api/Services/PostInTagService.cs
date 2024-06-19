@@ -97,7 +97,6 @@ public class PostInTagService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts in tag with ID: {TagId}", methodName, tagId);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInTag.GetAllPostInTagByIdKey(tagId);
             var cachedPostInTag = await cacheService.GetAsync<IEnumerable<PostInTagDto>>(cacheKey);
             if (cachedPostInTag != null)
@@ -155,7 +154,6 @@ public class PostInTagService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts in tag with Slug: {TagSlug}", methodName, tagSlug);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInTag.GetPostInTagBySlugKey(tagSlug);
             var cachedPostInTag = await cacheService.GetAsync<IEnumerable<PostInTagDto>>(cacheKey);
             if (cachedPostInTag != null)
@@ -220,7 +218,6 @@ public class PostInTagService(
                 "BEGIN {MethodName} - Retrieving posts in tag with ID: {TagId} for page {PageNumber} with page size {PageSize}",
                 methodName, tagId, pageNumber, pageSize);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInTag.GetPostInTagByIdPagingKey(tagId, pageNumber, pageSize);
             var cachedPostInTag = await cacheService.GetAsync<PagedResponse<PostInTagDto>>(cacheKey);
             if (cachedPostInTag != null)
@@ -287,7 +284,6 @@ public class PostInTagService(
                 "BEGIN {MethodName} - Retrieving posts in tag with Slug: {TagSlug} for page {PageNumber} with page size {PageSize}",
                 methodName, tagSlug, pageNumber, pageSize);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInTag.GetPostInTagBySlugPagingKey(tagSlug, pageNumber, pageSize);
             var cachedPostInTag = await cacheService.GetAsync<PagedResponse<PostInTagDto>>(cacheKey);
             if (cachedPostInTag != null)

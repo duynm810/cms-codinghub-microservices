@@ -2,13 +2,11 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -21,11 +19,11 @@ public class UpdatePostCommandHandler(
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
+    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostModel>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostModel>();
+        var result = new ApiResult<PostDto>();
         const string methodName = nameof(Handle);
 
         try
@@ -69,7 +67,7 @@ public class UpdatePostCommandHandler(
 
             await postRepository.UpdatePost(updatePost);
 
-            var data = mapper.Map<PostModel>(updatePost);
+            var data = mapper.Map<PostDto>(updatePost);
             result.Success(data);
 
             // Xóa cache liên quan

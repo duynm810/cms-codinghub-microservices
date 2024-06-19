@@ -1,6 +1,6 @@
 namespace Shared.Dtos.Post.Queries;
 
-public class PostBySlugDto
+public class PostsBySlugDto
 {
     public PostDto Detail { get; set; } = default!;
 

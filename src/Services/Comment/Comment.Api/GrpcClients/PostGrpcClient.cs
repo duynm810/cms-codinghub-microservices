@@ -24,7 +24,6 @@ public class PostGrpcClient(
 
         try
         {
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
             if (cachedPosts != null)

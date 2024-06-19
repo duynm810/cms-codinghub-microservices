@@ -1,11 +1,10 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
-using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 
@@ -13,28 +12,26 @@ namespace Post.Application.Features.V1.Posts.Queries.GetMostLikedPosts;
 
 public class GetMostLikedPostsQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
-    IMappingHelper mappingHelper,
-    ILogger logger) : IRequestHandler<GetMostLikedPostsQuery, ApiResult<IEnumerable<PostModel>>>
+    IPostService postService,
+    ILogger logger) : IRequestHandler<GetMostLikedPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostModel>>> Handle(GetMostLikedPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetMostLikedPostsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostModel>>();
+        var result = new ApiResult<IEnumerable<PostDto>>();
         const string methodName = nameof(GetMostLikedPostsQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving most liked posts", methodName);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetMostLikedPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
-                result.Success(cachedPosts);
                 logger.Information("END {MethodName} - Successfully retrieved most liked posts from cache", methodName);
+                result.Success(cachedPosts);
                 return result;
             }
 
@@ -44,13 +41,10 @@ public class GetMostLikedPostsQueryHandler(
 
             if (postList.Count != 0)
             {
-                var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
-
-                var data = mappingHelper.MapPostsWithCategories(postList, categories);
+                var data = await postService.EnrichPostsWithCategories(postList, cancellationToken);
+                
                 result.Success(data);
 
-                // Save cache (Lưu cache)
                 await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} most liked posts", methodName,

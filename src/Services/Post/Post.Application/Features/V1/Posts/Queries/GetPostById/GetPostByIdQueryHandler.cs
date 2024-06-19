@@ -2,8 +2,6 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;

@@ -1,10 +1,10 @@
 using MediatR;
-using Post.Application.Commons.Models;
+using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 
-public class GetPostsByAuthorPagingQuery(Guid authorId, int pageNumber, int pageSize) : IRequest<ApiResult<PagedResponse<PostModel>>>
+public class GetPostsByAuthorPagingQuery(Guid authorId, int pageNumber, int pageSize) : IRequest<ApiResult<PostsByAuthorDto>>
 {
     public Guid AuthorId { get; set; } = authorId;
 

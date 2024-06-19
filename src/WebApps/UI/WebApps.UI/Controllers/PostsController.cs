@@ -69,7 +69,7 @@ public class PostsController(
             {
                 var items = new PostDetailViewModel()
                 {
-                    Post = post.Data
+                    Posts = post.Data
                 };
                 
                 return View(items);

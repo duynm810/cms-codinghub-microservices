@@ -1,10 +1,9 @@
 using MediatR;
-using Post.Application.Commons.Models;
-using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 
-public class GetPostsQuery : IRequest<ApiResult<IEnumerable<PostModel>>>
+public class GetPostsQuery : IRequest<ApiResult<IEnumerable<PostDto>>>
 {
 }

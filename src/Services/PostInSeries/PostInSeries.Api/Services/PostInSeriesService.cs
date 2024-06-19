@@ -104,7 +104,6 @@ public class PostInSeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts in series with ID: {SeriesId}", methodName, seriesId);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(seriesId);
             var cachedPostInSeries = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
             if (cachedPostInSeries != null)
@@ -162,7 +161,6 @@ public class PostInSeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug}", methodName, seriesSlug);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesBySlugKey(seriesSlug);
             var cachedPostInSeries = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
             if (cachedPostInSeries != null)
@@ -228,7 +226,6 @@ public class PostInSeriesService(
                 "BEGIN {MethodName} - Retrieving posts in series with ID: {SeriesId} for page {PageNumber} with page size {PageSize}",
                 methodName, seriesId, pageNumber, pageSize);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesByIdPagingKey(seriesId, pageNumber, pageSize);
             var cachedPostInSeries = await cacheService.GetAsync<PagedResponse<PostInSeriesDto>>(cacheKey);
             if (cachedPostInSeries != null)
@@ -296,7 +293,6 @@ public class PostInSeriesService(
                 "BEGIN {MethodName} - Retrieving posts in series with Slug: {SeriesSlug} for page {PageNumber} with page size {PageSize}",
                 methodName, seriesSlug, pageNumber, pageSize);
             
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.PostInSeries.GetPostInSeriesBySlugPagingKey(seriesSlug, pageNumber, pageSize);
             var cachedPostInSeries = await cacheService.GetAsync<PagedResponse<PostInSeriesDto>>(cacheKey);
             if (cachedPostInSeries != null)
