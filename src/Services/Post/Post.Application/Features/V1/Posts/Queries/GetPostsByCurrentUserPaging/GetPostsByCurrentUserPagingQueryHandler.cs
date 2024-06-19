@@ -32,7 +32,7 @@ public class GetPostsByCurrentUserPagingQueryHandler(
                 methodName, request.CurrentUserId, request.PageNumber, request.PageSize);
 
             // Check existed cache (Kiểm tra cache)
-            var cacheKey = CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.CurrentUserId, request.PageNumber, request.PageSize);
+            var cacheKey = CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.CurrentUserId.ToString(), request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostModel>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {

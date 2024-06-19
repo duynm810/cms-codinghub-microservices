@@ -1,8 +1,9 @@
-using WebApps.UI.Models.Commons;
+using Shared.Dtos.Post;
+using Shared.Responses;
 
 namespace WebApps.UI.Models.Accounts;
 
-public class ManagePostsViewModel : BaseViewModel
+public class ManagePostsViewModel
 {
-    
+    public PagedResponse<PostDto> Posts { get; set; } = default!;
 }

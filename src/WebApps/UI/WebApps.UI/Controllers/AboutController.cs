@@ -9,7 +9,6 @@ public class AboutController : Controller
     {
         var viewModel = new AboutViewModel()
         {
-            MainClass = "bg-grey pb-30"
         };
 
         return View(viewModel);

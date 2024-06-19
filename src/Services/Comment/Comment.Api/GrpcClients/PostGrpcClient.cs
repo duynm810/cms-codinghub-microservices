@@ -17,7 +17,7 @@ public class PostGrpcClient(
     ILogger logger)
     : IPostGrpcClient
 {
-    public async Task<IEnumerable<PostDto>?> GetTop10Posts()
+    public async Task<IEnumerable<PostDto>> GetTop10Posts()
     {
         const string methodName = nameof(GetTop10Posts);
 

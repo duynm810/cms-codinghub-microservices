@@ -4,7 +4,7 @@ using WebApps.UI.Models.Commons;
 
 namespace WebApps.UI.Models.Posts;
 
-public class PostSearchViewModel : BaseViewModel
+public class PostSearchViewModel
 {
     public PagedResponse<PostDto> Posts { set; get; } = default!;
 

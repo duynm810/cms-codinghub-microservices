@@ -6,7 +6,7 @@ using WebApps.UI.Models.Commons;
 
 namespace WebApps.UI.Models.Posts;
 
-public class PostsInTagViewModel: BaseViewModel
+public class PostsInTagViewModel
 {
     public TagDto Tag { get; set; } = default!;
 

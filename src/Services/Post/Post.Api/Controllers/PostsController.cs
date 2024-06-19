@@ -22,6 +22,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetPosts;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
+using Post.Application.Features.V1.Posts.Queries.GetPostsByCurrentUserPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
@@ -129,7 +130,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         [FromQuery, Required] int pageSize = 10)
     {
         var userId = User.GetUserId();
-        var query = new GetPostsByAuthorPagingQuery(userId, pageNumber, pageSize);
+        var query = new GetPostsByCurrentUserPagingQuery(userId, pageNumber, pageSize);
         var result = await mediator.Send(query);
         return Ok(result);
     }

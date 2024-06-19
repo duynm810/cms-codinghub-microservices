@@ -141,38 +141,54 @@
 /*-------------------------------------------------------------------*/
 
 .table-wrap {
-    overflow-x: scroll; }
+    overflow-x: auto;
+}
 
 .table {
-    min-width: 1000px !important;
+    min-width: 1000px;
     width: 100%;
-    -webkit-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
-    -moz-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
-    box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29); }
+    box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
+}
+
 .table thead th {
     border: none;
-    padding: 30px;
+    padding: 15px;
     font-size: 13px;
     font-weight: 500;
-    color: gray; }
+    color: gray;
+    vertical-align: middle; /* Ensure vertical alignment */
+}
+
 .table thead tr {
     background: #fff;
-    border-bottom: 4px solid #eceffa; }
+    border-bottom: 4px solid #eceffa;
+}
+
 .table tbody tr {
     margin-bottom: 10px;
-    border-bottom: 4px solid #f8f9fd; }
+    border-bottom: 4px solid #f8f9fd;
+}
+
 .table tbody tr:last-child {
-    border-bottom: 0; }
+    border-bottom: 0;
+}
+
 .table tbody th, .table tbody td {
     border: none;
-    padding: 30px;
+    padding: 15px;
     font-size: 14px;
     background: #fff;
-    vertical-align: middle; }
+    vertical-align: middle; /* Ensure vertical alignment */
+}
+
 .table tbody td.status span {
     position: relative;
     border-radius: 30px;
-    padding: 4px 10px 4px 25px; }
+    padding: 4px 10px 4px 25px;
+    display: inline-block;
+    color: #fff; /* Default text color for better contrast */
+}
+
 .table tbody td.status span:after {
     position: absolute;
     top: 9px;
@@ -180,29 +196,39 @@
     width: 10px;
     height: 10px;
     content: '';
-    border-radius: 50%; }
-.table tbody td.status .active {
-    background: #cff6dd;
-    color: #1fa750; }
-.table tbody td.status .active:after {
-    background: #23bd5a; }
-.table tbody td.status .waiting {
-    background: #fdf5dd;
-    color: #cfa00c; }
-.table tbody td.status .waiting:after {
-    background: #f2be1d; }
-.table tbody td .img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%; }
-.table tbody td .email span {
-    display: block; }
-.table tbody td .email span:last-child {
-    font-size: 12px;
-    color: rgba(0, 0, 0, 0.3); }
-.table tbody td .close span {
-    font-size: 12px;
-    color: #dc3545; }
+    border-radius: 50%;
+}
+
+.table tbody td.status .Draft {
+    background: #b0b0b0; /* Grey for Draft */
+}
+
+.table tbody td.status .WaitingForApproval {
+    background: #fdf5dd; /* Light Yellow for WaitingForApproval */
+    color: #cfa00c;
+}
+
+.table tbody td.status .WaitingForApproval:after {
+    background: #f2be1d; /* Yellow Dot */
+}
+
+.table tbody td.status .Rejected {
+    background: #f8d7da; /* Light Red for Rejected */
+    color: #dc3545;
+}
+
+.table tbody td.status .Rejected:after {
+    background: #dc3545; /* Red Dot */
+}
+
+.table tbody td.status .Published {
+    background: #cff6dd; /* Light Green for Published */
+    color: #1fa750;
+}
+
+.table tbody td.status .Published:after {
+    background: #23bd5a; /* Green Dot */
+}
 
 .checkbox-wrap {
     display: block;
@@ -210,54 +236,52 @@
     cursor: pointer;
     font-size: 16px;
     font-weight: 500;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none; }
+    user-select: none;
+    vertical-align: middle; /* Ensure vertical alignment */
+}
 
-/* Hide the browser's default checkbox */
 .checkbox-wrap input {
     position: absolute;
     opacity: 0;
     cursor: pointer;
     height: 0;
-    width: 0; }
+    width: 0;
+}
 
-/* Create a custom checkbox */
 .checkmark {
     position: absolute;
-    top: 0;
-    left: 0; }
+    top: 50%;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: #eee;
+    border-radius: 3px;
+    transform: translateY(-50%); /* Center the checkmark vertically */
+}
 
-/* Create the checkmark/indicator (hidden when not checked) */
+.checkbox-wrap input:checked ~ .checkmark {
+    background-color: #40bfc1;
+}
+
 .checkmark:after {
-    content: "\f0c8";
-    font-family: "FontAwesome", serif;
+    content: "";
     position: absolute;
-    color: rgba(0, 0, 0, 0.1);
-    font-size: 20px;
-    margin-top: -14px;
-    -webkit-transition: 0.3s;
-    -o-transition: 0.3s;
-    transition: 0.3s; }
-@media (prefers-reduced-motion: reduce) {
-    .checkmark:after {
-        -webkit-transition: none;
-        -o-transition: none;
-        transition: none; } }
+    display: none;
+}
 
-/* Show the checkmark when checked */
 .checkbox-wrap input:checked ~ .checkmark:after {
     display: block;
-    content: "\f14a";
-    font-family: "FontAwesome", serif;
-    color: rgba(0, 0, 0, 0.2); }
+}
 
-/* Style the checkmark/indicator */
-.checkbox-primary {
-    color: #40bfc1; }
-.checkbox-primary input:checked ~ .checkmark:after {
-    color: #40bfc1; }
+.checkbox-wrap .checkmark:after {
+    left: 7px;
+    top: 3px;
+    width: 6px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    transform: rotate(45deg);
+}
 
 .close {
     float: right;
@@ -290,4 +314,10 @@ a.close.disabled {
 
 .text-right-custom {
     text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+    .table-wrap {
+        overflow-x: scroll;
+    }
 }

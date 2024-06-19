@@ -1,6 +1,4 @@
-﻿@model BaseViewModel
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
@@ -48,18 +46,13 @@
 </div>
 
 <!-- Start Main content -->
-<main class="@Model.MainClass">
+<main>
     @RenderBody()
 </main>
 <!-- End Main content -->
 
 <!--site-bottom-->
-@if (Model.ShowSiteBottom)
-{
-    <div class="site-bottom pt-50 pb-50">
-        @await Component.InvokeAsync("Bottom", "Default")
-    </div>
-}
+@* @await Component.InvokeAsync("Bottom", "Default") *@
 <!--end site-bottom-->
 
 <!-- Footer Start-->

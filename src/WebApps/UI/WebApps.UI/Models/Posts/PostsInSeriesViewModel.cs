@@ -5,7 +5,7 @@ using WebApps.UI.Models.Commons;
 
 namespace WebApps.UI.Models.Posts;
 
-public class PostsInSeriesViewModel : BaseViewModel
+public class PostsInSeriesViewModel
 {
     public SeriesDto Series { get; set; } = default!;
 

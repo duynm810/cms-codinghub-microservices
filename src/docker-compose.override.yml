@@ -50,7 +50,7 @@ services:
       - "5434:5432"
     volumes:
       - post_in_series_postgres_data:/var/lib/postgresql/data
-    
+  
   #tagdb: mysql
   tagdb:
     container_name: tagdb
@@ -99,7 +99,7 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: 'admin'
       MONGO_INITDB_ROOT_PASSWORD: 'admin'
-      
+  
   #identitydb: sqlserver
   identitydb:
     container_name: identitydb
@@ -146,7 +146,7 @@ services:
       - "9200:9200"
     volumes:
       - elasticsearch_data:/usr/share/elasticsearch/data
-    
+  
   redis:
     container_name: redis
     restart: always
@@ -164,13 +164,34 @@ services:
       - "5601:5601"
   
   ##microservices api sections
+  identity.api:
+    container_name: identity.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6002:80"
+    restart: always
+
+  identity.grpc:
+    container_name: identity.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6015:80"
+    restart: always
+  
   apigw.ocelot:
     container_name: apigw.ocelot
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     depends_on:
-      - identity.api
       - category.api
       - tag.api
       - series.api
@@ -184,29 +205,6 @@ services:
       - "6001:80"
     restart: always
   
-  identity.api:
-    container_name: identity.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - identitydb
-      - identity.grpc
-    ports:
-      - "6002:80"
-    restart: always
-  
-  identity.grpc:
-    container_name: identity.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - identitydb
-    ports:
-      - "6015:80"
-    restart: always
-  
   category.api:
     container_name: category.api
     environment:
@@ -214,7 +212,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - categorydb
-      - category.grpc
     ports:
       - "6003:80"
     restart: always
@@ -237,7 +234,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - postdb
-      - post.grpc
+      - rabbitmq
     ports:
       - "6005:80"
     restart: always
@@ -260,7 +257,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - seriesdb
-      - series.grpc
     ports:
       - "6007:80"
     restart: always
@@ -294,7 +290,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - tagdb
-      - tag.grpc
     ports:
       - "6010:80"
     restart: always
@@ -317,7 +312,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - post-in-tag-db
-      - post-in-tag.grpc
     ports:
       - "6012:80"
     restart: always
@@ -351,6 +345,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - hangfiredb
+      - rabbitmq
     ports:
       - "6018:80"
     restart: always

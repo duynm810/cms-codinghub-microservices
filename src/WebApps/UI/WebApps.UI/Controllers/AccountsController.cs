@@ -1,16 +1,18 @@
-using System.Security.Claims;
+using System.Net;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Extensions;
+using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
+using WebApps.UI.Services.Interfaces;
+using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
 [Authorize]
-public class AccountsController : Controller
+public class AccountsController(IPostApiClient postApiClient, IErrorService errorService, ILogger logger) : BaseController(errorService, logger)
 {
     public IActionResult Login(string returnUrl = "/")
     {
@@ -41,31 +43,42 @@ public class AccountsController : Controller
     {
         var item = new ProfileViewModel()
         {
-            ShowSiteBottom = false
         };
         
         return View(item);
     }
 
-    public IActionResult ManagePosts()
+    public async Task<IActionResult> ManagePosts([FromQuery] int page = 1)
     {
-        var user = User.GetUserId();
+        const string methodName = nameof(ManagePosts);
         
-        var items = new ManagePostsViewModel()
+        try
         {
-            MainClass = "bg-grey pb-30",
-            ShowSiteBottom = false
-        };
+            
+            var posts = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
 
-        return View(items);
+            if (posts is { IsSuccess: true, Data: not null })
+            {
+                var items = new ManagePostsViewModel()
+                {
+                    Posts = posts.Data
+                };
+
+                return View(items);
+            }
+
+            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
     }
 
     public IActionResult CreatePost()
     {
         var item = new CreatePostViewModel
         {
-            MainClass = "bg-grey pb-30",
-            ShowSiteBottom = false
         };
         
         return View(item);

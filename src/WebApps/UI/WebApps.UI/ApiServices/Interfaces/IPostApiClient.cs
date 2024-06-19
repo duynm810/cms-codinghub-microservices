@@ -12,7 +12,9 @@ public interface IPostApiClient
 
     Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
 
-    Task<ApiResult<PagedResponse<PostDto>>> GetPostsByTagPaging(string tagSlug, int pageNumber, int pageSize);
+    Task<ApiResult<PagedResponse<PostDto>>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize);
+
+    Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize);
     
     Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug, int relatedCount);
 

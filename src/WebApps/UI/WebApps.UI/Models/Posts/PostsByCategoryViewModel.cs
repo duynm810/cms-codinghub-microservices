@@ -5,7 +5,7 @@ using WebApps.UI.Models.Commons;
 
 namespace WebApps.UI.Models.Posts;
 
-public class PostsByCategoryViewModel : BaseViewModel
+public class PostsByCategoryViewModel
 {
     public CategoryDto Category { get; set; } = default!;
 

@@ -1,5 +1,6 @@
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
+using Shared.Enums;
 
 namespace Shared.Dtos.Post;
 
@@ -33,7 +34,9 @@ public class PostDto
 
     public bool IsPaid { get; set; }
 
-    public DateTimeOffset PublishedDate { get; set; }
+    public DateTimeOffset? PublishedDate { get; set; }
+    
+    public PostStatusEnum Status { get; set; }
 
     public long CategoryId { get; set; }
 

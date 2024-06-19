@@ -69,7 +69,6 @@ public class PostsController(
             {
                 var items = new PostDetailViewModel()
                 {
-                    MainClass = "bg-grey pb-30",
                     Post = post.Data
                 };
                 

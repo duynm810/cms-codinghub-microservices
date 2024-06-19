@@ -1,7 +1,5 @@
 @model PostDetailViewModel
 @{
-    ViewData["MainClass"] = "bg-grey pb-30";
-
     var detail = Model.Post.DetailPost;
     var categoryUrl = "/category/" + detail.CategorySlug;
 }
@@ -52,7 +50,7 @@
                             </a>
                         </p>
                     }
-                    <span class="mr-10">@detail.PublishedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
+                    <span class="mr-10">@detail.PublishedDate?.ToString("dd MMMM", CultureInfo.InvariantCulture) ?? "--"</span>
                     <span class="has-dot"> 8 mins read</span>
                 </div>
             </div>

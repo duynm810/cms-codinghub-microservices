@@ -34,7 +34,7 @@
                                                         <a href="@postUrl">@postItem.Title</a>
                                                     </h6>
                                                     <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                                        <span class="post-on">@postItem.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                                        <span class="post-on">@postItem.PublishedDate?.ToString("dd MMMM", CultureInfo.InvariantCulture) ?? "--"</span>
                                                         <span class="post-by has-dot">@postItem.ViewCount views</span>
                                                     </div>
                                                 </div>
