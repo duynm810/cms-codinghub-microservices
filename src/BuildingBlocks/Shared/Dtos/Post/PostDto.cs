@@ -21,7 +21,7 @@ public class PostDto
     public string? SeoDescription { get; set; }
 
     public string? Source { get; set; }
-    
+
     public int ViewCount { get; set; }
 
     public int CommentCount { get; set; }

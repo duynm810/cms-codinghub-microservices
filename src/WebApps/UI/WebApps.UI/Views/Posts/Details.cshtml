@@ -50,7 +50,7 @@
                             </a>
                         </p>
                     }
-                    <span class="mr-10">@detail.PublishedDate?.ToString("dd MMMM", CultureInfo.InvariantCulture) ?? "--"</span>
+                    <span class="mr-10">@(detail.PublishedDate.HasValue ? detail.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
                     <span class="has-dot"> 8 mins read</span>
                 </div>
             </div>

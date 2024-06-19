@@ -1,6 +1,6 @@
 @model ManagePostsViewModel
 @{
-var posts = Model.Posts;
+    var posts = Model.Posts;
 }
 
 <div class="container single-content">
@@ -26,6 +26,7 @@ var posts = Model.Posts;
                         <th>Category</th>
                         <th>Title</th>
                         <th>Created date</th>
+                        <th>Views</th>
                         <th>Status</th>
                         <th>&nbsp;</th>
                     </tr>
@@ -33,30 +34,31 @@ var posts = Model.Posts;
                     <tbody>
                     @if (posts.Items != null && posts.Items.Count != 0)
                     {
-                    foreach (var item in posts.Items)
-                    {
-                    <tr class="alert" role="alert">
-                        <td>
-                            <label class="checkbox-wrap checkbox-primary">
-                                <input type="checkbox">
-                                <span class="checkmark"></span>
-                            </label>
-                        </td>
-                        <td>@item.CategoryName</td>
-                        <td>@item.Title</td>
-                        <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
-                        <td class="status">
-                            <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
-                        </td>
-                        <td>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">
-                                    <i class="fa fa-close"></i>
-                                </span>
-                            </button>
-                        </td>
-                    </tr>
-                    }
+                        foreach (var item in posts.Items)
+                        {
+                            <tr class="alert" role="alert">
+                                <td>
+                                    <label class="checkbox-wrap checkbox-primary">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>@item.CategoryName</td>
+                                <td>@item.Title</td>
+                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.ViewCount.ToString("N0")</td>
+                                <td class="status">
+                                    <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
+                                </td>
+                                <td>
+                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                        <span aria-hidden="true">
+                                            <i class="fa fa-close"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
                     }
                     </tbody>
                     <tfoot>

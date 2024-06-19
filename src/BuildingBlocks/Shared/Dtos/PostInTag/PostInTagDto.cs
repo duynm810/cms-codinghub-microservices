@@ -8,7 +8,7 @@ public class PostInTagDto
 
     public string? Slug { get; set; }
 
-    public int ViewCount { get; set; }
+    public int? ViewCount { get; set; }
 
     public long CategoryId { get; set; }
 
