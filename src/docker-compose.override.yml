@@ -172,12 +172,12 @@ services:
     depends_on:
       - identity.api
       - category.api
-      - post.api
       - tag.api
       - series.api
-      - comment.api
-      - post-in-series.api
+      - post.api
       - post-in-tag.api
+      - post-in-series.api
+      - comment.api
       - hangfire.api
       - media.api
     ports:
