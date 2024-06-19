@@ -170,18 +170,20 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     depends_on:
+      - identity.api
       - category.api
       - post.api
-      - series.api
-      - post-in-series.api
       - tag.api
-      - post-in-tag.api
+      - series.api
       - comment.api
+      - post-in-series.api
+      - post-in-tag.api
       - hangfire.api
+      - media.api
     ports:
       - "6001:80"
     restart: always
-    
+  
   identity.api:
     container_name: identity.api
     environment:
@@ -189,10 +191,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - identitydb
+      - identity.grpc
     ports:
       - "6002:80"
     restart: always
-    
+  
   identity.grpc:
     container_name: identity.grpc
     environment:
@@ -211,6 +214,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - categorydb
+      - category.grpc
     ports:
       - "6003:80"
     restart: always
@@ -225,7 +229,7 @@ services:
     ports:
       - "6004:80"
     restart: always
-    
+  
   post.api:
     container_name: post.api
     environment:
@@ -233,6 +237,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - postdb
+      - post.grpc
     ports:
       - "6005:80"
     restart: always
@@ -255,6 +260,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - seriesdb
+      - series.grpc
     ports:
       - "6007:80"
     restart: always
@@ -280,7 +286,7 @@ services:
     ports:
       - "6009:80"
     restart: always
-    
+  
   tag.api:
     container_name: tag.api
     environment:
@@ -288,10 +294,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - tagdb
+      - tag.grpc
     ports:
       - "6010:80"
     restart: always
-    
+  
   tag.grpc:
     container_name: tag.grpc
     environment:
@@ -302,7 +309,7 @@ services:
     ports:
       - "6011:80"
     restart: always
-    
+  
   post-in-tag.api:
     container_name: post-in-tag.api
     environment:
@@ -310,10 +317,11 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - post-in-tag-db
+      - post-in-tag.grpc
     ports:
       - "6012:80"
     restart: always
-    
+  
   post-in-tag.grpc:
     container_name: post-in-tag.grpc
     environment:
@@ -324,7 +332,7 @@ services:
     ports:
       - "6013:80"
     restart: always
-    
+  
   comment.api:
     container_name: comment.api
     environment:
@@ -346,7 +354,7 @@ services:
     ports:
       - "6018:80"
     restart: always
-       
+  
   media.api:
     container_name: media.api
     environment:
