@@ -2,7 +2,6 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Mappings.Interfaces;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
@@ -23,32 +22,29 @@ public class GetPostBySlugQueryHandler(
     IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
-    IMappingHelper mappingHelper,
     ILogger logger)
-    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailDto>>
+    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostBySlugDto>>
 {
-    public async Task<ApiResult<PostDetailDto>> Handle(GetPostBySlugQuery request,
+    public async Task<ApiResult<PostBySlugDto>> Handle(GetPostBySlugQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDetailDto>();
+        var result = new ApiResult<PostBySlugDto>();
         const string methodName = nameof(GetPostBySlugQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
-            var cachedPost = await cacheService.GetAsync<PostDetailDto>(cacheKey, cancellationToken);
+            var cachedPost = await cacheService.GetAsync<PostBySlugDto>(cacheKey, cancellationToken).ConfigureAwait(false);
             if (cachedPost != null)
             {
+                logger.Information("Retrieved post from cache with slug: {PostSlug}", request.Slug);
                 result.Success(cachedPost);
-                logger.Information("END {MethodName} - Successfully retrieved post from cache with slug: {PostSlug}",
-                    methodName, request.Slug);
                 return result;
             }
 
-            var post = await postRepository.GetPostBySlug(request.Slug);
+            var post = await postRepository.GetPostBySlug(request.Slug).ConfigureAwait(false);
             if (post == null)
             {
                 logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, request.Slug);
@@ -57,13 +53,14 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            // Get category and related posts at the same time (Lấy danh mục và bài viết liên quan đồng thời)
+            var postDetail = mapper.Map<PostDto>(post);
+
             var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
             var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
 
-            await Task.WhenAll(categoryTask, relatedPostsTask);
+            await Task.WhenAll(categoryTask, relatedPostsTask).ConfigureAwait(false);
 
-            var category = categoryTask.Result;
+            var category = await categoryTask.ConfigureAwait(false);
             if (category == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
@@ -71,47 +68,34 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            var postDto = mapper.Map<PostDto>(post);
-            
-            postDto.Category = mapper.Map<CategoryDto>(category);
-            
-            var data = new PostDetailDto()
-            {
-                DetailPost = postDto
-            };
+            postDetail.Category = mapper.Map<CategoryDto>(category);
+            var data = new PostBySlugDto { Detail = postDetail };
 
-            // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
-            var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
+            var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id).ConfigureAwait(false);
             var tagIdList = tagIds.ToList();
             if (tagIdList.IsNotNullOrEmpty())
             {
-                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
+                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList).ConfigureAwait(false);
                 if (tagsInfo != null)
                 {
-                    var tagList = tagsInfo.ToList();
-                    if (tagList.IsNotNullOrEmpty())
-                    {
-                        data.DetailPost.Tags = tagList.ToList();
-                    }
+                    data.Detail.Tags = tagsInfo.ToList();
                 }
             }
 
-            // Get user information belongs to the post (Lấy thông tin tác giả bài viết)
-            var authorUserInfo = await identityGrpcClient.GetUserInfo(post.AuthorUserId);
+            var authorUserInfo = await identityGrpcClient.GetUserInfo(post.AuthorUserId).ConfigureAwait(false);
             if (authorUserInfo != null)
             {
-                data.DetailPost.User = authorUserInfo;
+                data.Detail.User = authorUserInfo;
             }
 
             var relatedPosts = relatedPostsTask.Result.ToList();
             if (relatedPosts.IsNotNullOrEmpty())
             {
                 var categoryIds = relatedPosts.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
+                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds).ConfigureAwait(false);
                 var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
                 var relatedPostDtos = mapper.Map<List<PostDto>>(relatedPosts);
-
                 foreach (var relatedPost in relatedPostDtos)
                 {
                     if (categoryDictionary.TryGetValue(relatedPost.CategoryId, out var relatedCategory))
@@ -124,12 +108,9 @@ public class GetPostBySlugQueryHandler(
             }
 
             result.Success(data);
+            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken).ConfigureAwait(false);
 
-            // Save cache (Lưu cache)
-            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
-
-            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName,
-                request.Slug);
+            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName, request.Slug);
         }
         catch (Exception e)
         {

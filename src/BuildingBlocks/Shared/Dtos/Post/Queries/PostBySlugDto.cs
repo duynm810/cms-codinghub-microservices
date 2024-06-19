@@ -1,8 +1,8 @@
 namespace Shared.Dtos.Post.Queries;
 
-public class PostDetailDto
+public class PostBySlugDto
 {
-    public PostDto DetailPost { get; set; } = default!;
+    public PostDto Detail { get; set; } = default!;
 
     public IEnumerable<PostDto> RelatedPosts { get; set; } = default!;
 }

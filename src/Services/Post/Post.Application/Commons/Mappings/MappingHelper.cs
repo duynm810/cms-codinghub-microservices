@@ -61,11 +61,4 @@ public class MappingHelper(IMapper mapper) : IMappingHelper
             MetaData = pagedPosts.MetaData
         };
     }
-
-    public PostModel MapPostWithCategory(PostBase post, CategoryDto category)
-    {
-        var postModel = mapper.Map<PostModel>(post);
-        mapper.Map(category, postModel);
-        return postModel;
-    }
 }

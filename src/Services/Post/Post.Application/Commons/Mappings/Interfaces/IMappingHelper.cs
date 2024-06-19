@@ -13,6 +13,4 @@ public interface IMappingHelper
         IEnumerable<CategoryDto> categories);
 
     PagedResponse<PostModel> MapPostsWithCategory(PagedResponse<PostBase> pagedPosts, CategoryDto category);
-
-    PostModel MapPostWithCategory(PostBase post, CategoryDto category);
 }

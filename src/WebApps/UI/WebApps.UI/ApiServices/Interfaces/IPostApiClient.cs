@@ -17,7 +17,7 @@ public interface IPostApiClient
 
     Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize);
     
-    Task<ApiResult<PostDetailDto>> GetPostBySlug(string slug, int relatedCount);
+    Task<ApiResult<PostBySlugDto>> GetPostBySlug(string slug, int relatedCount);
 
     Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
