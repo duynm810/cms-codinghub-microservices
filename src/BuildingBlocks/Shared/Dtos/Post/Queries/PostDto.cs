@@ -42,7 +42,9 @@ public class PostDto
     public Guid AuthorUserId { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
-
+    
+    public long CategoryId { get; set; }
+    
     /// <summary>
     /// Category in the article (Danh mục thuộc bài viết)
     /// </summary>

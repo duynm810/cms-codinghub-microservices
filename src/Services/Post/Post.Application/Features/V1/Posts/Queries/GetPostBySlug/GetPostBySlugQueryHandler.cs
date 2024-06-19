@@ -7,6 +7,7 @@ using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Category;
 using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
@@ -71,7 +72,8 @@ public class GetPostBySlugQueryHandler(
             }
 
             var postDto = mapper.Map<PostDto>(post);
-            mapper.Map(category, postDto);
+            
+            postDto.Category = mapper.Map<CategoryDto>(category);
             
             var data = new PostDetailDto()
             {
@@ -112,7 +114,7 @@ public class GetPostBySlugQueryHandler(
 
                 foreach (var relatedPost in relatedPostDtos)
                 {
-                    if (categoryDictionary.TryGetValue(relatedPost.Category.Id, out var relatedCategory))
+                    if (categoryDictionary.TryGetValue(relatedPost.CategoryId, out var relatedCategory))
                     {
                         relatedPost.Category = relatedCategory;
                     }
