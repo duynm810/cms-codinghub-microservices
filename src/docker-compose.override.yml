@@ -175,8 +175,9 @@ services:
       - series.api
       - post-in-series.api
       - tag.api
-      - hangfire.api
+      - post-in-tag.api
       - comment.api
+      - hangfire.api
     ports:
       - "6001:80"
     restart: always
@@ -210,7 +211,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - categorydb
-      - category.grpc
     ports:
       - "6003:80"
     restart: always
@@ -233,7 +233,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - postdb
-      - post.grpc
     ports:
       - "6005:80"
     restart: always
@@ -256,7 +255,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - seriesdb
-      - series.grpc
     ports:
       - "6007:80"
     restart: always
@@ -290,7 +288,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     depends_on:
       - tagdb
-      - tag.grpc
     ports:
       - "6010:80"
     restart: always
