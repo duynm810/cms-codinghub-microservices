@@ -1,3 +1,4 @@
+using Shared.Dtos.Category;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
 using Shared.Enums;
@@ -38,21 +39,14 @@ public class PostDto
     
     public PostStatusEnum Status { get; set; }
 
-    public long CategoryId { get; set; }
-
-    public string? CategoryName { get; set; }
-
-    public string? CategorySlug { get; set; }
-
-    public string? CategorySeoDescription { get; set; }
-
-    public string? CategoryIcon { get; set; }
-
-    public string? CategoryColor { get; set; }
-
     public Guid AuthorUserId { get; set; }
 
     public DateTimeOffset CreatedDate { get; set; }
+
+    /// <summary>
+    /// Category in the article (Danh mục thuộc bài viết)
+    /// </summary>
+    public CategoryDto Category { get; set; }
     
     /// <summary>
     /// List of tags in the article (Danh sách các thẻ thuộc bài viết)

@@ -1,12 +1,13 @@
+using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -20,14 +21,15 @@ public class GetPostBySlugQueryHandler(
     IPostInTagGrpcClient postInTagGrpcClient,
     IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
+    IMapper mapper,
     IMappingHelper mappingHelper,
     ILogger logger)
-    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailModel>>
+    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDetailDto>>
 {
-    public async Task<ApiResult<PostDetailModel>> Handle(GetPostBySlugQuery request,
+    public async Task<ApiResult<PostDetailDto>> Handle(GetPostBySlugQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDetailModel>();
+        var result = new ApiResult<PostDetailDto>();
         const string methodName = nameof(GetPostBySlugQuery);
 
         try
@@ -36,7 +38,7 @@ public class GetPostBySlugQueryHandler(
 
             // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
-            var cachedPost = await cacheService.GetAsync<PostDetailModel>(cacheKey, cancellationToken);
+            var cachedPost = await cacheService.GetAsync<PostDetailDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
                 result.Success(cachedPost);
@@ -68,9 +70,12 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            var data = new PostDetailModel()
+            var postDto = mapper.Map<PostDto>(post);
+            mapper.Map(category, postDto);
+            
+            var data = new PostDetailDto()
             {
-                DetailPost = mappingHelper.MapPostWithCategory(post, category)
+                DetailPost = postDto
             };
 
             // Get tag information belongs to the post (Lấy thông tin các tag thuộc bài viết) 
@@ -101,8 +106,19 @@ public class GetPostBySlugQueryHandler(
             {
                 var categoryIds = relatedPosts.Select(p => p.CategoryId).Distinct().ToList();
                 var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
+                var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
 
-                data.RelatedPosts = mappingHelper.MapPostsWithCategories(relatedPosts, categories);
+                var relatedPostDtos = mapper.Map<List<PostDto>>(relatedPosts);
+
+                foreach (var relatedPost in relatedPostDtos)
+                {
+                    if (categoryDictionary.TryGetValue(relatedPost.Category.Id, out var relatedCategory))
+                    {
+                        relatedPost.Category = relatedCategory;
+                    }
+                }
+
+                data.RelatedPosts = relatedPostDtos;
             }
 
             result.Success(data);

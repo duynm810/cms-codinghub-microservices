@@ -32,7 +32,7 @@ public static class ConfigureServices
 
     private static void AddAutoMapperConfiguration(this IServiceCollection services)
     {
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
         services.AddTransient<IMappingHelper, MappingHelper>();
     }
 

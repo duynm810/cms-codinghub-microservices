@@ -6,6 +6,7 @@ using Post.Domain.Entities;
 using Shared.Dtos.Category;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostActivity;
 using Shared.Dtos.Tag;
 using Tag.Grpc.Protos;
@@ -16,17 +17,11 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        ConfigurePostMappings();
         ConfigureCategoryGrpcMappings();
         ConfigureTagGrpcMappings();
         ConfigureIdentityGrpcMappings();
     }
-
-    private void ConfigurePostMappings()
-    {
-        CreateMap<PostActivityLog, PostActivityLogDto>();
-    }
-
+    
     private void ConfigureCategoryGrpcMappings()
     {
         CreateMap<CategoryDto, CategoryModel>()

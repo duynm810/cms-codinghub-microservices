@@ -22,7 +22,7 @@
             {
                 foreach (var item in posts.Items)
                 {
-                    var categoryUrl = "/category/" + item.CategorySlug;
+                    var categoryUrl = "/category/" + item.Category.Slug;
                     var postUrl = "/post/" + item.Slug;
 
                     <article class="col-lg-4 col-md-6 mb-30">
@@ -48,7 +48,7 @@
                             <div class="post-content p-30">
                                 <div class="entry-meta meta-0 font-small mb-10">
                                     <a href="@categoryUrl">
-                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                        <span class="post-cat @item.Category.Color">@item.Category.Name</span>
                                     </a>
                                 </div>
                                 <div class="d-flex post-card-content">

@@ -1,7 +1,7 @@
 @model PostDetailViewModel
 @{
     var detail = Model.Post.DetailPost;
-    var categoryUrl = "/category/" + detail.CategorySlug;
+    var categoryUrl = "/category/" + detail.Category.Slug;
 }
 
 @section scripts
@@ -28,7 +28,7 @@
             <div class="post-content">
                 <div class="entry-meta meta-0 mb-15 font-small">
                     <a href="@categoryUrl">
-                        <span class="post-cat position-relative @detail.CategoryColor">@detail.CategoryName</span>
+                        <span class="post-cat position-relative @detail.Category.Color">@detail.Category.Name</span>
                     </a>
                 </div>
                 <h1 class="entry-title mb-30 font-weight-900">
