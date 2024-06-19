@@ -1,4 +1,5 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
 using Shared.Responses;

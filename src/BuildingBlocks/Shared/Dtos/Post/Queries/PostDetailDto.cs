@@ -1,4 +1,4 @@
-namespace Shared.Dtos.Post;
+namespace Shared.Dtos.Post.Queries;
 
 public class PostDetailDto
 {

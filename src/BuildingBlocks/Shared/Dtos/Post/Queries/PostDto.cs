@@ -2,7 +2,7 @@ using Shared.Dtos.Identity.User;
 using Shared.Dtos.Tag;
 using Shared.Enums;
 
-namespace Shared.Dtos.Post;
+namespace Shared.Dtos.Post.Queries;
 
 public class PostDto
 {

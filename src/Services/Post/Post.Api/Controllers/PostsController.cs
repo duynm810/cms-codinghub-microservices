@@ -26,6 +26,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostsByCurrentUserPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Commands;
 using Shared.Extensions;
 using Shared.Responses;
 

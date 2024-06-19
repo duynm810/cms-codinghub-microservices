@@ -5,6 +5,7 @@ using Grpc.Core;
 using Post.Grpc.Protos;
 using Shared.Constants;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 

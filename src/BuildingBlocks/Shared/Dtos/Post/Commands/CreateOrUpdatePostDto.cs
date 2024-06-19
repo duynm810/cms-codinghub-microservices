@@ -1,4 +1,4 @@
-namespace Shared.Dtos.Post;
+namespace Shared.Dtos.Post.Commands;
 
 public class CreateOrUpdatePostDto
 {

@@ -6,6 +6,7 @@ using Post.Application.Commons.Models;
 using Post.Application.Features.V1.Posts.Commons;
 using Post.Domain.Entities;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Commands;
 using Shared.Extensions;
 using Shared.Responses;
 
