@@ -55,6 +55,35 @@ public class PostsController(
             return HandleException(e, methodName);
         }
     }
+    
+    [HttpGet("author/{userName}")]
+    public async Task<IActionResult> PostsByAuthor([FromRoute] string userName, [FromQuery] int page = 1)
+    {
+        const string methodName = nameof(PostsByAuthor);
+
+        try
+        {
+            var pageSize = paginationSettings.FeaturedPostPageSize;
+
+            var posts = await postApiClient.GetPostsByAuthorPaging(userName, page, pageSize);
+
+            if (posts is { IsSuccess: true, Data: not null })
+            {
+                var items = new PostsByAuthorViewModel
+                {
+                    PostsByAuthor = posts.Data
+                };
+
+                return View(items);
+            }
+
+            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
 
     [HttpGet("post/{slug}")]
     public async Task<IActionResult> Details([FromRoute] string slug)

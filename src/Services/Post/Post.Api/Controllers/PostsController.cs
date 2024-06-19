@@ -110,15 +110,15 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
     
-    [HttpGet("by-author/{authorId:guid}/paging")]
+    [HttpGet("by-author/{username}/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
     public async Task<IActionResult> GetPostsByAuthorPaging(
-        [FromRoute] Guid authorId,
+        [FromRoute] string username,
         [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)
     {
-        var query = new GetPostsByAuthorPagingQuery(authorId, pageNumber, pageSize);
+        var query = new GetPostsByAuthorPagingQuery(username, pageNumber, pageSize);
         var result = await mediator.Send(query);
         return Ok(result);
     }

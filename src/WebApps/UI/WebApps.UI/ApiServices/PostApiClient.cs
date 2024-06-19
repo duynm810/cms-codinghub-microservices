@@ -26,11 +26,11 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
     
-    public async Task<ApiResult<PagedResponse<PostDto>>> GetPostsByAuthorPaging(Guid authorId,
+    public async Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName,
         int pageNumber, int pageSize)
     {
-        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-            $"/posts/by-author/{authorId}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.GetAsync<PostsByAuthorDto>(
+            $"/posts/by-author/{userName}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
     
     public async Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize)

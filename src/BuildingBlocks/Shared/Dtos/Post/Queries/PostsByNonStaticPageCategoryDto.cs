@@ -4,7 +4,7 @@ namespace Shared.Dtos.Post.Queries;
 
 public class PostsByNonStaticPageCategoryDto
 {
-    public CategoryDto Category { get; set; }
+    public CategoryDto Category { get; set; } = default!;
 
-    public List<PostDto>? Posts { get; set; }
+    public List<PostDto> Posts { get; set; } = default!;
 }

@@ -115,15 +115,15 @@ public class PostDto
     /// <summary>
     /// Danh mục thuộc bài viết
     /// </summary>
-    public CategoryDto Category { get; set; }
+    public CategoryDto Category { get; set; } = default!;
 
     /// <summary>
     /// Danh sách các thẻ thuộc bài viết
     /// </summary>
     public List<TagDto>? Tags { get; set; } = [];
-    
+
     /// <summary>
     /// Thông tin tác giả bài viết
     /// </summary>
-    public UserDto? User { get; set; }
+    public UserDto User { get; set; } = default!;
 }

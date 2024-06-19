@@ -42,4 +42,11 @@ public class IdentityGrpcClient(
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
+
+    public async Task<UserDto?> GetUserInfoByUserName(string userName)
+    {
+        const string methodName = nameof(GetUserInfoByUserName);
+        //TODO Implement Get user info by username
+        throw new NotImplementedException();
+    }
 }

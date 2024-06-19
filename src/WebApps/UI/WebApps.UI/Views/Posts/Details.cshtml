@@ -2,6 +2,7 @@
 @{
     var detail = Model.Posts.Detail;
     var categoryUrl = "/category/" + detail.Category.Slug;
+    var authorUrl = "/author/" + detail.User.UserName;
 }
 
 @section scripts
@@ -38,14 +39,14 @@
                     @detail.Summary
                 </p>
                 <div class="entry-meta align-items-center meta-2 font-small color-muted">
-                    @if (detail.User != null)
-                    {
+                    @{
+                        
                         <p class="mb-5">
                             <a class="author-avatar" href="#">
                                 <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
                             </a>
                             By
-                            <a href="author.html">
+                            <a href="@authorUrl">
                                 <span class="author-name font-weight-bold">@detail.User.FullName</span>
                             </a>
                         </p>
@@ -118,7 +119,7 @@
         <hr class="wp-block-separator is-style-wide">
         <div class="wp-block-image">
             <figure class="alignleft is-resized">
-                <img class="border-radius-5" src="~/imgs/news/thumb-11.jpg">
+                <img class="border-radius-5" src="~/imgs/news/thumb-11.jpg" alt="">
                 <figcaption> And far contrary smoked some contrary among stealthy </figcaption>
             </figure>
         </div>
@@ -171,10 +172,9 @@
     </div>
     <!--author box-->
     <div class="author-bio p-30 mt-50 border-radius-10 bg-white">
-        @if (detail.User != null)
-        {
+        @{
             <div class="author-image mb-30">
-                <a href="author.html">
+                <a href="@authorUrl">
                     <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
                 </a>
             </div>
@@ -182,13 +182,13 @@
                 <h4 class="font-weight-bold mb-20">
                     <span class="vcard author">
                         <span class="fn">
-                            <a href="author.html" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
+                            <a href="@authorUrl" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
                         </span>
                     </span>
                 </h4>
                 <h5 class="text-muted">About author</h5>
                 <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
-                <a href="author.html" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
+                <a href="@authorUrl" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
                 <div class="author-social">
                     <ul class="author-social-icons">
                         <li class="author-social-link-facebook">

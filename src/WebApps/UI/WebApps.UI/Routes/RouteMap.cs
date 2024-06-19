@@ -48,9 +48,9 @@ public static class RouteMap
             new { controller = "Posts", action = "PostsByCategory" });
         
         app.MapControllerRoute(
-            "posts-by-tag",
-            "/tag/{tagSlug}",
-            new { controller = "Posts", action = "PostsByTag" });
+            "posts-by-author",
+            "/author/{userName}",
+            new { controller = "Posts", action = "PostsByAuthor" });
 
         app.MapControllerRoute(
             "post-detail",

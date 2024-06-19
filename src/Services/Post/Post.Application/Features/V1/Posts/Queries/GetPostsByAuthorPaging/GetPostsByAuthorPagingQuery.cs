@@ -4,9 +4,9 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 
-public class GetPostsByAuthorPagingQuery(Guid authorId, int pageNumber, int pageSize) : IRequest<ApiResult<PostsByAuthorDto>>
+public class GetPostsByAuthorPagingQuery(string userName, int pageNumber, int pageSize) : IRequest<ApiResult<PostsByAuthorDto>>
 {
-    public Guid AuthorId { get; set; } = authorId;
+    public string UserName { get; set; } = userName;
 
     public int PageNumber { get; set; } = pageNumber;
 

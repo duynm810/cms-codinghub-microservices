@@ -5,7 +5,7 @@ namespace Shared.Dtos.Post.Queries;
 
 public class PostsByAuthorDto
 {
-    public UserDto? User { get; set; }
-    
-    public PagedResponse<PostDto>? Posts { get; set; }
+    public UserDto User { get; set; } = default!;
+
+    public PagedResponse<PostDto> Posts { get; set; } = default!;
 }
