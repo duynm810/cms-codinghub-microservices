@@ -10,8 +10,13 @@
         <h1 class="entry-title mb-20 font-weight-900">
             Update posts
         </h1>
+        <div class="breadcrumb">
+            <a href="/accounts/manage-posts" rel="nofollow">Manage posts</a>
+            <span></span> Update posts
+        </div>
     </div>
     <form method="post" enctype="multipart/form-data">
+        @Html.AntiForgeryToken()
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">

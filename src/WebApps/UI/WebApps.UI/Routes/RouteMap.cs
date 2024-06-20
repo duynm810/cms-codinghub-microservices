@@ -70,6 +70,15 @@ public static class RouteMap
             new { controller = "About", action = "Index" });
 
         #endregion
+        
+        #region Media
+
+        app.MapControllerRoute(
+            "media-upload",
+            "media/upload",
+            new { controller = "Media", action = "Upload" });
+
+        #endregion
 
         #region Default
 

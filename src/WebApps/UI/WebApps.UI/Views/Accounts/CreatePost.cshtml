@@ -66,6 +66,33 @@
                     fileItem.appendChild(fileRemove);
                     fileList.appendChild(fileItem);
                 });
+
+                uploadFiles(files);
+            }
+
+            async function uploadFiles(files) {
+                const formData = new FormData();
+                formData.append('file', files[0]);
+                formData.append('type', 'image');
+
+                try {
+                    const response = await fetch('/api/media/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const responseBody = await response.text(); // Đọc body response một lần
+                    if (!response.ok) {
+                        alert(`Upload failed with status: ${response.status}, error: ${responseBody}`);
+                    }
+
+                    const result = JSON.parse(responseBody); // Parse JSON từ chuỗi đã đọc
+                    console.log('Upload successful:', result);
+                } catch (error) {
+                    console.error('Error uploading file:', error);
+                    // Bạn có thể hiển thị thông báo lỗi cho người dùng tại đây, ví dụ:
+                    alert(`Error uploading file: ${error.message}`);
+                }
             }
         });
     </script>
@@ -76,7 +103,12 @@
         <h1 class="entry-title mb-20 font-weight-900">
             New posts
         </h1>
+        <div class="breadcrumb">
+            <a href="/accounts/manage-posts" rel="nofollow">Manage posts</a>
+            <span></span> New posts
+        </div>
     </div>
+    <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     <form method="post" enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-6">
