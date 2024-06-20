@@ -1,10 +1,8 @@
 using AutoMapper;
 using MediatR;
-using Post.Application.Commons.Mappings;
 using Post.Application.Commons.Mappings.Interfaces;
 using Post.Application.Features.V1.Posts.Commons;
 using Post.Domain.Entities;
-using Shared.Dtos.Post;
 using Shared.Dtos.Post.Commands;
 using Shared.Responses;
 

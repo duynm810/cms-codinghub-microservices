@@ -6,7 +6,6 @@ using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Post.Application.Commons.Behaviours;
 using Post.Application.Commons.Mappings;
-using Post.Application.Commons.Mappings.Interfaces;
 
 namespace Post.Application;
 

@@ -1,6 +1,8 @@
-using System.Reflection;
 using AutoMapper;
-using Post.Application.Commons.Mappings.Interfaces;
+using Post.Domain.Entities;
+using Shared.Dtos.Category;
+using Shared.Dtos.Post.Queries;
+using Shared.Dtos.PostActivity;
 
 namespace Post.Application.Commons.Mappings;
 
@@ -8,50 +10,21 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        ConfigurePostActivityLogMappings();
+        ConfigurePostMappings();
     }
 
-    private void ApplyMappingsFromAssembly(Assembly assembly)
+    private void ConfigurePostActivityLogMappings()
     {
-        var mapFromType = typeof(IMapFrom<>);
-
-        const string mappingMethodName = nameof(IMapFrom<object>.Mapping);
-
-        bool HasInterface(Type t)
-        {
-            return t.IsGenericType
-                   && t.GetGenericTypeDefinition() == mapFromType;
-        }
-
-        var types = assembly.GetExportedTypes()
-            .Where(t => t.GetInterfaces()
-                .Any(HasInterface)).ToList();
-
-        var argumentTypes = new[] { typeof(Profile) };
-
-        foreach (var type in types)
-        {
-            var instance = Activator.CreateInstance(type);
-
-            var methodInfo = type.GetMethod(mappingMethodName);
-
-            if (methodInfo != null)
-            {
-                methodInfo.Invoke(instance, new object[] { this });
-            }
-            else
-            {
-                var interfaces = type.GetInterfaces()
-                    .Where(HasInterface).ToList();
-
-                if (interfaces.Count <= 0) continue;
-
-                foreach (var interfaceMethodInfo in interfaces.Select(@interface =>
-                             @interface.GetMethod(mappingMethodName, argumentTypes)))
-                {
-                    interfaceMethodInfo?.Invoke(instance, new object[] { this });
-                }
-            }
-        }
+        CreateMap<PostActivityLog, PostActivityLogDto>();
+    }
+    
+    private void ConfigurePostMappings()
+    {
+        CreateMap<PostBase, PostDto>();
+        CreateMap<CategoryDto, CategoryDto>();
+        CreateMap<CategoryDto, PostDto>()
+            .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src))
+            .ReverseMap();
     }
 }
