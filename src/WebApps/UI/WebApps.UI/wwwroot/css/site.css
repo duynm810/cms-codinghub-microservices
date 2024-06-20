@@ -26,6 +26,8 @@
     color: #0056b3;
 }
 
+/*-------------------------------------------------------------------*/
+
 .upload-container {
     background-color: #f8f9fa;
     padding-top: 5px;
@@ -200,34 +202,38 @@
 }
 
 .table tbody td.status .Draft {
-    background: #b0b0b0; /* Grey for Draft */
+    background: #e0e0e0; /* Light Grey for Draft */
+}
+
+.table tbody td.status .Draft:after {
+    background: #a0a0a0; /* Dark Grey Dot */
 }
 
 .table tbody td.status .WaitingForApproval {
-    background: #fdf5dd; /* Light Yellow for WaitingForApproval */
-    color: #cfa00c;
+    background: #fff5cc; /* Light Yellow for Waiting for Approval */
+    color: #ffcc00;
 }
 
 .table tbody td.status .WaitingForApproval:after {
-    background: #f2be1d; /* Yellow Dot */
+    background: #ffcc00; /* Yellow Dot */
 }
 
 .table tbody td.status .Rejected {
-    background: #f8d7da; /* Light Red for Rejected */
-    color: #dc3545;
+    background: #fdecea; /* Light Red for Rejected */
+    color: #e74c3c;
 }
 
 .table tbody td.status .Rejected:after {
-    background: #dc3545; /* Red Dot */
+    background: #e74c3c; /* Red Dot */
 }
 
 .table tbody td.status .Published {
-    background: #cff6dd; /* Light Green for Published */
-    color: #1fa750;
+    background: #e6f4ea; /* Light Green for Published */
+    color: #2ecc71;
 }
 
 .table tbody td.status .Published:after {
-    background: #23bd5a; /* Green Dot */
+    background: #27ae60; /* Green Dot */
 }
 
 .checkbox-wrap {
