@@ -4,11 +4,61 @@ public static class RouteMap
 {
     public static void RegisterRoutes(WebApplication app)
     {
-        #region Default
+        #region Accounts
 
         app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=Home}/{action=Index}/{id?}");
+            "update-post",
+            "/accounts/update-post/{slug}",
+            new { controller = "Accounts", action = "UpdatePost" });
+
+        app.MapControllerRoute(
+            "create-new-post",
+            "/accounts/create-new-post",
+            new { controller = "Accounts", action = "CreatePost" });
+
+        app.MapControllerRoute(
+            "profile",
+            "/accounts/profile",
+            new { controller = "Accounts", action = "Profile" });
+        
+        app.MapControllerRoute(
+            "manage-posts",
+            "/accounts/manage-posts",
+            new { controller = "Accounts", action = "ManagePosts" });
+
+        #endregion
+
+        #region Posts
+
+        app.MapControllerRoute(
+            "post-detail",
+            "post/{slug}",
+            new { controller = "Posts", action = "Details" });
+
+        app.MapControllerRoute(
+            "posts-by-category",
+            "/category/{categorySlug}",
+            new { controller = "Posts", action = "PostsByCategory" });
+        
+        app.MapControllerRoute(
+            "posts-in-series",
+            "series/{seriesSlug}",
+            new { controller = "Posts", action = "PostsBySeries" });
+
+        app.MapControllerRoute(
+            "posts-in-tag",
+            "tag/{tagSlug}",
+            new { controller = "Posts", action = "PostsByTag" });
+        
+        app.MapControllerRoute(
+            "posts-by-author",
+            "/author/{userName}",
+            new { controller = "Posts", action = "PostsByAuthor" });
+
+        app.MapControllerRoute(
+            "post-search",
+            "/search",
+            new { controller = "Posts", action = "Search" });
 
         #endregion
 
@@ -21,61 +71,11 @@ public static class RouteMap
 
         #endregion
 
-        #region Accounts
+        #region Default
 
         app.MapControllerRoute(
-            "profile",
-            "/accounts/profile",
-            new { controller = "Accounts", action = "Profile" });
-        
-        app.MapControllerRoute(
-            "manage-posts",
-            "/accounts/manage-posts",
-            new { controller = "Accounts", action = "ManagePosts" });
-        
-        app.MapControllerRoute(
-            "create-new-post",
-            "/accounts/create-new-post",
-            new { controller = "Accounts", action = "CreatePost" });
-        
-        app.MapControllerRoute(
-            "update-post",
-            "/update-post/{slug}",
-            new { controller = "Accounts", action = "UpdatePost" });
-
-        #endregion
-
-        #region Posts
-
-        app.MapControllerRoute(
-            "posts-by-category",
-            "/category/{categorySlug}",
-            new { controller = "Posts", action = "PostsByCategory" });
-        
-        app.MapControllerRoute(
-            "posts-in-series",
-            "series/{seriesSlug}",
-            new { controller = "Posts", action = "PostsBySeries" });
-        
-        app.MapControllerRoute(
-            "posts-in-tag",
-            "tag/{tagSlug}",
-            new { controller = "Posts", action = "PostsByTag" });
-        
-        app.MapControllerRoute(
-            "posts-by-author",
-            "/author/{userName}",
-            new { controller = "Posts", action = "PostsByAuthor" });
-
-        app.MapControllerRoute(
-            "post-detail",
-            "post/{slug}",
-            new { controller = "Posts", action = "Details" });
-
-        app.MapControllerRoute(
-            "post-search",
-            "/search",
-            new { controller = "Posts", action = "Search" });
+            name: "default",
+            pattern: "{controller=Home}/{action=Index}/{id?}");
 
         #endregion
     }
