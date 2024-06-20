@@ -15,7 +15,7 @@ public static class Serilogger
 
             // Elastic search configuration
             var elasticUri = context.Configuration.GetValue<string>("ElasticConfigurations:Uri");
-            var username = context.Configuration.GetValue<string>("ElasticConfigurations:Username");
+            var userName = context.Configuration.GetValue<string>("ElasticConfigurations:Username");
             var password = context.Configuration.GetValue<string>("ElasticConfigurations:Password");
 
             if (string.IsNullOrEmpty(elasticUri))
@@ -34,7 +34,7 @@ public static class Serilogger
                     AutoRegisterTemplate = true,
                     NumberOfReplicas = 1,
                     NumberOfShards = 2,
-                    ModifyConnectionSettings = x => x.BasicAuthentication(username, password)
+                    ModifyConnectionSettings = x => x.BasicAuthentication(userName, password)
                 })
                 .Enrich.FromLogContext()
                 .Enrich.WithMachineName()

@@ -49,7 +49,7 @@ public class IdentityGrpcClient(
 
         try
         {
-            var request = new UserNameRequest { Username = userName };
+            var request = new UserNameRequest { UserName = userName };
             
             var result = await userProtoServiceClient.GetUserInfoByUserNameAsync(request);
             if (result == null)

@@ -36,13 +36,13 @@ public static class UserSeedData
 
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-        CreateUser(scope, "Nguyen", "Duy", "82 Vo Van Ngan street, Binh Tho ward, Thu Duc city",
-            Guid.NewGuid().ToString(), "admin123",
-            "Administrator", "duynguyen810@example.com");
+        CreateUser(scope, "Nguyen Minh", "Duy", "82 Vo Van Ngan street, Binh Tho ward, Thu Duc city",
+            Guid.NewGuid().ToString(), "admin123","duynguyen810",
+            "Administrator",  "duynguyen810@example.com");
     }
 
     private static void CreateUser(IServiceScope scope, string firstName, string lastName,
-        string address, string id, string password, string role, string email)
+        string address, string id, string password, string userName, string role, string email)
     {
         var userManagement = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
         var user = userManagement.FindByNameAsync(email).Result;
@@ -53,7 +53,7 @@ public static class UserSeedData
 
         user = new User
         {
-            UserName = email,
+            UserName = userName,
             Email = email,
             FirstName = firstName,
             LastName = lastName,

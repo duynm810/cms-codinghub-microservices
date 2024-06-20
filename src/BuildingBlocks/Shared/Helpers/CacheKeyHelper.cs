@@ -66,8 +66,8 @@ public static class CacheKeyHelper
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:category:slug:{categorySlug}:page:{pageNumber}:size:{pageSize}";
         
-        public static string GetPostsByAuthorPagingKey(string username, int pageNumber, int pageSize) =>
-            $"{PostServicePrefix}:author:{username}:page:{pageNumber}:size:{pageSize}";
+        public static string GetPostsByAuthorPagingKey(string userName, int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:author:{userName}:page:{pageNumber}:size:{pageSize}";
         
         public static string GetPostsByCurrentUserPagingKey(string userId, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:current-user:{userId}:page:{pageNumber}:size:{pageSize}";

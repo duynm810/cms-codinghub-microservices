@@ -54,7 +54,7 @@ public class GetPostsByAuthorPagingQueryHandler(
                 result.Success(data);
 
                 // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data.Posts.Items, cancellationToken: cancellationToken);
+                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for author {UserName} for page {PageNumber} with page size {PageSize}", methodName, data.Posts.MetaData.TotalItems, request.UserName, request.PageNumber, request.PageSize);
             }

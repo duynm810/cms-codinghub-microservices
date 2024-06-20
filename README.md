@@ -129,8 +129,8 @@ dotnet ef database update -c IdentityContext --project Identity.Infrastructure -
 
 ## Docker Application URLs - LOCAL Environment (Docker Container):
 
-- Portainer: http://localhost:9000 - username: admin ; pass: "Admin123456@"
-- Kibana: http://localhost:5601 - username: elastic ; pass: admin
+- Portainer: http://localhost:9000 - userName: admin ; pass: "Admin123456@"
+- Kibana: http://localhost:5601 - userName: elastic ; pass: admin
 - RabbitMQ: http://localhost:15672 - username: guest ; pass: guest
 - HangfireUI: http://localhost:6016/jobs (docker)
 - WebUI: http://localhost:6100 (docker)
