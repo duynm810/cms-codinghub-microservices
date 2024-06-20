@@ -19,12 +19,12 @@ public class GetPostsByCategoryPagingQueryHandler(
     ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
-    ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PagedResponse<PostDto>>>
+    ILogger logger) : IRequestHandler<GetPostsByCategoryPagingQuery, ApiResult<PostsByCategoryDto>>
 {
-    public async Task<ApiResult<PagedResponse<PostDto>>> Handle(GetPostsByCategoryPagingQuery request,
+    public async Task<ApiResult<PostsByCategoryDto>> Handle(GetPostsByCategoryPagingQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PagedResponse<PostDto>>();
+        var result = new ApiResult<PostsByCategoryDto>();
         const string methodName = nameof(GetPostsByCategoryPagingQuery);
 
         try
@@ -32,7 +32,7 @@ public class GetPostsByCategoryPagingQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}", methodName, request.CategorySlug, request.PageNumber, request.PageSize);
             
             var cacheKey = CacheKeyHelper.Post.GetPostsByCategoryPagingKey(request.CategorySlug, request.PageNumber, request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PagedResponse<PostDto>>(cacheKey, cancellationToken);
+            var cachedPosts = await cacheService.GetAsync<PostsByCategoryDto>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved posts from cache for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}", methodName, request.CategorySlug, request.PageNumber, request.PageSize);
@@ -58,10 +58,14 @@ public class GetPostsByCategoryPagingQueryHandler(
                 post.Category = mapper.Map<CategoryDto>(category);
             }
 
-            var data = new PagedResponse<PostDto>
+            var data = new PostsByCategoryDto
             {
-                Items = posts,
-                MetaData = pagedPosts.MetaData
+               Category = category,
+               Posts = new PagedResponse<PostDto>()
+               {
+                   Items = posts,
+                   MetaData = pagedPosts.MetaData
+               }
             };
             
             result.Success(data);
@@ -69,9 +73,7 @@ public class GetPostsByCategoryPagingQueryHandler(
             // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information(
-                "END {MethodName} - Successfully retrieved {PostCount} posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
-                methodName, data.MetaData.TotalItems, request.CategorySlug, request.PageNumber, request.PageSize);
+            logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}", methodName, data.Posts.MetaData.TotalItems, request.CategorySlug, request.PageNumber, request.PageSize);
         }
         catch (Exception e)
         {

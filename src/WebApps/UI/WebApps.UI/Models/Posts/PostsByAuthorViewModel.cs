@@ -8,5 +8,5 @@ namespace WebApps.UI.Models.Posts;
 
 public class PostsByAuthorViewModel
 {
-    public PostsByAuthorDto PostsByAuthor { get; set; } = default!;
+    public PostsByAuthorDto Datas { get; set; } = default!;
 }

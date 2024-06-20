@@ -11,9 +11,6 @@ namespace WebApps.UI.Controllers;
 
 public class PostsController(
     IPostApiClient postApiClient,
-    ICategoryApiClient categoryApiClient,
-    ISeriesApiClient seriesApiClient,
-    ITagApiClient tagApiClient,
     ICommentApiClient commentApiClient,
     PaginationSettings paginationSettings,
     IErrorService errorService,
@@ -29,26 +26,74 @@ public class PostsController(
         {
             var pageSize = paginationSettings.FeaturedPostPageSize;
 
-            var category = await categoryApiClient.GetCategoryBySlug(categorySlug);
-            var posts = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, pageSize);
-
-            if (category is { IsSuccess: true, Data: not null })
+            var result = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, pageSize);
+            if (result is { IsSuccess: true, Data: not null })
             {
-                if (posts is { IsSuccess: true, Data: not null })
+                var items = new PostsByCategoryViewModel
                 {
-                    var items = new PostsByCategoryViewModel
-                    {
-                        Category = category.Data,
-                        Posts = posts.Data
-                    };
+                    Datas = result.Data
+                };
 
-                    return View(items);
-                }
-
-                return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+                return View(items);
             }
 
-            return HandleError((HttpStatusCode)category.StatusCode, methodName);
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+    
+    [HttpGet("series/{slug}")]
+    public async Task<IActionResult> PostsBySeries(string slug, int page = 1)
+    {
+        const string methodName = nameof(PostsBySeries);
+
+        try
+        {
+            var pageSize = paginationSettings.PostInSeriesPageSize;
+
+            var result = await postApiClient.GetPostsBySeriesPaging(slug, page, pageSize);
+            if (result is { IsSuccess: true, Data: not null })
+            {
+                var items = new PostsInSeriesViewModel
+                {
+                    Datas = result.Data
+                };
+
+                return View(items);
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    [HttpGet("tag/{slug}")]
+    public async Task<IActionResult> PostsByTag(string slug, int page = 1)
+    {
+        const string methodName = nameof(PostsByTag);
+
+        try
+        {
+            var pageSize = paginationSettings.PostInSeriesPageSize;
+
+            var result = await postApiClient.GetPostsByTagPaging(slug, page, pageSize);
+            if (result is { IsSuccess: true, Data: not null })
+            {
+                var items = new PostsInTagViewModel
+                {
+                    Datas = result.Data
+                };
+
+                return View(items);
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -65,19 +110,18 @@ public class PostsController(
         {
             var pageSize = paginationSettings.FeaturedPostPageSize;
 
-            var posts = await postApiClient.GetPostsByAuthorPaging(userName, page, pageSize);
-
-            if (posts is { IsSuccess: true, Data: not null })
+            var result = await postApiClient.GetPostsByAuthorPaging(userName, page, pageSize);
+            if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByAuthorViewModel
                 {
-                    PostsByAuthor = posts.Data
+                    Datas = result.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -92,19 +136,18 @@ public class PostsController(
 
         try
         {
-            var post = await postApiClient.GetPostBySlug(slug, 2);
-            
-            if (post is { IsSuccess: true, Data: not null })
+            var result = await postApiClient.GetPostBySlug(slug, 2);
+            if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostDetailViewModel()
                 {
-                    Posts = post.Data
+                    Posts = result.Data
                 };
                 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)post.StatusCode, methodName);
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -120,92 +163,19 @@ public class PostsController(
         {
             var pageSize = paginationSettings.SearchPostPageSize;
 
-            var posts = await postApiClient.SearchPostsPaging(keyword, page, pageSize);
-
-            if (posts is { IsSuccess: true, Data: not null })
+            var result = await postApiClient.SearchPostsPaging(keyword, page, pageSize);
+            if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostSearchViewModel()
                 {
                     Keyword = keyword,
-                    Posts = posts.Data
+                    Posts = result.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
-        }
-        catch (Exception e)
-        {
-            return HandleException(e, methodName);
-        }
-    }
-
-    [HttpGet("series/{slug}")]
-    public async Task<IActionResult> PostsInSeries(string slug, int page = 1)
-    {
-        const string methodName = nameof(PostsInSeries);
-
-        try
-        {
-            var pageSize = paginationSettings.PostInSeriesPageSize;
-
-            var series = await seriesApiClient.GetSeriesBySlug(slug);
-            var postsInSeries = await postApiClient.GetPostsInSeriesBySlugPaging(slug, page, pageSize);
-
-            if (series is { IsSuccess: true, Data: not null })
-            {
-                if (postsInSeries is { IsSuccess: true, Data: not null })
-                {
-                    var items = new PostsInSeriesViewModel
-                    {
-                        Series = series.Data,
-                        PostInSeries = postsInSeries.Data
-                    };
-
-                    return View(items);
-                }
-
-                return HandleError((HttpStatusCode)postsInSeries.StatusCode, methodName);
-            }
-
-            return HandleError((HttpStatusCode)series.StatusCode, methodName);
-        }
-        catch (Exception e)
-        {
-            return HandleException(e, methodName);
-        }
-    }
-
-    [HttpGet("tag/{slug}")]
-    public async Task<IActionResult> PostsInTag(string slug, int page = 1)
-    {
-        const string methodName = nameof(PostsInTag);
-
-        try
-        {
-            var pageSize = paginationSettings.PostInSeriesPageSize;
-
-            var tag = await tagApiClient.GetTagBySlug(slug);
-            var postsInTag = await postApiClient.GetPostsInTagBySlugPaging(slug, page, pageSize);
-
-            if (tag is { IsSuccess: true, Data: not null })
-            {
-                if (postsInTag is { IsSuccess: true, Data: not null })
-                {
-                    var items = new PostsInTagViewModel
-                    {
-                        Tag = tag.Data,
-                        PostInTags = postsInTag.Data
-                    };
-
-                    return View(items);
-                }
-
-                return HandleError((HttpStatusCode)postsInTag.StatusCode, methodName);
-            }
-
-            return HandleError((HttpStatusCode)tag.StatusCode, methodName);
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {

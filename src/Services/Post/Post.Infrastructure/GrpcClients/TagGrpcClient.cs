@@ -60,4 +60,50 @@ public class TagGrpcClient(
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
+    
+    public async Task<TagDto?> GetTagBySlug(string slug)
+    {
+        const string methodName = nameof(GetTagBySlug);
+
+        try
+        {
+            var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(slug);
+
+            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cachedTag != null)
+            {
+                return cachedTag;
+            }
+
+            var request = new GetTagBySlugRequest { Slug = slug };
+
+            var result = await tagProtoServiceClient.GetTagBySlugAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No tag found with slug {Slug}", methodName, slug);
+                return null;
+            }
+
+            var data = mapper.Map<TagDto>(result);
+
+            // Lưu cache
+            await cacheService.SetAsync(cacheKey, data);
+
+            return data;
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting tag by slug {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, slug, rpcEx.StatusCode, rpcEx.Message);
+            return null;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting tag by slug {Slug}. Message: {ErrorMessage}",
+                methodName, slug, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+        }
+    }
 }

@@ -83,12 +83,5 @@ public class MappingProfile : Profile
                 Icon = c.Icon,
                 Color = c.Color
             }).ToList());
-
-        CreateMap<CategoryDto, PostInTagDto>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.Slug, opt => opt.Ignore())
-            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.CategorySlug, opt => opt.MapFrom(src => src.Slug));
     }
 }

@@ -1,16 +1,16 @@
-@model PostsInTagViewModel
+@model PostsInSeriesViewModel
 @{
-    var tag = Model.Tag;
-    var postInTags = Model.PostInTags;
+    var series = Model.Datas.Series;
+    var posts = Model.Datas.Posts;
 }
 
 <!--archive header-->
 <div class="archive-header pt-50">
     <div class="container">
-        <h2 class="font-weight-900">@tag.Name</h2>
+        <h2 class="font-weight-900">@series.Title</h2>
         <div class="breadcrumb">
             <a href="/" rel="nofollow">Home</a>
-            <span></span> @tag.Name
+            <span></span> @series.Title
         </div>
         <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     </div>
@@ -21,18 +21,18 @@
             <div class="col-lg-8">
                 <div class="post-module-3">
                     <div class="loop-list loop-list-style-1">
-                        @if (postInTags.Items != null && postInTags.Items.Count != 0)
+                        @if (posts.Items != null && posts.Items.Count != 0)
                         {
-                            foreach (var item in postInTags.Items)
+                            foreach (var item in posts.Items)
                             {
-                                var categoryUrl = "/category/" + item.CategorySlug;
+                                var categoryUrl = "/category/" + item.Category.Slug;
                                 var postUrl = "/post/" + item.Slug;
 
                                 <article class="hover-up-2 transition-normal">
                                     <div class="row mb-40 list-style-2">
                                         <div class="col-md-4">
                                             <div class="post-thumb position-relative border-radius-5">
-                                                <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(../imgs/news/news-13.jpg)">
+                                                <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(@item.Thumbnail)">
                                                     <a class="img-link" href="@postUrl"></a>
                                                 </div>
                                                 <ul class="social-share">
@@ -53,7 +53,7 @@
                                             <div class="post-content">
                                                 <div class="entry-meta meta-0 font-small mb-10">
                                                     <a href="@categoryUrl">
-                                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                                        <span class="post-cat @item.Category.Color">@item.Category.Name</span>
                                                     </a>
                                                 </div>
                                                 <h5 class="post-title font-weight-900 mb-20">
@@ -75,8 +75,8 @@
                         }
                     </div>
                 </div>
-                <div class="pagination-area mb-30 wow fadeInUp animated">
-                    @await Component.InvokeAsync("Pager", postInTags.MetaData)
+                <div class="pagination-area mb-30">
+                    @await Component.InvokeAsync("Pager", posts.MetaData)
                 </div>
             </div>
             <div class="col-lg-4">

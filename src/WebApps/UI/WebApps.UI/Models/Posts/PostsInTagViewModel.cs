@@ -1,14 +1,8 @@
-using Shared.Dtos.Post;
-using Shared.Dtos.PostInTag;
-using Shared.Dtos.Tag;
-using Shared.Responses;
-using WebApps.UI.Models.Commons;
+using Shared.Dtos.Post.Queries;
 
 namespace WebApps.UI.Models.Posts;
 
 public class PostsInTagViewModel
 {
-    public TagDto Tag { get; set; } = default!;
-
-    public PagedResponse<PostInTagDto> PostInTags { set; get; } = default!;
+    public PostsByTagDto Datas { get; set; } = default!;
 }

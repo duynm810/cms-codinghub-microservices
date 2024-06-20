@@ -23,6 +23,8 @@ using Post.Application.Features.V1.Posts.Queries.GetPostsByAuthorPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCategoryPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByCurrentUserPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory;
+using Post.Application.Features.V1.Posts.Queries.GetPostsBySeriesPaging;
+using Post.Application.Features.V1.Posts.Queries.GetPostsByTagPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
@@ -106,6 +108,26 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         [FromQuery, Required] int pageSize = 10)
     {
         var query = new GetPostsByCategoryPagingQuery(categorySlug, pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("tag/by-slug/{tagSlug}/paging")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostByTagPaging(string tagSlug, [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetPostsByTagPagingQuery(tagSlug, pageNumber, pageSize);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("series/by-slug/{seriesSlug}/paging")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPostBySeriesPaging(string seriesSlug, [FromQuery, Required] int pageNumber = 1,
+        [FromQuery, Required] int pageSize = 10)
+    {
+        var query = new GetPostsBySeriesPagingQuery(seriesSlug, pageNumber, pageSize);
         var result = await mediator.Send(query);
         return Ok(result);
     }
