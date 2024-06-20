@@ -112,7 +112,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
     
-    [HttpGet("tag/by-slug/{tagSlug}/paging")]
+    [HttpGet("by-tag/{tagSlug}/paging")]
     [AllowAnonymous]
     public async Task<IActionResult> GetPostByTagPaging(string tagSlug, [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)
@@ -122,7 +122,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
     
-    [HttpGet("series/by-slug/{seriesSlug}/paging")]
+    [HttpGet("by-series/{seriesSlug}/paging")]
     [AllowAnonymous]
     public async Task<IActionResult> GetPostBySeriesPaging(string seriesSlug, [FromQuery, Required] int pageNumber = 1,
         [FromQuery, Required] int pageSize = 10)

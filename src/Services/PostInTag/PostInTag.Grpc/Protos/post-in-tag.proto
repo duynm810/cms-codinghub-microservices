@@ -4,12 +4,21 @@ option csharp_namespace = "PostInTag.Grpc.Protos";
 
 service PostInTagService {
   rpc GetTagsByPostId(GetTagsByPostIdRequest) returns (GetTagsByPostIdResponse);
+  rpc GetPostIdsInTag(GetPostIdsInTagRequest) returns (GetPostIdsInTagResponse);
 }
 
 message GetTagsByPostIdRequest {
   string post_id = 1;
 }
 
+message GetPostIdsInTagRequest {
+  string tag_id = 1;
+}
+
 message GetTagsByPostIdResponse {
   repeated string tag_ids = 1;
+}
+
+message GetPostIdsInTagResponse {
+  repeated string post_ids = 1;
 }

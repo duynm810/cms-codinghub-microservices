@@ -199,7 +199,6 @@ services:
       - post-in-tag.api
       - post-in-series.api
       - comment.api
-      - hangfire.api
       - media.api
     ports:
       - "6001:80"

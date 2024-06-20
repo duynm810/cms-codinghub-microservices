@@ -45,7 +45,7 @@ public static class UserSeedData
         string address, string id, string password, string userName, string role, string email)
     {
         var userManagement = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
-        var user = userManagement.FindByNameAsync(email).Result;
+        var user = userManagement.FindByNameAsync(userName).Result;
         if (user != null)
         {
             return;
