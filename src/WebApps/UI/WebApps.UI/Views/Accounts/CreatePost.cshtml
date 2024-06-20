@@ -1,6 +1,7 @@
 @model CreatePostViewModel
 @{
     Layout = "_Layout";
+    var categories = Model.Categories;
 }
 
 @section scripts {
@@ -82,9 +83,10 @@
                 <div class="form-group">
                     <select class="dropdown-custom" name="category" required="">
                         <option value="" disabled selected>Select category</option>
-                        <option value="category1">Danh mục 1</option>
-                        <option value="category2">Danh mục 2</option>
-                        <option value="category3">Danh mục 3</option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
                     </select>
                 </div>
             </div>

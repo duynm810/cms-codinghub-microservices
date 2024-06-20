@@ -12,7 +12,7 @@ using ILogger = Serilog.ILogger;
 namespace WebApps.UI.Controllers;
 
 [Authorize]
-public class AccountsController(IPostApiClient postApiClient, IErrorService errorService, ILogger logger) : BaseController(errorService, logger)
+public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, IErrorService errorService, ILogger logger) : BaseController(errorService, logger)
 {
     public IActionResult Login(string returnUrl = "/")
     {
@@ -41,11 +41,20 @@ public class AccountsController(IPostApiClient postApiClient, IErrorService erro
 
     public IActionResult Profile()
     {
-        var item = new ProfileViewModel()
-        {
-        };
+        const string methodName = nameof(Profile);
         
-        return View(item);
+        try
+        {
+            var item = new ProfileViewModel()
+            {
+            };
+
+            return View(item);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
     }
 
     public async Task<IActionResult> ManagePosts([FromQuery] int page = 1)
@@ -54,20 +63,18 @@ public class AccountsController(IPostApiClient postApiClient, IErrorService erro
         
         try
         {
-            
-            var posts = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
-
-            if (posts is { IsSuccess: true, Data: not null })
+            var result = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
+            if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new ManagePostsViewModel()
                 {
-                    Posts = posts.Data
+                    Posts = result.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)posts.StatusCode, methodName);
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -75,12 +82,61 @@ public class AccountsController(IPostApiClient postApiClient, IErrorService erro
         }
     }
 
-    public IActionResult CreatePost()
+    public async Task<IActionResult> CreatePost()
     {
-        var item = new CreatePostViewModel
-        {
-        };
+        const string methodName = nameof(CreatePost);
         
-        return View(item);
+        try
+        {
+            var categories = await categoryApiClient.GetCategories();
+            if (categories is { IsSuccess: true, Data: not null })
+            {
+                var item = new CreatePostViewModel
+                {
+                    Categories = categories.Data
+                };
+
+                return View(item);
+            }
+            
+            return HandleError((HttpStatusCode)categories.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> UpdatePost(string slug)
+    {
+        const string methodName = nameof(UpdatePost);
+        
+        try
+        {
+            var post = await postApiClient.GetPostBySlug(slug);
+            if (post is { IsSuccess: true, Data: not null })
+            {
+                var categories = await categoryApiClient.GetCategories();
+                if (categories is { IsSuccess: true, Data: not null })
+                {
+                    var items = new UpdatePostViewModel()
+                    {
+                        Post = post.Data,
+                        Categories = categories.Data
+                    };
+
+                    return View(items);
+                }
+                
+                return HandleError((HttpStatusCode)categories.StatusCode, methodName);
+            }
+
+            return HandleError((HttpStatusCode)post.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
     }
 }

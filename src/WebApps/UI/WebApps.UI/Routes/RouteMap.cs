@@ -37,6 +37,11 @@ public static class RouteMap
             "create-new-post",
             "/accounts/create-new-post",
             new { controller = "Accounts", action = "CreatePost" });
+        
+        app.MapControllerRoute(
+            "update-post",
+            "/update-post/{slug}",
+            new { controller = "Accounts", action = "UpdatePost" });
 
         #endregion
 

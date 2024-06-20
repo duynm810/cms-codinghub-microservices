@@ -3,6 +3,15 @@
     var posts = Model.Posts;
 }
 
+@section Scripts {
+    <script>
+            function updatePost(button) {
+                let slug = button.getAttribute('data-slug');
+                window.location.href = '@Url.Action("UpdatePost", "Accounts")' + '?slug=' + encodeURIComponent(slug);
+            }
+    </script>
+}
+
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
         <h1 class="entry-title mb-20 font-weight-900">
@@ -52,7 +61,7 @@
                                 </td>
                                 <td>
                                     <div class="button-container">
-                                        <button type="button" class="btn btn-update" aria-label="Update">
+                                        <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" onclick="updatePost(this)">
                                             <span aria-hidden="true">
                                                 <i class="fa fa-pencil"></i>
                                             </span>

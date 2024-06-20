@@ -1,4 +1,94 @@
 @model UpdatePostViewModel
 @{
     Layout = "_Layout";
+    var post = Model.Post;
+    var categories = Model.Categories;
 }
+
+<div class="container single-content">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            Update posts
+        </h1>
+    </div>
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="dropdown-custom" name="category" required="">
+                        <option value="" disabled>Select category</option>
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id" @(post.Category.Id == category.Id ? "selected" : "")>
+                                @Html.Raw(category.Name)
+                            </option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" required="" class="form-control" name="title" placeholder="Title" value="@post.Title">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" required="" class="form-control" name="slug" placeholder="Slug (SEO)" value="@post.Slug">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required="" name="summary" placeholder="Summary" rows="3">@post.Summary</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required="" name="content" placeholder="Content" rows="6">@post.Content</textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input class="form-control" required="" name="seo_description" placeholder="SEO description" rows="3" value="@post.SeoDescription">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="source" placeholder="Reference source (URL or source)" value="@post.Source">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="upload-container">
+                    <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
+                        <input type="file" id="thumbnail" name="thumbnail" required="" style="display:none;">
+                        <div id="drop-area" class="drop-area">
+                            <div class="drop-area-icon">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                            </div>
+                            <div class="drop-area-text">Drag and drop file here</div>
+                        </div>
+                    </label>
+                    <div id="file-list" class="file-list"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="submit" class="button button-contactForm btn-block">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

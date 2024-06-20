@@ -136,7 +136,7 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetPostBySlug(slug, 2);
+            var result = await postApiClient.GetDetailBySlug(slug, 2);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostDetailViewModel()

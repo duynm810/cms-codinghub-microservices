@@ -4,5 +4,5 @@ namespace WebApps.UI.Models.Posts;
 
 public class PostsInSeriesViewModel
 {
-    public PostsBySeriesDto Datas { get; set; }
+    public PostsBySeriesDto Datas { get; set; } = default!;
 }

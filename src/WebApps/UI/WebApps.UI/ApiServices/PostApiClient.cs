@@ -18,9 +18,13 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/pinned?count={count}");
     }
+    
+    public async Task<ApiResult<PostDto>> GetPostBySlug(string slug)
+    {
+        return await baseApiClient.GetAsync<PostDto>($"/posts/slug/{slug}", true);
+    }
 
-    public async Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug,
-        int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize)
     {
         return await baseApiClient.GetAsync<PostsByCategoryDto>(
             $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
@@ -38,8 +42,7 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/posts/by-tag/{tagSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
     }
     
-    public async Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName,
-        int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName, int pageNumber, int pageSize)
     {
         return await baseApiClient.GetAsync<PostsByAuthorDto>(
             $"/posts/by-author/{userName}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
@@ -51,9 +54,9 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/posts/by-current-user/paging?pageNumber={pageNumber}&pageSize={pageSize}", true);
     }
     
-    public async Task<ApiResult<PostsBySlugDto>> GetPostBySlug(string slug, int relatedCount)
+    public async Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount)
     {
-        return await baseApiClient.GetAsync<PostsBySlugDto>($"/posts/by-slug/{slug}?relatedCount={relatedCount}");
+        return await baseApiClient.GetAsync<PostsBySlugDto>($"/posts/detail/by-slug/{slug}?relatedCount={relatedCount}");
     }
 
     public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)

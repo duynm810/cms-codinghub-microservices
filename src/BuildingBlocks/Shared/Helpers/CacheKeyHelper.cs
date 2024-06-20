@@ -55,10 +55,12 @@ public static class CacheKeyHelper
         public static string GetMostCommentPostsKey() => $"{PostServicePrefix}:most_commented";
 
         public static string GetPostByIdKey(Guid postId) => $"{PostServicePrefix}:{postId}";
+        
+        public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
 
         public static string GetPostsByNonStaticPageCategoryKey() => $"{PostServicePrefix}:category:non_static_page";
 
-        public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
+        public static string GetDetailBySlugKey(string slug) => $"{PostServicePrefix}:detail:slug:{slug}";
 
         public static string GetLatestPostsPagingKey(int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:latest:page:{pageNumber}:size:{pageSize}";

@@ -202,11 +202,30 @@
       "SwaggerKey": "post-service"
     },
     {
-      "UpstreamPathTemplate": "/posts/by-slug/{slug}",
+      "UpstreamPathTemplate": "/posts/slug/{slug}",
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/posts/by-slug/{slug}",
+      "DownstreamPathTemplate": "/api/posts/slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/detail/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/detail/by-slug/{slug}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

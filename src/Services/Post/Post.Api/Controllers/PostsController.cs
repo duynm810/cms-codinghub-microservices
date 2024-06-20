@@ -11,6 +11,7 @@ using Post.Application.Features.V1.Posts.Commands.DeletePost;
 using Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
 using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
+using Post.Application.Features.V1.Posts.Queries.GetDetailBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 using Post.Application.Features.V1.Posts.Queries.GetMostCommentPosts;
@@ -82,6 +83,15 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<ActionResult<PostDto>> GetPostById([Required] Guid id)
     {
         var query = new GetPostByIdQuery(id);
+        var result = await mediator.Send(query);
+        return Ok(result);
+    }
+    
+    [HttpGet("slug/{slug}")]
+    [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<PostDto>> GetPostBySlug([Required] string slug)
+    {
+        var query = new GetPostBySlugQuery(slug);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -169,16 +179,16 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
     
-    [HttpGet("by-slug/{slug}")]
+    [HttpGet("detail/by-slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<ActionResult<PostDto>> GetPostBySlug([Required] string slug, int relatedCount)
+    public async Task<ActionResult<PostDto>> GetDetailBySlug([Required] string slug, int relatedCount)
     {
-        var query = new GetPostBySlugQuery(slug, relatedCount);
+        var query = new GetDetailBySlugQuery(slug, relatedCount);
         var result = await mediator.Send(query);
         return Ok(result);
     }
-
+    
     [HttpGet("featured")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]

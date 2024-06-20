@@ -4,7 +4,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
-using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Category;
@@ -18,51 +17,41 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
-    ITagGrpcClient tagGrpcClient,
-    IPostInTagGrpcClient postInTagGrpcClient,
-    IIdentityGrpcClient identityGrpcClient,
     ICacheService cacheService,
-    IPostService postService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostsBySlugDto>>
+    : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostsBySlugDto>> Handle(GetPostBySlugQuery request,
-        CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(GetPostBySlugQuery request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostsBySlugDto>();
+        var result = new ApiResult<PostDto>();
         const string methodName = nameof(GetPostBySlugQuery);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("BEGIN {MethodName} - Retrieving post with Slug: {PostSlug}", methodName, request.Slug);
 
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
-            var cachedPost = await cacheService.GetAsync<PostsBySlugDto>(cacheKey, cancellationToken).ConfigureAwait(false);
+            var cachedPost = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
-                logger.Information("Retrieved post from cache with slug: {PostSlug}", request.Slug);
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with Slug: {PostSlug}", methodName, request.Slug);
                 result.Success(cachedPost);
                 return result;
             }
 
-            var post = await postRepository.GetPostBySlug(request.Slug).ConfigureAwait(false);
+            var post = await postRepository.GetPostBySlug(request.Slug);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, request.Slug);
+                logger.Warning("{MethodName} - Post not found with Slug: {PostSlug}", methodName, request.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
+            
+            var data = mapper.Map<PostDto>(post);
 
-            var postDetail = mapper.Map<PostDto>(post);
-
-            var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
-            var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
-
-            await Task.WhenAll(categoryTask, relatedPostsTask).ConfigureAwait(false);
-
-            var category = await categoryTask.ConfigureAwait(false);
+            var category = await categoryGrpcClient.GetCategoryById(post.CategoryId);
             if (category == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
@@ -70,37 +59,12 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            postDetail.Category = mapper.Map<CategoryDto>(category);
-            var data = new PostsBySlugDto { Detail = postDetail };
-
-            var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id).ConfigureAwait(false);
-            var tagIdList = tagIds.ToList();
-            if (tagIdList.IsNotNullOrEmpty())
-            {
-                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList).ConfigureAwait(false);
-                if (tagsInfo != null)
-                {
-                    data.Detail.Tags = tagsInfo.ToList();
-                }
-            }
-
-            var authorUserInfo = await identityGrpcClient.GetUserInfo(post.AuthorUserId).ConfigureAwait(false);
-            if (authorUserInfo != null)
-            {
-                data.Detail.User = authorUserInfo;
-            }
-
-            var relatedPosts = relatedPostsTask.Result.ToList();
-            if (relatedPosts.IsNotNullOrEmpty())
-            {
-                var relatedPostList= await postService.EnrichPostsWithCategories(relatedPosts, cancellationToken);
-                data.RelatedPosts = relatedPostList;
-            }
-
+            data.Category = mapper.Map<CategoryDto>(category);
+            
             result.Success(data);
-            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("END {MethodName} - Successfully retrieved post with Slug: {PostSlug}", methodName, request.Slug);
         }
         catch (Exception e)
         {

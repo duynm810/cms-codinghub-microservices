@@ -12,6 +12,8 @@ public interface IPostApiClient
     
     Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count);
 
+    Task<ApiResult<PostDto>> GetPostBySlug(string slug);
+
     Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
 
     Task<ApiResult<PostsBySeriesDto>> GetPostsBySeriesPaging(string seriesSlug, int pageNumber, int pageSize);
@@ -22,7 +24,7 @@ public interface IPostApiClient
 
     Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize);
     
-    Task<ApiResult<PostsBySlugDto>> GetPostBySlug(string slug, int relatedCount);
+    Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount);
 
     Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize);
 
