@@ -46,7 +46,7 @@ public class GetPostsByAuthorPagingQueryHandler(
             
             var data = new PostsByAuthorDto { User = authorUserInfo };
             
-            var posts = await postRepository.GetPostsByAuthorPaging(data.User.Id, request.PageNumber, request.PageSize);
+            var posts = await postRepository.GetPostsByAuthorPaging(authorUserInfo.Id, request.PageNumber, request.PageSize);
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 data.Posts = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);

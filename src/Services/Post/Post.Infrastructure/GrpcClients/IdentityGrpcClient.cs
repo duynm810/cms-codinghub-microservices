@@ -46,7 +46,30 @@ public class IdentityGrpcClient(
     public async Task<UserDto?> GetUserInfoByUserName(string userName)
     {
         const string methodName = nameof(GetUserInfoByUserName);
-        //TODO Implement Get user info by username
-        throw new NotImplementedException();
+
+        try
+        {
+            var request = new UserNameRequest { Username = userName };
+            
+            var result = await userProtoServiceClient.GetUserInfoByUserNameAsync(request);
+            if (result == null)
+            {
+                logger.Warning("{MethodName}: No user found with username {Username}", methodName, userName);
+                return null;
+            }
+            
+            var data = mapper.Map<UserDto>(result);
+            return data;
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error("{MethodName}: gRPC error occurred while getting user info by username: {Username}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, userName, rpcEx.StatusCode, rpcEx.Message);
+            return null;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting user info by username: {Username}. Message: {ErrorMessage}", methodName, userName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting user by username"));
+        }
     }
 }

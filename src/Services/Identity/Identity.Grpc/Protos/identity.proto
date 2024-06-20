@@ -5,6 +5,7 @@ option csharp_namespace = "Identity.Grpc.Protos";
 service UserProtoService {
   rpc GetUserInfo (UserRequest) returns (UserResponse);
   rpc GetUsersInfo (UsersRequest) returns (UsersResponse);
+  rpc GetUserInfoByUserName (UserNameRequest) returns (UserResponse);
 }
 
 message UserRequest {
@@ -13,6 +14,10 @@ message UserRequest {
 
 message UsersRequest {
   repeated string user_ids = 1;
+}
+
+message UserNameRequest {
+  string username = 1;
 }
 
 message UserResponse {
