@@ -48,6 +48,16 @@ public static class RouteMap
             new { controller = "Posts", action = "PostsByCategory" });
         
         app.MapControllerRoute(
+            "posts-in-series",
+            "series/{seriesSlug}",
+            new { controller = "Posts", action = "PostsBySeries" });
+        
+        app.MapControllerRoute(
+            "posts-in-tag",
+            "tag/{tagSlug}",
+            new { controller = "Posts", action = "PostsByTag" });
+        
+        app.MapControllerRoute(
             "posts-by-author",
             "/author/{userName}",
             new { controller = "Posts", action = "PostsByAuthor" });
@@ -61,15 +71,6 @@ public static class RouteMap
             "post-search",
             "/search",
             new { controller = "Posts", action = "Search" });
-
-        #endregion
-
-        #region Series
-
-        app.MapControllerRoute(
-            "posts-in-series",
-            "series/{slug}",
-            new { controller = "Posts", action = "PostsInSeries" });
 
         #endregion
     }

@@ -45,8 +45,8 @@ public class PostsController(
         }
     }
     
-    [HttpGet("series/{slug}")]
-    public async Task<IActionResult> PostsBySeries(string slug, int page = 1)
+    [HttpGet("series/{seriesSlug}")]
+    public async Task<IActionResult> PostsBySeries(string seriesSlug, int page = 1)
     {
         const string methodName = nameof(PostsBySeries);
 
@@ -54,7 +54,7 @@ public class PostsController(
         {
             var pageSize = paginationSettings.PostInSeriesPageSize;
 
-            var result = await postApiClient.GetPostsBySeriesPaging(slug, page, pageSize);
+            var result = await postApiClient.GetPostsBySeriesPaging(seriesSlug, page, pageSize);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInSeriesViewModel
@@ -73,8 +73,8 @@ public class PostsController(
         }
     }
 
-    [HttpGet("tag/{slug}")]
-    public async Task<IActionResult> PostsByTag(string slug, int page = 1)
+    [HttpGet("tag/{tagSlug}")]
+    public async Task<IActionResult> PostsByTag(string tagSlug, int page = 1)
     {
         const string methodName = nameof(PostsByTag);
 
@@ -82,7 +82,7 @@ public class PostsController(
         {
             var pageSize = paginationSettings.PostInSeriesPageSize;
 
-            var result = await postApiClient.GetPostsByTagPaging(slug, page, pageSize);
+            var result = await postApiClient.GetPostsByTagPaging(tagSlug, page, pageSize);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInTagViewModel

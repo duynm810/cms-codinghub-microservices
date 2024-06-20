@@ -289,19 +289,30 @@
     transform: rotate(45deg);
 }
 
+.button-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .close {
-    float: right;
-    font-size: 1.5rem;
+    font-size: 1rem;
     font-weight: 700;
     line-height: 1;
     color: #000;
     text-shadow: 0 1px 0 #fff;
-    opacity: .5; }
+    opacity: .5;
+}
+
 .close:hover {
     color: #000;
-    text-decoration: none; }
-.close:not(:disabled):not(.disabled):hover, .close:not(:disabled):not(.disabled):focus {
-    opacity: .75; }
+    text-decoration: none;
+}
+
+.close:not(:disabled):not(.disabled):hover,
+.close:not(:disabled):not(.disabled):focus {
+    opacity: .75;
+}
 
 button.close {
     padding: 0;
@@ -309,8 +320,31 @@ button.close {
     border: 0;
     -webkit-appearance: none;
     -moz-appearance: none;
-    appearance: none; }
+    appearance: none;
+}
 
+button.btn-update {
+    padding: 0;
+    background-color: transparent;
+    border: 0;
+    font-size: 1rem;
+    color: #007bff;
+    opacity: .5;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin-right: 15px; /* Adjust space between buttons */
+}
+
+button.btn-update:hover {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+button.btn-update:not(:disabled):not(.disabled):hover,
+button.btn-update:not(:disabled):not(.disabled):focus {
+    opacity: .75;
+}
 a.close.disabled {
     pointer-events: none; }
 
