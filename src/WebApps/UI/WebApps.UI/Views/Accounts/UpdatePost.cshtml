@@ -19,8 +19,9 @@
                         <option value="" disabled>Select category</option>
                         @foreach (var category in Model.Categories)
                         {
-                            <option value="@category.Id" @(post.Category.Id == category.Id ? "selected" : "")>
-                                @Html.Raw(category.Name)
+                            var selectedAttribute = post.Category.Id == category.Id ? "selected" : "";
+                            <option value="@category.Id" selected="@selectedAttribute">
+                                @category.Name
                             </option>
                         }
                     </select>
