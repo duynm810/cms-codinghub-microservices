@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Dtos.Category;
+using Shared.Dtos.Post.Commands;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
@@ -82,24 +84,55 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
         }
     }
 
+    [HttpGet]
     public async Task<IActionResult> CreatePost()
     {
         const string methodName = nameof(CreatePost);
         
         try
         {
-            var categories = await categoryApiClient.GetCategories();
-            if (categories is { IsSuccess: true, Data: not null })
+            var categories = await GetCategories();
+            var items = new CreatePostViewModel
             {
-                var item = new CreatePostViewModel
-                {
-                    Categories = categories.Data
-                };
+                Categories = categories
+            };
 
-                return View(item);
-            }
+            return View(items);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> CreatePost(CreatePostDto request)
+    {
+        const string methodName = nameof(CreatePost);
+
+        try
+        {
+            var categories = await GetCategories();
             
-            return HandleError((HttpStatusCode)categories.StatusCode, methodName);
+            if (ModelState.IsValid)
+            {
+                var result = await postApiClient.CreatePost(request);
+                if (result is { IsSuccess: true })
+                {
+                    return RedirectToAction("ManagePosts");
+                }
+                
+                TempData["ErrorMessage"] = "Failed to create post.";
+            }
+
+            var items = new CreatePostViewModel
+            {
+                Categories = categories,
+                Post = request
+            };
+
+            return View(items);
         }
         catch (Exception e)
         {
@@ -139,4 +172,28 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
             return HandleException(e, methodName);
         }
     }
+
+    #region Helpers
+
+    private async Task<IEnumerable<CategoryDto>> GetCategories()
+    {
+        const string methodName = nameof(GetCategories);
+
+        try
+        {
+            var categoriesResponse = await categoryApiClient.GetCategories();
+            if (categoriesResponse is { IsSuccess: true, Data: not null })
+            {
+                return categoriesResponse.Data;
+            }
+
+            throw new Exception($"Error fetching categories: {categoriesResponse.StatusCode}");
+        }
+        catch (Exception e)
+        {
+            throw new Exception($"Exception in {methodName}: {e.Message}", e);
+        }
+    }
+
+    #endregion
 }

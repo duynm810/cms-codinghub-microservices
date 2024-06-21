@@ -1,4 +1,5 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
@@ -8,6 +9,8 @@ namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface IPostApiClient
 {
+    Task<ApiResult<long>> CreatePost(CreatePostDto request);
+    
     Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
     
     Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count);

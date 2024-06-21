@@ -6,6 +6,19 @@
 
 @section scripts {
     <script>
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <text>showError("@TempData["ErrorMessage"]");</text>
+        }
+
+        // Auto-generate slug from title
+        document.querySelector('input[name="Title"]').addEventListener('input', function() {
+            let titleValue = this.value;
+            document.querySelector('input[name="Slug"]').value = createSlug(titleValue);
+        });
+        
+        // Handle upload or drag files
         document.addEventListener("DOMContentLoaded", function() {
             const fileInput = document.getElementById("thumbnail");
             const dropArea = document.getElementById("drop-area");
@@ -69,37 +82,64 @@
 
                 uploadFiles(files);
             }
+        });
 
-            async function uploadFiles(files) {
-                if (files.length === 0) {
-                    alert('No file selected');
+        async function uploadFiles(files) {
+            const formData = new FormData();
+            formData.append('file', files[0]);
+            formData.append('type', 'image');
+
+            try {
+                const response = await fetch('/api/media/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseBody = await response.text();
+                if (!response.ok) {
+                    showError(`Upload failed with status: ${response.status}, error: ${responseBody}`);
                     return;
                 }
 
-                const formData = new FormData();
-                formData.append('file', files[0]);
-                formData.append('type', 'image');
+                const result = JSON.parse(responseBody);
+                console.log(result);
+                
+                // Update the hidden input with the URL of the uploaded file
+                document.getElementById('thumbnailUrl').value = result.data;
+            } catch (error) {
+                showError(`Error uploading file: ${error.message}`);
+            }
+        }
 
-                try {
-                    const response = await fetch('/api/media/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
+        async function validateForm() {
+            let form = document.getElementById('frm-create-post');
+            let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+            let valid = true;
 
-                    const responseBody = await response.text();
-                    if (!response.ok) {
-                        alert(`Upload failed with status: ${response.status}, error: ${responseBody}`);
-                        return;
-                    }
-
-                    const result = JSON.parse(responseBody);
-                    console.log('Upload successful:', result);
-                } catch (error) {
-                    console.error('Error uploading file:', error);
-                    alert(`Error uploading file: ${error.message}`);
+            for (let i = 0; i < inputs.length; i++) {
+                let input = inputs[i];
+                if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
+                    showError('Please fill out the ' + input.name + ' field.');
+                    valid = false;
+                    break; // Dừng lại sau khi tìm thấy trường không được nhập
                 }
             }
-        });
+
+            if (valid) {
+                const thumbnailInput = document.getElementById('thumbnail');
+                if (thumbnailInput.files.length > 0 && !document.getElementById('thumbnailUrl').value) {
+                    await uploadFiles(thumbnailInput.files);
+                }
+
+                if (document.getElementById('thumbnailUrl').value) {
+                    form.submit();
+                } else {
+                    showError('Please upload a valid thumbnail.');
+                }
+            }
+        }
+    
+    
     </script>
 }
 
@@ -114,11 +154,11 @@
         </div>
     </div>
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" id="frm-create-post" novalidate asp-controller="Accounts" asp-action="CreatePost">
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <select class="dropdown-custom" name="category" required="">
+                    <select class="dropdown-custom" name="CategoryId" id="category" required>
                         <option value="" disabled selected>Select category</option>
                         @foreach (var category in categories)
                         {
@@ -131,40 +171,40 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" required="" class="form-control" name="title" placeholder="Title">
+                    <input type="text" class="form-control" required name="Title" id="title" placeholder="Title">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" required="" class="form-control" name="slug" placeholder="Slug (SEO)">
+                    <input type="text" class="form-control" required name="Slug" id="slug" placeholder="Slug (SEO)">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required="" name="summary" placeholder="Summary" rows="3"></textarea>
+                    <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required="" name="content" placeholder="Content" rows="6"></textarea>
+                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <input class="form-control" required="" name="seo_description" placeholder="SEO description" rows="3">
+                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3">
                 </div>
             </div>
         </div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <input type="text" class="form-control" name="source" placeholder="Reference source (URL or source)">
+                    <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)">
                 </div>
             </div>
         </div>
@@ -172,7 +212,7 @@
             <div class="col-md-12">
                 <div class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
-                        <input type="file" id="thumbnail" name="thumbnail" required="" style="display:none;">
+                        <input type="file" id="thumbnail" name="thumbnail" style="display:none;">
                         <div id="drop-area" class="drop-area">
                             <div class="drop-area-icon">
                                 <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
@@ -184,10 +224,11 @@
                 </div>
             </div>
         </div>
+        <input type="hidden" name="Thumbnail" id="thumbnailUrl">
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <button type="submit" class="button button-contactForm btn-block">Submit</button>
+                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()">Submit</button>
                 </div>
             </div>
         </div>

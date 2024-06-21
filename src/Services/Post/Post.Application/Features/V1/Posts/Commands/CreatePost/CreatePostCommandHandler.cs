@@ -29,7 +29,7 @@ public class CreatePostCommandHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating post with name: {Name}", methodName, request.Name);
+            logger.Information("BEGIN {MethodName} - Creating post with title: {Title}", methodName, request.Title);
 
             // Check slug exists
             var slugExists = await postRepository.SlugExists(request.Slug);

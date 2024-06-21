@@ -26,6 +26,10 @@
     color: #0056b3;
 }
 
+.error-border {
+    border: 2px solid red;
+}
+
 /*-------------------------------------------------------------------*/
 
 .upload-container {

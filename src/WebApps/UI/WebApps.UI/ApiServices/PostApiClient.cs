@@ -1,4 +1,5 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
@@ -9,6 +10,11 @@ namespace WebApps.UI.ApiServices;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {
+    public async Task<ApiResult<long>> CreatePost(CreatePostDto request)
+    {
+        return await baseApiClient.PostAsync<CreatePostDto, long>($"/posts", request, true);
+    }
+    
     public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)
     {
         return await baseApiClient.GetListAsync<PostDto>($"/posts/featured?count={count}");

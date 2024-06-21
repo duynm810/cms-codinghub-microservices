@@ -2,7 +2,7 @@ namespace Shared.Dtos.Post.Commands;
 
 public class CreateOrUpdatePostDto
 {
-    public required string Name { get; set; }
+    public required string Title { get; set; }
 
     public required string Slug { get; set; }
 
@@ -15,8 +15,6 @@ public class CreateOrUpdatePostDto
     public string? SeoDescription { get; set; }
 
     public string? Source { get; set; }
-
-    public double RoyaltyAmount { get; set; }
-
+    
     public long CategoryId { get; set; }
 }
