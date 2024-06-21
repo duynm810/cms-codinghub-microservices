@@ -11,7 +11,7 @@
             Update posts
         </h1>
         <div class="breadcrumb">
-            <a href="/accounts/manage-posts" rel="nofollow">Manage posts</a>
+            <a asp-action="UpdatePost" asp-controller="Accounts" rel="nofollow">Manage posts</a>
             <span></span> Update posts
         </div>
     </div>
@@ -22,7 +22,7 @@
                 <div class="form-group">
                     <select class="dropdown-custom" name="category" required="">
                         <option value="" disabled>Select category</option>
-                        @foreach (var category in Model.Categories)
+                        @foreach (var category in categories)
                         {
                             if (post.CategoryId == category.Id)
                             {

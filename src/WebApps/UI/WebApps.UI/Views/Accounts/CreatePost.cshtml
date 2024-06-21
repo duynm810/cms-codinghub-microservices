@@ -71,6 +71,11 @@
             }
 
             async function uploadFiles(files) {
+                if (files.length === 0) {
+                    alert('No file selected');
+                    return;
+                }
+
                 const formData = new FormData();
                 formData.append('file', files[0]);
                 formData.append('type', 'image');
@@ -81,16 +86,16 @@
                         body: formData
                     });
 
-                    const responseBody = await response.text(); // Đọc body response một lần
+                    const responseBody = await response.text();
                     if (!response.ok) {
                         alert(`Upload failed with status: ${response.status}, error: ${responseBody}`);
+                        return;
                     }
 
-                    const result = JSON.parse(responseBody); // Parse JSON từ chuỗi đã đọc
+                    const result = JSON.parse(responseBody);
                     console.log('Upload successful:', result);
                 } catch (error) {
                     console.error('Error uploading file:', error);
-                    // Bạn có thể hiển thị thông báo lỗi cho người dùng tại đây, ví dụ:
                     alert(`Error uploading file: ${error.message}`);
                 }
             }
@@ -104,7 +109,7 @@
             New posts
         </h1>
         <div class="breadcrumb">
-            <a href="/accounts/manage-posts" rel="nofollow">Manage posts</a>
+            <a asp-action="ManagePosts" asp-controller="Accounts" rel="nofollow">Manage posts</a>
             <span></span> New posts
         </div>
     </div>
