@@ -20,7 +20,6 @@ public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService seri
         {
             logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, type);
 
-            // Check if file is null (Kiểm tra tập tin null)
             if (file == null || file.Length == 0)
             {
                 logger.Warning("Upload attempt with empty file.");
@@ -47,7 +46,8 @@ public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService seri
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
                 logger.Error(ErrorMessagesConsts.Media.ImageUploadFailed, response.StatusCode, errorContent);
-                throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode, errorContent));
+                throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed,
+                    response.StatusCode, errorContent));
             }
 
             var responseContent = await response.Content.ReadAsStringAsync();

@@ -62,19 +62,21 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
             var baseImageFolder = mediaSettings.ImageFolder ?? "DefaultImagePath";
             var imageFolder = Path.Combine(baseImageFolder, "images", type, now.ToString("MMyyyy"));
 
-            if (string.IsNullOrWhiteSpace(hostEnvironment.WebRootPath))
+            // Ensure wwwroot folder exists
+            var wwwrootPath = hostEnvironment.WebRootPath;
+            if (!Directory.Exists(wwwrootPath))
             {
-                hostEnvironment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                Directory.CreateDirectory(wwwrootPath);
             }
 
-            if (string.IsNullOrEmpty(filename))
+            // Ensure base image folder exists
+            var baseFolderPath = Path.Combine(wwwrootPath, baseImageFolder);
+            if (!Directory.Exists(baseFolderPath))
             {
-                result.Messages.Add(ErrorMessagesConsts.Media.FileNameCannotBeEmpty);
-                result.Failure(StatusCodes.Status404NotFound, result.Messages);
-                return result;
+                Directory.CreateDirectory(baseFolderPath);
             }
 
-            var folderPath = Path.Combine(hostEnvironment.WebRootPath, imageFolder);
+            var folderPath = Path.Combine(wwwrootPath, imageFolder);
             if (!Directory.Exists(folderPath))
             {
                 Directory.CreateDirectory(folderPath);
