@@ -358,7 +358,7 @@ services:
       - "6019:80"
     restart: always
     volumes:
-      - ./wwwroot:/app/wwwroot
+      - ./Services/Media/Media.Api/wwwroot:/app/wwwroot
   
   healthcheck:
     container_name: healthcheck

@@ -32,7 +32,6 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 logger.Warning("Upload attempt with empty file.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileIsEmpty);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to empty file.", methodName);
                 return result;
             }
 
@@ -43,7 +42,6 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 logger.Warning("Filename is empty after parsing.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileNameCannotBeEmpty);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to empty filename.", methodName);
                 return result;
             }
 
@@ -54,7 +52,6 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 logger.Warning("File extension {FileExtension} is not allowed.", fileExtension);
                 result.Messages.Add(ErrorMessagesConsts.Media.InvalidFileTypeOrName);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to invalid file extension.", methodName);
                 return result;
             }
 
@@ -64,25 +61,28 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
 
             // Ensure wwwroot folder exists
             var wwwrootPath = hostEnvironment.WebRootPath;
-            if (!Directory.Exists(wwwrootPath))
+            if (string.IsNullOrWhiteSpace(wwwrootPath))
             {
-                Directory.CreateDirectory(wwwrootPath);
+                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                Utils.EnsureDirectoryExists(wwwrootPath);
+                logger.Information("wwwroot path set to: {wwwrootPath}", wwwrootPath);
             }
-
+            else
+            {
+                logger.Information("Using provided wwwroot path: {wwwrootPath}", wwwrootPath);
+            }
+            
             // Ensure base image folder exists
             var baseFolderPath = Path.Combine(wwwrootPath, baseImageFolder);
-            if (!Directory.Exists(baseFolderPath))
-            {
-                Directory.CreateDirectory(baseFolderPath);
-            }
+            Utils.EnsureDirectoryExists(baseFolderPath);
+            logger.Information("Base image folder path: {baseFolderPath}", baseFolderPath);
 
             var folderPath = Path.Combine(wwwrootPath, imageFolder);
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            Utils.EnsureDirectoryExists(folderPath);
+            logger.Information("Specific image folder path: {folderPath}", folderPath);
 
             var filePath = Path.Combine(folderPath, filename);
+            logger.Information("Full file path: {filePath}", filePath);
 
             try
             {

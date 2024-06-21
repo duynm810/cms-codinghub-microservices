@@ -1,7 +1,5 @@
-using IdentityServer4.AccessTokenValidation;
 using Media.Api.Dtos;
 using Media.Api.Services.Interfaces;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Media.Api.Controllers;
