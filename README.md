@@ -88,7 +88,7 @@ dotnet ef database update -c ConfigurationDbContext
 ```Powershell
 - Move out Identity.Api folder (in root Identity folder)
 
-dotnet ef migrations add Initial_AspNet_Identity -c IdentityContext -o Persistence/Migrations
+dotnet ef migrations add Initial_AspNet_Identity -c IdentityContext -o Persistence/Migrations --project Identity.Infrastructure --startup-project Identity.Api
 dotnet ef database update -c IdentityContext --project Identity.Infrastructure --startup-project Identity.Api
 ```
 ---
