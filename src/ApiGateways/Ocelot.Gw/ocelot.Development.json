@@ -778,6 +778,18 @@
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/images/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/media/images/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5019
+        }
+      ]
     }
   ],
   "SwaggerEndPoints": [

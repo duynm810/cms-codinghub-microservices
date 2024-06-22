@@ -40,8 +40,8 @@ namespace Post.Api.Controllers;
 public class PostsController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
-    [ProducesResponseType(typeof(ApiResult<long>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<long>>> CreatePost([FromBody] CreatePostDto request)
+    [ProducesResponseType(typeof(ApiResult<Guid>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody] CreatePostDto request)
     {
         var command = mapper.Map<CreatePostCommand>(request);
         command.AuthorUserId = User.GetUserId();

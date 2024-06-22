@@ -10,9 +10,9 @@ namespace WebApps.UI.ApiServices;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {
-    public async Task<ApiResult<long>> CreatePost(CreatePostDto request)
+    public async Task<ApiResult<Guid>> CreatePost(CreatePostDto request)
     {
-        return await baseApiClient.PostAsync<CreatePostDto, long>($"/posts", request, true);
+        return await baseApiClient.PostAsync<CreatePostDto, Guid>($"/posts", request, true);
     }
     
     public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)

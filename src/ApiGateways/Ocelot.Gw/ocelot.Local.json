@@ -778,6 +778,20 @@
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/images/{everything}",
+      "UpstreamHttpMethod": [ 
+        "GET" 
+      ],
+      "DownstreamPathTemplate": "/media/images/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6019
+        }
+      ]
     }
   ],
   "SwaggerEndPoints": [

@@ -9,7 +9,7 @@ namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface IPostApiClient
 {
-    Task<ApiResult<long>> CreatePost(CreatePostDto request);
+    Task<ApiResult<Guid>> CreatePost(CreatePostDto request);
     
     Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
     
