@@ -5,7 +5,7 @@ namespace Shared.Dtos.Comment;
 
 public class CommentDto
 {
-    public string Id { get; set; }
+    public required string Id { get; set; }
     
     public Guid UserId { get; set; }
 

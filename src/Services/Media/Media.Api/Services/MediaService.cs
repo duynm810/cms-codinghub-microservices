@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Media.Api.Dtos;
 using Media.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Responses;
@@ -17,17 +18,17 @@ namespace Media.Api.Services;
 public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings mediaSettings, ILogger logger)
     : IMediaService
 {
-    public async Task<ApiResult<string>> UploadImage(IFormFile? file, string type)
+    public async Task<ApiResult<string>> UploadImage(SingleFileDto request)
     {
         var result = new ApiResult<string>();
         const string methodName = nameof(UploadImage);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, type);
+            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, request.Type);
 
             // Check file is empty (Kiểm tra tập tin rỗng)
-            if (file == null || file.Length == 0)
+            if (request.File == null || request.File.Length == 0)
             {
                 logger.Warning("Upload attempt with empty file.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileIsEmpty);
@@ -36,7 +37,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
             }
 
             // Extract and validate filename (Xác thực tên tập tin)
-            var filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName?.Trim('"');
+            var filename = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName?.Trim('"');
             if (string.IsNullOrEmpty(filename))
             {
                 logger.Warning("Filename is empty after parsing.");
@@ -57,7 +58,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
 
             var now = DateTime.Now;
             var baseImageFolder = mediaSettings.ImageFolder ?? "DefaultImagePath";
-            var imageFolder = Path.Combine(baseImageFolder, "images", type, now.ToString("MMyyyy"));
+            var imageFolder = Path.Combine(baseImageFolder, "images", request.Type ?? "unkown", now.ToString("MMyyyy"));
 
             // Ensure wwwroot folder exists
             var wwwrootPath = hostEnvironment.WebRootPath;
@@ -87,7 +88,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
             try
             {
                 // Process the image (Xử lý hình ảnh)
-                await ProcessImage(file, filePath, fileExtension);
+                await ProcessImage(request.File, filePath, fileExtension);
                 logger.Information("Image processed and saved successfully.");
 
                 var data = Path.Combine(imageFolder, filename).Replace("\\", "/");

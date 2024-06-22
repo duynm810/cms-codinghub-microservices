@@ -1,11 +1,8 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
-using Infrastructure.Paged;
 using PostInTag.Api.Entities;
-using PostInTag.Api.GrpcClients.Interfaces;
 using PostInTag.Api.Repositories.Interfaces;
 using PostInTag.Api.Services.Interfaces;
-using Shared.Constants;
 using Shared.Dtos.PostInTag;
 using Shared.Helpers;
 using Shared.Responses;
@@ -16,9 +13,6 @@ namespace PostInTag.Api.Services;
 
 public class PostInTagService(
     IPostInTagRepository postInTagRepository,
-    IPostGrpcClient postGrpcClient,
-    ITagGrpcClient tagGrpcClient,
-    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : IPostInTagService

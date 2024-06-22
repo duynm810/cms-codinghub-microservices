@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Shared.Constants;
 
 namespace Identity.Infrastructure.Entities.Configurations;
 
@@ -10,14 +11,26 @@ public class RoleConfiguration : IEntityTypeConfiguration<IdentityRole>
     {
         builder.HasData(new IdentityRole()
             {
-                Name = "Administrator",
-                NormalizedName = "ADMINISTRATOR",
+                Name = UserRolesConsts.Administrator,
+                NormalizedName = UserRolesConsts.Administrator.Normalize(),
                 Id = Guid.NewGuid().ToString()
             },
-            new()
+            new IdentityRole
             {
-                Name = "Member",
-                NormalizedName = "MEMBER",
+                Name = UserRolesConsts.Author,
+                NormalizedName = UserRolesConsts.Author.Normalize(),
+                Id = Guid.NewGuid().ToString()
+            },
+            new IdentityRole
+            {
+                Name = UserRolesConsts.Reader,
+                NormalizedName = UserRolesConsts.Reader.Normalize(),
+                Id = Guid.NewGuid().ToString()
+            },
+            new IdentityRole
+            {
+                Name = UserRolesConsts.Subscriber,
+                NormalizedName = UserRolesConsts.Subscriber.Normalize(),
                 Id = Guid.NewGuid().ToString()
             });
     }

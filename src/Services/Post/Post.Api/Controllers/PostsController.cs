@@ -46,6 +46,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         var command = mapper.Map<CreatePostCommand>(request);
         command.AuthorUserId = User.GetUserId();
 
+        var roles = User.GetRoles();
+        command.SetStatusBasedOnRoles(roles);
+
         var result = await mediator.Send(command);
         return Ok(result);
     }
