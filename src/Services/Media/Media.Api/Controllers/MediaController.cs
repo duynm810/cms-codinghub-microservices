@@ -8,13 +8,20 @@ namespace Media.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+/*[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]*/
 public class MediaController(IMediaService mediaService) : ControllerBase
 {
     [HttpPost("upload-image")]
     public async Task<IActionResult> UploadImage([FromForm] SingleFileDto request)
     {
         var result = await mediaService.UploadImage(request);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-image/{imagePath}")]
+    public IActionResult DeleteImage(string imagePath)
+    {
+        var result = mediaService.DeleteImage(imagePath);
         return Ok(result);
     }
 }

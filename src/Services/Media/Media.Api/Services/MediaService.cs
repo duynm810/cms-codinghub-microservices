@@ -57,8 +57,8 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
             }
 
             var now = DateTime.Now;
-            var baseImageFolder = mediaSettings.ImageFolder ?? "DefaultImagePath";
-            var imageFolder = Path.Combine(baseImageFolder, "images", request.Type ?? "unkown", now.ToString("MMyyyy"));
+            var baseImageFolder = mediaSettings.ImageFolder;
+            var imageFolder = Path.Combine(baseImageFolder, "images", request.Type ?? "unkown", now.ToString("ddMMyyyy"));
 
             // Ensure wwwroot folder exists
             var wwwrootPath = hostEnvironment.WebRootPath;
@@ -113,6 +113,59 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
         return result;
     }
 
+    public ApiResult<bool> DeleteImage(string imagePath)
+    {
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(DeleteImage);
+        
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Deleting image at path: {ImagePath}", methodName, imagePath);
+
+            // Ensure wwwroot folder exists
+            var wwwrootPath = hostEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(wwwrootPath))
+            {
+                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                Utils.EnsureDirectoryExists(wwwrootPath);
+                logger.Information("wwwroot path set to: {wwwrootPath}", wwwrootPath);
+            }
+            else
+            {
+                logger.Information("Using provided wwwroot path: {wwwrootPath}", wwwrootPath);
+            }
+            
+            // Decode the URL-encoded path
+            var decodedImagePath = Uri.UnescapeDataString(imagePath);
+            logger.Information("Decoded imagePath: {DecodedImagePath}", decodedImagePath);
+
+            var fullPath = Path.Combine(wwwrootPath, decodedImagePath);
+            logger.Information("Computed fullPath: {FullPath}", fullPath);
+            
+            if (!File.Exists(fullPath))
+            {
+                logger.Warning("Image not found at path: {ImagePath}", fullPath);
+                result.Messages.Add("Image not found.");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+            
+            File.Delete(fullPath);
+            logger.Information("Image successfully deleted at path: {ImagePath}", fullPath);
+
+            result.Success(true);
+            logger.Information("END {MethodName} - Image deleted successfully.", methodName);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     #region HELPERS
 
     /// <summary>
@@ -122,9 +175,8 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
     /// <returns></returns>
     private bool IsAllowedFileType(string fileExtension)
     {
-        var allowImageTypes = mediaSettings.AllowImageFileTypes?.Split(",");
-        return allowImageTypes != null &&
-               allowImageTypes.Any(ext => fileExtension.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
+        var allowImageTypes = mediaSettings.AllowImageFileTypes.Split(",");
+        return allowImageTypes.Any(ext => fileExtension.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
@@ -192,7 +244,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
     }
 
     /// <summary>
-    /// Helper method to calculate the corresponding height for a given width to maintain aspect ratio
+    /// Helper method to calculate the corresponding height for a given width to maintain aspect ratio (Phương pháp trợ giúp để tính chiều cao tương ứng cho chiều rộng nhất định để duy trì tỷ lệ khung hình)
     /// </summary>
     /// <param name="image"></param>
     /// <param name="width"></param>
