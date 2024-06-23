@@ -69,4 +69,9 @@ public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService seri
             return result;
         }
     }
+
+    public Task<ApiResult<bool>> DeleteImage(string imagePath)
+    {
+        return baseApiClient.DeleteAsync<bool>($"media/delete-image/{imagePath}", true);
+    }
 }

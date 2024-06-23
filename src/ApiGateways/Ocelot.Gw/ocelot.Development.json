@@ -761,11 +761,28 @@
     {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
-        "GET",
-        "POST",
-        "DELETE"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/media/upload-image",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5019
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/delete-image/{imagePath}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/delete-image/{imagePath}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

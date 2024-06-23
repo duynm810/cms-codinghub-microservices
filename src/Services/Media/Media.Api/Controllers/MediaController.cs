@@ -8,7 +8,7 @@ namespace Media.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-/*[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]*/
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class MediaController(IMediaService mediaService) : ControllerBase
 {
     [HttpPost("upload-image")]
