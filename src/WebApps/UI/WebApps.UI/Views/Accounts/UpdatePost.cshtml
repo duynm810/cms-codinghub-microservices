@@ -5,174 +5,73 @@
     var categories = Model.Categories;
 }
 
+@if (TempData["ErrorMessage"] != null)
+{
+    <text>showError("@TempData["ErrorMessage"]");</text>
+}
+
 @section scripts {
+    <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
+    
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>
     <script>
-        
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <text>showError("@TempData["ErrorMessage"]");</text>
+        const thumbnailUrl = document.getElementById("thumbnailUrl").value;
+
+        // Hiển thị hình ảnh đã upload khi tải trang cập nhật
+        if (thumbnailUrl) {
+            displayUploadedFile(thumbnailUrl);
         }
 
-        // Auto-generate slug from title
-        document.querySelector('input[name="Title"]').addEventListener('input', function() {
-            let titleValue = this.value;
-            document.querySelector('input[name="Slug"]').value = createSlug(titleValue);
-        });
+        // Any additional UpdatePost-specific logic
 
-        // Handle upload or drag files
-        document.addEventListener("DOMContentLoaded", function() {
-            const fileInput = document.getElementById("thumbnail");
-            const dropArea = document.getElementById("drop-area");
+        function displayUploadedFile(url) {
             const fileList = document.getElementById("file-list");
-            const thumbnailUrl = document.getElementById("thumbnailUrl").value;
+            if (!fileList) return;
 
-            // Hiển thị hình ảnh đã upload khi tải trang cập nhật
-            if (thumbnailUrl) {
-                displayUploadedFile(thumbnailUrl);
-            }
+            fileList.innerHTML = '';
 
-            dropArea.addEventListener("dragover", (event) => {
-                event.preventDefault();
-                dropArea.classList.add("drag-over");
-            });
+            const fileItem = document.createElement("div");
+            fileItem.className = "file-item";
 
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.classList.remove("drag-over");
-            });
+            const fileThumbnail = document.createElement("div");
+            fileThumbnail.className = "file-thumbnail";
+            const img = document.createElement("img");
+            img.src = `${serverUrl}/${url}`; // Sử dụng serverUrl từ biến JavaScript
+            img.alt = "Thumbnail";
+            fileThumbnail.appendChild(img);
 
-            dropArea.addEventListener("drop", (event) => {
-                event.preventDefault();
-                dropArea.classList.remove("drag-over");
-                handleFiles(event.dataTransfer.files);
-            });
+            const fileDetails = document.createElement("div");
+            fileDetails.className = "file-details";
+            fileDetails.innerHTML = `
+                <span class="file-name">${url.split('/').pop()}</span>
+            `;
 
-            fileInput.addEventListener("change", () => {
-                handleFiles(fileInput.files);
-            });
-
-            function handleFiles(files) {
-                fileList.innerHTML = '';
-                [...files].forEach(file => {
-                    const fileItem = document.createElement("div");
-                    fileItem.className = "file-item";
-
-                    const fileThumbnail = document.createElement("div");
-                    fileThumbnail.className = "file-thumbnail";
-                    const img = document.createElement("img");
-                    img.src = URL.createObjectURL(file);
-                    img.alt = "Thumbnail";
-                    fileThumbnail.appendChild(img);
-
-                    const fileDetails = document.createElement("div");
-                    fileDetails.className = "file-details";
-                    fileDetails.innerHTML = `
-                        <span class="file-name">${file.name}</span>
-                        <span class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                    `;
-
-                    const fileRemove = document.createElement("div");
-                    fileRemove.className = "file-remove";
-                    const removeButton = document.createElement("button");
-                    removeButton.type = "button";
-                    removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                    removeButton.addEventListener("click", () => {
-                        showConfirm(
-                            'Are you sure you want to delete this image?',
-                            'This action cannot be undone.',
-                            'Yes, delete it',
-                            'Cancel',
-                            () => {
-                                fileInput.value = '';
-                                fileList.innerHTML = '';
-                                document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
-                            }
-                        );
-                    });
-
-                    fileRemove.appendChild(removeButton);
-                    fileItem.appendChild(fileThumbnail);
-                    fileItem.appendChild(fileDetails);
-                    fileItem.appendChild(fileRemove);
-                    fileList.appendChild(fileItem);
-                });
-
-                uploadFiles(files);
-            }
-
-            function displayUploadedFile(url) {
-                fileList.innerHTML = '';
-
-                const fileItem = document.createElement("div");
-                fileItem.className = "file-item";
-
-                const fileThumbnail = document.createElement("div");
-                fileThumbnail.className = "file-thumbnail";
-                const img = document.createElement("img");
-                img.src = `${serverUrl}/${url}`; // Sử dụng serverUrl từ biến JavaScript
-                img.alt = "Thumbnail";
-                fileThumbnail.appendChild(img);
-
-                const fileDetails = document.createElement("div");
-                fileDetails.className = "file-details";
-                fileDetails.innerHTML = `
-                    <span class="file-name">${url.split('/').pop()}</span>
-                `;
-
-                const fileRemove = document.createElement("div");
-                fileRemove.className = "file-remove";
-                const removeButton = document.createElement("button");
-                removeButton.type = "button";
-                removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                removeButton.addEventListener("click", () => {
-                    showConfirm(
-                        'Are you sure you want to delete this image?',
-                        'This action cannot be undone.',
-                        'Yes, delete it',
-                        'Cancel',
-                        () => {
-                            fileInput.value = '';
-                            fileList.innerHTML = '';
-                            document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
-                        }
-                    );
-                });
-
-                fileRemove.appendChild(removeButton);
-                fileItem.appendChild(fileThumbnail);
-                fileItem.appendChild(fileDetails);
-                fileItem.appendChild(fileRemove);
-                fileList.appendChild(fileItem);
-            }
-
-            async function uploadFiles(files) {
-                const formData = new FormData();
-                formData.append('file', files[0]);
-                formData.append('type', 'image');
-
-                try {
-                    const response = await fetch('/api/media/upload', {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    const responseBody = await response.text();
-                    if (!response.ok) {
-                        showError(`Upload failed with status: ${response.status}, error: ${responseBody}`);
-                        return;
+            const fileRemove = document.createElement("div");
+            fileRemove.className = "file-remove";
+            const removeButton = document.createElement("button");
+            removeButton.type = "button";
+            removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
+            removeButton.addEventListener("click", () => {
+                showConfirm(
+                    'Are you sure you want to delete this image?',
+                    'This action cannot be undone.',
+                    'Yes, delete it',
+                    'Cancel',
+                    () => {
+                        document.getElementById('thumbnail').value = '';
+                        fileList.innerHTML = '';
+                        document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
                     }
+                );
+            });
 
-                    const result = JSON.parse(responseBody);
-                    console.log(result);
-
-                    // Update the hidden input with the URL of the uploaded file
-                    document.getElementById('thumbnailUrl').value = result.data;
-                } catch (error) {
-                    showError(`Error uploading file: ${error.message}`);
-                }
-            }
-        });
+            fileRemove.appendChild(removeButton);
+            fileItem.appendChild(fileThumbnail);
+            fileItem.appendChild(fileDetails);
+            fileItem.appendChild(fileRemove);
+            fileList.appendChild(fileItem);
+        }
     </script>
 }
 
@@ -211,7 +110,7 @@
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <input type="text" required class="form-control" name="Title" id="title"  placeholder="Title" value="@post.Title">
+                    <input type="text" required class="form-control" name="Title" id="title" placeholder="Title" value="@post.Title">
                 </div>
             </div>
             <div class="col-md-6">

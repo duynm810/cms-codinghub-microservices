@@ -4,113 +4,21 @@
     var categories = Model.Categories;
 }
 
+@* Show error message *@
+@if (TempData["ErrorMessage"] != null)
+{
+    <text>showError("@TempData["ErrorMessage"]");</text>
+}
+
+
 @section scripts {
+    <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
     <script>
 
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <text>showError("@TempData["ErrorMessage"]");</text>
-        }
-
-        // Auto-generate slug from title
-        document.querySelector('input[name="Title"]').addEventListener('input', function() {
-            let titleValue = this.value;
-            document.querySelector('input[name="Slug"]').value = createSlug(titleValue);
-        });
+        // Initialize the accountsController
+        const controller = new accountsController();
+        controller.initialize();
         
-        // Handle upload or drag files
-        document.addEventListener("DOMContentLoaded", function() {
-            const fileInput = document.getElementById("thumbnail");
-            const dropArea = document.getElementById("drop-area");
-            const fileList = document.getElementById("file-list");
-
-            dropArea.addEventListener("dragover", (event) => {
-                event.preventDefault();
-                dropArea.classList.add("drag-over");
-            });
-
-            dropArea.addEventListener("dragleave", () => {
-                dropArea.classList.remove("drag-over");
-            });
-
-            dropArea.addEventListener("drop", (event) => {
-                event.preventDefault();
-                dropArea.classList.remove("drag-over");
-                handleFiles(event.dataTransfer.files);
-            });
-
-            fileInput.addEventListener("change", () => {
-                handleFiles(fileInput.files);
-            });
-
-            function handleFiles(files) {
-                fileList.innerHTML = '';
-                [...files].forEach(file => {
-                    const fileItem = document.createElement("div");
-                    fileItem.className = "file-item";
-
-                    const fileThumbnail = document.createElement("div");
-                    fileThumbnail.className = "file-thumbnail";
-                    const img = document.createElement("img");
-                    img.src = URL.createObjectURL(file);
-                    img.alt = "Thumbnail";
-                    fileThumbnail.appendChild(img);
-
-                    const fileDetails = document.createElement("div");
-                    fileDetails.className = "file-details";
-                    fileDetails.innerHTML = `
-                        <span class="file-name">${file.name}</span>
-                        <span class="file-size">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
-                    `;
-
-                    const fileRemove = document.createElement("div");
-                    fileRemove.className = "file-remove";
-                    const removeButton = document.createElement("button");
-                    removeButton.type = "button";
-                    removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
-                    removeButton.addEventListener("click", () => {
-                        fileInput.value = '';
-                        fileList.innerHTML = '';
-                    });
-
-                    fileRemove.appendChild(removeButton);
-                    fileItem.appendChild(fileThumbnail);
-                    fileItem.appendChild(fileDetails);
-                    fileItem.appendChild(fileRemove);
-                    fileList.appendChild(fileItem);
-                });
-
-                uploadFiles(files);
-            }
-        });
-
-        async function uploadFiles(files) {
-            const formData = new FormData();
-            formData.append('file', files[0]);
-            formData.append('type', 'image');
-
-            try {
-                const response = await fetch('/api/media/upload', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const responseBody = await response.text();
-                if (!response.ok) {
-                    showError(`Upload failed with status: ${response.status}, error: ${responseBody}`);
-                    return;
-                }
-
-                const result = JSON.parse(responseBody);
-                console.log(result);
-                
-                // Update the hidden input with the URL of the uploaded file
-                document.getElementById('thumbnailUrl').value = result.data;
-            } catch (error) {
-                showError(`Error uploading file: ${error.message}`);
-            }
-        }
-
         async function validateForm() {
             let form = document.getElementById('frm-create-post');
             let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
@@ -126,11 +34,6 @@
             }
 
             if (valid) {
-                const thumbnailInput = document.getElementById('thumbnail');
-                if (thumbnailInput.files.length > 0 && !document.getElementById('thumbnailUrl').value) {
-                    await uploadFiles(thumbnailInput.files);
-                }
-
                 if (document.getElementById('thumbnailUrl').value) {
                     form.submit();
                 } else {
@@ -138,8 +41,6 @@
                 }
             }
         }
-    
-    
     </script>
 }
 
