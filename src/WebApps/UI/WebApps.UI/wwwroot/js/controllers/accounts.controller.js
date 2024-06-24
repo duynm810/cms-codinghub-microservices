@@ -65,7 +65,7 @@ const accountsController = function () {
                 removeButton.type = "button";
                 removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
                 removeButton.addEventListener("click", () => {
-                    this.showConfirm(
+                    showConfirm(
                         'Are you sure you want to delete this image?',
                         'This action cannot be undone.',
                         'Yes, delete it',
