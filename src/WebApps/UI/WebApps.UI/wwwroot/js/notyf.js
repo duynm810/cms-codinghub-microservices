@@ -8,11 +8,11 @@ let notyf = new Notyf({
 });
 
 // Show error function using Notyf
-function showError(message) {
+function showErrorNotification(message) {
     notyf.error(message);
 }
 
 // Show success function using Notyf
-function showSuccess(message) {
+function showSuccessNotification(message) {
     notyf.success(message);
 }

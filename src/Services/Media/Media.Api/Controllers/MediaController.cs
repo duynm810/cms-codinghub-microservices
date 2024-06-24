@@ -19,7 +19,7 @@ public class MediaController(IMediaService mediaService) : ControllerBase
     }
 
     [HttpDelete("delete-image/{imagePath}")]
-    public IActionResult DeleteImage(string imagePath)
+    public IActionResult DeleteImage([FromRoute] string imagePath)
     {
         var result = mediaService.DeleteImage(imagePath);
         return Ok(result);

@@ -4,13 +4,6 @@
     var categories = Model.Categories;
 }
 
-@* Show error message *@
-@if (TempData["ErrorMessage"] != null)
-{
-    <text>showError("@TempData["ErrorMessage"]");</text>
-}
-
-
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
     <script>
@@ -27,7 +20,7 @@
             for (let i = 0; i < inputs.length; i++) {
                 let input = inputs[i];
                 if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
-                    showError('Please fill out the ' + input.name + ' field.');
+                    this.showErrorNotification('Please fill out the ' + input.name + ' field.');
                     valid = false;
                     break; // Dừng lại sau khi tìm thấy trường không được nhập
                 }
@@ -35,9 +28,10 @@
 
             if (valid) {
                 if (document.getElementById('thumbnailUrl').value) {
+                    await controller.waitForUploadCompletion();
                     form.submit();
                 } else {
-                    showError('Please upload a valid thumbnail.');
+                    this.showErrorNotification('Please upload a valid thumbnail.');
                 }
             }
         }

@@ -4,13 +4,20 @@ using WebApps.UI.ApiServices.Interfaces;
 namespace WebApps.UI.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class MediaController(IMediaApiClient mediaApiClient) : ControllerBase
 {
-    [HttpPost("upload")]
-    public async Task<IActionResult> Upload([FromForm] IFormFile file, [FromForm] string type)
+    [HttpPost("upload-image")]
+    public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string type)
     {
         var result = await mediaApiClient.UploadImage(file, type);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-image/{imagePath}")]
+    public async Task<IActionResult> DeleteImage([FromRoute] string imagePath)
+    {
+        var result = await mediaApiClient.DeleteImage(imagePath);
         return Ok(result);
     }
 }

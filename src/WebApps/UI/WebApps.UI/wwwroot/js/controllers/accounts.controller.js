@@ -65,15 +65,27 @@ const accountsController = function () {
                 removeButton.type = "button";
                 removeButton.innerHTML = '<i class="fas fa-trash-alt"></i>';
                 removeButton.addEventListener("click", () => {
-                    showConfirm(
+                    showConfirmAlert(
                         'Are you sure you want to delete this image?',
                         'This action cannot be undone.',
                         'Yes, delete it',
                         'Cancel',
-                        () => {
-                            fileInput.value = '';
-                            fileList.innerHTML = '';
-                            document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
+                        async () => {
+                            const thumbnailUrl = document.getElementById('thumbnailUrl').value;
+                            if (thumbnailUrl) {
+                                const deleteSuccess = await this.deleteImage(thumbnailUrl);
+                                if (deleteSuccess) {
+                                    const postId = document.getElementById('postId').value;
+                                    if (postId) {
+                                        await this.updatePostThumbnail(postId);
+                                    }
+                                    fileInput.value = '';
+                                    fileList.innerHTML = '';
+                                    document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
+                                } else {
+                                    this.showErrorNotification('Failed to delete image.');
+                                }
+                            }
                         }
                     );
                 });
@@ -94,14 +106,14 @@ const accountsController = function () {
             formData.append('type', 'posts');
 
             try {
-                const response = await fetch('/api/media/upload', {
+                const response = await fetch('/media/upload-image', {
                     method: 'POST',
                     body: formData
                 });
 
                 const responseBody = await response.text();
                 if (!response.ok) {
-                    this.showError(`Upload failed with status: ${response.status}, error: ${responseBody}`);
+                    showErrorNotification(`Upload failed with status: ${response.status}, error: ${responseBody}`);
                     return;
                 }
 
@@ -111,7 +123,59 @@ const accountsController = function () {
                 // Update the hidden input with the URL of the uploaded file
                 document.getElementById('thumbnailUrl').value = result.data;
             } catch (error) {
-                this.showError(`Error uploading file: ${error.message}`);
+                showErrorNotification(`Error uploading file: ${error.message}`);
+            }
+        }
+
+        this.deleteImage = async (imagePath) => {
+            try {
+                const response = await fetch(`/media/delete-image/${encodeURIComponent(imagePath)}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    showErrorNotification(`Delete failed with status: ${response.status}`);
+                    return false;
+                }
+
+                const result = await response.json();
+                console.log(`Image deleted successfully: ${imagePath}`);
+                return result.isSuccess && result.data;
+            } catch (error) {
+                showErrorNotification(`Error deleting file: ${error.message}`);
+                return false;
+            }
+        }
+
+        this.updatePostThumbnail = async (postId) => {
+            try {
+                console.log(`Updating thumbnail for post with ID: ${postId}`);
+                const response = await fetch(`/posts/update-thumbnail/${postId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        thumbnail: null // Set the thumbnail to null
+                    })
+                });
+
+                if (!response.ok) {
+                    showErrorNotification(`Post update failed with status: ${response.status}`);
+                    return;
+                }
+
+                const result = await response.json();
+                console.log('Post thumbnail updated successfully');
+            } catch (error) {
+                showErrorNotification(`Error updating post: ${error.message}`);
+            }
+        }
+
+        this.waitForUploadCompletion = async () => {
+            const thumbnailUrl = document.getElementById('thumbnailUrl');
+            while (!thumbnailUrl.value) {
+                await new Promise(resolve => setTimeout(resolve, 100));
             }
         }
     }

@@ -147,25 +147,48 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
         
         try
         {
+            var categories = await GetCategories();
+            
             var post = await postApiClient.GetPostBySlug(slug);
             if (post is { IsSuccess: true, Data: not null })
             {
-                var categories = await categoryApiClient.GetCategories();
-                if (categories is { IsSuccess: true, Data: not null })
+                var items = new UpdatePostViewModel()
                 {
-                    var items = new UpdatePostViewModel()
-                    {
-                        Post = post.Data,
-                        Categories = categories.Data
-                    };
+                    Post = post.Data,
+                    Categories = categories
+                };
 
-                    return View(items);
-                }
-                
-                return HandleError((HttpStatusCode)categories.StatusCode, methodName);
+                return View(items);
             }
 
             return HandleError((HttpStatusCode)post.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    [HttpPost("UpdatePost/{id:guid}")]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdatePost(Guid id, UpdatePostDto request)
+    {
+        const string methodName = nameof(UpdatePost);
+        
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Failed to update post.";
+            }
+            
+            var result = await postApiClient.UpdatePost(id, request);
+            if (result is { IsSuccess: true })
+            {
+                return RedirectToAction("ManagePosts");
+            }
+            
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {

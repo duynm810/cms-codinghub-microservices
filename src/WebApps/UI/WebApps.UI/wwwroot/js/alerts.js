@@ -16,7 +16,7 @@ function confirmLogout(url) {
     });
 }
 
-function showConfirm(title, text, confirmButtonText, cancelButtonText, onConfirm) {
+function showConfirmAlert(title, text, confirmButtonText, cancelButtonText, onConfirm) {
     Swal.fire({
         title: title,
         text: text,
@@ -34,7 +34,7 @@ function showConfirm(title, text, confirmButtonText, cancelButtonText, onConfirm
     });
 }
 
-function showError(message) {
+function showErrorAlert(message) {
     Swal.fire({
         title: 'Error',
         text: message,

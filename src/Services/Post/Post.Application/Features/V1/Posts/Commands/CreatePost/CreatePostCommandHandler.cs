@@ -68,7 +68,8 @@ public class CreatePostCommandHandler(
                 CacheKeyHelper.Post.GetFeaturedPostsKey(),
                 CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
                 CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
-                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10)
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
+                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 10)
             };
 
             await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

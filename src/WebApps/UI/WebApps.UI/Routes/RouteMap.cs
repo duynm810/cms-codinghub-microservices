@@ -76,7 +76,7 @@ public static class RouteMap
         app.MapControllerRoute(
             "media-upload",
             "media/upload",
-            new { controller = "Media", action = "Upload" });
+            new { controller = "Media", action = "UploadImage" });
 
         #endregion
 

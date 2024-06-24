@@ -1,6 +1,7 @@
 using AutoMapper;
 using Post.Application.Features.V1.Posts.Commands.CreatePost;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
+using Post.Application.Features.V1.Posts.Commands.UpdateThumbnail;
 using Post.Application.Features.V1.Posts.Commons;
 using Post.Domain.Entities;
 using Shared.Dtos.Category;
@@ -55,6 +56,7 @@ public class MappingProfile : Profile
         #region Update
 
         CreateMap<UpdatePostDto, UpdatePostCommand>().IgnoreAllNonExisting();
+        CreateMap<UpdateThumbnailDto, UpdateThumbnailCommand>().IgnoreAllNonExisting();
         CreateMap<UpdatePostCommand, PostBase>();
 
         #endregion

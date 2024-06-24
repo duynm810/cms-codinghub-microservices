@@ -10,6 +10,10 @@ namespace WebApps.UI.ApiServices.Interfaces;
 public interface IPostApiClient
 {
     Task<ApiResult<Guid>> CreatePost(CreatePostDto request);
+
+    Task<ApiResult<PostDto>> UpdatePost(Guid id, UpdatePostDto request);
+    
+    Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request);
     
     Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
     

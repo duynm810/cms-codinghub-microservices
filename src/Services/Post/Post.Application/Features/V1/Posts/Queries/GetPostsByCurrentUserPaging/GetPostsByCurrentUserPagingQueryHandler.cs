@@ -27,7 +27,7 @@ public class GetPostsByCurrentUserPagingQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUserId, request.PageNumber, request.PageSize);
 
-            var cacheKey = CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.CurrentUserId.ToString(), request.PageNumber, request.PageSize);
+            var cacheKey = CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.CurrentUserId, request.PageNumber, request.PageSize);
             var cachedPosts = await cacheService.GetAsync<PagedResponse<PostDto>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {

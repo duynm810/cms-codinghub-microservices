@@ -11,6 +11,7 @@ using Post.Application.Features.V1.Posts.Commands.DeletePost;
 using Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
 using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
+using Post.Application.Features.V1.Posts.Commands.UpdateThumbnail;
 using Post.Application.Features.V1.Posts.Queries.GetDetailBySlug;
 using Post.Application.Features.V1.Posts.Queries.GetFeaturedPosts;
 using Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
@@ -41,7 +42,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<Guid>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody] CreatePostDto request)
+    public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody, Required] CreatePostDto request)
     {
         var command = mapper.Map<CreatePostCommand>(request);
         command.AuthorUserId = User.GetUserId();
@@ -55,16 +56,26 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<PostDto>> UpdatePost([Required] Guid id, [FromBody] UpdatePostCommand command)
+    public async Task<ActionResult<PostDto>> UpdatePost([FromRoute, Required] Guid id, [FromBody] UpdatePostCommand command)
     {
         command.SetId(id);
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
+    [HttpPut("update-thumbnail/{id:guid}")]
+    public async Task<ActionResult<bool>> UpdateThumbnail([FromRoute, Required] Guid id, [FromBody, Required] UpdateThumbnailDto request)
+    {
+        var command = mapper.Map<UpdateThumbnailCommand>(request);
+        command.SetId(id);
+        
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(typeof(NoContentResult), (int)HttpStatusCode.NoContent)]
-    public async Task<ActionResult> DeletePost([Required] Guid id)
+    public async Task<ActionResult> DeletePost([FromRoute, Required] Guid id)
     {
         var command = new DeletePostCommand(id);
         var result = await mediator.Send(command);
@@ -83,7 +94,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<ActionResult<PostDto>> GetPostById([Required] Guid id)
+    public async Task<ActionResult<PostDto>> GetPostById([FromRoute, Required] Guid id)
     {
         var query = new GetPostByIdQuery(id);
         var result = await mediator.Send(query);
@@ -92,7 +103,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     
     [HttpGet("slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<PostDto>> GetPostBySlug([Required] string slug)
+    public async Task<ActionResult<PostDto>> GetPostBySlug([FromRoute, Required] string slug)
     {
         var query = new GetPostBySlugQuery(slug);
         var result = await mediator.Send(query);

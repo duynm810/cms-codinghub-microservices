@@ -24,7 +24,7 @@ public class UpdatePostCommandHandler(
     public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDto>();
-        const string methodName = nameof(Handle);
+        const string methodName = nameof(UpdatePostCommand);
 
         try
         {
