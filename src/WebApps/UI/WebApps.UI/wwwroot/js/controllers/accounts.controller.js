@@ -15,7 +15,8 @@ const accountsController = function () {
         const dropArea = document.getElementById("drop-area");
         const fileList = document.getElementById("file-list");
 
-        if (!fileInput || !dropArea || !fileList) return;
+        if (!fileInput || !dropArea || !fileList) 
+            return;
 
         dropArea.addEventListener("dragover", (event) => {
             event.preventDefault();
@@ -38,6 +39,7 @@ const accountsController = function () {
 
         this.handleFiles = async (files) => {
             const fileList = document.getElementById("file-list");
+            
             fileList.innerHTML = '';
             [...files].forEach(file => {
                 const fileItem = document.createElement("div");
