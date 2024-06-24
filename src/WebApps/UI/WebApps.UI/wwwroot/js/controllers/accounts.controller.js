@@ -91,7 +91,7 @@ const accountsController = function () {
         this.uploadFiles = async (files) => {
             const formData = new FormData();
             formData.append('file', files[0]);
-            formData.append('type', 'image');
+            formData.append('type', 'posts');
 
             try {
                 const response = await fetch('/api/media/upload', {
