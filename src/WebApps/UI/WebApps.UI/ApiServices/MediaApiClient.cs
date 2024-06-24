@@ -70,8 +70,8 @@ public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService seri
         }
     }
 
-    public Task<ApiResult<bool>> DeleteImage(string imagePath)
+    public async Task<ApiResult<bool>> DeleteImage(string imagePath)
     {
-        return baseApiClient.DeleteAsync<bool>($"media/delete-image/{imagePath}", true);
+        return await baseApiClient.DeleteAsync<bool>($"media/delete-image?imagePath={imagePath}");
     }
 }
