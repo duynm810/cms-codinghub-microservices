@@ -11,12 +11,12 @@ public static class RouteMap
         app.MapControllerRoute(
             "update_post_view",
             "accounts/update-post",
-            new { controller = "Accounts", action = "UpdatePost", httpMethod = new HttpMethodRouteConstraint(HttpMethods.Get) });
+            new { controller = "Accounts", action = "UpdatePost" });
 
         app.MapControllerRoute(
             "update_post",
             "accounts/update-post/{id:guid}",
-            new { controller = "Accounts", action = "UpdatePost", httpMethod = new HttpMethodRouteConstraint(HttpMethods.Put) });
+            new { controller = "Accounts", action = "UpdatePost" });
         
         app.MapControllerRoute(
             "update-thumbnail",

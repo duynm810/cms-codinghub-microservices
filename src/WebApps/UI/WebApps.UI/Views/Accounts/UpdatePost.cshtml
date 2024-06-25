@@ -102,7 +102,7 @@
             };
 
             try {
-                await $.ajax({
+                const response = await $.ajax({
                     url: url,
                     method: 'PUT',
                     contentType: 'application/json',
@@ -110,6 +110,11 @@
                     data: JSON.stringify(data)
                 });
 
+                if (response.success) {
+                    window.location.href = response.redirectUrl;
+                } else {
+                    showErrorNotification('An error occurred while updating the post.');
+                }
             } catch (error) {
                 console.error('Error:', error);
                 showErrorNotification('An error occurred while updating the post.');

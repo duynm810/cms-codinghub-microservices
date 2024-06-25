@@ -188,7 +188,7 @@ public class AccountsController(
             var result = await postApiClient.UpdatePost(id, request);
             if (result is { IsSuccess: true })
             {
-                return RedirectToAction("ManagePosts");
+                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts") });
             }
 
             return HandleError((HttpStatusCode)result.StatusCode, methodName);
