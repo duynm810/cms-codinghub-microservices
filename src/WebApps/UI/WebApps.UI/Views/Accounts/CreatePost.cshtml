@@ -16,7 +16,7 @@
             let form = document.getElementById('frm-create-post');
             let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
             let valid = true;
-
+            
             for (let i = 0; i < inputs.length; i++) {
                 let input = inputs[i];
                 if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
@@ -25,7 +25,7 @@
                     break; // Dừng lại sau khi tìm thấy trường không được nhập
                 }
             }
-
+            
             if (valid) {
                 if (document.getElementById('thumbnailUrl').value) {
                     await controller.waitForUploadCompletion();
