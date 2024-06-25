@@ -76,7 +76,11 @@ public class UpdatePostCommandHandler(
                 CacheKeyHelper.Post.GetAllPostsKey(),
                 CacheKeyHelper.Post.GetPostByIdKey(request.Id),
                 CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey()
+                CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
+                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
             };
 
             await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

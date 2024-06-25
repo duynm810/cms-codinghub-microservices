@@ -13,6 +13,8 @@ namespace Post.Application.Features.V1.Posts.Commands.UpdatePost;
 public class UpdatePostCommand : CreateOrUpdateCommand, IRequest<ApiResult<PostDto>>
 {
     public Guid Id { get; private set; }
+    
+    public Guid AuthorUserId { get; set; }
 
     public void SetId(Guid id)
     {

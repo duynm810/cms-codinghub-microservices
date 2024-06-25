@@ -59,6 +59,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<ActionResult<PostDto>> UpdatePost([FromRoute, Required] Guid id, [FromBody] UpdatePostCommand command)
     {
         command.SetId(id);
+        command.AuthorUserId = User.GetUserId();
         var result = await mediator.Send(command);
         return Ok(result);
     }
