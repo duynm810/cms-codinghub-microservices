@@ -258,8 +258,7 @@
     {
       "UpstreamPathTemplate": "/posts/update-thumbnail/{id}",
       "UpstreamHttpMethod": [
-        "PUT",
-        "DELETE"
+        "PUT"
       ],
       "DownstreamPathTemplate": "/api/posts/update-thumbnail/{id}",
       "DownstreamScheme": "http",
