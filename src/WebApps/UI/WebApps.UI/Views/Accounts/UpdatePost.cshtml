@@ -56,14 +56,10 @@
                     'Yes, delete it',
                     'Cancel',
                     async () => {
-                        const thumbnailUrl = document.getElementById('thumbnailUrl').value;
-                        if (thumbnailUrl) {
-                            await controller.deleteImage(thumbnailUrl);
+                        const postId = document.getElementById('postId').value;
+                        if (postId) {
+                            await updatePostThumbnail(postId);
                         }
-
-                        fileList.value = '';
-                        fileList.innerHTML = '';
-                        document.getElementById('thumbnailUrl').value = ''; // Delete image URL when deleting file
                     }
                 );
             });

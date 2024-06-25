@@ -10,6 +10,11 @@ public static class RouteMap
             "update-post",
             "/accounts/update-post/{slug}",
             new { controller = "Accounts", action = "UpdatePost" });
+        
+        app.MapControllerRoute(
+            "update-thumbnail",
+            "/accounts/update-thumbnail/{id:guid}",
+            new { controller = "Accounts", action = "UpdateThumbnail" });
 
         app.MapControllerRoute(
             "create-new-post",

@@ -173,7 +173,6 @@ public class AccountsController(
         }
     }
 
-    [HttpPut("update-post/{id:guid}")]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
@@ -201,7 +200,6 @@ public class AccountsController(
         }
     }
 
-    [HttpPut("update-thumbnail/{id:guid}")]
     public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
     {
         var result = await postApiClient.UpdateThumbnail(id, request);
