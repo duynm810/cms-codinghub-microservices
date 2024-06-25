@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Routing.Constraints;
+
 namespace WebApps.UI.Routes;
 
 public static class RouteMap
@@ -7,9 +9,14 @@ public static class RouteMap
         #region Accounts
 
         app.MapControllerRoute(
-            "update-post",
-            "/accounts/update-post/{slug}",
-            new { controller = "Accounts", action = "UpdatePost" });
+            "update_post_view",
+            "accounts/update-post",
+            new { controller = "Accounts", action = "UpdatePost", httpMethod = new HttpMethodRouteConstraint(HttpMethods.Get) });
+
+        app.MapControllerRoute(
+            "update_post",
+            "accounts/update-post/{id:guid}",
+            new { controller = "Accounts", action = "UpdatePost", httpMethod = new HttpMethodRouteConstraint(HttpMethods.Put) });
         
         app.MapControllerRoute(
             "update-thumbnail",

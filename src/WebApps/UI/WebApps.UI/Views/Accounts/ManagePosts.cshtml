@@ -8,10 +8,17 @@
         function updatePost(button) {
             let slug = button.getAttribute('data-slug');
             let urlTemplate = button.getAttribute('data-url');
-            window.location.href = urlTemplate.replace('__slug__', encodeURIComponent(slug));
+            let url = urlTemplate.replace('__slug__', encodeURIComponent(slug));
+
+            console.log("Slug:", slug); // Log để kiểm tra giá trị slug
+            console.log("URL Template:", urlTemplate); // Log để kiểm tra giá trị URL template
+            console.log("URL:", url); // Log để kiểm tra URL cuối cùng
+
+            window.location.href = url;
         }
     </script>
 }
+
 
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
@@ -46,7 +53,7 @@
                     {
                         foreach (var item in posts.Items)
                         {
-                            var updatePostUrl = Url.RouteUrl("update-post", new { slug = "__slug__" });
+                            var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
                             
                             <tr class="alert" role="alert">
                                 <td>

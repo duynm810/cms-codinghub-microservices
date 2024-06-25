@@ -90,18 +90,26 @@
             const postId = document.getElementById('postId').value;
             const url = `/accounts/update-post/${postId}`;
 
+            const data = {
+                Title: formData.get('Title'),
+                Slug: formData.get('Slug'),
+                Content: formData.get('Content'),
+                Summary: formData.get('Summary'),
+                Thumbnail: formData.get('Thumbnail'),
+                SeoDescription: formData.get('SeoDescription'),
+                Source: formData.get('Source'),
+                CategoryId: formData.get('category')
+            };
+
             try {
-                const response = await fetch(url, {
+                await $.ajax({
+                    url: url,
                     method: 'PUT',
-                    body: formData
+                    contentType: 'application/json',
+                    processData: false,
+                    data: JSON.stringify(data)
                 });
 
-                if (response.ok) {
-                    window.location.href = '/Accounts/ManagePosts';
-                } else {
-                    // Handle error
-                    showErrorNotification('Failed to update post.');
-                }
             } catch (error) {
                 console.error('Error:', error);
                 showErrorNotification('An error occurred while updating the post.');

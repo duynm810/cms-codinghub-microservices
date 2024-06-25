@@ -145,7 +145,7 @@ public class AccountsController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdatePost(string slug)
+    public async Task<IActionResult> UpdatePost([FromQuery] string slug)
     {
         const string methodName = nameof(UpdatePost);
 
@@ -173,7 +173,6 @@ public class AccountsController(
         }
     }
 
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
         const string methodName = nameof(UpdatePost);
