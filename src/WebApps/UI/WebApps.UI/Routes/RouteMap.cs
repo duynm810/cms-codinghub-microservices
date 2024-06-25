@@ -66,8 +66,8 @@ public static class RouteMap
             new { controller = "Posts", action = "Search" });
         
         app.MapControllerRoute(
-            "get-comment-by-post-id",
-            "/posts/get-comment-by-post-id/{id:guid}",
+            "get-comments-by-post-id",
+            "/posts/get-comments-by-post-id/{id:guid}",
             new { controller = "Posts", action = "GetCommentsByPostId" });
         
         app.MapControllerRoute(

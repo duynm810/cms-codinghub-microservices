@@ -7,7 +7,7 @@ const postsController = function () {
     }
 
     function loadComments(id) {
-        $.get('/posts/get-comment-by-post-id/' + id).done(function (response, statusText, xhr) {
+        $.get('/posts/get-comments-by-post-id/' + id).done(function (response, statusText, xhr) {
             if (xhr.status === 200) {
                 if (response && response.data && response.data.length > 0) {
                     let html = '';
