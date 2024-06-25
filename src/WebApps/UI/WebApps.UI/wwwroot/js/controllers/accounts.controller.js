@@ -10,6 +10,31 @@ const accountsController = function () {
         });
     }
 
+    this.showSpinner = function () {
+        const preloader = document.getElementById('spinner');
+        const uploadSection = document.getElementById('upload-section');
+
+        if (preloader) {
+            preloader.style.display = 'block';
+        }
+        if (uploadSection) {
+            uploadSection.classList.add('loading');
+        }
+    }
+
+    this.hideSpinner = function() {
+        const preloader = document.getElementById('spinner');
+        const uploadSection = document.getElementById('upload-section');
+
+        if (preloader) {
+            preloader.style.display = 'none';
+        }
+        
+        if (uploadSection) {
+            uploadSection.classList.remove('loading');
+        }
+    }
+
     this.uploadFileHandlers = function () {
         const fileInput = document.getElementById("thumbnail");
         const dropArea = document.getElementById("drop-area");
@@ -34,7 +59,9 @@ const accountsController = function () {
         });
 
         fileInput.addEventListener("change", async () => {
+            this.showSpinner();
             await this.handleFiles(fileInput.files);
+            this.hideSpinner();
         });
 
         this.handleFiles = async (files) => {

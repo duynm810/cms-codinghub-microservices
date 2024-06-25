@@ -24,15 +24,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
     <!-- Notyf -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/2.0.0/spinkit.min.css">
+    
+    <!-- Spinkit -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
     
 </head>
 <body class="theme-mode">
 <div class="scroll-progress primary-bg"></div>
 <!-- Start Preloader -->
-<div id="preloader" class="preloader text-center">
+<div class="preloader text-center">
     <div class="circle"></div>
 </div>
+
 <!--Off canvas sidebar-->
 <aside id="sidebar-wrapper" class="custom-scrollbar offcanvas-sidebar">
     @await Component.InvokeAsync("Canvas", "Default")

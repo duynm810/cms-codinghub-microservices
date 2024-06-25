@@ -30,6 +30,38 @@
     border: 2px solid red;
 }
 
+.upload-container {
+    position: relative;
+}
+
+.spinner {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+}
+
+/* Spinner styles */
+.spinner .rect1,
+.spinner .rect2,
+.spinner .rect3,
+.spinner .rect4,
+.spinner .rect5 {
+    background-color: #333;
+    height: 100px;
+    width: 10px;
+    display: inline-block;
+    margin-right: 2px;
+    animation: sk-rect 1.2s infinite ease-in-out;
+}
+
+@keyframes sk-rect {
+    0%, 40%, 100% { transform: scaleY(0.4) }
+    20% { transform: scaleY(1.0) }
+}
+
 /*-------------------------------------------------------------------*/
 
 .upload-container {
@@ -38,6 +70,11 @@
     border-radius: 5px;
     margin-bottom: 20px;
     width: 100%;
+}
+
+.upload-container.loading .drop-area,
+.upload-container.loading #file-list {
+    opacity: 0.5;
 }
 
 .drop-area {

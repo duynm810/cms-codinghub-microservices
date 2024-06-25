@@ -105,7 +105,7 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <div class="upload-container">
+                <div id="upload-section" class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
                         <input type="file" id="thumbnail" name="thumbnail" style="display:none;">
                         <div id="drop-area" class="drop-area">
@@ -116,6 +116,15 @@
                         </div>
                     </label>
                     <div id="file-list" class="file-list"></div>
+
+                    <!-- Spinner -->
+                    <div id="spinner" class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
                 </div>
             </div>
         </div>
