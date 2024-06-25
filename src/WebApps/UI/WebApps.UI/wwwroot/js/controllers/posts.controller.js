@@ -7,7 +7,7 @@ const postsController = function () {
     }
 
     function loadComments(id) {
-        $.get('/posts/GetCommentsByPostId?postId=' + id).done(function (response, statusText, xhr) {
+        $.get('/posts/get-comment-by-post-id/' + id).done(function (response, statusText, xhr) {
             if (xhr.status === 200) {
                 if (response && response.data && response.data.length > 0) {
                     let html = '';
@@ -230,7 +230,7 @@ const postsController = function () {
     function generateReplyFormHtml(commentId) {
         return `
         <div class="comment-form form-contact rounded bordered">
-            <form action="/posts/addNewComment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
+            <form action="/posts/add-new-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
                 <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
                 <input type="hidden" name="replyId" value="${commentId}" />
                 <div class="messages"></div>

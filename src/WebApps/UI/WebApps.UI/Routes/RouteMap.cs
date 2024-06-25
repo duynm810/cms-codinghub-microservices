@@ -64,6 +64,16 @@ public static class RouteMap
             "post-search",
             "/search",
             new { controller = "Posts", action = "Search" });
+        
+        app.MapControllerRoute(
+            "get-comment-by-post-id",
+            "/posts/get-comment-by-post-id/{id:guid}",
+            new { controller = "Posts", action = "GetCommentsByPostId" });
+        
+        app.MapControllerRoute(
+            "add-new-comment",
+            "/posts/add-new-comment",
+            new { controller = "Posts", action = "AddNewComment" });
 
         #endregion
 

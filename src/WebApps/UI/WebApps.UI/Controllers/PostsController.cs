@@ -184,14 +184,12 @@ public class PostsController(
         }
     }
     
-    [HttpGet]
     public async Task<IActionResult> GetCommentsByPostId(Guid postId)
     {
         var comments = await commentApiClient.GetCommentsByPostId(postId);
         return Ok(new { data = comments.Data });
     }
     
-    [HttpPost]
     public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
     {
         var newComment = await commentApiClient.CreateComment(comment);
