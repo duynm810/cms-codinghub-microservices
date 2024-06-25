@@ -197,11 +197,4 @@ public class PostsController(
         var newComment = await commentApiClient.CreateComment(comment);
         return Ok(new { data = newComment });
     }
-
-    [HttpPut("update-thumbnail/{id:guid}")]
-    public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
-    {
-        var result = await postApiClient.UpdateThumbnail(id, request);
-        return Ok(new { data = result });
-    }
 }

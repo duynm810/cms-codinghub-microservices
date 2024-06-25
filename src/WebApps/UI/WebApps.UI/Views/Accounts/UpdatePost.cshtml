@@ -7,7 +7,7 @@
 
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
-    
+
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>
     <script>
@@ -17,12 +17,10 @@
         
         const thumbnailUrl = document.getElementById("thumbnailUrl").value;
 
-        // Hiển thị hình ảnh đã upload khi tải trang cập nhật
+        // Display uploaded images when loading the update page (Hiển thị hình ảnh đã upload khi tải trang cập nhật)
         if (thumbnailUrl) {
             displayUploadedFile(thumbnailUrl);
         }
-
-        // Any additional UpdatePost-specific logic
 
         function displayUploadedFile(url) {
             const fileList = document.getElementById("file-list");
@@ -82,11 +80,11 @@
             const formData = new FormData(form);
 
             const postId = document.getElementById('postId').value;
-            const url = `/Accounts/UpdatePost/${postId}`;
+            const url = `/accounts/update-post/${postId}`;
 
             try {
                 const response = await fetch(url, {
-                    method: 'POST',
+                    method: 'PUT',
                     body: formData
                 });
 
@@ -94,14 +92,32 @@
                     window.location.href = '/Accounts/ManagePosts';
                 } else {
                     // Handle error
-                    this.showErrorNotification('Failed to update post.');
+                    showErrorNotification('Failed to update post.');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                this.showErrorNotification('An error occurred while updating the post.');
+                showErrorNotification('An error occurred while updating the post.');
             }
         }
-    
+
+        async function updatePostThumbnail(postId) {
+            try {
+                console.log(`Updating thumbnail for post with ID: ${postId}`);
+                const response = await $.ajax({
+                    url: `/accounts/update-thumbnail/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        thumbnail: null // Set the thumbnail to null
+                    })
+                });
+
+                console.log('Post thumbnail updated successfully', response);
+            } catch (error) {
+                showErrorNotification(`Error updating post: ${error.responseText || error.message}`);
+            }
+        }
+
     </script>
 }
 

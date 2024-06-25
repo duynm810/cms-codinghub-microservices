@@ -14,7 +14,11 @@ using ILogger = Serilog.ILogger;
 namespace WebApps.UI.Controllers;
 
 [Authorize]
-public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient categoryApiClient, IErrorService errorService, ILogger logger) : BaseController(errorService, logger)
+public class AccountsController(
+    IPostApiClient postApiClient,
+    ICategoryApiClient categoryApiClient,
+    IErrorService errorService,
+    ILogger logger) : BaseController(errorService, logger)
 {
     public IActionResult Login(string returnUrl = "/")
     {
@@ -44,7 +48,7 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
     public IActionResult Profile()
     {
         const string methodName = nameof(Profile);
-        
+
         try
         {
             var item = new ProfileViewModel()
@@ -62,7 +66,7 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
     public async Task<IActionResult> ManagePosts([FromQuery] int page = 1)
     {
         const string methodName = nameof(ManagePosts);
-        
+
         try
         {
             var result = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
@@ -88,7 +92,7 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
     public async Task<IActionResult> CreatePost()
     {
         const string methodName = nameof(CreatePost);
-        
+
         try
         {
             var categories = await GetCategories();
@@ -114,7 +118,7 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
         try
         {
             var categories = await GetCategories();
-            
+
             if (ModelState.IsValid)
             {
                 var result = await postApiClient.CreatePost(request);
@@ -122,7 +126,7 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
                 {
                     return RedirectToAction("ManagePosts");
                 }
-                
+
                 TempData["ErrorMessage"] = "Failed to create post.";
             }
 
@@ -144,11 +148,11 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
     public async Task<IActionResult> UpdatePost(string slug)
     {
         const string methodName = nameof(UpdatePost);
-        
+
         try
         {
             var categories = await GetCategories();
-            
+
             var post = await postApiClient.GetPostBySlug(slug);
             if (post is { IsSuccess: true, Data: not null })
             {
@@ -169,31 +173,39 @@ public class AccountsController(IPostApiClient postApiClient, ICategoryApiClient
         }
     }
 
-    [HttpPost("UpdatePost/{id:guid}")]
+    [HttpPut("update-post/{id:guid}")]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> UpdatePost(Guid id, UpdatePostDto request)
+    public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
         const string methodName = nameof(UpdatePost);
-        
+
         try
         {
             if (!ModelState.IsValid)
             {
                 TempData["ErrorMessage"] = "Failed to update post.";
+                return BadRequest(ModelState);
             }
-            
+
             var result = await postApiClient.UpdatePost(id, request);
             if (result is { IsSuccess: true })
             {
                 return RedirectToAction("ManagePosts");
             }
-            
+
             return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
             return HandleException(e, methodName);
         }
+    }
+
+    [HttpPut("update-thumbnail/{id:guid}")]
+    public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
+    {
+        var result = await postApiClient.UpdateThumbnail(id, request);
+        return Ok(new { data = result });
     }
 
     #region Helpers

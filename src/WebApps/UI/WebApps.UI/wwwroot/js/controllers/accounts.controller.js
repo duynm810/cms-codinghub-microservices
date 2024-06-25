@@ -73,19 +73,12 @@ const accountsController = function () {
                         async () => {
                             const thumbnailUrl = document.getElementById('thumbnailUrl').value;
                             if (thumbnailUrl) {
-                                const deleteSuccess = await this.deleteImage(thumbnailUrl);
-                                if (deleteSuccess) {
-                                    const postId = document.getElementById('postId').value;
-                                    if (postId) {
-                                        await this.updatePostThumbnail(postId);
-                                    }
-                                    fileInput.value = '';
-                                    fileList.innerHTML = '';
-                                    document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
-                                } else {
-                                    this.showErrorNotification('Failed to delete image.');
-                                }
+                                await this.deleteImage(thumbnailUrl);
                             }
+
+                            fileList.value = '';
+                            fileList.innerHTML = '';
+                            document.getElementById('thumbnailUrl').value = ''; // Delete image URL when deleting file
                         }
                     );
                 });
@@ -129,49 +122,24 @@ const accountsController = function () {
 
         this.deleteImage = async (imagePath) => {
             try {
-                const response = await fetch(`/media/delete-image/${encodeURIComponent(imagePath)}`, {
+                const response = await $.ajax({
+                    url: `/media/delete-image/${encodeURIComponent(imagePath)}`,
                     method: 'DELETE'
                 });
 
-                if (!response.ok) {
+                if (!response.isSuccess) {
                     showErrorNotification(`Delete failed with status: ${response.status}`);
                     return false;
                 }
 
-                const result = await response.json();
                 console.log(`Image deleted successfully: ${imagePath}`);
-                return result.isSuccess && result.data;
+                return response.data;
             } catch (error) {
                 showErrorNotification(`Error deleting file: ${error.message}`);
                 return false;
             }
         }
-
-        this.updatePostThumbnail = async (postId) => {
-            try {
-                console.log(`Updating thumbnail for post with ID: ${postId}`);
-                const response = await fetch(`/posts/update-thumbnail/${postId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        thumbnail: null // Set the thumbnail to null
-                    })
-                });
-
-                if (!response.ok) {
-                    showErrorNotification(`Post update failed with status: ${response.status}`);
-                    return;
-                }
-
-                const result = await response.json();
-                console.log('Post thumbnail updated successfully');
-            } catch (error) {
-                showErrorNotification(`Error updating post: ${error.message}`);
-            }
-        }
-
+        
         this.waitForUploadCompletion = async () => {
             const thumbnailUrl = document.getElementById('thumbnailUrl');
             while (!thumbnailUrl.value) {
