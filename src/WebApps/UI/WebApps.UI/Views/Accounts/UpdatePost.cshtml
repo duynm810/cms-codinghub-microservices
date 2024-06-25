@@ -56,9 +56,21 @@
                     'Yes, delete it',
                     'Cancel',
                     async () => {
-                        const postId = document.getElementById('postId').value;
-                        if (postId) {
-                            await updatePostThumbnail(postId);
+                        const thumbnailUrl = document.getElementById('thumbnailUrl').value;
+                        if (thumbnailUrl) {
+                            const deleteSuccess = await controller.deleteImage(thumbnailUrl);
+                            if (deleteSuccess) {
+                                const postId = document.getElementById('postId').value;
+                                if (postId) {
+                                    await updatePostThumbnail(postId);
+                                }
+
+                                fileList.value = '';
+                                fileList.innerHTML = '';
+                                document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
+                            } else {
+                                this.showErrorNotification('Failed to delete image.');
+                            }
                         }
                     }
                 );

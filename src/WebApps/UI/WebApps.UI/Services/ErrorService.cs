@@ -19,6 +19,7 @@ public class ErrorService : IErrorService
     {
         return statusCode switch
         {
+            401 => "~/Views/Shared/HttpError-Unauthorized.cshtml",
             404 => "~/Views/Shared/HttpError-NotFound.cshtml",
             400 => "~/Views/Shared/HttpError-BadRequest.cshtml",
             500 => "~/Views/Shared/HttpError-InternalServerError.cshtml",

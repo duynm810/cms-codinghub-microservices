@@ -1,7 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Comment;
-using Shared.Dtos.Post.Commands;
 using Shared.Settings;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Posts;
@@ -184,7 +183,7 @@ public class PostsController(
         }
     }
     
-    public async Task<IActionResult> GetCommentsByPostId(Guid postId)
+    public async Task<IActionResult> GetCommentsByPostId([FromQuery] Guid postId)
     {
         var comments = await commentApiClient.GetCommentsByPostId(postId);
         return Ok(new { data = comments.Data });
