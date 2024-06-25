@@ -30,9 +30,11 @@
     border: 2px solid red;
 }
 
-.upload-container {
-    position: relative;
+.button:disabled {
+    cursor: not-allowed;
 }
+
+/*----------------------- Start Spinner ----------------------*/
 
 .spinner {
     display: none;
@@ -62,9 +64,12 @@
     20% { transform: scaleY(1.0) }
 }
 
+/*---------------------- End Spinner ----------------------*/
+
 /*-------------------------------------------------------------------*/
 
 .upload-container {
+    position: relative;
     background-color: #f2f2f2;
     padding: 10px 10px;
     border-radius: 5px;

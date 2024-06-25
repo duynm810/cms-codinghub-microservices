@@ -29,12 +29,13 @@
             if (valid) {
                 if (document.getElementById('thumbnailUrl').value) {
                     await controller.waitForUploadCompletion();
-                    form.submit();
-                } else {
-                    this.showErrorNotification('Please upload a valid thumbnail.');
                 }
+                form.submit();
             }
         }
+
+        // Call checkRequiredFields initially to set the correct state of the submit button
+        controller.checkRequiredFields('frm-create-post');
     </script>
 }
 
@@ -132,7 +133,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()">Submit</button>
+                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
                 </div>
             </div>
         </div>
