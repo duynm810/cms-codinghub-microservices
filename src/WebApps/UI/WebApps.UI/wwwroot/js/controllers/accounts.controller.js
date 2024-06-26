@@ -8,30 +8,6 @@ const accountsController = function () {
             let titleValue = this.value;
             document.querySelector('input[name="Slug"]').value = createSlug(titleValue);
         });
-
-        // Disable submit button until all required fields are filled
-        const createPostForm = document.getElementById('frm-create-post');
-        const updatePostForm = document.getElementById('frm-update-post');
-
-        if (createPostForm) {
-            const requiredInputsCreatePost = createPostForm.querySelectorAll('input[required], textarea[required], select[required]');
-            requiredInputsCreatePost.forEach(input => {
-                input.addEventListener('input', () => this.checkRequiredFields('frm-create-post'));
-            });
-
-            // Call checkRequiredFields initially to set the correct state of the submit button
-            this.checkRequiredFields('frm-create-post');
-        }
-
-        if (updatePostForm) {
-            const requiredInputsUpdatePost = updatePostForm.querySelectorAll('input[required], textarea[required], select[required]');
-            requiredInputsUpdatePost.forEach(input => {
-                input.addEventListener('input', () => this.checkRequiredFields('frm-update-post'));
-            });
-
-            // Call checkRequiredFields initially to set the correct state of the submit button
-            this.checkRequiredFields('frm-update-post');
-        }
     }
 
     this.checkRequiredFields = function (formId) {
