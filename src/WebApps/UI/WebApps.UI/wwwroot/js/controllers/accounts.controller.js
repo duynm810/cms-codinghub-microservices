@@ -1,30 +1,40 @@
-const accountsController = function () {
+const accountsController = function (formId) {
+
+    this.formId = formId;
+    this.form = document.getElementById(formId);
+    
     this.initialize = function () {
-
         this.uploadFileHandlers();
-
-        // Auto-generate slug from title
-        document.querySelector('input[name="Title"]').addEventListener('input', function () {
-            let titleValue = this.value;
-            document.querySelector('input[name="Slug"]').value = createSlug(titleValue);
-        });
+        this.addSlugGenerator();
+        this.addRequiredFieldListeners();
+        this.checkRequiredFields(); //Check fields immediately upon initialization (for update page)
     }
 
-    this.checkRequiredFields = function (formId) {
-        const form = document.getElementById(formId);
-        const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
-        let allFilled = true;
-
-        for (let i = 0; i < inputs.length; i++) {
-            if (!inputs[i].value.trim()) {
-                allFilled = false;
-                break;
-            }
+    this.addSlugGenerator = function() {
+        const titleInput = this.form.querySelector('input[name="Title"]');
+        if (titleInput) {
+            titleInput.addEventListener('input', () => {
+                this.form.querySelector('input[name="Slug"]').value = createSlug(titleInput.value);
+            });
         }
+    };
 
-        document.getElementById('submit-button').disabled = !allFilled;
-    }
+    this.addRequiredFieldListeners = function() {
+        const inputs = this.form.querySelectorAll('input[required], textarea[required], select[required]');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => this.checkRequiredFields());
+        });
+    };
 
+    this.checkRequiredFields = function() {
+        const inputs = this.form.querySelectorAll('input[required], textarea[required], select[required]');
+        let allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
+        const submitButton = document.getElementById('submit-button');
+        if (submitButton) {
+            submitButton.disabled = !allFilled;
+        }
+    };
+    
     this.showSpinner = function () {
         const preloader = document.getElementById('spinner');
         const uploadSection = document.getElementById('upload-section');
