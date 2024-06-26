@@ -159,11 +159,14 @@
     </div>
     <form enctype="multipart/form-data" id="frm-update-post" novalidate>
         @Html.AntiForgeryToken()
+        <!-- Id -->
         <input type="hidden" name="PostId" id="postId" value="@post.Id"/>
         <div class="row">
+            <!-- Category -->
             <div class="col-md-6">
                 <div class="form-group">
-                    <select class="dropdown-custom" name="category" required="">
+                    <label for="category">Category</label>
+                    <select class="dropdown-custom" name="CategoryId" id="category" required>
                         <option value="" disabled>Select category</option>
                         @foreach (var category in categories)
                         {
@@ -181,25 +184,32 @@
             </div>
         </div>
         <div class="row">
+            <!-- Title -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="title">Title</label>
                     <input type="text" required class="form-control" name="Title" id="title" placeholder="Title" value="@post.Title">
                 </div>
             </div>
+            <!-- Slug -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="slug">Slug</label>
                     <input type="text" required class="form-control" name="Slug" id="slug" placeholder="Slug (SEO)" value="@post.Slug">
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Summary -->
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="summary">Summary</label>
                     <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3">@post.Summary</textarea>
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Content -->
             <div class="col-md-12">
                 <div class="form-group">
                     <div id="editor" data-content='@Html.Raw(post.Content)'></div>
@@ -208,20 +218,25 @@
             </div>
         </div>
         <div class="row">
+            <!-- Seo Description -->
             <div class="col-md-12">
                 <div class="form-group">
-                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3" value="@post.SeoDescription">
+                    <label for="seoDescription">SEO Description</label>
+                    <input class="form-control" name="SeoDescription" id="seoDescription" placeholder="SEO description" rows="3" value="@post.SeoDescription">
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Source -->
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="source">Source</label>
                     <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)" value="@post.Source">
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Thumbnail -->
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
@@ -248,10 +263,8 @@
         </div>
         <input type="hidden" name="Thumbnail" id="thumbnailUrl" value="@post.Thumbnail"/>
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <button type="button" class="button button-contactForm btn-block" onclick="submitUpdatePostForm()" id="submit-button" disabled>Submit</button>
-                </div>
+            <div class="col-md-12 text-center">
+                <button type="button" class="button button-contactForm btn-block" onclick="submitUpdatePostForm()" id="submit-button" disabled>Submit</button>
             </div>
         </div>
     </form>

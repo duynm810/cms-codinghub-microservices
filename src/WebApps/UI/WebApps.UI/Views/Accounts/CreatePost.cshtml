@@ -20,18 +20,20 @@
             
             for (let i = 0; i < inputs.length; i++) {
                 let input = inputs[i];
-                if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
+                if (input.hasAttribute('required') && !input.value.trim()) { // Check the required attribute (Kiểm tra thuộc tính required)
                     this.showErrorNotification('Please fill out the ' + input.name + ' field.');
                     valid = false;
-                    break; // Dừng lại sau khi tìm thấy trường không được nhập
+                    break; // Stop if any required attributes have not been entered (Dừng nếu có thuộc tính nào bắt buộc chưa nhập)
                 }
             }
             
             if (valid) {
                 if (document.getElementById('thumbnailUrl').value) {
+                    // Wait for the image to finish uploading before allowing submission (Đợi hình ảnh upload xong mới cho phép submit)
                     await controller.waitForUploadCompletion();
                 }
-
+                
+                // Set content data from quill editor (Gán nội dung được nhập từ quill editor vào content)
                 document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
                 
                 form.submit();
@@ -53,8 +55,10 @@
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     <form method="post" enctype="multipart/form-data" id="frm-create-post" novalidate asp-controller="Accounts" asp-action="CreatePost">
         <div class="row">
+            <!-- Category -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="category">Category</label>
                     <select class="dropdown-custom" name="CategoryId" id="category" required>
                         <option value="" disabled selected>Select category</option>
                         @foreach (var category in categories)
@@ -66,25 +70,32 @@
             </div>
         </div>
         <div class="row">
+            <!-- Title -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="title">Title</label>
                     <input type="text" class="form-control" required name="Title" id="title" placeholder="Title">
                 </div>
             </div>
+            <!-- Slug -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="slug">Slug</label>
                     <input type="text" class="form-control" required name="Slug" id="slug" placeholder="Slug (SEO)">
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Summary -->
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="summary">Summary</label>
                     <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3"></textarea>
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Content -->
             <div class="col-md-12">
                 <div class="form-group">
                     <div id="editor" data-content=""></div>
@@ -93,20 +104,26 @@
             </div>
         </div>
         <div class="row">
+            <!-- SEO Description -->
             <div class="col-md-12">
                 <div class="form-group">
-                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3">
+                    <label for="seoDescription">SEO Description</label>
+                    <input class="form-control" name="SeoDescription" id="seoDescription" placeholder="SEO description" rows="3">
                 </div>
             </div>
         </div>
+        <!-- -->
         <div class="row">
+            <!-- Source -->
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="source">Source</label>
                     <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)">
                 </div>
             </div>
         </div>
         <div class="row">
+            <!-- Thumbnail -->
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
@@ -133,10 +150,8 @@
         </div>
         <input type="hidden" name="Thumbnail" id="thumbnailUrl">
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
-                </div>
+            <div class="col-md-12 text-center">
+                <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
             </div>
         </div>
     </form>
