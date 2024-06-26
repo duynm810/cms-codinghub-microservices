@@ -14,6 +14,7 @@
         // Initialize the accountsController
         const controller = new accountsController('frm-update-post');
         controller.initialize();
+        controller.checkRequiredFields();
         
         const thumbnailUrl = document.getElementById("thumbnailUrl").value;
 
