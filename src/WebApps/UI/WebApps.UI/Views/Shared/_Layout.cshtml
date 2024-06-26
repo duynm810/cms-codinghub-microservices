@@ -28,6 +28,9 @@
     
     <!-- Spinkit -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
+    <!-- Quill Editor -->
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
     
 </head>
 <body class="theme-mode">
@@ -105,6 +108,10 @@
 <!-- Slugify -->
 <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
 <script src="~/js/slugify-config.js"></script>
+
+<!-- Quill Editor -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script src="~/js/quill.js"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>
