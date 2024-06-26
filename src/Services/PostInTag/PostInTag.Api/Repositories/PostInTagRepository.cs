@@ -13,7 +13,4 @@ public class PostInTagRepository(PostInTagContext dbContext, IUnitOfWork<PostInT
     public async Task CreatePostToTag(PostInTagBase postInTagBase) => await CreateAsync(postInTagBase);
 
     public async Task DeletePostToTag(PostInTagBase postInTagBase) => await DeleteAsync(postInTagBase);
-
-    public async Task<IEnumerable<Guid>?> GetPostIdsInTag(Guid tagId) =>
-        await FindByCondition(x => x.TagId == tagId).Select(x => x.PostId).ToListAsync();
 }

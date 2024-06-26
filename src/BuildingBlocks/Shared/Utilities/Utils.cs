@@ -56,4 +56,12 @@ public static class Utils
     {
         return !string.IsNullOrEmpty(list) && list.Split(',').Contains(id);
     }
+    
+    public static void EnsureDirectoryExists(string path)
+    {
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+    }
 }

@@ -2,14 +2,12 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post;
+using Shared.Dtos.Category;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -20,27 +18,25 @@ public class GetPostByIdQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
-    IMappingHelper mappingHelper,
+    IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostByIdQuery, ApiResult<PostModel>>
+    : IRequestHandler<GetPostByIdQuery, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostModel>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(GetPostByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostModel>();
+        var result = new ApiResult<PostDto>();
         const string methodName = nameof(GetPostByIdQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving post with ID: {PostId}", methodName, request.Id);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetPostByIdKey(request.Id);
-            var cachedPost = await cacheService.GetAsync<PostModel>(cacheKey, cancellationToken);
+            var cachedPost = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with ID: {PostId}", methodName, request.Id);
                 result.Success(cachedPost);
-                logger.Information("END {MethodName} - Successfully retrieved post from cache with ID: {PostId}",
-                    methodName, request.Id);
                 return result;
             }
 
@@ -52,6 +48,8 @@ public class GetPostByIdQueryHandler(
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
+            
+            var data = mapper.Map<PostDto>(post);
 
             var category = await categoryGrpcClient.GetCategoryById(post.CategoryId);
             if (category == null)
@@ -61,14 +59,12 @@ public class GetPostByIdQueryHandler(
                 return result;
             }
 
-            var data = mappingHelper.MapPostWithCategory(post, category);
+            data.Category = mapper.Map<CategoryDto>(category);
+            
             result.Success(data);
-
-            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information("END {MethodName} - Successfully retrieved post with ID: {PostId}", methodName,
-                request.Id);
+            logger.Information("END {MethodName} - Successfully retrieved post with ID: {PostId}", methodName, request.Id);
         }
         catch (Exception e)
         {

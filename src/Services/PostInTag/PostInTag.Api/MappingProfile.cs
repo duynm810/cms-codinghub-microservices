@@ -5,6 +5,7 @@ using Post.Grpc.Protos;
 using PostInTag.Api.Entities;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
 using Shared.Dtos.Tag;
 using Tag.Grpc.Protos;
@@ -82,12 +83,5 @@ public class MappingProfile : Profile
                 Icon = c.Icon,
                 Color = c.Color
             }).ToList());
-
-        CreateMap<CategoryDto, PostInTagDto>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore())
-            .ForMember(dest => dest.Slug, opt => opt.Ignore())
-            .ForMember(dest => dest.CategoryId, opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.CategoryName, opt => opt.MapFrom(src => src.Name))
-            .ForMember(dest => dest.CategorySlug, opt => opt.MapFrom(src => src.Slug));
     }
 }

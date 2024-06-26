@@ -19,6 +19,17 @@ public static class ClaimsPrincipalExtensions
     }
     
     /// <summary>
+    /// Get role list from claims
+    /// </summary>
+    /// <param name="user"></param>
+    /// <returns></returns>
+    public static List<string> GetRoles(this ClaimsPrincipal user)
+    {
+        var roles = GetClaimValue(user, InternalClaimTypesConsts.Claims.Roles);
+        return string.IsNullOrEmpty(roles) ? [] : roles.Split(';').ToList();
+    }
+    
+    /// <summary>
     /// Get fullname from claims, fallback to lastname if fullname is not available.
     /// </summary>
     /// <param name="user">Current claims principal.</param>

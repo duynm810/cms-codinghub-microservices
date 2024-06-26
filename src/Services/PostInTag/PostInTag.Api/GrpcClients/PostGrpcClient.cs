@@ -5,6 +5,7 @@ using Post.Grpc.Protos;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
@@ -26,7 +27,6 @@ public class PostGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInTagDto>>(cacheKey);
             if (cachedPosts != null)
@@ -71,7 +71,6 @@ public class PostGrpcClient(
 
         try
         {
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
             if (cachedPosts != null)

@@ -202,11 +202,30 @@
       "SwaggerKey": "post-service"
     },
     {
-      "UpstreamPathTemplate": "/posts/by-slug/{slug}",
+      "UpstreamPathTemplate": "/posts/slug/{slug}",
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/posts/by-slug/{slug}",
+      "DownstreamPathTemplate": "/api/posts/slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/detail/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/detail/by-slug/{slug}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -223,6 +242,25 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/posts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/update-thumbnail/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/update-thumbnail/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -279,6 +317,70 @@
           "Port": 6005
         }
       ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-tag/{tagSlug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-tag/{tagSlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-series/{seriesSlug}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-series/{seriesSlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-author/{authorId}/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-author/{authorId}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-current-user/paging",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "SwaggerKey": "post-service"
     },
     {
@@ -490,36 +592,6 @@
     {
       "UpstreamPathTemplate": "/post-in-series",
       "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-series",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6009
-        }
-      ],
-      "SwaggerKey": "post-in-series-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-series/by-slug",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-series/by-slug",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6009
-        }
-      ],
-      "SwaggerKey": "post-in-series-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-series",
-      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -535,36 +607,6 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "SwaggerKey": "post-in-series-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-series/paging",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-series/paging",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6009
-        }
-      ],
-      "SwaggerKey": "post-in-series-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-series/by-slug/{slug}/paging",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-series/by-slug/{slug}/paging",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6009
-        }
-      ],
       "SwaggerKey": "post-in-series-service"
     },
     {
@@ -658,36 +700,6 @@
     {
       "UpstreamPathTemplate": "/post-in-tag",
       "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-tag",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6012
-        }
-      ],
-      "SwaggerKey": "post-in-tag-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-tag/by-slug",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-tag/by-slug",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6012
-        }
-      ],
-      "SwaggerKey": "post-in-tag-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-tag",
-      "UpstreamHttpMethod": [
         "POST",
         "DELETE"
       ],
@@ -703,36 +715,6 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
-      "SwaggerKey": "post-in-tag-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-tag/paging",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-tag/paging",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6012
-        }
-      ],
-      "SwaggerKey": "post-in-tag-service"
-    },
-    {
-      "UpstreamPathTemplate": "/post-in-tag/by-slug/{slug}/paging",
-      "UpstreamHttpMethod": [
-        "GET"
-      ],
-      "DownstreamPathTemplate": "/api/post-in-tag/by-slug/{slug}/paging",
-      "DownstreamScheme": "http",
-      "DownstreamHostAndPorts": [
-        {
-          "Host": "host.docker.internal",
-          "Port": 6012
-        }
-      ],
       "SwaggerKey": "post-in-tag-service"
     },
     {
@@ -798,9 +780,7 @@
     {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
-        "GET",
-        "POST",
-        "DELETE"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/media/upload-image",
       "DownstreamScheme": "http",
@@ -815,6 +795,39 @@
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/delete-image/{imagePath}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/delete-image/{imagePath}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6019
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/images/{everything}",
+      "UpstreamHttpMethod": [ 
+        "GET" 
+      ],
+      "DownstreamPathTemplate": "/media/images/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6019
+        }
+      ]
     }
   ],
   "SwaggerEndPoints": [

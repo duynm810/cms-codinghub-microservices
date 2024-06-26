@@ -7,8 +7,8 @@
     });
 
     // Scroll progress
-    var scrollProgress = function() {
-        var docHeight = $(document).height(),
+    let scrollProgress = function() {
+        let docHeight = $(document).height(),
             windowHeight = $(window).height(),
             scrollPercent;
         $(window).on('scroll', function() {
@@ -18,7 +18,7 @@
     };
 
     // Off canvas sidebar
-    var OffCanvas = function() {
+    let OffCanvas = function() {
         $('#off-canvas-toggle').on('click', function() {
             $('body').toggleClass("canvas-opened");
         });
@@ -32,7 +32,7 @@
     };
 
     // Search form
-    var openSearchForm = function() {
+    let openSearchForm = function() {
         $('button.search-icon').on('click', function() {
             $('body').toggleClass("open-search-form");
             $('.mega-menu-item').removeClass("open");
@@ -44,8 +44,8 @@
     };
 
     // Mobile menu
-    var mobileMenu = function() {
-        var menu = $('ul#mobile-menu');
+    let mobileMenu = function() {
+        let menu = $('ul#mobile-menu');
         if (menu.length) {
             menu.slicknav({
                 prependTo: ".mobile_menu",
@@ -55,7 +55,7 @@
         };
     };
 
-    var SubMenu = function() {
+    let SubMenu = function() {
         // $(".sub-menu").hide();
         $(".menu li.menu-item-has-children").on({
             mouseenter: function() {
@@ -67,10 +67,10 @@
         });
     };
 
-    var WidgetSubMenu = function() {
+    let WidgetSubMenu = function() {
         //$(".sub-menu").hide();
         $('.menu li.menu-item-has-children').on('click', function() {
-            var element = $(this);
+            let element = $(this);
             if (element.hasClass('open')) {
                 element.removeClass('open');
                 element.find('li').removeClass('open');
@@ -87,7 +87,7 @@
     };
 
     // Slick slider
-    var customSlickSlider = function() {
+    let customSlickSlider = function() {
 
         // Slideshow Fade
         $('.slide-fade').slick({
@@ -163,8 +163,8 @@
         });
     };
 
-    var typeWriter = function() {
-        var TxtType = function(el, toRotate, period) {
+    let typeWriter = function() {
+        let TxtType = function(el, toRotate, period) {
             this.toRotate = toRotate;
             this.el = el;
             this.loopNum = 0;
@@ -174,16 +174,16 @@
             this.isDeleting = !1
         };
         TxtType.prototype.tick = function() {
-            var i = this.loopNum % this.toRotate.length;
-            var fullTxt = this.toRotate[i];
+            let i = this.loopNum % this.toRotate.length;
+            let fullTxt = this.toRotate[i];
             if (this.isDeleting) {
                 this.txt = fullTxt.substring(0, this.txt.length - 1)
             } else {
                 this.txt = fullTxt.substring(0, this.txt.length + 1)
             }
             this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
-            var that = this;
-            var delta = 200 - Math.random() * 100;
+            let that = this;
+            let delta = 200 - Math.random() * 100;
             if (this.isDeleting) {
                 delta /= 2
             }
@@ -200,15 +200,15 @@
             }, delta)
         };
         window.onload = function() {
-            var elements = document.getElementsByClassName('typewrite');
-            for (var i = 0; i < elements.length; i++) {
-                var toRotate = elements[i].getAttribute('data-type');
-                var period = elements[i].getAttribute('data-period');
+            let elements = document.getElementsByClassName('typewrite');
+            for (let i = 0; i < elements.length; i++) {
+                let toRotate = elements[i].getAttribute('data-type');
+                let period = elements[i].getAttribute('data-period');
                 if (toRotate) {
                     new TxtType(elements[i], JSON.parse(toRotate), period)
                 }
             }
-            var css = document.createElement("style");
+            let css = document.createElement("style");
             css.type = "text/css";
             css.innerHTML = ".typewrite > .wrap { border-right: 0.05em solid #5869DA}";
             document.body.appendChild(css)
@@ -216,17 +216,17 @@
     }
 
     // Nice Select
-    var niceSelectBox = function() {
-        var nice_Select = $('select');
+    let niceSelectBox = function() {
+        let nice_Select = $('select');
         if (nice_Select.length) {
             nice_Select.niceSelect();
         }
     };
 
     //Header sticky
-    var headerSticky = function() {
+    let headerSticky = function() {
         $(window).on('scroll', function() {
-            var scroll = $(window).scrollTop();
+            let scroll = $(window).scrollTop();
             if (scroll < 245) {
                 $(".header-sticky").removeClass("sticky-bar");
             } else {
@@ -236,7 +236,7 @@
     };
 
     // Scroll up to top
-    var scrollToTop = function() {
+    let scrollToTop = function() {
         $.scrollUp({
             scrollName: 'scrollUp', // Element ID
             topDistance: '300', // Distance from top before showing element (px)
@@ -250,7 +250,7 @@
     };
 
     //VSticker
-    var VSticker = function() {
+    let VSticker = function() {
         $('#news-flash').vTicker({
             speed: 800,
             pause: 3000,
@@ -268,25 +268,25 @@
     };
 
     //sidebar sticky
-    var stickySidebar = function() {
+    let stickySidebar = function() {
         $('.sticky-sidebar').theiaStickySidebar();
     };
 
     //Custom scrollbar
-    var customScrollbar = function() {
-        var $ = document.querySelector.bind(document);
-        var ps = new PerfectScrollbar('.custom-scrollbar');
+    let customScrollbar = function() {
+        let $ = document.querySelector.bind(document);
+        let ps = new PerfectScrollbar('.custom-scrollbar');
     };
 
     //Mega menu
-    var megaMenu = function() {
+    let megaMenu = function() {
         $('.sub-mega-menu .nav-pills > a').on('mouseover', function(event) {
             $(this).tab('show');
         });
     };
 
     //magnific Popup
-    var magPopup = function() {
+    let magPopup = function() {
         if ($('.play-video').length) {
             $('.play-video').magnificPopup({
                 disableOn: 700,
@@ -299,10 +299,10 @@
         }
     };
 
-    var masonryGrid = function() {
+    let masonryGrid = function() {
         if ($(".grid").length) {
             // init Masonry
-            var $grid = $('.grid').masonry({
+            let $grid = $('.grid').masonry({
                 itemSelector: '.grid-item',
                 percentPosition: true,
                 columnWidth: '.grid-sizer',
@@ -317,9 +317,9 @@
     };
 
     /* More articles*/
-    var moreArticles = function() {
+    let moreArticles = function() {
         $.fn.vwScroller = function(options) {
-            var default_options = {
+            let default_options = {
                 delay: 500,
                 /* Milliseconds */
                 position: 0.7,
@@ -328,14 +328,14 @@
                 invisibleClass: '',
             }
 
-            var isVisible = false;
-            var $document = $(document);
-            var $window = $(window);
+            let isVisible = false;
+            let $document = $(document);
+            let $window = $(window);
 
             options = $.extend(default_options, options);
 
-            var observer = $.proxy(function() {
-                var isInViewPort = $document.scrollTop() > (($document.height() - $window.height()) * options.position);
+            let observer = $.proxy(function() {
+                let isInViewPort = $document.scrollTop() > (($document.height() - $window.height()) * options.position);
 
                 if (!isVisible && isInViewPort) {
                     onVisible();
@@ -344,7 +344,7 @@
                 }
             }, this);
 
-            var onVisible = $.proxy(function() {
+            let onVisible = $.proxy(function() {
                 isVisible = true;
 
                 /* Add visible class */
@@ -359,7 +359,7 @@
 
             }, this);
 
-            var onInvisible = $.proxy(function() {
+            let onInvisible = $.proxy(function() {
                 isVisible = false;
 
                 /* Remove visible class */
@@ -380,7 +380,7 @@
         }
 
         if ($.fn.vwScroller) {
-            var $more_articles = $('.single-more-articles');
+            let $more_articles = $('.single-more-articles');
             $more_articles.vwScroller({ visibleClass: 'single-more-articles--visible', position: 0.55 })
             $more_articles.find('.single-more-articles-close-button').on('click', function() {
                 $more_articles.hide();
@@ -395,7 +395,7 @@
     /* WOW active */
     new WOW().init();
 
-    var darkLightMode = function() {
+    let darkLightMode = function() {
         const darkLightBtn = document.querySelector(".dark-light-mode");
         const currentTheme = localStorage.getItem("theme");
         if (currentTheme == "dark") {

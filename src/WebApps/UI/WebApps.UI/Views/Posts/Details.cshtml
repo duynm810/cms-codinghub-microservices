@@ -1,9 +1,8 @@
 @model PostDetailViewModel
 @{
-    ViewData["MainClass"] = "bg-grey pb-30";
-
-    var detail = Model.Post.DetailPost;
-    var categoryUrl = "/category/" + detail.CategorySlug;
+    var detail = Model.Posts.Detail;
+    var categoryUrl = "/category/" + detail.Category.Slug;
+    var authorUrl = "/author/" + detail.User.UserName;
 }
 
 @section scripts
@@ -23,14 +22,14 @@
     <div class="row">
         <div class="col-md-6 mb-md-0 mb-sm-3">
             <figure class="mb-0 mt-lg-0 mt-3 border-radius-5">
-                <img class=" border-radius-5" src="~/imgs/news/news-8.jpg" alt="">
+                <image-url src="@detail.Thumbnail"></image-url>
             </figure>
         </div>
         <div class="col-md-6 align-self-center">
             <div class="post-content">
                 <div class="entry-meta meta-0 mb-15 font-small">
                     <a href="@categoryUrl">
-                        <span class="post-cat position-relative @detail.CategoryColor">@detail.CategoryName</span>
+                        <span class="post-cat position-relative @detail.Category.Color">@detail.Category.Name</span>
                     </a>
                 </div>
                 <h1 class="entry-title mb-30 font-weight-900">
@@ -40,19 +39,19 @@
                     @detail.Summary
                 </p>
                 <div class="entry-meta align-items-center meta-2 font-small color-muted">
-                    @if (detail.User != null)
-                    {
+                    @{
+                        
                         <p class="mb-5">
                             <a class="author-avatar" href="#">
                                 <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
                             </a>
                             By
-                            <a href="author.html">
+                            <a href="@authorUrl">
                                 <span class="author-name font-weight-bold">@detail.User.FullName</span>
                             </a>
                         </p>
                     }
-                    <span class="mr-10">@detail.PublishedDate.ToString("dd MMMM yyyy", CultureInfo.InvariantCulture)</span>
+                    <span class="mr-10">@(detail.PublishedDate.HasValue ? detail.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
                     <span class="has-dot"> 8 mins read</span>
                 </div>
             </div>
@@ -120,7 +119,7 @@
         <hr class="wp-block-separator is-style-wide">
         <div class="wp-block-image">
             <figure class="alignleft is-resized">
-                <img class="border-radius-5" src="~/imgs/news/thumb-11.jpg">
+                <img class="border-radius-5" src="~/imgs/news/thumb-11.jpg" alt="">
                 <figcaption> And far contrary smoked some contrary among stealthy </figcaption>
             </figure>
         </div>
@@ -173,10 +172,9 @@
     </div>
     <!--author box-->
     <div class="author-bio p-30 mt-50 border-radius-10 bg-white">
-        @if (detail.User != null)
-        {
+        @{
             <div class="author-image mb-30">
-                <a href="author.html">
+                <a href="@authorUrl">
                     <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
                 </a>
             </div>
@@ -184,13 +182,13 @@
                 <h4 class="font-weight-bold mb-20">
                     <span class="vcard author">
                         <span class="fn">
-                            <a href="author.html" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
+                            <a href="@authorUrl" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
                         </span>
                     </span>
                 </h4>
                 <h5 class="text-muted">About author</h5>
                 <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
-                <a href="author.html" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
+                <a href="@authorUrl" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
                 <div class="author-social">
                     <ul class="author-social-icons">
                         <li class="author-social-link-facebook">

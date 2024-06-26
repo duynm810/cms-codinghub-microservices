@@ -25,7 +25,6 @@ public class PostGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInSeriesDto>>(cacheKey);
             if (cachedPosts != null)

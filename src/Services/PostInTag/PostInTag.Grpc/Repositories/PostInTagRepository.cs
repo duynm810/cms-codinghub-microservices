@@ -12,4 +12,7 @@ public class PostInTagRepository(PostInTagContext dbContext, IUnitOfWork<PostInT
 {
     public async Task<IEnumerable<Guid>> GetTagIdsByPostId(Guid postId) =>
         await FindByCondition(x => x.PostId == postId).Select(x => x.TagId).ToListAsync();
+
+    public async Task<IEnumerable<Guid>> GetPostIdsInTag(Guid tagId) =>
+        await FindByCondition(x => x.TagId == tagId).Select(x => x.PostId).ToListAsync();
 }

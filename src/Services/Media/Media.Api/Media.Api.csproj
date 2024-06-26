@@ -21,12 +21,14 @@
 
     <ItemGroup>
         <Folder Include="wwwroot\"/>
+        <Folder Include="wwwroot\media\images\posts\24062024\" />
     </ItemGroup>
 
     <ItemGroup>
         <Content Include="..\..\..\..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
+        <Content Remove="wwwroot\media\images\image\062024\wallpaperflare.com_wallpaper.jpg" />
     </ItemGroup>
 
 </Project>

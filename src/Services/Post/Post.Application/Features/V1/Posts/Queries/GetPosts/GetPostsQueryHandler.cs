@@ -1,14 +1,10 @@
-using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Post.Application.Commons.Mappings.Interfaces;
-using Post.Application.Commons.Models;
-using Post.Domain.Entities;
-using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -17,25 +13,23 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPosts;
 
 public class GetPostsQueryHandler(
     IPostRepository postRepository,
-    ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
-    IMappingHelper mappingHelper,
+    IPostService postService,
     ILogger logger)
-    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostModel>>>
+    : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostModel>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostModel>>();
+        var result = new ApiResult<IEnumerable<PostDto>>();
         const string methodName = nameof(GetPostsQuery);
 
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Post.GetAllPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostModel>>(cacheKey, cancellationToken);
+            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
             if (cachedPosts != null)
             {
                 result.Success(cachedPosts);
@@ -48,10 +42,8 @@ public class GetPostsQueryHandler(
             var postList = posts.ToList();
             if (postList.IsNotNullOrEmpty())
             {
-                var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-                var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
-
-                var data = mappingHelper.MapPostsWithCategories(postList, categories);
+                var data = await postService.EnrichPostsWithCategories(postList, cancellationToken);
+                
                 result.Success(data);
 
                 // Save cache (Lưu cache)

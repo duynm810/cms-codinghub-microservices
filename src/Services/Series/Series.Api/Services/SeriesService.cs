@@ -168,7 +168,6 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetAllSeriesKey();
             var cachedSeries = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
@@ -210,7 +209,6 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving series with ID: {SeriesId}", methodName, id);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesByIdKey(id);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)
@@ -261,7 +259,6 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series for page {PageNumber} with page size {PageSize}",
                 methodName, pageNumber, pageSize);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(pageNumber, pageSize);
             var cachedSeries = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
@@ -307,7 +304,6 @@ public class SeriesService(
         {
             logger.Information("BEGIN {MethodName} - Retrieving series with Slug: {SeriesSlug}", methodName, slug);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Series.GetSeriesBySlugKey(slug);
             var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
             if (cachedSeries != null)

@@ -1,15 +1,16 @@
 @model PostsByCategoryViewModel
 @{
-    var posts = Model.Posts;
+    var category = Model.Datas.Category;
+    var posts = Model.Datas.Posts;
 }
 
 <!--archive header-->
 <div class="archive-header pt-50 text-center">
     <div class="container">
-        <h2 class="font-weight-900">@Model.Category.Name</h2>
+        <h2 class="font-weight-900">@category.Name</h2>
         <div class="breadcrumb">
             <a href="/" rel="nofollow">Home</a>
-            <span></span> @Model.Category.Name
+            <span></span> @category.Name
         </div>
         <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     </div>
@@ -22,12 +23,12 @@
             {
                 foreach (var item in posts.Items)
                 {
-                    var categoryUrl = "/category/" + item.CategorySlug;
+                    var categoryUrl = "/category/" + item.Category.Slug;
                     var postUrl = "/post/" + item.Slug;
 
                     <article class="col-lg-4 col-md-6 mb-30">
                         <div class="post-card-1 border-radius-10 hover-up">
-                            <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(../imgs/news/news-3.jpg)">
+                            <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(@item.Thumbnail)">
                                 <a class="img-link" href="@postUrl"></a>
                                 <span class="top-right-icon bg-success">
                                     <i class="elegant-icon icon_camera_alt"></i>
@@ -48,7 +49,7 @@
                             <div class="post-content p-30">
                                 <div class="entry-meta meta-0 font-small mb-10">
                                     <a href="@categoryUrl">
-                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                        <span class="post-cat @item.Category.Color">@item.Category.Name</span>
                                     </a>
                                 </div>
                                 <div class="d-flex post-card-content">
@@ -56,7 +57,7 @@
                                         <a href="@postUrl">@item.Title</a>
                                     </h5>
                                     <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                        <span class="post-on">@item.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                        <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
                                         <span class="time-reading has-dot">12 mins read</span>
                                         <span class="post-by has-dot">@item.ViewCount views</span>
                                     </div>

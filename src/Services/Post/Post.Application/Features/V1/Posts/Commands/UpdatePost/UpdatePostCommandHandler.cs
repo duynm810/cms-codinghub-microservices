@@ -2,13 +2,11 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
-using Post.Application.Commons.Models;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -21,12 +19,12 @@ public class UpdatePostCommandHandler(
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<UpdatePostCommand, ApiResult<PostModel>>
+    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostModel>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostModel>();
-        const string methodName = nameof(Handle);
+        var result = new ApiResult<PostDto>();
+        const string methodName = nameof(UpdatePostCommand);
 
         try
         {
@@ -69,7 +67,7 @@ public class UpdatePostCommandHandler(
 
             await postRepository.UpdatePost(updatePost);
 
-            var data = mapper.Map<PostModel>(updatePost);
+            var data = mapper.Map<PostDto>(updatePost);
             result.Success(data);
 
             // Xóa cache liên quan
@@ -78,7 +76,11 @@ public class UpdatePostCommandHandler(
                 CacheKeyHelper.Post.GetAllPostsKey(),
                 CacheKeyHelper.Post.GetPostByIdKey(request.Id),
                 CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey()
+                CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
+                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
             };
 
             await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

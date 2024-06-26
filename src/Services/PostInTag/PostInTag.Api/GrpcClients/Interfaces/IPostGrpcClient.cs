@@ -1,4 +1,5 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
 
 namespace PostInTag.Api.GrpcClients.Interfaces;

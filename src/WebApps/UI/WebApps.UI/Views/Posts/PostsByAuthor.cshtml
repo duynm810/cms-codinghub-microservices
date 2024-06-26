@@ -1,0 +1,91 @@
+@model PostsByAuthorViewModel
+@{
+    var data = Model.Datas;
+    var authorUrl = "/author/" + data.User.UserName;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <!--author box-->
+            <div class="author-bio mb-50 bg-white p-30 border-radius-10">
+                <div class="author-image mb-30">
+                    <a href="@authorUrl">
+                        <img src="~/imgs/authors/author.jpg" alt="" class="avatar">
+                    </a>
+                </div>
+                <div class="author-info">
+                    <h3 class="font-weight-900">
+                        <span class="vcard author">
+                            <span class="fn">
+                                <a href="@authorUrl" title="Posts by Steven" rel="author">@data.User.FullName</a>
+                            </span>
+                        </span>
+                    </h3>
+                    <h5 class="text-muted">About author</h5>
+                    <div class="author-description text-muted">
+                        You should write because you love the shape of stories and sentences and the creation of different words on a page. Graduating from a top accelerator or incubator can be as career-defining for a startup founder as an
+                        elite university diploma.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="post-module-2">
+                <div class="widget-header-2 position-relative mb-30  wow fadeInUp animated">
+                    <h5 class="mt-5 mb-30">Posted by @data.User.FullName</h5>
+                </div>
+                <div class="loop-list loop-list-style-1">
+                    <div class="row">
+                        @if (data.Posts.Items != null && data.Posts.Items.Count != 0)
+                        {
+                            foreach (var item in data.Posts.Items)
+                            {
+                                var categoryUrl = "/category/" + item.Category.Slug;
+                                var postUrl = "/post/" + item.Slug;
+
+                                <article class="col-md-6 mb-40 wow fadeInUp  animated">
+                                    <div class="post-card-1 border-radius-10 hover-up">
+                                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(@item.Thumbnail)">
+                                            <a class="img-link" href="@postUrl"></a>
+                                        </div>
+                                        <div class="post-content p-30">
+                                            <div class="entry-meta meta-0 font-small mb-10">
+                                                <a href="@categoryUrl">
+                                                    <span class="post-cat text-info">@item.Category.Name</span>
+                                                </a>
+                                            </div>
+                                            <div class="d-flex post-card-content">
+                                                <h5 class="post-title mb-20 font-weight-900">
+                                                    <a href="@postUrl">@item.Title</a>
+                                                </h5>
+                                                <div class="post-excerpt mb-25 font-small text-muted">
+                                                    <p>@item.Summary</p>
+                                                </div>
+                                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                                    <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
+                                                    <span class="time-reading has-dot">12 mins read</span>
+                                                    <span class="post-by has-dot">@item.ViewCount views</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </article>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="pagination-area mb-30 wow fadeInUp animated">
+                @await Component.InvokeAsync("Pager", data.Posts.MetaData)
+            </div>
+        </div>
+        <div class="col-lg-4 primary-sidebar sticky-sidebar">
+            <div class="widget-area">
+                @await Component.InvokeAsync("Sidebar", "Default")
+            </div>
+        </div>
+    </div>
+</div>

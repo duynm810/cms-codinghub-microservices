@@ -13,4 +13,6 @@ public interface IBaseApiClient
     Task<ApiResult<List<T>>> GetListAsync<T>(string url, bool requiredLogin = false);
 
     Task<ApiResult<T>> GetAsync<T>(string url, bool requiredLogin = false);
+
+    Task<HttpClient> CreateClientAsync(bool requiredLogin);
 }

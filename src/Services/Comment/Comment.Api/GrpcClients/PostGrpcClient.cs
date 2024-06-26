@@ -5,6 +5,7 @@ using Grpc.Core;
 using Post.Grpc.Protos;
 using Shared.Constants;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
@@ -17,13 +18,12 @@ public class PostGrpcClient(
     ILogger logger)
     : IPostGrpcClient
 {
-    public async Task<IEnumerable<PostDto>?> GetTop10Posts()
+    public async Task<IEnumerable<PostDto>> GetTop10Posts()
     {
         const string methodName = nameof(GetTop10Posts);
 
         try
         {
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
             var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
             if (cachedPosts != null)

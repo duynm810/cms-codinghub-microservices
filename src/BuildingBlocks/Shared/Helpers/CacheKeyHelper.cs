@@ -55,16 +55,24 @@ public static class CacheKeyHelper
         public static string GetMostCommentPostsKey() => $"{PostServicePrefix}:most_commented";
 
         public static string GetPostByIdKey(Guid postId) => $"{PostServicePrefix}:{postId}";
+        
+        public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
 
         public static string GetPostsByNonStaticPageCategoryKey() => $"{PostServicePrefix}:category:non_static_page";
 
-        public static string GetPostBySlugKey(string slug) => $"{PostServicePrefix}:slug:{slug}";
+        public static string GetDetailBySlugKey(string slug) => $"{PostServicePrefix}:detail:slug:{slug}";
 
         public static string GetLatestPostsPagingKey(int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:latest:page:{pageNumber}:size:{pageSize}";
 
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:category:slug:{categorySlug}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostsByAuthorPagingKey(string userName, int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:author:{userName}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetPostsByCurrentUserPagingKey(Guid userId, int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:current-user:{userId}:page:{pageNumber}:size:{pageSize}";
 
         public static string GetPostsPagingKey(int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:page:{pageNumber}:size:{pageSize}";

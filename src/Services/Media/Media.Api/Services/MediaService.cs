@@ -1,4 +1,5 @@
 using System.Net.Http.Headers;
+using Media.Api.Dtos;
 using Media.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Responses;
@@ -17,33 +18,31 @@ namespace Media.Api.Services;
 public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings mediaSettings, ILogger logger)
     : IMediaService
 {
-    public async Task<ApiResult<string>> UploadImage(IFormFile? file, string type)
+    public async Task<ApiResult<string>> UploadImage(SingleFileDto request)
     {
         var result = new ApiResult<string>();
         const string methodName = nameof(UploadImage);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, type);
+            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, request.Type);
 
             // Check file is empty (Kiểm tra tập tin rỗng)
-            if (file == null || file.Length == 0)
+            if (request.File == null || request.File.Length == 0)
             {
                 logger.Warning("Upload attempt with empty file.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileIsEmpty);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to empty file.", methodName);
                 return result;
             }
 
             // Extract and validate filename (Xác thực tên tập tin)
-            var filename = ContentDispositionHeaderValue.Parse(file.ContentDisposition).FileName?.Trim('"');
+            var filename = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName?.Trim('"');
             if (string.IsNullOrEmpty(filename))
             {
                 logger.Warning("Filename is empty after parsing.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileNameCannotBeEmpty);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to empty filename.", methodName);
                 return result;
             }
 
@@ -54,38 +53,42 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 logger.Warning("File extension {FileExtension} is not allowed.", fileExtension);
                 result.Messages.Add(ErrorMessagesConsts.Media.InvalidFileTypeOrName);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                logger.Information("END {MethodName} - Failed to upload due to invalid file extension.", methodName);
                 return result;
             }
 
             var now = DateTime.Now;
-            var baseImageFolder = mediaSettings.ImageFolder ?? "DefaultImagePath";
-            var imageFolder = Path.Combine(baseImageFolder, "images", type, now.ToString("MMyyyy"));
+            var baseImageFolder = mediaSettings.ImageFolder;
+            var imageFolder = Path.Combine(baseImageFolder, "images", request.Type ?? "unkown", now.ToString("ddMMyyyy"));
 
-            if (string.IsNullOrWhiteSpace(hostEnvironment.WebRootPath))
+            // Ensure wwwroot folder exists
+            var wwwrootPath = hostEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(wwwrootPath))
             {
-                hostEnvironment.WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                Utils.EnsureDirectoryExists(wwwrootPath);
+                logger.Information("wwwroot path set to: {wwwrootPath}", wwwrootPath);
             }
+            else
+            {
+                logger.Information("Using provided wwwroot path: {wwwrootPath}", wwwrootPath);
+            }
+            
+            // Ensure base image folder exists
+            var baseFolderPath = Path.Combine(wwwrootPath, baseImageFolder);
+            Utils.EnsureDirectoryExists(baseFolderPath);
+            logger.Information("Base image folder path: {baseFolderPath}", baseFolderPath);
 
-            if (string.IsNullOrEmpty(filename))
-            {
-                result.Messages.Add(ErrorMessagesConsts.Media.FileNameCannotBeEmpty);
-                result.Failure(StatusCodes.Status404NotFound, result.Messages);
-                return result;
-            }
-
-            var folderPath = Path.Combine(hostEnvironment.WebRootPath, imageFolder);
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
+            var folderPath = Path.Combine(wwwrootPath, imageFolder);
+            Utils.EnsureDirectoryExists(folderPath);
+            logger.Information("Specific image folder path: {folderPath}", folderPath);
 
             var filePath = Path.Combine(folderPath, filename);
+            logger.Information("Full file path: {filePath}", filePath);
 
             try
             {
                 // Process the image (Xử lý hình ảnh)
-                await ProcessImage(file, filePath, fileExtension);
+                await ProcessImage(request.File, filePath, fileExtension);
                 logger.Information("Image processed and saved successfully.");
 
                 var data = Path.Combine(imageFolder, filename).Replace("\\", "/");
@@ -110,6 +113,59 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
         return result;
     }
 
+    public ApiResult<bool> DeleteImage(string imagePath)
+    {
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(DeleteImage);
+        
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Deleting image at path: {ImagePath}", methodName, imagePath);
+
+            // Ensure wwwroot folder exists
+            var wwwrootPath = hostEnvironment.WebRootPath;
+            if (string.IsNullOrWhiteSpace(wwwrootPath))
+            {
+                wwwrootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
+                Utils.EnsureDirectoryExists(wwwrootPath);
+                logger.Information("wwwroot path set to: {wwwrootPath}", wwwrootPath);
+            }
+            else
+            {
+                logger.Information("Using provided wwwroot path: {wwwrootPath}", wwwrootPath);
+            }
+            
+            // Decode the URL-encoded path
+            var decodedImagePath = Uri.UnescapeDataString(imagePath);
+            logger.Information("Decoded imagePath: {DecodedImagePath}", decodedImagePath);
+
+            var fullPath = Path.Combine(wwwrootPath, decodedImagePath);
+            logger.Information("Computed fullPath: {FullPath}", fullPath);
+            
+            if (!File.Exists(fullPath))
+            {
+                logger.Warning("Image not found at path: {ImagePath}", fullPath);
+                result.Messages.Add("Image not found.");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+            
+            File.Delete(fullPath);
+            logger.Information("Image successfully deleted at path: {ImagePath}", fullPath);
+
+            result.Success(true);
+            logger.Information("END {MethodName} - Image deleted successfully.", methodName);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     #region HELPERS
 
     /// <summary>
@@ -119,9 +175,8 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
     /// <returns></returns>
     private bool IsAllowedFileType(string fileExtension)
     {
-        var allowImageTypes = mediaSettings.AllowImageFileTypes?.Split(",");
-        return allowImageTypes != null &&
-               allowImageTypes.Any(ext => fileExtension.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
+        var allowImageTypes = mediaSettings.AllowImageFileTypes.Split(",");
+        return allowImageTypes.Any(ext => fileExtension.EndsWith(ext, StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
@@ -189,7 +244,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
     }
 
     /// <summary>
-    /// Helper method to calculate the corresponding height for a given width to maintain aspect ratio
+    /// Helper method to calculate the corresponding height for a given width to maintain aspect ratio (Phương pháp trợ giúp để tính chiều cao tương ứng cho chiều rộng nhất định để duy trì tỷ lệ khung hình)
     /// </summary>
     /// <param name="image"></param>
     /// <param name="width"></param>

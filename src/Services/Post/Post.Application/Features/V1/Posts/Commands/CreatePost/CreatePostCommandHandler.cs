@@ -2,7 +2,6 @@ using AutoMapper;
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
@@ -29,7 +28,7 @@ public class CreatePostCommandHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating post with name: {Name}", methodName, request.Name);
+            logger.Information("BEGIN {MethodName} - Creating post with title: {Title}", methodName, request.Title);
 
             // Check slug exists
             var slugExists = await postRepository.SlugExists(request.Slug);
@@ -66,7 +65,11 @@ public class CreatePostCommandHandler(
                 CacheKeyHelper.Post.GetAllPostsKey(),
                 CacheKeyHelper.Post.GetPostByIdKey(id),
                 CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey()
+                CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
+                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
             };
 
             await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

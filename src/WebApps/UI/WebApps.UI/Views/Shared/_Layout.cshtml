@@ -1,6 +1,4 @@
-﻿@model BaseViewModel
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
     <meta charset="utf-8">
@@ -25,6 +23,12 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     
+    <!-- Notyf -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/spinkit/2.0.0/spinkit.min.css">
+    
+    <!-- Spinkit -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    
 </head>
 <body class="theme-mode">
 <div class="scroll-progress primary-bg"></div>
@@ -32,6 +36,7 @@
 <div class="preloader text-center">
     <div class="circle"></div>
 </div>
+
 <!--Off canvas sidebar-->
 <aside id="sidebar-wrapper" class="custom-scrollbar offcanvas-sidebar">
     @await Component.InvokeAsync("Canvas", "Default")
@@ -48,18 +53,13 @@
 </div>
 
 <!-- Start Main content -->
-<main class="@Model.MainClass">
+<main>
     @RenderBody()
 </main>
 <!-- End Main content -->
 
 <!--site-bottom-->
-@if (Model.ShowSiteBottom)
-{
-    <div class="site-bottom pt-50 pb-50">
-        @await Component.InvokeAsync("Bottom", "Default")
-    </div>
-}
+@* @await Component.InvokeAsync("Bottom", "Default") *@
 <!--end site-bottom-->
 
 <!-- Footer Start-->
@@ -97,6 +97,14 @@
 
 <!-- Font Awesome -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
+
+<!-- Notyf -->
+<script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+<script src="~/js/notyf.js"></script>
+
+<!-- Slugify -->
+<script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
+<script src="~/js/slugify-config.js"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>

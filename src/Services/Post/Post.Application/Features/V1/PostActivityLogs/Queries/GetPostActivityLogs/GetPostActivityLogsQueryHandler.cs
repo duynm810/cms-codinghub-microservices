@@ -1,9 +1,9 @@
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Post.Application.Commons.Models;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Dtos.PostActivity;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -13,12 +13,12 @@ public class GetPostActivityLogsQueryHandler(
     IPostActivityLogRepository postActivityLogRepository,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<GetPostActivityLogsQuery, ApiResult<IEnumerable<PostActivityLogModel>>>
+    : IRequestHandler<GetPostActivityLogsQuery, ApiResult<IEnumerable<PostActivityLogDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostActivityLogModel>>> Handle(GetPostActivityLogsQuery request,
+    public async Task<ApiResult<IEnumerable<PostActivityLogDto>>> Handle(GetPostActivityLogsQuery request,
         CancellationToken cancellationToken)
     {
-        var result = new ApiResult<IEnumerable<PostActivityLogModel>>();
+        var result = new ApiResult<IEnumerable<PostActivityLogDto>>();
         const string methodName = nameof(Handle);
 
         try
@@ -27,7 +27,7 @@ public class GetPostActivityLogsQueryHandler(
                 request.PostId);
 
             var postActivityLogs = await postActivityLogRepository.GetActivityLogs(request.PostId);
-            var data = mapper.Map<List<PostActivityLogModel>>(postActivityLogs);
+            var data = mapper.Map<List<PostActivityLogDto>>(postActivityLogs);
             result.Success(data);
 
             logger.Information(

@@ -1,6 +1,14 @@
-using System.Reflection;
 using AutoMapper;
-using Post.Application.Commons.Mappings.Interfaces;
+using Post.Application.Features.V1.Posts.Commands.CreatePost;
+using Post.Application.Features.V1.Posts.Commands.UpdatePost;
+using Post.Application.Features.V1.Posts.Commands.UpdateThumbnail;
+using Post.Application.Features.V1.Posts.Commons;
+using Post.Domain.Entities;
+using Shared.Dtos.Category;
+using Shared.Dtos.Post.Commands;
+using Shared.Dtos.Post.Queries;
+using Shared.Dtos.PostActivity;
+using Shared.Extensions;
 
 namespace Post.Application.Commons.Mappings;
 
@@ -8,50 +16,49 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        ConfigurePostActivityLogMappings();
+        ConfigureCategoryGrpcMappings();
+        ConfigurePostMappings();
     }
 
-    private void ApplyMappingsFromAssembly(Assembly assembly)
+    private void ConfigurePostActivityLogMappings()
     {
-        var mapFromType = typeof(IMapFrom<>);
+        CreateMap<PostActivityLog, PostActivityLogDto>();
+    }
 
-        const string mappingMethodName = nameof(IMapFrom<object>.Mapping);
+    private void ConfigureCategoryGrpcMappings()
+    {
+        CreateMap<CategoryDto, CategoryDto>();
+        CreateMap<CategoryDto, PostDto>()
+            .ForMember(dest => dest.Category,
+                opt => opt.MapFrom(src => src))
+            .ReverseMap();
+    }
 
-        bool HasInterface(Type t)
-        {
-            return t.IsGenericType
-                   && t.GetGenericTypeDefinition() == mapFromType;
-        }
+    private void ConfigurePostMappings()
+    {
+        #region Get
 
-        var types = assembly.GetExportedTypes()
-            .Where(t => t.GetInterfaces()
-                .Any(HasInterface)).ToList();
+        CreateMap<PostBase, PostDto>();
 
-        var argumentTypes = new[] { typeof(Profile) };
+        #endregion
 
-        foreach (var type in types)
-        {
-            var instance = Activator.CreateInstance(type);
+        #region Create
 
-            var methodInfo = type.GetMethod(mappingMethodName);
+        CreateMap<CreatePostDto, CreatePostCommand>();
+        CreateMap<CreatePostCommand, PostBase>()
+            .ForMember(dest => dest.AuthorUserId,
+                opt => opt.MapFrom(src => src.AuthorUserId));
+        CreateMap<CreateOrUpdateCommand, PostBase>();
 
-            if (methodInfo != null)
-            {
-                methodInfo.Invoke(instance, new object[] { this });
-            }
-            else
-            {
-                var interfaces = type.GetInterfaces()
-                    .Where(HasInterface).ToList();
+        #endregion
 
-                if (interfaces.Count <= 0) continue;
+        #region Update
 
-                foreach (var interfaceMethodInfo in interfaces.Select(@interface =>
-                             @interface.GetMethod(mappingMethodName, argumentTypes)))
-                {
-                    interfaceMethodInfo?.Invoke(instance, new object[] { this });
-                }
-            }
-        }
+        CreateMap<UpdatePostDto, UpdatePostCommand>().IgnoreAllNonExisting();
+        CreateMap<UpdateThumbnailDto, UpdateThumbnailCommand>().IgnoreAllNonExisting();
+        CreateMap<UpdatePostCommand, PostBase>();
+
+        #endregion
     }
 }

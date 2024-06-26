@@ -92,9 +92,7 @@ public class UserService(IUserRepository userRepository, IMapper mapper, ILogger
                 }
                 catch (Exception e)
                 {
-                    logger.Error(e,
-                        "{MethodName} - Error occurred while getting user info for ID: {UserId}. Message: {ErrorMessage}",
-                        methodName, userId, e.Message);
+                    logger.Error(e, "{MethodName} - Error occurred while getting user info for ID: {UserId}. Message: {ErrorMessage}", methodName, userId, e.Message);
                 }
             }
 
@@ -109,6 +107,45 @@ public class UserService(IUserRepository userRepository, IMapper mapper, ILogger
         {
             logger.Error(e, "{MethodName}. Error occurred while getting user info by IDs. Message: {ErrorMessage}", methodName, e.Message);
             throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting users by IDs"));
+        }
+    }
+
+    public override async Task<UserResponse?> GetUserInfoByUserName(UserNameRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetUserInfoByUserName);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Getting user info by username: {UserName}", methodName, request.UserName);
+
+            if (string.IsNullOrWhiteSpace(request.UserName))
+            {
+                logger.Warning("{MethodName} - UserName is null or empty: {UserName}", methodName, request.UserName);
+                throw new RpcException(new Status(StatusCode.InvalidArgument, "UserName cannot be null or empty"));
+            }
+
+            var user = await userRepository.GetUserByUserName(request.UserName);
+            if (user == null)
+            {
+                logger.Warning("{MethodName} - User not found for username: {UserName}", methodName, request.UserName);
+                throw new RpcException(new Status(StatusCode.NotFound, "User not found"));
+            }
+
+            var data = mapper.Map<UserResponse>(user);
+
+            logger.Information("END {MethodName} - Success: Retrieved User {UserName}", methodName, data.Id);
+
+            return data;
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}. gRPC error occurred while getting user info by username: {UserName}. Message: {ErrorMessage}", methodName, request.UserName, rpcEx.Message);
+            throw;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}. Error occurred while getting user info by username: {UserName}. Message: {ErrorMessage}", methodName, request.UserName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, "An error occurred while getting user by username"));
         }
     }
 }

@@ -1,3 +1,4 @@
+@using MongoDB.Driver.Linq
 @model HomeViewModel
 
 @{
@@ -43,11 +44,11 @@
                     {
                         foreach (var item in pinnedPosts)
                         {
-                            var categoryUrl = "/category/" + item.CategorySlug;
+                            var categoryUrl = "/category/" + item.Category.Slug;
                             var postUrl = "/post/" + item.Slug;
 
                             <div class="position-relative post-thumb">
-                                <div class="thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-4.jpg)">
+                                <div class="thumb-overlay img-hover-slide position-relative" thumbnail="@item.Thumbnail">
                                     <a class="img-link" href="@postUrl"></a>
                                     <span class="top-left-icon bg-warning">
                                         <i class="elegant-icon icon_star_alt"></i>
@@ -55,7 +56,7 @@
                                     <div class="post-content-overlay text-white ml-30 mr-30 pb-30">
                                         <div class="entry-meta meta-0 font-small mb-20">
                                             <a href="@categoryUrl">
-                                                <span class="post-cat @item.CategoryColor text-uppercase">@item.CategoryName</span>
+                                                <span class="post-cat @item.Category.Color text-uppercase">@item.Category.Name</span>
                                             </a>
                                         </div>
                                         <h3 class="post-title font-weight-900 mb-20">
@@ -77,12 +78,12 @@
         {
             foreach (var item in featuredPosts)
             {
-                var categoryUrl = "/category/" + item.CategorySlug;
+                var categoryUrl = "/category/" + item.Category.Slug;
                 var postUrl = "/post/" + item.Slug;
 
                 <article class="col-lg-4 col-md-6 mb-30">
                     <div class="post-card-1 border-radius-10 hover-up">
-                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(./imgs/news/news-1.jpg)">
+                        <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(@item.Thumbnail)">
                             <a class="img-link" href="@postUrl"></a>
                             <span class="top-right-icon bg-success">
                                 <i class="elegant-icon icon_camera_alt"></i>
@@ -103,7 +104,7 @@
                         <div class="post-content p-30">
                             <div class="entry-meta meta-0 font-small mb-10">
                                 <a href="@categoryUrl">
-                                    <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                    <span class="post-cat @item.Category.Color">@item.Category.Name</span>
                                 </a>
                             </div>
                             <div class="d-flex post-card-content">
@@ -111,7 +112,7 @@
                                     <a href="@postUrl">@item.Title</a>
                                 </h5>
                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                    <span class="post-on">@item.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                    <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
                                     <span class="time-reading has-dot">12 mins read</span>
                                     <span class="post-by has-dot">@item.ViewCount views</span>
                                 </div>

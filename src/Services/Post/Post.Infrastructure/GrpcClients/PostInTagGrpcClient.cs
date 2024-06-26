@@ -41,4 +41,36 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
         }
     }
 
+    public async Task<IEnumerable<Guid>> GetPostIdsInTagAsync(Guid tagId)
+    {
+        const string methodName = nameof(GetPostIdsInTagAsync);
+        
+        try
+        {
+            var request = new GetPostIdsInTagRequest
+            {
+                TagId = tagId.ToString()
+            };
+
+            var result = await postInTagServiceClient.GetPostIdsInTagAsync(request);
+            if (result == null || result.PostIds.Count == 0)
+            {
+                logger.Warning("{MethodName}: No posts found for tag id {Id}", methodName, tagId);
+                return Enumerable.Empty<Guid>();
+            }
+
+            var postIds = result.PostIds.Select(Guid.Parse);
+            return postIds;
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting posts by tag id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, tagId, rpcEx.StatusCode, rpcEx.Message);
+            return Enumerable.Empty<Guid>();
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting posts by tag id {Id}. Message: {ErrorMessage}", methodName, tagId, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+        }
+    }
 }

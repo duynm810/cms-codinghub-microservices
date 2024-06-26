@@ -17,7 +17,7 @@ namespace Identity.Infrastructure.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.5")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -151,15 +151,27 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "9767ea34-f5b9-467a-aa9c-ac6db1555da7",
+                            Id = "e0723160-46ec-42c9-ac13-c2ffe58fb2bc",
                             Name = "Administrator",
-                            NormalizedName = "ADMINISTRATOR"
+                            NormalizedName = "Administrator"
                         },
                         new
                         {
-                            Id = "fd819cb9-5b7c-44df-a422-3549860ada11",
-                            Name = "Member",
-                            NormalizedName = "MEMBER"
+                            Id = "8a65fd85-b18a-4d7b-b10b-ae1c54cc6d93",
+                            Name = "Author",
+                            NormalizedName = "Author"
+                        },
+                        new
+                        {
+                            Id = "dfddf5cc-41d4-43bd-8168-fbc0359c6f2f",
+                            Name = "Reader",
+                            NormalizedName = "Reader"
+                        },
+                        new
+                        {
+                            Id = "e831886b-4325-472f-9d13-3d9285f31e5e",
+                            Name = "Subscriber ",
+                            NormalizedName = "Subscriber "
                         });
                 });
 

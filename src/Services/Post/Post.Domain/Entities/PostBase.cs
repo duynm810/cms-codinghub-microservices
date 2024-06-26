@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Contracts.Domains;
@@ -57,16 +58,19 @@ public class PostBase : EntityAuditBase<Guid>
     /// <summary>
     /// Số lượt xem bài viết
     /// </summary>
+    [DefaultValue(0)]
     public int ViewCount { get; set; }
 
     /// <summary>
     /// Số lượng bình luận bài viết
     /// </summary>
+    [DefaultValue(0)]
     public int CommentCount { get; set; }
 
     /// <summary>
     /// Số lượt thích bài viết
     /// </summary>
+    [DefaultValue(0)]
     public int LikeCount { get; set; }
 
     /// <summary>

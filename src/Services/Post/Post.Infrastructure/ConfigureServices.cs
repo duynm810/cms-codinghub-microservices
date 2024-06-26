@@ -96,7 +96,8 @@ public static class ConfigureServices
             .AddScoped<IIdentityGrpcClient, IdentityGrpcClient>()
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
-            .AddScoped<ICacheService, CacheService>();
+            .AddScoped<ICacheService, CacheService>()
+            .AddScoped<IPostService, PostService>();
     }
 
     private static void AddGrpcServices(this IServiceCollection services)

@@ -24,7 +24,6 @@ public class TagGrpcClient(
         {
             var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(slug);
 
-            // Kiểm tra cache
             var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
             if (cachedTag != null)
             {
@@ -69,7 +68,6 @@ public class TagGrpcClient(
 
         try
         {
-            // Kiểm tra cache
             var cacheKey = CacheKeyHelper.TagGrpc.GetAllTagsKey();
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)

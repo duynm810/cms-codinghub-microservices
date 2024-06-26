@@ -12,10 +12,4 @@ public interface IPostInTagRepository : IRepositoryCommandBase<PostInTagBase, Gu
     Task DeletePostToTag(PostInTagBase postInTagBase);
 
     #endregion
-
-    #region OTHERS
-
-    Task<IEnumerable<Guid>?> GetPostIdsInTag(Guid tagId);
-
-    #endregion
 }

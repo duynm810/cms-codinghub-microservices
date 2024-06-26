@@ -142,7 +142,7 @@ public class BaseApiClient(
 
     #region HELPERS
 
-    private async Task<HttpClient> CreateClientAsync(bool requiredLogin)
+    public async Task<HttpClient> CreateClientAsync(bool requiredLogin)
     {
         if (string.IsNullOrEmpty(apiSettings.ServerUrl))
         {

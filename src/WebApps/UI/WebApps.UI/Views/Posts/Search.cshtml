@@ -23,14 +23,14 @@
                         {
                             foreach (var item in posts.Items)
                             {
-                                var categoryUrl = "/category/" + item.CategorySlug;
+                                var categoryUrl = "/category/" + item.Category.Slug;
                                 var postUrl = "/post/" + item.Slug;
 
                                 <article class="hover-up-2 transition-normal">
                                     <div class="row mb-40 list-style-2">
                                         <div class="col-md-4">
                                             <div class="post-thumb position-relative border-radius-5">
-                                                <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(./imgs/news/news-13.jpg)">
+                                                <div class="img-hover-slide border-radius-5 position-relative" thumbnail="@item.Thumbnail">
                                                     <a class="img-link" href="@postUrl"></a>
                                                 </div>
                                                 <ul class="social-share">
@@ -51,7 +51,7 @@
                                             <div class="post-content">
                                                 <div class="entry-meta meta-0 font-small mb-10">
                                                     <a href="@categoryUrl">
-                                                        <span class="post-cat @item.CategoryColor">@item.CategoryName</span>
+                                                        <span class="post-cat @item.Category.Color">@item.Category.Name</span>
                                                     </a>
                                                 </div>
                                                 <h5 class="post-title font-weight-900 mb-20">
@@ -61,7 +61,7 @@
                                                     </span>
                                                 </h5>
                                                 <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                                    <span class="post-on">@item.PublishedDate.ToString("dd MMMM", CultureInfo.InvariantCulture)</span>
+                                                    <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
                                                     <span class="time-reading has-dot">11 mins read</span>
                                                     <span class="post-by has-dot">@item.ViewCount views</span>
                                                 </div>

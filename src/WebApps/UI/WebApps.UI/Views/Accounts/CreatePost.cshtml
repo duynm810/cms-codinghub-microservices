@@ -1,0 +1,138 @@
+@model CreatePostViewModel
+@{
+    Layout = "_Layout";
+    var categories = Model.Categories;
+}
+
+@section scripts {
+    <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
+    <script>
+
+        // Initialize the accountsController
+        const controller = new accountsController('frm-create-post');
+        controller.initialize();
+        
+        async function validateForm() {
+            let form = document.getElementById('frm-create-post');
+            let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+            let valid = true;
+            
+            for (let i = 0; i < inputs.length; i++) {
+                let input = inputs[i];
+                if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
+                    this.showErrorNotification('Please fill out the ' + input.name + ' field.');
+                    valid = false;
+                    break; // Dừng lại sau khi tìm thấy trường không được nhập
+                }
+            }
+            
+            if (valid) {
+                if (document.getElementById('thumbnailUrl').value) {
+                    await controller.waitForUploadCompletion();
+                }
+                form.submit();
+            }
+        }
+    </script>
+}
+
+<div class="container single-content">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            New posts
+        </h1>
+        <div class="breadcrumb">
+            <a asp-action="ManagePosts" asp-controller="Accounts" rel="nofollow">Manage posts</a>
+            <span></span> New posts
+        </div>
+    </div>
+    <div class="bt-1 border-color-1 mt-30 mb-50"></div>
+    <form method="post" enctype="multipart/form-data" id="frm-create-post" novalidate asp-controller="Accounts" asp-action="CreatePost">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <select class="dropdown-custom" name="CategoryId" id="category" required>
+                        <option value="" disabled selected>Select category</option>
+                        @foreach (var category in categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" class="form-control" required name="Title" id="title" placeholder="Title">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="form-group">
+                    <input type="text" class="form-control" required name="Slug" id="slug" placeholder="Slug (SEO)">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6"></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div id="upload-section" class="upload-container">
+                    <label for="thumbnail" class="custom-file-upload" style="width: 100%;">
+                        <input type="file" id="thumbnail" name="thumbnail" style="display:none;">
+                        <div id="drop-area" class="drop-area">
+                            <div class="drop-area-icon">
+                                <i class="fas fa-cloud-upload-alt fa-2x mb-2"></i>
+                            </div>
+                            <div class="drop-area-text">Drag and drop file here</div>
+                        </div>
+                    </label>
+                    <div id="file-list" class="file-list"></div>
+
+                    <!-- Spinner -->
+                    <div id="spinner" class="spinner">
+                        <div class="rect1"></div>
+                        <div class="rect2"></div>
+                        <div class="rect3"></div>
+                        <div class="rect4"></div>
+                        <div class="rect5"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" name="Thumbnail" id="thumbnailUrl">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -99,5 +99,6 @@ public static class ErrorMessagesConsts
         public const string FileIsEmpty = "The file is empty";
         public const string InvalidFileTypeOrName = "Invalid file type or name";
         public const string FileNameCannotBeEmpty = "Filename cannot be null or empty";
+        public const string ImageUploadFailed = "Image upload failed with status code: {0}, error: {1}";
     }
 }

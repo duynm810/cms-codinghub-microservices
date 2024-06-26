@@ -1,11 +1,12 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Queries;
 using Shared.Dtos.Series;
 using Shared.Dtos.Tag;
 using Shared.Responses;
 
 namespace WebApps.UI.Models.Commons;
 
-public class HomeViewModel : BaseViewModel
+public class HomeViewModel
 {
     public IEnumerable<PostDto> FeaturedPosts { get; set; } = default!;
 

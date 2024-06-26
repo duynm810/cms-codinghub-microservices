@@ -79,6 +79,40 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return response;
     }
+    
+    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId,
+        int pageNumber = 1, int pageSize = 10)
+    {
+        var query = FindByCondition(x => x.AuthorUserId == authorId && x.Status == PostStatusEnum.Published)
+            .OrderByDescending(x => x.PublishedDate);
+
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+
+        var response = new PagedResponse<PostBase>
+        {
+            Items = items,
+            MetaData = items.GetMetaData()
+        };
+
+        return response;
+    }
+
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber = 1,
+        int pageSize = 10)
+    {
+        var query = FindByCondition(x => x.AuthorUserId == currentUserId)
+            .OrderByDescending(x => x.CreatedDate);
+
+        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+
+        var response = new PagedResponse<PostBase>
+        {
+            Items = items,
+            MetaData = items.GetMetaData()
+        };
+
+        return response;
+    }
 
     public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
     {

@@ -1,0 +1,103 @@
+@model ManagePostsViewModel
+@{
+    var posts = Model.Posts;
+}
+
+@section Scripts {
+    <script>
+        function updatePost(button) {
+            let slug = button.getAttribute('data-slug');
+            let urlTemplate = button.getAttribute('data-url');
+            let url = urlTemplate.replace('__slug__', encodeURIComponent(slug));
+
+            console.log("Slug:", slug); // Log để kiểm tra giá trị slug
+            console.log("URL Template:", urlTemplate); // Log để kiểm tra giá trị URL template
+            console.log("URL:", url); // Log để kiểm tra URL cuối cùng
+
+            window.location.href = url;
+        }
+    </script>
+}
+
+
+<div class="container single-content">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            Manage posts
+        </h1>
+    </div>
+    <div class="row mb-3">
+        <div class="col-md-12 text-right-custom">
+            <button class="btn btn-primary btn-block" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
+                <i class="fa fa-edit"></i> Create new post
+            </button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="table-wrap">
+                <table class="table table-responsive-xl">
+                    <thead>
+                    <tr>
+                        <th>&nbsp;</th>
+                        <th>Category</th>
+                        <th>Title</th>
+                        <th>Created date</th>
+                        <th>Views</th>
+                        <th>Status</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (posts.Items != null && posts.Items.Count != 0)
+                    {
+                        foreach (var item in posts.Items)
+                        {
+                            var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
+                            
+                            <tr class="alert" role="alert">
+                                <td>
+                                    <label class="checkbox-wrap checkbox-primary">
+                                        <input type="checkbox">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </td>
+                                <td>@item.Category.Name</td>
+                                <td>@item.Title</td>
+                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+                                <td>@item.ViewCount.ToString("N0")</td>
+                                <td class="status">
+                                    <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
+                                </td>
+                                <td>
+                                    <div class="button-container">
+                                        <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
+                                            <span aria-hidden="true">
+                                                <i class="fa fa-pencil"></i>
+                                            </span>
+                                        </button>
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">
+                                                <i class="fa fa-close"></i>
+                                            </span>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <div class="pagination-area mb-30">
+                                @await Component.InvokeAsync("Pager", posts.MetaData)
+                            </div>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

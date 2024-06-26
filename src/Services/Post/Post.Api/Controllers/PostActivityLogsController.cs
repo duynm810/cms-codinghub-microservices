@@ -1,7 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Post.Application.Commons.Models;
 using Post.Application.Features.V1.PostActivityLogs.Queries.GetPostActivityLogs;
+using Shared.Dtos.Post;
+using Shared.Dtos.PostActivity;
 
 namespace Post.Api.Controllers;
 
@@ -10,7 +11,7 @@ namespace Post.Api.Controllers;
 public class PostActivityLogsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{postId:guid}")]
-    public async Task<ActionResult<List<PostActivityLogModel>>> GetActivityLogs(Guid postId)
+    public async Task<ActionResult<List<PostActivityLogDto>>> GetActivityLogs(Guid postId)
     {
         var query = new GetPostActivityLogsQuery(postId);
         var result = await mediator.Send(query);

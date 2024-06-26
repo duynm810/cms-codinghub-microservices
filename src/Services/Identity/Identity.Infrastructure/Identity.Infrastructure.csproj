@@ -24,4 +24,8 @@
         <ProjectReference Include="..\..\..\BuildingBlocks\Shared\Shared.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Persistence\Migrations\" />
+    </ItemGroup>
+
 </Project>

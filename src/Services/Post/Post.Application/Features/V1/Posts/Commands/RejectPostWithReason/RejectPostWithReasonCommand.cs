@@ -1,5 +1,6 @@
 using MediatR;
 using Shared.Dtos.Post;
+using Shared.Dtos.Post.Commands;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;

@@ -157,7 +157,6 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         {
             logger.Information("BEGIN {MethodName} - Retrieving all tags", methodName);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Tag.GetAllTagsKey();
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)
@@ -199,7 +198,6 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         {
             logger.Information("BEGIN {MethodName} - Retrieving tag with ID: {TagId}", methodName, id);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Tag.GetTagByIdKey(id);
             var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
             if (cachedTag != null)
@@ -250,7 +248,6 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         {
             logger.Information("BEGIN {MethodName} - Retrieving tag with slug: {TagSlug}", methodName, slug);
 
-            // Check existed cache (Kiểm tra cache)
             var cacheKey = CacheKeyHelper.Tag.GetTagBySlugKey(slug);
             var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
             if (cachedTag != null)
