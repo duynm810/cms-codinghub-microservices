@@ -6,6 +6,7 @@
 
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
+    <script src="~/js/quill.js" asp-append-version="true"></script>
     <script>
 
         // Initialize the accountsController
@@ -30,6 +31,9 @@
                 if (document.getElementById('thumbnailUrl').value) {
                     await controller.waitForUploadCompletion();
                 }
+
+                document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
+                
                 form.submit();
             }
         }
@@ -83,7 +87,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <div id="editor"></div>
+                    <div id="editor" data-content=""></div>
+                    <input type="hidden" name="Content" id="content">
                 </div>
             </div>
         </div>

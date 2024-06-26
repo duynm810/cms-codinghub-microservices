@@ -7,7 +7,8 @@
 
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
-
+    <script src="~/js/quill.js" asp-append-version="true"></script>
+    
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>
     <script>
@@ -15,7 +16,7 @@
         const controller = new accountsController('frm-update-post');
         controller.initialize();
         controller.checkRequiredFields();
-        
+
         const thumbnailUrl = document.getElementById("thumbnailUrl").value;
 
         // Display uploaded images when loading the update page (Hiển thị hình ảnh đã upload khi tải trang cập nhật)
@@ -86,6 +87,10 @@
 
         async function submitUpdatePostForm() {
             const form = document.getElementById('frm-update-post');
+
+            const content = quill.root.innerHTML;
+            document.querySelector('input[name="Content"]').value = content;
+
             const formData = new FormData(form);
 
             const postId = document.getElementById('postId').value;
@@ -94,7 +99,7 @@
             const data = {
                 Title: formData.get('Title'),
                 Slug: formData.get('Slug'),
-                Content: formData.get('Content'),
+                Content: content,
                 Summary: formData.get('Summary'),
                 Thumbnail: formData.get('Thumbnail'),
                 SeoDescription: formData.get('SeoDescription'),
@@ -197,7 +202,8 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6">@post.Content</textarea>
+                    <div id="editor" data-content='@Html.Raw(post.Content)'></div>
+                    <input type="hidden" name="Content" id="content">
                 </div>
             </div>
         </div>

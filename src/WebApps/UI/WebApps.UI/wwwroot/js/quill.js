@@ -3,7 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
         // Apply nice-select to all select elements, except elements with class 'ql-header'
         $('select').not('.ql-header').niceSelect();
 
-        // Sau khi khởi tạo Quill, loại bỏ nice-select trên các phần tử của Quill
         const toolbarOptions = [
             [{'header': [1, 2, 3, false]}],
             ['bold', 'italic', 'underline'],
@@ -13,19 +12,18 @@ document.addEventListener('DOMContentLoaded', function () {
             ['clean']
         ];
 
-        const quill = new Quill('#editor', {
+        // Declare global quill variable
+        window.quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
                 toolbar: toolbarOptions
             }
         });
 
-        // Listen for form submission to copy content from Quill to textarea
-        document.querySelector('form').onsubmit = function () {
-            document.querySelector('textarea[name="Content"]').value = quill.root.innerHTML;
-        };
+        const contentFromServer = document.getElementById('editor').getAttribute('data-content');
+        quill.root.innerHTML = contentFromServer || '';
 
-        // Loại bỏ nice-select khỏi các phần tử của Quill
+        // Remove nice-select from Quill elements
         $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
     });
 });
