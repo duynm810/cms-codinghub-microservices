@@ -11,9 +11,15 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Fetch các tags hiện có từ server bằng jQuery $.get
-    $.get('/tags/suggest', { count: 10 }, function (tags) {
-        tagify.settings.whitelist = tags;
-        tagify.dropdown.show(); // Show the suggestions dropdown
+    $.get('/tags/suggest', { count: 10 }, function (response) {
+        if (response && response.data && response.data.length > 0) {
+            const tags = [];
+            $.each(response.data, function (index, item) {
+                tags.push(item.name);
+            });
+            tagify.settings.whitelist = tags;
+            tagify.dropdown.show(); // Show the suggestions dropdown
+        }
     });
 
     // Xử lý sự kiện thêm tag mới

@@ -96,29 +96,6 @@ public static class RouteMap
             new { controller = "About", action = "Index" });
 
         #endregion
-        
-        #region Media
-
-        app.MapControllerRoute(
-            "upload-image",
-            "media/upload-image",
-            new { controller = "Media", action = "UploadImage" });
-        
-        app.MapControllerRoute(
-            "delete-image",
-            "media/delete-image",
-            new { controller = "Media", action = "DeleteImage" });
-
-        #endregion
-
-        #region Tag
-
-        app.MapControllerRoute(
-            "get-suggested-tags",
-            "tags/suggest",
-            new { controller = "Tags", action = "GetSuggestedTags" });
-
-        #endregion
 
         #region Default
 
