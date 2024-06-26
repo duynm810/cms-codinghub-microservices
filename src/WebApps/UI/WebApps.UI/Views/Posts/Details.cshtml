@@ -1,5 +1,6 @@
 @model PostDetailViewModel
 @{
+    ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
     var detail = Model.Posts.Detail;
     var categoryUrl = "/category/" + detail.Category.Slug;
     var authorUrl = "/author/" + detail.User.UserName;
