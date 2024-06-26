@@ -23,5 +23,7 @@ public interface ITagService
 
     Task<ApiResult<TagDto>> GetTagBySlug(string slug);
 
+    Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(int count);
+
     #endregion
 }

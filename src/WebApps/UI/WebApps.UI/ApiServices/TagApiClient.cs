@@ -15,4 +15,9 @@ public class TagApiClient(IBaseApiClient baseApiClient) : ITagApiClient
     {
         return await baseApiClient.GetAsync<TagDto>($"/tags/by-slug/{slug}");
     }
+    
+    public async Task<ApiResult<List<TagDto>>> GetSuggestedTags(int count)
+    {
+        return await baseApiClient.GetListAsync<TagDto>($"/tags/suggest?count={count}");
+    }
 }

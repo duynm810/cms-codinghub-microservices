@@ -286,6 +286,46 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
         return result;
     }
+    
+    public async Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(int count)
+    {
+        var result = new ApiResult<IEnumerable<TagDto>>();
+        const string methodName = nameof(GetSuggestedTags);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving suggested tags", methodName);
+
+            var cacheKey = CacheKeyHelper.Tag.GetSuggestedTagsKey(count);
+            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cachedTags != null)
+            {
+                result.Success(cachedTags);
+                logger.Information("END {MethodName} - Successfully retrieved suggested tags from cache", methodName);
+                return result;
+            }
+
+            var tags = await tagRepository.GetSuggestedTags(count);
+            if (tags.IsNotNullOrEmpty())
+            {
+                var data = mapper.Map<List<TagDto>>(tags);
+                result.Success(data);
+
+                await cacheService.SetAsync(cacheKey, data);
+
+                logger.Information("END {MethodName} - Successfully retrieved {TagCount} suggested tags", methodName,
+                    data.Count);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
 
     #endregion
 }

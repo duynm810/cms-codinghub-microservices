@@ -8,4 +8,6 @@ public interface ITagApiClient
     Task<ApiResult<List<TagDto>>> GetTags(int count);
 
     Task<ApiResult<TagDto>> GetTagBySlug(string slug);
+
+    Task<ApiResult<List<TagDto>>> GetSuggestedTags(int count);
 }

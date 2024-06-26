@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Tag.Api.Persistence;
 
@@ -11,9 +12,11 @@ using Tag.Api.Persistence;
 namespace Tag.Api.Migrations
 {
     [DbContext(typeof(TagContext))]
-    partial class TagContextModelSnapshot : ModelSnapshot
+    [Migration("20240626172946_Add_UsageCount_Field")]
+    partial class Add_UsageCount_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

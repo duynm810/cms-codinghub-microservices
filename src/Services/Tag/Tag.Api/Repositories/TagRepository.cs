@@ -28,5 +28,13 @@ public class TagRepository(TagContext dbContext, IUnitOfWork<TagContext> unitOfW
 
     public async Task<TagBase?> GetTagBySlug(string slug) => await FindByCondition(x => x.Slug == slug).FirstAsync();
 
+    public async Task<IEnumerable<TagBase>> GetSuggestedTags(int count)
+    {
+        return await FindAll()
+            .OrderByDescending(tag => tag.UsageCount)
+            .Take(count)
+            .ToListAsync();
+    }
+
     #endregion
 }

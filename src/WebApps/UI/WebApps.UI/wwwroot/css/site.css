@@ -1,6 +1,6 @@
 /* wwwroot/css/site.css */
 
-/*---------------------- Start Common ----------------------*/
+/*---------------------- Common ----------------------*/
 
 .small-swal-popup {
     max-width: 400px;
@@ -42,7 +42,7 @@
     display: block;
 }
 
-/*----------------------- Start Spinner ----------------------*/
+/*----------------------- Spinner ----------------------*/
 
 .spinner {
     display: none;
@@ -84,7 +84,7 @@
     text-align: right;
 }
 
-/*----------------------- Start Upload Files (Drag Or Drop) ----------------------*/
+/*----------------------- Upload Files (Drag Or Drop) ----------------------*/
 
 .upload-container {
     position: relative;
@@ -179,7 +179,7 @@
     color: #c82333;
 }
 
-/*----------------------- Start Select (Dropdown) ----------------------*/
+/*----------------------- Select (Dropdown) ----------------------*/
 
 .dropdown-custom {
     width: 100%;
@@ -190,7 +190,7 @@
     background-color: #fff;
 }
 
-/*----------------------- Start Button Submit ----------------------*/
+/*----------------------- Button Submit ----------------------*/
 
 .button-contactForm {
     background-color: #007bff;
@@ -204,7 +204,7 @@
     border-color: #0056b3;
 }
 
-/*----------------------- Start Table ----------------------*/
+/*----------------------- Table ----------------------*/
 
 .table-wrap {
     overflow-x: auto;
@@ -306,7 +306,7 @@
     }
 }
 
-/*----------------------- Start Checkbox ----------------------*/
+/*----------------------- Checkbox ----------------------*/
 
 .checkbox-wrap {
     display: block;
@@ -361,7 +361,7 @@
     transform: rotate(45deg);
 }
 
-/*----------------------- Start Action Button ----------------------*/
+/*----------------------- Action Button ----------------------*/
 
 .button-container {
     display: flex;
@@ -422,9 +422,19 @@ button.btn-update:not(:disabled):not(.disabled):focus {
 a.close.disabled {
     pointer-events: none; }
 
-/*----------------------- Start Quill Editor ----------------------*/
+/*----------------------- Quill Editor ----------------------*/
 
 .ql-editor {
     background-color: white;
-   
+}
+
+/*----------------------- Tagify ----------------------*/
+
+.tagify+input{
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    width: 90%;
+    margin-top: 1em;
+    padding: .5em;
 }

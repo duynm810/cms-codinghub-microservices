@@ -156,6 +156,8 @@ public static class CacheKeyHelper
         public static string GetTagBySlugKey(string slug) => $"{TagServicePrefix}:slug:{slug}";
 
         public static string GetTagsPagingKey(int pageNumber, int pageSize) => $"{TagServicePrefix}:page:{pageNumber}:size:{pageSize}";
+        
+        public static string GetSuggestedTagsKey(int count) => $"{TagServicePrefix}:suggested:count:{count}";
     }
 
     #endregion

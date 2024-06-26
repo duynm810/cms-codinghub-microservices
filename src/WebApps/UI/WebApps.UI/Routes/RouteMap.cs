@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace WebApps.UI.Routes;
 
@@ -101,9 +100,23 @@ public static class RouteMap
         #region Media
 
         app.MapControllerRoute(
-            "media-upload",
-            "media/upload",
+            "upload-image",
+            "media/upload-image",
             new { controller = "Media", action = "UploadImage" });
+        
+        app.MapControllerRoute(
+            "delete-image",
+            "media/delete-image",
+            new { controller = "Media", action = "DeleteImage" });
+
+        #endregion
+
+        #region Tag
+
+        app.MapControllerRoute(
+            "get-suggested-tags",
+            "tags/suggest",
+            new { controller = "Tags", action = "GetSuggestedTags" });
 
         #endregion
 

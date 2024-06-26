@@ -43,5 +43,11 @@ public static class TagsController
             var result = await tagService.GetTagBySlug(slug);
             return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
         });
+        
+        app.MapGet("/api/tags/suggest", async ([FromServices] ITagService tagService, [FromQuery] int count = 5) =>
+        {
+            var result = await tagService.GetSuggestedTags(count);
+            return result.IsSuccess ? Results.Ok(result) : Results.NotFound(result);
+        });
     }
 }

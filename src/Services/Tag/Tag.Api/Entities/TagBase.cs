@@ -28,4 +28,9 @@ public class TagBase : EntityAuditBase<Guid>
     /// </summary>
     [MaxLength(100)]
     public string? Description { get; set; }
+    
+    /// <summary>
+    /// Số lần sử dụng
+    /// </summary>
+    public int UsageCount { get; set; } = 0;
 }

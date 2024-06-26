@@ -54,8 +54,8 @@
     </div>
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     <form method="post" enctype="multipart/form-data" id="frm-create-post" novalidate asp-controller="Accounts" asp-action="CreatePost">
+        <!-- Category -->
         <div class="row">
-            <!-- Category -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="category">Category</label>
@@ -69,15 +69,14 @@
                 </div>
             </div>
         </div>
+        <!-- Title & Slug -->
         <div class="row">
-            <!-- Title -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="title">Title</label>
                     <input type="text" class="form-control" required name="Title" id="title" placeholder="Title">
                 </div>
             </div>
-            <!-- Slug -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="slug">Slug</label>
@@ -85,8 +84,8 @@
                 </div>
             </div>
         </div>
+        <!-- Summary -->
         <div class="row">
-            <!-- Summary -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="summary">Summary</label>
@@ -94,8 +93,8 @@
                 </div>
             </div>
         </div>
+        <!-- Content -->
         <div class="row">
-            <!-- Content -->
             <div class="col-md-12">
                 <div class="form-group">
                     <div id="editor" data-content=""></div>
@@ -103,8 +102,8 @@
                 </div>
             </div>
         </div>
+        <!-- SEO Description -->
         <div class="row">
-            <!-- SEO Description -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="seoDescription">SEO Description</label>
@@ -112,9 +111,8 @@
                 </div>
             </div>
         </div>
-        <!-- -->
+        <!-- Source -->
         <div class="row">
-            <!-- Source -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="source">Source</label>
@@ -122,8 +120,17 @@
                 </div>
             </div>
         </div>
+        <!-- Tags -->
         <div class="row">
-            <!-- Thumbnail -->
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" class="form-control" name="Tags" id="tags" placeholder="Add tags">
+                </div>
+            </div>
+        </div>
+        <!-- Thumbnail -->
+        <div class="row">
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">

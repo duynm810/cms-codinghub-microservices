@@ -23,5 +23,7 @@ public interface ITagRepository : IRepositoryCommandBase<TagBase, Guid>
 
     Task<TagBase?> GetTagBySlug(string slug);
 
+    Task<IEnumerable<TagBase>> GetSuggestedTags(int count);
+
     #endregion
 }
