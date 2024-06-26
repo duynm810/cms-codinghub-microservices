@@ -86,6 +86,7 @@ public static class ServiceExtensions
     {
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<ISerializeService, SerializeService>()
+            .AddScoped<IRazorRenderViewService, RazorRenderViewService>()
             .AddScoped<IErrorService, ErrorService>();
     }
 
