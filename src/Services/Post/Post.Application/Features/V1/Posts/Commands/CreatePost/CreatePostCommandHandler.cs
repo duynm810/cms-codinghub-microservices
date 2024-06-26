@@ -67,8 +67,8 @@ public class CreatePostCommandHandler(
                 CacheKeyHelper.Post.GetPinnedPostsKey(),
                 CacheKeyHelper.Post.GetFeaturedPostsKey(),
                 CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
-                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
-                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
+                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 6),
                 CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
             };
 
