@@ -1,8 +1,5 @@
-using Shared.Dtos.Post;
 using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
-using Shared.Dtos.PostInSeries;
-using Shared.Dtos.PostInTag;
 using Shared.Responses;
 
 namespace WebApps.UI.ApiServices.Interfaces;
@@ -12,8 +9,10 @@ public interface IPostApiClient
     Task<ApiResult<Guid>> CreatePost(CreatePostDto request);
 
     Task<ApiResult<PostDto>> UpdatePost(Guid id, UpdatePostDto request);
-    
+
     Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request);
+    
+    Task<ApiResult<bool>> DeletePost(Guid id);
     
     Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
     

@@ -22,6 +22,11 @@ public static class RouteMap
             "update-thumbnail",
             "/accounts/update-thumbnail/{id:guid}",
             new { controller = "Accounts", action = "UpdateThumbnail" });
+        
+        app.MapControllerRoute(
+            "delete_post",
+            "accounts/delete-post/{id:guid}",
+            new { controller = "Accounts", action = "DeletePost" });
 
         app.MapControllerRoute(
             "create-new-post",

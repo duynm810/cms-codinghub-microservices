@@ -24,6 +24,11 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.PutAsync<UpdateThumbnailDto, bool>($"/posts/update-thumbnail/{id}", request, true);
     }
+
+    public async Task<ApiResult<bool>> DeletePost(Guid id)
+    {
+        return await baseApiClient.DeleteAsync<bool>($"/posts/{id}", true);
+    }
     
     public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)
     {

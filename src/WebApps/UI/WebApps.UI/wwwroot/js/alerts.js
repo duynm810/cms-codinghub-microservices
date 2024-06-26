@@ -33,15 +33,3 @@ function showConfirmAlert(title, text, confirmButtonText, cancelButtonText, onCo
         }
     });
 }
-
-function showErrorAlert(message) {
-    Swal.fire({
-        title: 'Error',
-        text: message,
-        icon: 'error',
-        confirmButtonText: 'OK',
-        customClass: {
-            popup: 'small-swal-popup'
-        }
-    });
-}

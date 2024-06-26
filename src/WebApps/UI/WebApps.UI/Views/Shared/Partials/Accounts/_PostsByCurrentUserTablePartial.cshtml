@@ -1,0 +1,42 @@
+@model ManagePostsViewModel
+@{
+    var posts = Model.Posts;
+}
+
+@if (posts.Items != null && posts.Items.Count != 0)
+{
+    foreach (var item in posts.Items)
+    {
+        var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
+
+        <tr class="alert" role="alert">
+            <td>
+                <label class="checkbox-wrap checkbox-primary">
+                    <input type="checkbox">
+                    <span class="checkmark"></span>
+                </label>
+            </td>
+            <td>@item.Category.Name</td>
+            <td>@item.Title</td>
+            <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
+            <td>@item.ViewCount.ToString("N0")</td>
+            <td class="status">
+                <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
+            </td>
+            <td>
+                <div class="button-container">
+                    <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
+                        <span aria-hidden="true">
+                            <i class="fa fa-pencil"></i>
+                        </span>
+                    </button>
+                    <button type="button" class="close" data-id="@item.Id" aria-label="Close" onclick="deletePost(this)">
+                        <span aria-hidden="true">
+                            <i class="fa fa-close"></i>
+                        </span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    }
+}

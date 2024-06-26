@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post.Commands;
 using WebApps.UI.ApiServices.Interfaces;
@@ -45,6 +48,8 @@ public class AccountsController(
         return RedirectToAction("Index", "Home");
     }
 
+    #region Profile
+
     public IActionResult Profile()
     {
         const string methodName = nameof(Profile);
@@ -56,6 +61,35 @@ public class AccountsController(
             };
 
             return View(item);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    #endregion
+
+    #region Post
+    
+    public async Task<IActionResult> GetPostsByCurrentUser([FromQuery] int page = 1)
+    {
+        const string methodName = nameof(GetPostsByCurrentUser);
+
+        try
+        {
+            var result = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
+            if (result is { IsSuccess: true, Data: not null })
+            {
+                var items = new ManagePostsViewModel()
+                {
+                    Posts = result.Data
+                };
+
+                return PartialView("Partials/Accounts/_PostsByCurrentUserTablePartial", items);
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -173,6 +207,7 @@ public class AccountsController(
         }
     }
 
+    [HttpPut]
     public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
         const string methodName = nameof(UpdatePost);
@@ -199,12 +234,49 @@ public class AccountsController(
         }
     }
 
+    [HttpPut]
     public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
     {
         var result = await postApiClient.UpdateThumbnail(id, request);
         return Ok(new { data = result });
     }
 
+    [HttpDelete]
+    public async Task<IActionResult> DeletePost([FromRoute] Guid id, [FromQuery] int page = 1)
+    {
+        const string methodName = nameof(DeletePost);
+        
+        try
+        {
+            var result = await postApiClient.DeletePost(id);
+            if (result is { IsSuccess: true })
+            {
+                // Lấy lại danh sách bài viết sau khi xóa
+                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
+                if (postsResult is { IsSuccess: true, Data: not null })
+                {
+                    var items = new ManagePostsViewModel()
+                    {
+                        Posts = postsResult.Data
+                    };
+                    
+                    var html = await RenderViewAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items, true);
+                    return Json(new { success = true, html });
+                }
+                
+                return Json(new { success = true, html = string.Empty });
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    #endregion
+    
     #region Helpers
 
     private async Task<IEnumerable<CategoryDto>> GetCategories()
@@ -225,6 +297,38 @@ public class AccountsController(
         {
             throw new Exception($"Exception in {methodName}: {e.Message}", e);
         }
+    }
+    
+    // Helper method to render view to string
+    private async Task<string> RenderViewAsync<TModel>(string viewName, TModel model, bool partial = false)
+    {
+        var viewEngine = HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+        var tempDataProvider = HttpContext.RequestServices.GetService(typeof(ITempDataProvider)) as ITempDataProvider;
+        var actionContext = new ActionContext(HttpContext, RouteData, ControllerContext.ActionDescriptor, ModelState);
+
+        await using var sw = new StringWriter();
+        if (viewEngine != null)
+        {
+            var viewResult = viewEngine.GetView(null, viewName, !partial);
+
+            if (viewResult.View == null)
+            {
+                viewResult = viewEngine.FindView(actionContext, viewName, !partial);
+
+                if (viewResult.View == null)
+                {
+                    var searchedLocations = string.Join(", ", viewResult.SearchedLocations);
+                    throw new ArgumentNullException($"The view '{viewName}' was not found. Searched locations: {searchedLocations}");
+                }
+            }
+
+            var viewDictionary = new ViewDataDictionary<TModel>(ViewData, model);
+            var viewContext = new ViewContext(actionContext, viewResult.View, viewDictionary, new TempDataDictionary(HttpContext, tempDataProvider), sw, new HtmlHelperOptions());
+
+            await viewResult.View.RenderAsync(viewContext);
+        }
+
+        return sw.ToString();
     }
 
     #endregion
