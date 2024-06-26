@@ -11,7 +11,7 @@
         // Initialize the accountsController
         const controller = new accountsController('frm-create-post');
         controller.initialize();
-        
+
         async function validateForm() {
             let form = document.getElementById('frm-create-post');
             let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
@@ -83,7 +83,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6"></textarea>
+                    <div id="editor"></div>
                 </div>
             </div>
         </div>
