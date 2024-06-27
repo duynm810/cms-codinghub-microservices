@@ -13,4 +13,11 @@ public class TagsController(ITagApiClient tagApiClient) :  ControllerBase
         var result = await tagApiClient.GetSuggestedTags(count);
         return Ok(result);
     }
+    
+    [HttpGet("check")]
+    public async Task<IActionResult> GetTagByName([FromQuery] string name)
+    {
+        var result = await tagApiClient.GetTagByName(name);
+        return Ok(result);
+    }
 }

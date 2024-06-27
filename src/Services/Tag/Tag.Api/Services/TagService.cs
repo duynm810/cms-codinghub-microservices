@@ -287,16 +287,60 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         return result;
     }
     
-    public async Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(int count)
+    public async Task<ApiResult<TagDto>> GetTagByName(string name)
+    {
+        var result = new ApiResult<TagDto>();
+        const string methodName = nameof(GetTagByName);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving tag with name: {TagName}", methodName, name);
+
+            var cacheKey = CacheKeyHelper.Tag.GetTagByNameKey(name);
+            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cachedTag != null)
+            {
+                logger.Information("END {MethodName} - Successfully retrieved tag with name {TagName} from cache", methodName, name);
+                result.Success(cachedTag);
+                return result;
+            }
+
+            var tag = await tagRepository.GetTagByName(name);
+            if (tag == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Tag.TagNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<TagDto>(tag);
+            result.Success(data);
+
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
+
+            logger.Information("END {MethodName} - Successfully retrieved tag with name {TagName}", methodName, name);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    public async Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(string? keyword, int count)
     {
         var result = new ApiResult<IEnumerable<TagDto>>();
         const string methodName = nameof(GetSuggestedTags);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving suggested tags", methodName);
+            logger.Information("BEGIN {MethodName} - Retrieving suggested tags with keyword {Keyword}", methodName, keyword);
 
-            var cacheKey = CacheKeyHelper.Tag.GetSuggestedTagsKey(count);
+            var cacheKey = CacheKeyHelper.Tag.GetSuggestedTagsKey(keyword, count);
             var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
             if (cachedTags != null)
             {
@@ -305,7 +349,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                 return result;
             }
 
-            var tags = await tagRepository.GetSuggestedTags(count);
+            var tags = await tagRepository.GetSuggestedTags(keyword, count);
             if (tags.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<TagDto>>(tags);
@@ -313,8 +357,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
                 await cacheService.SetAsync(cacheKey, data);
 
-                logger.Information("END {MethodName} - Successfully retrieved {TagCount} suggested tags", methodName,
-                    data.Count);
+                logger.Information("END {MethodName} - Successfully retrieved {TagCount} suggested tags with keyword {Keyword}", methodName, data.Count, keyword);
             }
         }
         catch (Exception e)

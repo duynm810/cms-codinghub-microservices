@@ -1,3 +1,6 @@
+
+using Shared.Dtos.Tag;
+
 namespace Shared.Dtos.Post.Commands;
 
 public class CreateOrUpdatePostDto
@@ -17,4 +20,12 @@ public class CreateOrUpdatePostDto
     public string? Source { get; set; }
     
     public long CategoryId { get; set; }
+
+    public List<TagDto> ExistingTags { get; set; } = [];
+    
+    public string? ExistingTagsData { get; set; }
+    
+    public List<TagDto> NewTags { get; set; } = [];
+    
+    public string? NewTagsData { get; set; }
 }

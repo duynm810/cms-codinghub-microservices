@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post.Commands;
+using Shared.Dtos.Tag;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
@@ -19,6 +21,7 @@ public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
     IRazorRenderViewService razorRenderViewService,
+    ISerializeService serializeService,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
@@ -157,7 +160,7 @@ public class AccountsController(
                 var result = await postApiClient.CreatePost(request);
                 if (result is { IsSuccess: true })
                 {
-                    return RedirectToAction("ManagePosts");
+                    return RedirectToAction("ManagePosts", "Accounts");
                 }
 
                 TempData["ErrorMessage"] = "Failed to create post.";
@@ -223,7 +226,7 @@ public class AccountsController(
             var result = await postApiClient.UpdatePost(id, request);
             if (result is { IsSuccess: true })
             {
-                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts") });
+                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
             }
 
             return HandleError((HttpStatusCode)result.StatusCode, methodName);

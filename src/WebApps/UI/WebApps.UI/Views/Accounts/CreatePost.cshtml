@@ -7,6 +7,7 @@
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
     <script src="~/js/quill.js" asp-append-version="true"></script>
+    <script src="~/js/slugify.js" asp-append-version="true"></script>
     <script src="~/js/tagify.js" asp-append-version="true"></script>
     <script>
 
@@ -36,6 +37,11 @@
                 
                 // Set content data from quill editor (Gán nội dung được nhập từ quill editor vào content)
                 document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
+
+                // Set tag data get from tagify.js
+                const tagsData = window.getTagsData();
+                document.getElementById('existingTagsData').value = JSON.stringify(tagsData.existingTags);
+                document.getElementById('newTagsData').value = JSON.stringify(tagsData.newTags);
                 
                 form.submit();
             }
@@ -126,7 +132,9 @@
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="tags">Tags</label>
-                    <input type="text" class="form-control" name="Tags" id="tags" placeholder="Add tags">
+                    <input type="text" class="form-control" id="tags" placeholder="Add tags">
+                    <input type="hidden" name="ExistingTagsData" id="existingTagsData">
+                    <input type="hidden" name="NewTagsData" id="newTagsData">
                 </div>
             </div>
         </div>
