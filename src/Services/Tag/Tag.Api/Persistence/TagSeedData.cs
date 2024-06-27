@@ -18,49 +18,58 @@ public static class TagSeedData
 
     private static IEnumerable<TagBase> GetTags()
     {
+        var random = new Random();
+        
         return new List<TagBase>
         {
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Tech",
-                Slug = "tech"
+                Name = "tech",
+                Slug = "tech",
+                UsageCount = random.Next(1, 21) // Random value between 1 to 20
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Programming",
-                Slug = "programming"
+                Name = "programming",
+                Slug = "programming",
+                UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
                 Name = "Tutorial",
-                Slug = "tutorial"
+                Slug = "tutorial",
+                UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
                 Name = "Microservices",
-                Slug = "microservices"
+                Slug = "microservices",
+                UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
                 Name = "CSharp",
-                Slug = "csharp"
+                Slug = "csharp",
+                UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Language Programming",
-                Slug = "language-programming"
+                Name = "programming",
+                Slug = "programming",
+                UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Trick",
-                Slug = "trick"
+                Name = "trick",
+                Slug = "trick",
+                UsageCount = random.Next(1, 21)
             }
         };
     }
