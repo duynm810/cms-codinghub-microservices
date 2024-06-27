@@ -39,29 +39,29 @@ public static class TagSeedData
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Tutorial",
+                Name = "tutorial",
                 Slug = "tutorial",
                 UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "Microservices",
+                Name = "microservices",
                 Slug = "microservices",
                 UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "CSharp",
+                Name = "csharp",
                 Slug = "csharp",
                 UsageCount = random.Next(1, 21)
             },
             new()
             {
                 Id = Guid.NewGuid(),
-                Name = "programming",
-                Slug = "programming",
+                Name = "language",
+                Slug = "language",
                 UsageCount = random.Next(1, 21)
             },
             new()
