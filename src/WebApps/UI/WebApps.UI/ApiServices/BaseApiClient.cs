@@ -133,7 +133,7 @@ public class BaseApiClient(
 
     #endregion
 
-    #region HELPERS
+    #region Helpers
 
     public async Task<HttpClient> CreateClientAsync(bool requiredLogin)
     {

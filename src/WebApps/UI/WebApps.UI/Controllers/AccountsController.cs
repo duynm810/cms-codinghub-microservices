@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post.Commands;
-using Shared.Dtos.Tag;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
@@ -50,7 +48,7 @@ public class AccountsController(
         return RedirectToAction("Index", "Home");
     }
 
-    #region Profile
+    #region PROFILE
 
     public IActionResult Profile()
     {
@@ -72,7 +70,7 @@ public class AccountsController(
 
     #endregion
 
-    #region Post
+    #region POST
     
     public async Task<IActionResult> GetPostsByCurrentUser([FromQuery] int page = 1)
     {

@@ -48,9 +48,10 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
                 throw;
             }
         });
-
     }
-    
+
+    #region Helpers
+
     private async Task CreateNewTag(RawTagDto rawTag)
     {
         try
@@ -92,4 +93,6 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
             throw;
         }
     }
+
+    #endregion
 }
