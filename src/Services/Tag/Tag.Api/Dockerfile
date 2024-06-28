@@ -9,6 +9,7 @@ COPY ["BuildingBlocks/Contracts/Contracts.csproj", "BuildingBlocks/Contracts/"]
 COPY ["BuildingBlocks/Shared/Shared.csproj", "BuildingBlocks/Shared/"]
 COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Infrastructure/"]
 COPY ["BuildingBlocks/Logging/Logging.csproj", "BuildingBlocks/Logging/"]
+COPY ["BuildingBlocks/EventBus/EventBus.csproj", "BuildingBlocks/EventBus/"]
 
 RUN dotnet restore "Services/Tag/Tag.Api/Tag.Api.csproj"
 COPY . .

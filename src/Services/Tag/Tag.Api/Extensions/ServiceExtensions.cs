@@ -59,6 +59,9 @@ public static class ServiceExtensions
 
         // Register authorization services
         services.AddAuthorizationServices();
+        
+        // Register MassTransit with RabbitMQ
+        services.AddMassTransitWithRabbitMq();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)

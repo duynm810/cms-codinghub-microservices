@@ -1,9 +1,9 @@
 using EventBus.Commons;
 using EventBus.IntegrationEvents.Interfaces;
 
-namespace EventBus.IntegrationEvents;
+namespace EventBus.IntegrationEvents.Posts;
 
-public record PostSubmittedForApprovalEvent : IntegrationEvent, IPostSubmittedForApprovalEvent
+public record PostRejectedWithReasonEvent : IntegrationEvent, IPostRejectedWithReasonEvent
 {
     public required string To { get; set; }
 

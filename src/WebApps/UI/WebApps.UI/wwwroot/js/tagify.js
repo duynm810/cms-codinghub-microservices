@@ -54,8 +54,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else {
             console.log(`Tag "${tagName}" là mới và sẽ được tạo.`);
+            const slug = createSlug(tagName); // Tạo slug cho tag mới
             if (tagIndex > -1) {
                 tagify.value[tagIndex].isExisting = false; // Đánh dấu tag mới
+                tagify.value[tagIndex].slug = slug; // Thêm slug vào tag mới
             }
         }
     });
@@ -71,6 +73,7 @@ document.addEventListener('DOMContentLoaded', function () {
         return tagify.value.map(tag => ({
             id: tag.id || null,  // If id exists, use it, otherwise set to null for new tags
             name: tag.value,
+            slug: tag.slug || createSlug(tag.value),
             isExisting: tag.isExisting || false  // Default to false if not set
         }));
     };

@@ -2,9 +2,11 @@ namespace Shared.Dtos.Tag;
 
 public class RawTagDto
 {
-    public Guid? Id { get; set; }
+    public required string Id { get; set; } = string.Empty;
     
-    public string? Name { get; set; }
+    public required string Name { get; set; }
+    
+    public required string Slug { get; set; }
     
     public bool IsExisting { get; set; }
 }
