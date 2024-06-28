@@ -38,7 +38,7 @@
                 // Set content data from quill editor (Gán nội dung được nhập từ quill editor vào content)
                 document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
 
-                // Set tag data get from tagify.js
+                // Set tag data get from tagify.js (Gán dữ liệu nhãn được lấy từ tagify.js)
                 const tagsData = window.getTagsData();
                 document.getElementById('existingTagsData').value = JSON.stringify(tagsData.existingTags);
                 document.getElementById('newTagsData').value = JSON.stringify(tagsData.newTags);
