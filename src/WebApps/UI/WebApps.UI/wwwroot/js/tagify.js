@@ -1,9 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
     const input = document.querySelector('#tags');
 
-    const newTagsData = [];
-    const existingTagsData = [];
-    
     window.tagify = new Tagify(input, {
         whitelist: [],
         dropdown: {
@@ -26,7 +23,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }));
         }
     });
-    
+
     // Xử lý sự kiện nhập liệu gợi ý tags
     tagify.on('input', function(e) {
         const keyword = e.detail.value;
@@ -43,41 +40,38 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // Handle event adding a new tag (Xử lý sự kiện thêm tag mới)
+    // Handle event adding a new tag
     tagify.on('add', function(e) {
         const tagName = e.detail.data.value;
+        const tagId = e.detail.data.id;
+        const tagIndex = tagify.value.findIndex(tag => tag.value === tagName);
 
-        // Check if the tag already exists (Kiểm tra xem tag đã tồn tại chưa)
-        $.get('/tags/check', { name: tagName }, function(response) {
-            if (response && response.data) {
-                console.log(`Tag "${tagName}" đã tồn tại với ID: ${response.data.id}`);
-                const tagIndex = tagify.value.findIndex(tag => tag.value === tagName);
-                if (tagIndex > -1) {
-                    tagify.value[tagIndex].id = response.data.id;
-                    existingTagsData.push({
-                        id: response.data.id,
-                        name: tagName
-                    });
-                }
-            } else {
-                console.log(`Tag "${tagName}" là mới và sẽ được tạo.`);
-                newTagsData.push({
-                    id: null,
-                    name: tagName
-                });
+        if (tagId) {
+            console.log(`Tag "${tagName}" đã tồn tại với ID: ${tagId}`);
+            if (tagIndex > -1) {
+                tagify.value[tagIndex].id = tagId;
+                tagify.value[tagIndex].isExisting = true; // Đánh dấu tag đã tồn tại
             }
-        });
+        } else {
+            console.log(`Tag "${tagName}" là mới và sẽ được tạo.`);
+            if (tagIndex > -1) {
+                tagify.value[tagIndex].isExisting = false; // Đánh dấu tag mới
+            }
+        }
     });
 
+    // Handle event deleting tag (Xử lý xoá nhãn dán)
     tagify.on('remove', function(e) {
-        console.log(e.detail); // Contains removed tag information
+        const tagName = e.detail.data.value;
+        console.log(`Tag "${tagName}" đã bị xoá.`);
     });
 
-    // Hàm để lấy danh sách các tags đã tồn tại và mới
+    // Hàm để lấy danh sách các tags hiện tại
     window.getTagsData = function() {
-        return {
-            existingTags: existingTagsData,
-            newTags: newTagsData
-        };
+        return tagify.value.map(tag => ({
+            id: tag.id || null,  // If id exists, use it, otherwise set to null for new tags
+            name: tag.value,
+            isExisting: tag.isExisting || false  // Default to false if not set
+        }));
     };
 });
