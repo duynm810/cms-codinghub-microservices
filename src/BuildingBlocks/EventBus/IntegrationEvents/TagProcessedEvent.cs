@@ -3,7 +3,7 @@ using EventBus.IntegrationEvents.Interfaces;
 
 namespace EventBus.IntegrationEvents;
 
-public record TagProcessedEvent : IntegrationEvent, ITagProcessedEvent
+public record TagProcessedEvent(string SourceService) : IntegrationEvent(SourceService), ITagProcessedEvent
 {
     public Guid PostId { get; set; }
 

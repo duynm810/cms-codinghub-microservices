@@ -88,15 +88,9 @@ public class CreatePostCommandHandler(
             var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
             if (rawTags != null)
             {
-                var postCreatedEvent = new PostCreatedEvent()
-                {
-                    PostId = id,
-                    RawTags = rawTags
-                };
-
                 logger.Information("BEGIN HandlePostCreatedEvent - PostId: {PostId}", id);
 
-                TaskHelper.RunFireAndForget(() => postEventService.HandlePostCreatedEvent(postCreatedEvent), e =>
+                TaskHelper.RunFireAndForget(() => postEventService.HandlePostCreatedEvent(id, rawTags), e =>
                 {
                     logger.Error("HandlePostCreatedEvent failed. Message: {ErrorMessage}", e.Message);
                 });

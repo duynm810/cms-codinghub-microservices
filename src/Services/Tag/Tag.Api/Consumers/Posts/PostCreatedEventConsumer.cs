@@ -2,16 +2,20 @@ using AutoMapper;
 using EventBus.IntegrationEvents;
 using EventBus.IntegrationEvents.Interfaces;
 using MassTransit;
+using Microsoft.Extensions.Options;
 using Shared.Constants;
 using Shared.Dtos.Tag;
+using Shared.Settings;
 using Tag.Api.Entities;
 using Tag.Api.Repositories.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace Tag.Api.Consumers.Posts;
 
-public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepository tagRepository, IMapper mapper, ILogger logger) : IConsumer<IPostCreatedEvent>
+public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepository tagRepository, IOptions<EventBusSettings> eventBusSettings, IMapper mapper, ILogger logger) : IConsumer<IPostCreatedEvent>
 {
+    private readonly EventBusSettings _eventBusSettings = eventBusSettings.Value;
+    
     public async Task Consume(ConsumeContext<IPostCreatedEvent> context)
     {
         var postCreatedEvent = context.Message;
@@ -67,7 +71,7 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
         
         try
         {
-            var tagProcessedEvent = new TagProcessedEvent()
+            var tagProcessedEvent = new TagProcessedEvent(_eventBusSettings.ServiceName)
             {
                 PostId = postId,
                 TagIds = tagIds

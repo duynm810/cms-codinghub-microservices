@@ -3,7 +3,7 @@ using EventBus.IntegrationEvents.Interfaces;
 
 namespace EventBus.IntegrationEvents;
 
-public record PostRejectedWithReasonEvent : IntegrationEvent, IPostRejectedWithReasonEvent
+public record PostRejectedWithReasonEvent(string SourceService) : IntegrationEvent(SourceService), IPostRejectedWithReasonEvent
 {
     public required string To { get; set; }
 
