@@ -1,7 +1,7 @@
 using AutoMapper;
+using EventBus.IntegrationEvents;
 using EventBus.IntegrationEvents.Interfaces;
 using MassTransit;
-using Microsoft.EntityFrameworkCore;
 using Shared.Constants;
 using Shared.Dtos.Tag;
 using Tag.Api.Entities;
@@ -19,60 +19,60 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
 
         logger.Information("Handling PostCreatedEventConsumer - PostId: {PostId}", postCreatedEvent.PostId);
 
-        var strategy = tagRepository.CreateExecutionStrategy();
-
-        await strategy.ExecuteAsync(async () =>
-        {
-            await using var transaction = await tagRepository.BeginTransactionAsync();
+        await using var transaction = await tagRepository.BeginTransactionAsync();
             
-            try
-            {
-                var tagIds = new List<Guid>();
+        try
+        {
+            var tagIds = new List<Guid>();
                 
-                foreach (var rawTag in postCreatedEvent.RawTags)
+            foreach (var rawTag in postCreatedEvent.RawTags)
+            {
+                if (!rawTag.IsExisting)
                 {
-                    if (!rawTag.IsExisting)
+                    var newTagId = await CreateNewTag(rawTag);
+                    tagIds.Add(newTagId);
+                }
+                else
+                {
+                    var existingTagId = await UpdateExistingTag(rawTag);
+                    if (existingTagId != Guid.Empty)
                     {
-                        var newTagId = await CreateNewTag(rawTag);
-                        tagIds.Add(newTagId);
-                    }
-                    else
-                    {
-                        var existingTagId = await UpdateExistingTag(rawTag);
-                        if (existingTagId != Guid.Empty)
-                        {
-                            tagIds.Add(existingTagId);
-                        }
+                        tagIds.Add(existingTagId);
                     }
                 }
+            }
 
-                await transaction.CommitAsync();
+            await transaction.CommitAsync();
                 
-                // Ensure that publishing event happens outside of the transaction
-                await PublishPostTagsProcessedEvent(postCreatedEvent.PostId, tagIds);
-            }
-            catch (Exception e)
-            {
-                await tagRepository.RollbackTransactionAsync();
-                logger.Error(e, "{MethodName} - An error occurred while handling PostCreatedEvent - PostId: {PostId}", methodName, postCreatedEvent.PostId);
-                throw;
-            }
-        });
+            await PublishTagsProcessedEvent(postCreatedEvent.PostId, tagIds);
+        }
+        catch (Exception e)
+        {
+            await tagRepository.RollbackTransactionAsync();
+            logger.Error(e, "{MethodName} - An error occurred while handling PostCreatedEvent - PostId: {PostId}", methodName, postCreatedEvent.PostId);
+            throw;
+        }
     }
 
     #region Helpers
     
-    private async Task PublishPostTagsProcessedEvent(Guid postId, List<Guid> tagIds)
+    private async Task PublishTagsProcessedEvent(Guid postId, List<Guid> tagIds)
     {
-        const string methodName = nameof(PublishPostTagsProcessedEvent);
+        const string methodName = nameof(PublishTagsProcessedEvent);
 
         try
         {
-            //await publishEndpoint.Publish<IPostTagsProcessedEvent>(postTagsProcessedEvent);
+            var tagProcessedEvent = new TagProcessedEvent()
+            {
+                PostId = postId,
+                TagIds = tagIds
+            };
+            
+            await publishEndpoint.Publish<ITagProcessedEvent>(tagProcessedEvent);
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "{MethodName} - An error occurred while handling PostTagsProcessedEvent - PostId: {PostId}", methodName, postId);
+            logger.Error(ex, "{MethodName} - An error occurred while publishing TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", methodName, postId, ex.Message);
             throw;
         }
     }
@@ -96,7 +96,7 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while creating a new tag - Tag: {TagName}", rawTag.Name);
+            logger.Error(ex, "An error occurred while creating a new tag - Tag: {TagName}. Error: {ErrorMessage}", rawTag.Name, ex.Message);
             throw;
         }
     }
@@ -119,7 +119,7 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
         }
         catch (Exception ex)
         {
-            logger.Error(ex, "An error occurred while updating an existing tag - TagId: {TagId}", rawTag.Id);
+            logger.Error(ex, "An error occurred while updating an existing tag - TagId: {TagId}. Error: {ErrorMessage}", rawTag.Id, ex.Message);
             throw;
         }
     }
