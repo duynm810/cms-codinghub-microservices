@@ -59,6 +59,12 @@ public static class ConfigureServices
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(EventBusSettings)} is not configured properly");
+
+        services.AddSingleton(eventBusSetings);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)

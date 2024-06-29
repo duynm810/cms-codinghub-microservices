@@ -35,12 +35,14 @@ public class TagProcessedEventConsumer(IPostInTagRepository postInTagRepository,
                 var postInTag = mapper.Map<PostInTagBase>(postInTagDto);
                 await postInTagRepository.CreatePostToTag(postInTag);
             }
-            
-            logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className, tagProcessedEvent.PostId);
+
+            logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className,
+                tagProcessedEvent.PostId);
         }
         catch (Exception e)
         {
-            logger.Error(e, "{ClassName}::{MethodName} - ERROR while processing TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", className, methodName, tagProcessedEvent.PostId, e.Message);
+            logger.Error(e, "ERROR while processing {MethodName} - PostId: {PostId}. Error: {ErrorMessage}", methodName,
+                tagProcessedEvent.PostId, e.Message);
             throw;
         }
     }

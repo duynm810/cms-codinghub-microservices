@@ -71,6 +71,12 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
+                              ?? throw new ArgumentNullException(
+                                  $"{nameof(EventBusSettings)} is not configured properly");
+
+        services.AddSingleton(eventBusSetings);
 
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
                                 ?? throw new ArgumentNullException(
