@@ -94,10 +94,14 @@ public class CreatePostCommandHandler(
                     RawTags = rawTags
                 };
 
+                logger.Information("BEGIN HandlePostCreatedEvent - PostId: {PostId}", id);
+
                 TaskHelper.RunFireAndForget(() => postEventService.HandlePostCreatedEvent(postCreatedEvent), e =>
                 {
                     logger.Error("HandlePostCreatedEvent failed. Message: {ErrorMessage}", e.Message);
                 });
+
+                logger.Information("END HandlePostCreatedEvent - PostId: {PostId}", id);
             }
 
             logger.Information("END {MethodName} - Post created successfully with ID: {PostId}", methodName, id);

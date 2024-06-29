@@ -15,9 +15,11 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
     public async Task Consume(ConsumeContext<IPostCreatedEvent> context)
     {
         var postCreatedEvent = context.Message;
+        
         const string methodName = nameof(Consume);
+        const string className = nameof(PostCreatedEventConsumer);
 
-        logger.Information("Handling PostCreatedEventConsumer - PostId: {PostId}", postCreatedEvent.PostId);
+        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, postCreatedEvent.PostId);
 
         await using var transaction = await tagRepository.BeginTransactionAsync();
             
@@ -45,11 +47,13 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
             await transaction.CommitAsync();
                 
             await PublishTagsProcessedEvent(postCreatedEvent.PostId, tagIds);
+            
+            logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className, postCreatedEvent.PostId);
         }
         catch (Exception e)
         {
             await tagRepository.RollbackTransactionAsync();
-            logger.Error(e, "{MethodName} - An error occurred while handling PostCreatedEvent - PostId: {PostId}", methodName, postCreatedEvent.PostId);
+            logger.Error(e, "{ClassName}::{MethodName} - ERROR while processing PostCreatedEvent - PostId: {PostId}. Error: {ErrorMessage}", className, methodName, postCreatedEvent.PostId, e.Message);
             throw;
         }
     }
@@ -59,7 +63,8 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
     private async Task PublishTagsProcessedEvent(Guid postId, List<Guid> tagIds)
     {
         const string methodName = nameof(PublishTagsProcessedEvent);
-
+        const string className = nameof(PostCreatedEventConsumer);
+        
         try
         {
             var tagProcessedEvent = new TagProcessedEvent()
@@ -70,15 +75,18 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
             
             await publishEndpoint.Publish<ITagProcessedEvent>(tagProcessedEvent);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "{MethodName} - An error occurred while publishing TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", methodName, postId, ex.Message);
+            logger.Error(e, "{ClassName}::{MethodName} - ERROR while publishing TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", className, methodName, postId, e.Message);
             throw;
         }
     }
 
     private async Task<Guid> CreateNewTag(RawTagDto rawTag)
     {
+        const string className = nameof(PostCreatedEventConsumer);
+        const string methodName = nameof(CreateNewTag);
+
         try
         {
             var tagDto = new CreateTagDto
@@ -94,15 +102,18 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
             
             return tag.Id;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "An error occurred while creating a new tag - Tag: {TagName}. Error: {ErrorMessage}", rawTag.Name, ex.Message);
+            logger.Error(e, "{ClassName}::{MethodName} - ERROR while creating a new tag - Tag: {TagName}. Error: {ErrorMessage}", className, methodName, rawTag.Name, e.Message);
             throw;
         }
     }
 
     private async Task<Guid> UpdateExistingTag(RawTagDto rawTag)
     {
+        const string className = nameof(PostCreatedEventConsumer);
+        const string methodName = nameof(UpdateExistingTag);
+
         try
         {
             var existedTag = await tagRepository.GetTagById(Guid.Parse(rawTag.Id));
@@ -117,9 +128,9 @@ public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepo
             
             return existedTag.Id;
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "An error occurred while updating an existing tag - TagId: {TagId}. Error: {ErrorMessage}", rawTag.Id, ex.Message);
+            logger.Error(e, "{ClassName}::{MethodName} - ERROR while updating an existing tag - TagId: {TagId}. Error: {ErrorMessage}", className, methodName, rawTag.Id, e.Message);
             throw;
         }
     }

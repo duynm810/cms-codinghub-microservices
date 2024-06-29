@@ -10,16 +10,16 @@ public class PostEventService(IPublishEndpoint publishEndpoint, ILogger logger) 
 {
     public async Task HandlePostCreatedEvent(PostCreatedEvent postCreatedEvent)
     {
-        logger.Information("Handling PostCreatedEvent - PostId: {PostId}", postCreatedEvent.PostId);
+        logger.Information("BEGIN Publish PostCreatedEvent - PostId: {PostId}", postCreatedEvent.PostId);
 
         try
         {
             await publishEndpoint.Publish<IPostCreatedEvent>(postCreatedEvent);
-            logger.Information("Handled PostCreatedEvent successfully - PostId: {PostId}", postCreatedEvent.PostId);
+            logger.Information("END Publish PostCreatedEvent successfully - PostId: {PostId}", postCreatedEvent.PostId);
         }
-        catch (Exception ex)
+        catch (Exception e)
         {
-            logger.Error(ex, "An error occurred while handling PostCreatedEvent - PostId: {PostId}", postCreatedEvent.PostId);
+            logger.Error(e, "ERROR while publishing PostCreatedEvent - PostId: {PostId}", postCreatedEvent.PostId);
             throw;
         }
     }

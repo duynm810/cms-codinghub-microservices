@@ -14,9 +14,10 @@ public class TagProcessedEventConsumer(IPostInTagRepository postInTagRepository,
     {
         var tagProcessedEvent = context.Message;
 
+        const string className = nameof(TagProcessedEventConsumer);
         const string methodName = nameof(Consume);
 
-        logger.Information("Handling TagProcessedEventConsumer - PostId: {PostId}", tagProcessedEvent.PostId);
+        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, tagProcessedEvent.PostId);
 
         try
         {
@@ -34,10 +35,12 @@ public class TagProcessedEventConsumer(IPostInTagRepository postInTagRepository,
                 var postInTag = mapper.Map<PostInTagBase>(postInTagDto);
                 await postInTagRepository.CreatePostToTag(postInTag);
             }
+            
+            logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className, tagProcessedEvent.PostId);
         }
         catch (Exception e)
         {
-            logger.Error(e, "{MethodName} - An error occurred while handling TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", methodName, tagProcessedEvent.PostId, e.Message);
+            logger.Error(e, "{ClassName}::{MethodName} - ERROR while processing TagProcessedEvent - PostId: {PostId}. Error: {ErrorMessage}", className, methodName, tagProcessedEvent.PostId, e.Message);
             throw;
         }
     }
