@@ -1,4 +1,5 @@
-using EventBus.IntegrationEvents.Posts;
+using EventBus.IntegrationEvents;
+using EventBus.IntegrationEvents.Interfaces;
 using MassTransit;
 using Post.Domain.Services;
 using Serilog;
@@ -13,7 +14,7 @@ public class PostEventService(IPublishEndpoint publishEndpoint, ILogger logger) 
 
         try
         {
-            await publishEndpoint.Publish(postCreatedEvent);
+            await publishEndpoint.Publish<IPostCreatedEvent>(postCreatedEvent);
             logger.Information("Handled PostCreatedEvent successfully - PostId: {PostId}", postCreatedEvent.PostId);
         }
         catch (Exception ex)

@@ -1,6 +1,6 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
-using EventBus.IntegrationEvents.Posts;
+using EventBus.IntegrationEvents;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Entities;

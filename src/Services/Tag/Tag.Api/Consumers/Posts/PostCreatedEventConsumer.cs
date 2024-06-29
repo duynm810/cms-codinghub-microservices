@@ -10,7 +10,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Tag.Api.Consumers.Posts;
 
-public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapper, ILogger logger) : IConsumer<IPostCreatedEvent>
+public class PostCreatedEventConsumer(IPublishEndpoint publishEndpoint, ITagRepository tagRepository, IMapper mapper, ILogger logger) : IConsumer<IPostCreatedEvent>
 {
     public async Task Consume(ConsumeContext<IPostCreatedEvent> context)
     {
@@ -27,19 +27,29 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
             
             try
             {
+                var tagIds = new List<Guid>();
+                
                 foreach (var rawTag in postCreatedEvent.RawTags)
                 {
                     if (!rawTag.IsExisting)
                     {
-                        await CreateNewTag(rawTag);
+                        var newTagId = await CreateNewTag(rawTag);
+                        tagIds.Add(newTagId);
                     }
                     else
                     {
-                        await UpdateExistingTag(rawTag);
+                        var existingTagId = await UpdateExistingTag(rawTag);
+                        if (existingTagId != Guid.Empty)
+                        {
+                            tagIds.Add(existingTagId);
+                        }
                     }
                 }
 
                 await transaction.CommitAsync();
+                
+                // Ensure that publishing event happens outside of the transaction
+                await PublishPostTagsProcessedEvent(postCreatedEvent.PostId, tagIds);
             }
             catch (Exception e)
             {
@@ -51,8 +61,23 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
     }
 
     #region Helpers
+    
+    private async Task PublishPostTagsProcessedEvent(Guid postId, List<Guid> tagIds)
+    {
+        const string methodName = nameof(PublishPostTagsProcessedEvent);
 
-    private async Task CreateNewTag(RawTagDto rawTag)
+        try
+        {
+            //await publishEndpoint.Publish<IPostTagsProcessedEvent>(postTagsProcessedEvent);
+        }
+        catch (Exception ex)
+        {
+            logger.Error(ex, "{MethodName} - An error occurred while handling PostTagsProcessedEvent - PostId: {PostId}", methodName, postId);
+            throw;
+        }
+    }
+
+    private async Task<Guid> CreateNewTag(RawTagDto rawTag)
     {
         try
         {
@@ -63,8 +88,11 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
             };
             
             var tag = mapper.Map<TagBase>(tagDto);
+            
             tag.UsageCount = 1;
             await tagRepository.CreateTag(tag);
+            
+            return tag.Id;
         }
         catch (Exception ex)
         {
@@ -73,7 +101,7 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
         }
     }
 
-    private async Task UpdateExistingTag(RawTagDto rawTag)
+    private async Task<Guid> UpdateExistingTag(RawTagDto rawTag)
     {
         try
         {
@@ -81,11 +109,13 @@ public class PostCreatedEventConsumer(ITagRepository tagRepository, IMapper mapp
             if (existedTag == null)
             {
                 logger.Warning(ErrorMessagesConsts.Tag.TagNotFound);
-                return;
+                return Guid.Empty;
             }
 
             existedTag.UsageCount++;
             await tagRepository.UpdateTag(existedTag);
+            
+            return existedTag.Id;
         }
         catch (Exception ex)
         {

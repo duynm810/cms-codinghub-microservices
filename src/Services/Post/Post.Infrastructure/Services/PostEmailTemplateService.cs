@@ -1,6 +1,6 @@
 using Contracts.Services.Interfaces;
+using EventBus.IntegrationEvents;
 using EventBus.IntegrationEvents.Interfaces;
-using EventBus.IntegrationEvents.Posts;
 using MassTransit;
 using Post.Domain.Services;
 

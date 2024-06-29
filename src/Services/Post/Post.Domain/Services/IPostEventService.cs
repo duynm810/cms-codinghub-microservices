@@ -1,4 +1,4 @@
-using EventBus.IntegrationEvents.Posts;
+using EventBus.IntegrationEvents;
 
 namespace Post.Domain.Services;
 

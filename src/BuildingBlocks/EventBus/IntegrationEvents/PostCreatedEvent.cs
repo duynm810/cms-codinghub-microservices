@@ -2,7 +2,7 @@ using EventBus.Commons;
 using EventBus.IntegrationEvents.Interfaces;
 using Shared.Dtos.Tag;
 
-namespace EventBus.IntegrationEvents.Posts;
+namespace EventBus.IntegrationEvents;
 
 public record PostCreatedEvent : IntegrationEvent, IPostCreatedEvent
 {

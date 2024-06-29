@@ -1,7 +1,7 @@
 using EventBus.Commons;
 using EventBus.IntegrationEvents.Interfaces;
 
-namespace EventBus.IntegrationEvents.Posts;
+namespace EventBus.IntegrationEvents;
 
 public record PostApprovedEvent : IntegrationEvent, IPostApprovedEvent
 {
