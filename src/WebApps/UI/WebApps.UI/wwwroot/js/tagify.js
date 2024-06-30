@@ -13,7 +13,24 @@ document.addEventListener('DOMContentLoaded', function () {
         mapValueToProp: 'name' // Map the value to 'id'
     });
 
-    // Get a list of tag suggestions when the page is loaded (Lấy danh sách gợi ý tags khi trang được tải)
+    // Function to load existing tags
+    const loadExistingTags = (tags) => {
+        const tagItems = tags.map(tag => ({
+            value: tag.name,
+            name: tag.name,
+            id: tag.id,
+            slug: tag.slug,
+            isExisting: true
+        }));
+        tagify.addTags(tagItems);
+    };
+
+    // Initializing with existing tags from the server
+    const existingTagsElement = document.getElementById('tagsData');
+    const existingTags = JSON.parse(existingTagsElement.getAttribute('data-tags'));
+    loadExistingTags(existingTags);
+
+    // Fetch tag suggestions when the page is loaded (Lấy danh sách gợi ý tags khi trang được tải)
     $.get('/tags/suggest', { count: 10 }, function (response) {
         if (response && response.data && response.data.length > 0) {
             tagify.settings.whitelist = response.data.map(item => ({
@@ -24,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Xử lý sự kiện nhập liệu gợi ý tags
+    // Handle input event for tag suggestions (Xử lý sự kiện nhập liệu gợi ý tags)
     tagify.on('input', function(e) {
         const keyword = e.detail.value;
 

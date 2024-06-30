@@ -8,7 +8,8 @@
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
     <script src="~/js/quill.js" asp-append-version="true"></script>
-    
+    <script src="~/js/tagify.js" asp-append-version="true"></script>
+
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>
     <script>
@@ -161,8 +162,8 @@
         @Html.AntiForgeryToken()
         <!-- Id -->
         <input type="hidden" name="PostId" id="postId" value="@post.Id"/>
+        <!-- Category -->
         <div class="row">
-            <!-- Category -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="category">Category</label>
@@ -183,8 +184,8 @@
                 </div>
             </div>
         </div>
+        <!-- Title -->
         <div class="row">
-            <!-- Title -->
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="title">Title</label>
@@ -199,8 +200,8 @@
                 </div>
             </div>
         </div>
+        <!-- Summary -->
         <div class="row">
-            <!-- Summary -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="summary">Summary</label>
@@ -208,8 +209,8 @@
                 </div>
             </div>
         </div>
+        <!-- Content -->
         <div class="row">
-            <!-- Content -->
             <div class="col-md-12">
                 <div class="form-group">
                     <div id="editor" data-content='@Html.Raw(post.Content)'></div>
@@ -217,8 +218,8 @@
                 </div>
             </div>
         </div>
+        <!-- Seo Description -->
         <div class="row">
-            <!-- Seo Description -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="seoDescription">SEO Description</label>
@@ -226,8 +227,8 @@
                 </div>
             </div>
         </div>
+        <!-- Source -->
         <div class="row">
-            <!-- Source -->
             <div class="col-md-12">
                 <div class="form-group">
                     <label for="source">Source</label>
@@ -235,8 +236,18 @@
                 </div>
             </div>
         </div>
+        <!-- Tags -->
         <div class="row">
-            <!-- Thumbnail -->
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" class="form-control" id="tags" placeholder="Add tags">
+                    <input type="hidden" name="RawTags" id="tagsData" data-tags='@Html.Raw(Json.Serialize(Model.Post.Tags))'>
+                </div>
+            </div>
+        </div>
+        <!-- Thumbnail -->
+        <div class="row">
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
                     <label for="thumbnail" class="custom-file-upload" style="width: 100%;">

@@ -37,7 +37,7 @@ namespace Post.Api.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-/*[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]*/
+[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
 public class PostsController(IMediator mediator, IMapper mapper) : ControllerBase
 {
     [HttpPost]
