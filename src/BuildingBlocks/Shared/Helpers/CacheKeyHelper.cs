@@ -199,4 +199,15 @@ public static class CacheKeyHelper
     }
 
     #endregion
+    
+    #region Post In Tag Grpc
+    
+    private const string PostInTagGrpcServicePrefix = "grpc:post-in-tag";
+
+    public static class PostInTagGrpc
+    {
+        public static string GetTagsByPostIdAsync(Guid postId) => $"{PostInTagGrpcServicePrefix}:tags:post:{postId}";
+    }
+    
+    #endregion
 }

@@ -1,12 +1,14 @@
+using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using Post.Domain.GrpcClients;
 using PostInTag.Grpc.Protos;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 
 namespace Post.Infrastructure.GrpcClients;
 
-public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ILogger logger) : IPostInTagGrpcClient
+public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ICacheService cacheService, ILogger logger) : IPostInTagGrpcClient
 {
     public async Task<IEnumerable<Guid>> GetTagIdsByPostIdAsync(Guid postId)
     {
@@ -14,6 +16,13 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
 
         try
         {
+            var cacheKey = CacheKeyHelper.PostInTagGrpc.GetTagsByPostIdAsync(postId);
+            var cachedTags = await cacheService.GetAsync<IEnumerable<Guid>>(cacheKey);
+            if (cachedTags != null)
+            {
+                return cachedTags;
+            }
+            
             var request = new GetTagsByPostIdRequest
             {
                 PostId = postId.ToString()
@@ -27,7 +36,12 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
             }
         
             var tagIds = result.TagIds.Select(Guid.Parse);
-            return tagIds;
+            
+            var tagIdList = tagIds as Guid[] ?? tagIds.ToArray();
+            
+            await cacheService.SetAsync(cacheKey, tagIdList.ToList());
+            
+            return tagIdList;
         }
         catch (RpcException rpcEx)
         {

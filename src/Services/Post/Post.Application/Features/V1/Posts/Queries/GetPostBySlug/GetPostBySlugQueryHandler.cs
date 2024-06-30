@@ -17,6 +17,8 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostBySlug;
 public class GetPostBySlugQueryHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
+    ITagGrpcClient tagGrpcClient,
+    IPostInTagGrpcClient postInTagGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
@@ -40,7 +42,9 @@ public class GetPostBySlugQueryHandler(
                 return result;
             }
 
-            var post = await postRepository.GetPostBySlug(request.Slug);
+            var postTask = postRepository.GetPostBySlug(request.Slug);
+            var post = await postTask;
+
             if (post == null)
             {
                 logger.Warning("{MethodName} - Post not found with Slug: {PostSlug}", methodName, request.Slug);
@@ -48,10 +52,16 @@ public class GetPostBySlugQueryHandler(
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
-            
+
             var data = mapper.Map<PostDto>(post);
 
-            var category = await categoryGrpcClient.GetCategoryById(post.CategoryId);
+            // Fetch category and tags in parallel
+            var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
+            var tagIdsTask = postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
+
+            await Task.WhenAll(categoryTask, tagIdsTask);
+
+            var category = await categoryTask;
             if (category == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
@@ -60,6 +70,18 @@ public class GetPostBySlugQueryHandler(
             }
 
             data.Category = mapper.Map<CategoryDto>(category);
+
+            var tagIds = await tagIdsTask;
+            var tagIdList = tagIds.ToList();
+            if (tagIdList.IsNotNullOrEmpty())
+            {
+                var tagsInfoTask = tagGrpcClient.GetTagsByIds(tagIdList);
+                var tagsInfo = await tagsInfoTask.ConfigureAwait(false);
+                if (tagsInfo != null)
+                {
+                    data.Tags = tagsInfo.ToList();
+                }
+            }
             
             result.Success(data);
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
