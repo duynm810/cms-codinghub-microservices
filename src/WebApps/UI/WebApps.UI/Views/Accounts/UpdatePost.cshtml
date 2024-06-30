@@ -86,11 +86,31 @@
             fileList.appendChild(fileItem);
         }
 
+        async function updatePostThumbnail(postId) {
+            try {
+                console.log(`Updating thumbnail for post with ID: ${postId}`);
+                const response = await $.ajax({
+                    url: `/accounts/update-thumbnail/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        thumbnail: null // Set the thumbnail to null
+                    })
+                });
+
+                console.log('Post thumbnail updated successfully', response);
+            } catch (error) {
+                showErrorNotification(`Error updating post: ${error.responseText || error.message}`);
+            }
+        }
+
         async function submitUpdatePostForm() {
             const form = document.getElementById('frm-update-post');
 
             const content = quill.root.innerHTML;
             document.querySelector('input[name="Content"]').value = content;
+
+            const tagsData = window.getTagsData();
 
             const formData = new FormData(form);
 
@@ -105,7 +125,8 @@
                 Thumbnail: formData.get('Thumbnail'),
                 SeoDescription: formData.get('SeoDescription'),
                 Source: formData.get('Source'),
-                CategoryId: formData.get('category')
+                CategoryId: formData.get('CategoryId'),
+                RawTags: JSON.stringify(tagsData)
             };
 
             try {
@@ -127,24 +148,7 @@
                 showErrorNotification('An error occurred while updating the post.');
             }
         }
-
-        async function updatePostThumbnail(postId) {
-            try {
-                console.log(`Updating thumbnail for post with ID: ${postId}`);
-                const response = await $.ajax({
-                    url: `/accounts/update-thumbnail/${postId}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        thumbnail: null // Set the thumbnail to null
-                    })
-                });
-
-                console.log('Post thumbnail updated successfully', response);
-            } catch (error) {
-                showErrorNotification(`Error updating post: ${error.responseText || error.message}`);
-            }
-        }
+        
     </script>
 }
 

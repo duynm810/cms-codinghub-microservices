@@ -208,7 +208,6 @@ public class AccountsController(
     }
 
     [HttpPut]
-    [ValidateAntiForgeryToken]
     public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
         const string methodName = nameof(UpdatePost);
