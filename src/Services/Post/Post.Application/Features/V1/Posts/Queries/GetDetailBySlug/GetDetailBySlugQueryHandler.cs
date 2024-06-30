@@ -38,7 +38,7 @@ public class GetDetailBySlugQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
 
             var cacheKey = CacheKeyHelper.Post.GetDetailBySlugKey(request.Slug);
-            var cachedPost = await cacheService.GetAsync<PostsBySlugDto>(cacheKey, cancellationToken).ConfigureAwait(false);
+            var cachedPost = await cacheService.GetAsync<PostsBySlugDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
                 logger.Information("Retrieved post from cache with slug: {PostSlug}", request.Slug);
@@ -46,7 +46,7 @@ public class GetDetailBySlugQueryHandler(
                 return result;
             }
 
-            var post = await postRepository.GetPostBySlug(request.Slug).ConfigureAwait(false);
+            var post = await postRepository.GetPostBySlug(request.Slug);
             if (post == null)
             {
                 logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, request.Slug);
@@ -57,12 +57,15 @@ public class GetDetailBySlugQueryHandler(
 
             var postDetail = mapper.Map<PostDto>(post);
 
+            // Fetch category, related posts, tag ids, and author user info in parallel
             var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
             var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
+            var tagIdsTask = postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
+            var authorUserInfoTask = identityGrpcClient.GetUserInfo(post.AuthorUserId);
 
-            await Task.WhenAll(categoryTask, relatedPostsTask).ConfigureAwait(false);
+            await Task.WhenAll(categoryTask, relatedPostsTask, tagIdsTask, authorUserInfoTask);
 
-            var category = await categoryTask.ConfigureAwait(false);
+            var category = await categoryTask;
             if (category == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
@@ -71,34 +74,36 @@ public class GetDetailBySlugQueryHandler(
             }
 
             postDetail.Category = mapper.Map<CategoryDto>(category);
+
             var data = new PostsBySlugDto { Detail = postDetail };
 
-            var tagIds = await postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id).ConfigureAwait(false);
+            var tagIds = await tagIdsTask;
             var tagIdList = tagIds.ToList();
             if (tagIdList.IsNotNullOrEmpty())
             {
-                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList).ConfigureAwait(false);
+                var tagsInfo = await tagGrpcClient.GetTagsByIds(tagIdList);
                 if (tagsInfo != null)
                 {
                     data.Detail.Tags = tagsInfo.ToList();
                 }
             }
 
-            var authorUserInfo = await identityGrpcClient.GetUserInfo(post.AuthorUserId).ConfigureAwait(false);
+            var authorUserInfo = await authorUserInfoTask;
             if (authorUserInfo != null)
             {
                 data.Detail.User = authorUserInfo;
             }
 
-            var relatedPosts = relatedPostsTask.Result.ToList();
-            if (relatedPosts.IsNotNullOrEmpty())
+            var relatedPosts = await relatedPostsTask;
+            var postBases = relatedPosts.ToList();
+            if (postBases.IsNotNullOrEmpty())
             {
-                var relatedPostList= await postService.EnrichPostsWithCategories(relatedPosts, cancellationToken);
+                var relatedPostList = await postService.EnrichPostsWithCategories(postBases, cancellationToken);
                 data.RelatedPosts = relatedPostList;
             }
 
             result.Success(data);
-            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken).ConfigureAwait(false);
+            await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName, request.Slug);
         }
