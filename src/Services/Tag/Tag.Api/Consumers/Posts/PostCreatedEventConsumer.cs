@@ -23,12 +23,12 @@ public class PostCreatedEventConsumer(
 
     public async Task Consume(ConsumeContext<IPostCreatedEvent> context)
     {
-        var postCreatedEvent = context.Message;
+        var message = context.Message;
 
         const string methodName = nameof(Consume);
         const string className = nameof(PostCreatedEventConsumer);
 
-        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, postCreatedEvent.PostId);
+        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, message.PostId);
 
         await using var transaction = await tagRepository.BeginTransactionAsync();
 
@@ -36,8 +36,9 @@ public class PostCreatedEventConsumer(
         {
             var tagIds = new List<Guid>();
 
-            foreach (var rawTag in postCreatedEvent.RawTags)
+            foreach (var rawTag in message.RawTags)
             {
+                // If the tag is new, create it (Nếu tag mới, tạo tag mới)
                 if (!rawTag.IsExisting)
                 {
                     var newTagId = await CreateNewTag(rawTag);
@@ -45,6 +46,7 @@ public class PostCreatedEventConsumer(
                 }
                 else
                 {
+                    // If the tag exists, update its usage count (Nếu tag tồn tại, cập nhật usage count)
                     var existingTagId = await UpdateExistingTag(rawTag);
                     if (existingTagId != Guid.Empty)
                     {
@@ -55,26 +57,27 @@ public class PostCreatedEventConsumer(
 
             await transaction.CommitAsync();
 
-            await PublishTagsProcessedEvent(postCreatedEvent.PostId, tagIds);
+            // Publish event for created tags (Phát hành sự kiện cho các tags đã tạo)
+            await PublishPostTagsCreatedEvent(message.PostId, tagIds);
 
             logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className,
-                postCreatedEvent.PostId);
+                message.PostId);
         }
         catch (Exception e)
         {
             await tagRepository.RollbackTransactionAsync();
             logger.Error(e,
                 "ERROR while processing {MethodName} - PostId: {PostId}. Error: {ErrorMessage}", methodName,
-                postCreatedEvent.PostId, e.Message);
+                message.PostId, e.Message);
             throw;
         }
     }
 
-    #region Helpers
+    #region HELPERS
 
-    private async Task PublishTagsProcessedEvent(Guid postId, List<Guid> tagIds)
+    private async Task PublishPostTagsCreatedEvent(Guid postId, List<Guid> tagIds)
     {
-        const string methodName = nameof(PublishTagsProcessedEvent);
+        const string methodName = nameof(PublishPostTagsCreatedEvent);
 
         var serviceName = _eventBusSettings.ServiceName;
 
@@ -83,13 +86,13 @@ public class PostCreatedEventConsumer(
 
         try
         {
-            var tagProcessedEvent = new TagProcessedEvent(_eventBusSettings.ServiceName)
+            var postTagsCreatedEvent = new PostTagsCreatedEvent(_eventBusSettings.ServiceName)
             {
                 PostId = postId,
                 TagIds = tagIds
             };
 
-            await publishEndpoint.Publish<ITagProcessedEvent>(tagProcessedEvent);
+            await publishEndpoint.Publish<IPostTagsCreatedEvent>(postTagsCreatedEvent);
             
             logger.Information(
                 "END Publish {MethodName} successfully - PostId: {PostId}, SourceService: {SourceService}", methodName,
@@ -119,7 +122,9 @@ public class PostCreatedEventConsumer(
 
             var tag = mapper.Map<TagBase>(tagDto);
 
+            // Set initial usage count to 1 (Thiết lập usage count ban đầu là 1)
             tag.UsageCount = 1;
+            
             await tagRepository.CreateTag(tag);
 
             return tag.Id;
@@ -147,7 +152,9 @@ public class PostCreatedEventConsumer(
                 return Guid.Empty;
             }
 
+            // Increase the usage count for the existing tag (Tăng usage count cho tag hiện tại)
             existedTag.UsageCount++;
+            
             await tagRepository.UpdateTag(existedTag);
 
             return existedTag.Id;

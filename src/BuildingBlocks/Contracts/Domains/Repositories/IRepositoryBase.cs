@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Contracts.Domains.Repositories;
 
-#region Query Base (Get)
+#region QUERY
 
 public interface IRepositoryQueryBase<T, TK> where T : EntityBase<TK>
 {
@@ -35,7 +35,7 @@ public interface IRepositoryQueryBase<T, TK, TContext> : IRepositoryQueryBase<T,
 
 #endregion
 
-#region Command Base (Create-Update-Delete)
+#region COMMAND
 
 public interface IRepositoryCommandBase<T, TK> : IRepositoryQueryBase<T, TK>
     where T : EntityBase<TK>

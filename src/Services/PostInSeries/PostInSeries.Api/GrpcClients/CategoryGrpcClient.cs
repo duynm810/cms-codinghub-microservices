@@ -23,14 +23,7 @@ public class CategoryGrpcClient(
         try
         {
             var idList = ids as long[] ?? ids.ToArray();
-
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
-            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-            if (cachedCategories != null)
-            {
-                return cachedCategories;
-            }
-
+            
             var request = new GetCategoriesByIdsRequest { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             if (result == null || result.Categories.Count == 0)
@@ -41,7 +34,6 @@ public class CategoryGrpcClient(
         
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = categoriesByIds.ToList();
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)

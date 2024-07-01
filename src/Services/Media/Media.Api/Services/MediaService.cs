@@ -166,7 +166,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
         return result;
     }
 
-    #region Helpers
+    #region HELPERS
 
     /// <summary>
     /// Check file extension is allowed

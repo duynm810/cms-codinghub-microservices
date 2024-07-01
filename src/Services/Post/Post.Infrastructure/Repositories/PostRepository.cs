@@ -22,10 +22,10 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return post.Id;
     }
 
-    public async Task<PostBase> UpdatePost(PostBase post)
+    public async Task<bool> UpdatePost(PostBase post)
     {
         await UpdateAsync(post);
-        return post;
+        return true;
     }
 
     public async Task DeletePost(PostBase post) => await DeleteAsync(post);

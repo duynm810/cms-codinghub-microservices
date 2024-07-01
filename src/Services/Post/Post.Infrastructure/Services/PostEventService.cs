@@ -43,4 +43,35 @@ public class PostEventService(IPublishEndpoint publishEndpoint, IOptions<EventBu
             throw;
         }
     }
+
+    public async Task HandlePostUpdatedEvent(Guid postId, List<RawTagDto> rawTags)
+    {
+        const string methodName = nameof(HandlePostUpdatedEvent);
+        
+        var serviceName = _eventBusSettings.ServiceName;
+
+        logger.Information("BEGIN Publish {MethodName} - PostId: {PostId}, SourceService: {SourceService}", methodName,
+            postId, serviceName);
+
+        try
+        {
+            var postUpdatedEvent = new PostUpdatedEvent(serviceName)
+            {
+                PostId = postId,
+                RawTags = rawTags
+            };
+            
+            await publishEndpoint.Publish<IPostUpdatedEvent>(postUpdatedEvent);
+            
+            logger.Information(
+                "END Publish {MethodName} successfully - PostId: {PostId}, SourceService: {SourceService}", methodName,
+                postId, serviceName);
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "ERROR while publishing {MethodName} - PostId: {PostId}, SourceService: {SourceService}",
+                methodName, postId, serviceName);
+            throw;
+        }
+    }
 }

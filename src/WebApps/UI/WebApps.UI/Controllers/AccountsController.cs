@@ -277,7 +277,7 @@ public class AccountsController(
 
     #endregion
     
-    #region Helpers
+    #region HELPERS
 
     private async Task<IEnumerable<CategoryDto>> GetCategories()
     {

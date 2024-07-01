@@ -27,13 +27,6 @@ public class PostGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInTagDto>>(cacheKey);
-            if (cachedPosts != null)
-            {
-                return cachedPosts;
-            }
-
             // Convert each GUID to its string representation
             var request = new GetPostsByIdsRequest();
             request.Ids.AddRange(idList.Select(id => id.ToString()));
@@ -43,9 +36,6 @@ public class PostGrpcClient(
             {
                 var postsByIds = mapper.Map<IEnumerable<PostInTagDto>>(result.Posts);
                 var data = postsByIds.ToList();
-
-                // Lưu cache
-                await cacheService.SetAsync(cacheKey, data);
 
                 return data;
             }
@@ -71,13 +61,6 @@ public class PostGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
-            if (cachedPosts != null)
-            {
-                return cachedPosts;
-            }
-
             var request = new GetTop10PostsRequest();
 
             var result = await postProtoServiceClient.GetTop10PostsAsync(request);
@@ -85,10 +68,6 @@ public class PostGrpcClient(
             {
                 var posts = mapper.Map<IEnumerable<PostDto>>(result.Posts);
                 var data = posts.ToList();
-
-                // Lưu cache
-                await cacheService.SetAsync(cacheKey, data);
-
                 return data;
             }
 

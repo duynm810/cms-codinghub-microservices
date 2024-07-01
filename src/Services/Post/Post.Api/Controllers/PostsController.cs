@@ -57,6 +57,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous] //TODO disabled author
     public async Task<ActionResult<PostDto>> UpdatePost([FromRoute, Required] Guid id, [FromBody] UpdatePostCommand command)
     {
         command.SetId(id);

@@ -32,14 +32,6 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             var data = mapper.Map<TagDto>(tag);
             result.Success(data);
 
-            var cacheKeys = new List<string>
-            {
-                CacheKeyHelper.Tag.GetAllTagsKey(),
-                CacheKeyHelper.TagGrpc.GetAllTagsKey(),
-            };
-            
-            await cacheService.RemoveMultipleAsync(cacheKeys);
-
             logger.Information("END {MethodName} - Tag created successfully with ID {TagId}", methodName, data.Id);
         }
         catch (Exception e)
@@ -77,13 +69,9 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
             var cacheKeys = new List<string>
             {
-                CacheKeyHelper.Tag.GetAllTagsKey(),
                 CacheKeyHelper.Tag.GetTagByIdKey(id),
                 CacheKeyHelper.Tag.GetTagBySlugKey(updateTag.Slug),
-                CacheKeyHelper.Tag.GetTagByNameKey(updateTag.Name),
-                CacheKeyHelper.TagGrpc.GetAllTagsKey(),
-                CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id),
-                CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(updateTag.Slug)
+                CacheKeyHelper.Tag.GetTagByNameKey(updateTag.Name)
             };
             
             await cacheService.RemoveMultipleAsync(cacheKeys);
@@ -126,16 +114,10 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                 
                 // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
                 tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id)));
-                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id)));
             }
             
             await Task.WhenAll(tasks);
-
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey())
-            );
-
+            
             result.Success(true);
 
             logger.Information("END {MethodName} - Tags with IDs {TagIds} deleted successfully", methodName, string.Join(", ", ids));
@@ -158,25 +140,13 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving all tags", methodName);
-
-            var cacheKey = CacheKeyHelper.Tag.GetAllTagsKey();
-            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
-            if (cachedTags != null)
-            {
-                result.Success(cachedTags);
-                logger.Information("END {MethodName} - Successfully retrieved tags from cache", methodName);
-                return result;
-            }
-
+            
             var categories = await tagRepository.GetTags(count);
             if (categories.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<TagDto>>(categories);
                 result.Success(data);
-
-                // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data);
-
+                
                 logger.Information("END {MethodName} - Successfully retrieved {TagCount} tags", methodName,
                     data.Count);
             }

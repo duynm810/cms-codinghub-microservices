@@ -1,12 +1,12 @@
 using Contracts.Commons.Interfaces;
 using Grpc.Core;
-using Post.Domain.GrpcClients;
 using PostInTag.Grpc.Protos;
-using Serilog;
 using Shared.Constants;
 using Shared.Helpers;
+using Tag.Api.GrpcClients.Interfaces;
+using ILogger = Serilog.ILogger;
 
-namespace Post.Infrastructure.GrpcClients;
+namespace Tag.Api.GrpcClients;
 
 public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ICacheService cacheService, ILogger logger) : IPostInTagGrpcClient
 {
@@ -42,39 +42,6 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting tags by post id {Id}. Message: {ErrorMessage}", methodName, postId, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
-        }
-    }
-
-    public async Task<IEnumerable<Guid>> GetPostIdsInTagAsync(Guid tagId)
-    {
-        const string methodName = nameof(GetPostIdsInTagAsync);
-        
-        try
-        {
-            var request = new GetPostIdsInTagRequest
-            {
-                TagId = tagId.ToString()
-            };
-
-            var result = await postInTagServiceClient.GetPostIdsInTagAsync(request);
-            if (result == null || result.PostIds.Count == 0)
-            {
-                logger.Warning("{MethodName}: No posts found for tag id {Id}", methodName, tagId);
-                return Enumerable.Empty<Guid>();
-            }
-
-            var postIds = result.PostIds.Select(Guid.Parse);
-            return postIds;
-        }
-        catch (RpcException rpcEx)
-        {
-            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting posts by tag id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, tagId, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<Guid>();
-        }
-        catch (Exception e)
-        {
-            logger.Error(e, "{MethodName}: Unexpected error occurred while getting posts by tag id {Id}. Message: {ErrorMessage}", methodName, tagId, e.Message);
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }

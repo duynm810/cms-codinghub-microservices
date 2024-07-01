@@ -8,8 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using PostInTag.Grpc.Protos;
 using Shared.Configurations;
 using Shared.Settings;
+using Tag.Api.GrpcClients;
+using Tag.Api.GrpcClients.Interfaces;
 using Tag.Api.Persistence;
 using Tag.Api.Repositories;
 using Tag.Api.Repositories.Interfaces;
@@ -32,6 +35,9 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
+        
+        // Register gRPC services
+        services.AddGrpcServices();
 
         // Register Redis
         services.AddRedisConfiguration();
@@ -59,7 +65,7 @@ public static class ServiceExtensions
 
         // Register authorization services
         services.AddAuthorizationServices();
-        
+
         // Register MassTransit with RabbitMQ
         services.AddMassTransitWithRabbitMq();
     }
@@ -71,7 +77,7 @@ public static class ServiceExtensions
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
-        
+
         var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
                               ?? throw new ArgumentNullException(
                                   $"{nameof(EventBusSettings)} is not configured properly");
@@ -111,7 +117,8 @@ public static class ServiceExtensions
             .AddScoped<ITagRepository, TagRepository>()
             .AddScoped<ITagService, TagService>()
             .AddScoped<ISerializeService, SerializeService>()
-            .AddScoped<ICacheService, CacheService>();
+            .AddScoped<ICacheService, CacheService>()
+            .AddScoped<IPostInTagGrpcClient, PostInTagGrpcClient>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
@@ -119,6 +126,16 @@ public static class ServiceExtensions
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+    }
+
+    private static void AddGrpcServices(this IServiceCollection services)
+    {
+        var grpcSettings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings)) ??
+                           throw new ArgumentNullException(
+                               $"{nameof(GrpcSettings)} is not configured properly");
+
+        services.AddGrpcClient<PostInTagService.PostInTagServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.PostInTagUrl));
     }
 
     private static void AddHealthCheckServices(this IServiceCollection services)
@@ -130,7 +147,7 @@ public static class ServiceExtensions
         var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
                             throw new ArgumentNullException(
                                 $"{nameof(CacheSettings)} is not configured properly");
-        
+
         var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
                                           throw new ArgumentNullException(
                                               $"{nameof(ElasticConfigurations)} is not configured properly");

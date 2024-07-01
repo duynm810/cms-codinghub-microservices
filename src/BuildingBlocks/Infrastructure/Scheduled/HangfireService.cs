@@ -6,7 +6,7 @@ namespace Infrastructure.Scheduled;
 
 public class HangfireService : IScheduledJobService
 {
-    #region Fire And Forget (Chạy ngay lập tức - Không cần đợi)
+    #region FIRE AND FORGET (Chạy ngay lập tức - Không cần đợi)
 
     public string Enqueue(Expression<Action> functionCall)
     {
@@ -20,7 +20,7 @@ public class HangfireService : IScheduledJobService
 
     #endregion
 
-    #region Delayed Jobs
+    #region DELAYED JOBS
 
     public string Schedule(Expression<Action> functionCall, TimeSpan delay)
     {
@@ -39,7 +39,7 @@ public class HangfireService : IScheduledJobService
 
     #endregion
 
-    #region Continuos Jobs
+    #region CONTINUOS JOBS
 
     public string ContinueQueueWith(string parentJobId, Expression<Action> functionCall)
     {

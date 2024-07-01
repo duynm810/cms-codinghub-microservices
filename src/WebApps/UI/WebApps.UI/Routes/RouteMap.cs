@@ -5,7 +5,7 @@ public static class RouteMap
 {
     public static void RegisterRoutes(WebApplication app)
     {
-        #region Accounts
+        #region ACCOUNTS
 
         app.MapControllerRoute(
             "update_post_view",
@@ -44,7 +44,7 @@ public static class RouteMap
 
         #endregion
 
-        #region Posts
+        #region POSTS
 
         app.MapControllerRoute(
             "post-detail",
@@ -88,7 +88,7 @@ public static class RouteMap
 
         #endregion
 
-        #region About
+        #region ABOUT
 
         app.MapControllerRoute(
             "about",
@@ -97,7 +97,7 @@ public static class RouteMap
 
         #endregion
 
-        #region Default
+        #region DEFAULT
 
         app.MapControllerRoute(
             name: "default",

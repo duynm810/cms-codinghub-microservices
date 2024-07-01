@@ -2,7 +2,7 @@ namespace Shared.Helpers;
 
 public static class CacheKeyHelper
 {
-    #region Category
+    #region CATEGORY
 
     private const string CategoryServicePrefix = "service:category";
 
@@ -20,25 +20,7 @@ public static class CacheKeyHelper
 
     #endregion
 
-    #region Category Grpc
-
-    private const string CategoryGrpcPrefix = "grpc:category";
-
-    public static class CategoryGrpc
-    {
-        public static string GetGrpcCategoryByIdKey(long categoryId) => $"{CategoryGrpcPrefix}:{categoryId}";
-
-        public static string GetGrpcCategoryBySlugKey(string slug) => $"{CategoryGrpcPrefix}:slug:{slug}";
-
-        public static string GetGrpcCategoriesByIdsKey(IEnumerable<long> ids) =>
-            $"{CategoryGrpcPrefix}:ids:{string.Join("_", ids)}";
-
-        public static string GetGrpcAllNonStaticPageCategoriesKey() => $"{CategoryGrpcPrefix}:non_static";
-    }
-
-    #endregion
-
-    #region Post
+    #region POST
 
     private const string PostServicePrefix = "service:post";
 
@@ -80,21 +62,7 @@ public static class CacheKeyHelper
 
     #endregion
 
-    #region Post Grpc
-
-    private const string PostGrpcPrefix = "grpc:post";
-
-    public static class PostGrpc
-    {
-        public static string GetGrpcPostsByIdsKey(IEnumerable<Guid> ids) =>
-            $"{PostGrpcPrefix}:ids:{string.Join("_", ids)}";
-        
-        public static string GetTop10PostsKey() => $"{PostGrpcPrefix}:top10";
-    }
-
-    #endregion
-
-    #region Series
+    #region SERIES
 
     private const string SeriesServicePrefix = "service:series";
 
@@ -111,20 +79,7 @@ public static class CacheKeyHelper
 
     #endregion
 
-    #region Series Grpc
-
-    private const string SeriesGrpcPrefix = "grpc:series";
-
-    public static class SeriesGrpc
-    {
-        public static string GetGrpcSeriesByIdKey(Guid seriesId) => $"{SeriesGrpcPrefix}:{seriesId}";
-
-        public static string GetGrpcSeriesBySlugKey(string slug) => $"{SeriesGrpcPrefix}:slug:{slug}";
-    }
-
-    #endregion
-
-    #region Post In Series
+    #region POST IN SERIES
 
     private const string PostInSeriesServicePrefix = "service:post-in-series";
 
@@ -143,14 +98,12 @@ public static class CacheKeyHelper
 
     #endregion
 
-    #region Tag
+    #region TAG
 
     private const string TagServicePrefix = "service:tag";
     
     public static class Tag
     {
-        public static string GetAllTagsKey() => $"{TagServicePrefix}:all";
-
         public static string GetTagByIdKey(Guid tagId) => $"{TagServicePrefix}:{tagId}";
         
         public static string GetTagBySlugKey(string slug) => $"{TagServicePrefix}:slug:{slug}";
@@ -163,25 +116,8 @@ public static class CacheKeyHelper
     }
 
     #endregion
-
-    #region Tag Grpc
-
-    private const string TagGrpcPrefix = "grpc:tag";
-
-    public static class TagGrpc
-    {
-        public static string GetAllTagsKey() => $"{TagGrpcPrefix}:all";
-        
-        public static string GetGrpcTagsByIdsKey(IEnumerable<Guid> ids) => $"{TagGrpcPrefix}:ids:{string.Join(",", ids)}";
-        
-        public static string GetGrpcTagByIdKey(Guid tagId) => $"{TagGrpcPrefix}:{tagId}";
-        
-        public static string GetGrpcTagBySlugKey(string slug) => $"{TagGrpcPrefix}:slug:{slug}";
-    }
-
-    #endregion
     
-    #region Post In Tag
+    #region POST IN TAG
 
     private const string PostInTagServicePrefix = "service:post-in-tag";
 
@@ -198,16 +134,5 @@ public static class CacheKeyHelper
             $"{PostInTagServicePrefix}:tag:slug:{tagSlug}:page:{pageNumber}:size:{pageSize}";
     }
 
-    #endregion
-    
-    #region Post In Tag Grpc
-    
-    private const string PostInTagGrpcServicePrefix = "grpc:post-in-tag";
-
-    public static class PostInTagGrpc
-    {
-        public static string GetTagsByPostIdAsync(Guid postId) => $"{PostInTagGrpcServicePrefix}:tags:post:{postId}";
-    }
-    
     #endregion
 }

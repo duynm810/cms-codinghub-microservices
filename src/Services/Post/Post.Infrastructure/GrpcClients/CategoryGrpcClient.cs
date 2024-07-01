@@ -23,13 +23,6 @@ public class CategoryGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryByIdKey(id);
-            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
-            if (cachedCategory != null)
-            {
-                return cachedCategory;
-            }
-
             var request = new GetCategoryByIdRequest { Id = id };
             var result = await categoryProtoServiceClient.GetCategoryByIdAsync(request);
             if (result == null)
@@ -39,7 +32,6 @@ public class CategoryGrpcClient(
             }
 
             var data = mapper.Map<CategoryDto>(result);
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)
@@ -63,14 +55,7 @@ public class CategoryGrpcClient(
         try
         {
             var idList = ids as long[] ?? ids.ToArray();
-
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
-            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-            if (cachedCategories != null)
-            {
-                return cachedCategories;
-            }
-
+            
             var request = new GetCategoriesByIdsRequest { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             if (result == null || result.Categories.Count == 0)
@@ -81,7 +66,6 @@ public class CategoryGrpcClient(
 
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = categoriesByIds.ToList();
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)
@@ -106,13 +90,6 @@ public class CategoryGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoryBySlugKey(slug);
-            var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
-            if (cachedCategory != null)
-            {
-                return cachedCategory;
-            }
-
             var request = new GetCategoryBySlugRequest { Slug = slug };
             var result = await categoryProtoServiceClient.GetCategoryBySlugAsync(request);
             if (result == null)
@@ -122,7 +99,6 @@ public class CategoryGrpcClient(
             }
 
             var data = mapper.Map<CategoryDto>(result);
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)
@@ -147,13 +123,6 @@ public class CategoryGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
-            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-            if (cachedCategories != null)
-            {
-                return cachedCategories;
-            }
-
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
             if (result == null || result.Categories.Count == 0)
             {
@@ -163,7 +132,6 @@ public class CategoryGrpcClient(
 
             var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = allNonStaticPageCategories.ToList();
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)

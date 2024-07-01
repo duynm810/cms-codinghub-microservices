@@ -30,7 +30,7 @@ public class RazorRenderViewService(
         return await RenderAsync(viewName, model, false);
     }
 
-    #region Helpers
+    #region HELPERS
     
     /// <summary>
     /// Render a view or partial view to a string.

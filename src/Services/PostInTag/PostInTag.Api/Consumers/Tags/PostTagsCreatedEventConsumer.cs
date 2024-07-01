@@ -8,27 +8,28 @@ using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.Consumers.Tags;
 
-public class TagProcessedEventConsumer(IPostInTagRepository postInTagRepository, IMapper mapper, ILogger logger) : IConsumer<ITagProcessedEvent>
+public class PostTagsCreatedEventConsumer(IPostInTagRepository postInTagRepository, IMapper mapper, ILogger logger)
+    : IConsumer<IPostTagsCreatedEvent>
 {
-    public async Task Consume(ConsumeContext<ITagProcessedEvent> context)
+    public async Task Consume(ConsumeContext<IPostTagsCreatedEvent> context)
     {
-        var tagProcessedEvent = context.Message;
+        var message = context.Message;
 
-        const string className = nameof(TagProcessedEventConsumer);
+        const string className = nameof(PostTagsCreatedEventConsumer);
         const string methodName = nameof(Consume);
 
-        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, tagProcessedEvent.PostId);
+        logger.Information("BEGIN processing {ClassName} - PostId: {PostId}", className, message.PostId);
 
         try
         {
             var sortOrder = 1;
 
-            foreach (var tagId in tagProcessedEvent.TagIds)
+            foreach (var tagId in message.TagIds)
             {
                 var postInTagDto = new CreatePostInTagDto
                 {
                     TagId = tagId,
-                    PostId = tagProcessedEvent.PostId,
+                    PostId = message.PostId,
                     SortOrder = sortOrder++
                 };
 
@@ -37,12 +38,12 @@ public class TagProcessedEventConsumer(IPostInTagRepository postInTagRepository,
             }
 
             logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className,
-                tagProcessedEvent.PostId);
+                message.PostId);
         }
         catch (Exception e)
         {
             logger.Error(e, "ERROR while processing {MethodName} - PostId: {PostId}. Error: {ErrorMessage}", methodName,
-                tagProcessedEvent.PostId, e.Message);
+                message.PostId, e.Message);
             throw;
         }
     }

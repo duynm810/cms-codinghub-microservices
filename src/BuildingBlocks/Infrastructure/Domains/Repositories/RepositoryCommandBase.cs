@@ -21,7 +21,7 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
 
     private IDbConnection Connection => _dbContext.Database.GetDbConnection();
 
-    #region Async
+    #region ASYNC
 
     public async Task<TK> CreateAsync(T entity)
     {
@@ -85,7 +85,7 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
 
     #endregion
 
-    #region Not Async
+    #region NOT ASYNC
 
     public void Create(T entity) =>
         _dbContext.Set<T>().Add(entity);
