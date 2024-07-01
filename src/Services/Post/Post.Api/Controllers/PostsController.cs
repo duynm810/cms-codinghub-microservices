@@ -42,7 +42,6 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<Guid>), (int)HttpStatusCode.OK)]
-    [AllowAnonymous] //TODO disabled author
     public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody, Required] CreatePostDto request)
     {
         var command = mapper.Map<CreatePostCommand>(request);
@@ -57,7 +56,6 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
-    [AllowAnonymous] //TODO disabled author
     public async Task<ActionResult<PostDto>> UpdatePost([FromRoute, Required] Guid id, [FromBody] UpdatePostCommand command)
     {
         command.SetId(id);

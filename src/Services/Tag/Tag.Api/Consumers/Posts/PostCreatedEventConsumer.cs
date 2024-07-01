@@ -36,24 +36,17 @@ public class PostCreatedEventConsumer(
         {
             var tagIds = new List<Guid>();
 
-            foreach (var rawTag in message.RawTags)
-            {
-                // If the tag is new, create it (Nếu tag mới, tạo tag mới)
-                if (!rawTag.IsExisting)
-                {
-                    var newTagId = await CreateNewTag(rawTag);
-                    tagIds.Add(newTagId);
-                }
-                else
-                {
-                    // If the tag exists, update its usage count (Nếu tag tồn tại, cập nhật usage count)
-                    var existingTagId = await UpdateExistingTag(rawTag);
-                    if (existingTagId != Guid.Empty)
-                    {
-                        tagIds.Add(existingTagId);
-                    }
-                }
-            }
+            var newTags = message.RawTags.Where(t => !t.IsExisting).ToList();
+            var existingTags = message.RawTags.Where(t => t.IsExisting).ToList();
+
+            var newTagTasks = newTags.Select(CreateNewTag).ToList();
+            var existingTagTasks = existingTags.Select(UpdateExistingTag).ToList();
+
+            var newTagIds = await Task.WhenAll(newTagTasks);
+            tagIds.AddRange(newTagIds);
+
+            var existingTagIds = await Task.WhenAll(existingTagTasks);
+            tagIds.AddRange(existingTagIds.Where(id => id != Guid.Empty));
 
             await transaction.CommitAsync();
 
