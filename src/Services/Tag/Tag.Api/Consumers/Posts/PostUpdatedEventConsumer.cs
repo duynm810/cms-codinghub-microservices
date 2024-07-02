@@ -45,23 +45,22 @@ public class PostUpdatedEventConsumer(
             var newTags = message.RawTags.Where(t => !t.IsExisting).ToList();
             var existingTags = message.RawTags.Where(t => t.IsExisting).ToList();
 
-            var newTagTasks = newTags.Select(CreateNewTag).ToList();
-            var existingTagTasks = existingTags.Select(rawTag =>
+            // Create and save new tags (Tạo và lưu các tag mới)
+            foreach (var tag in newTags)
             {
-                var tagId = Guid.Parse(rawTag.Id);
+                var tagId = await CreateNewTag(tag);
+                newTagIds.Add(tagId);
+            }
+
+            // Update existing tags (Cập nhật các tag hiện có)
+            foreach (var tagId in existingTags.Select(rawTag => Guid.Parse(rawTag.Id)))
+            {
                 processedTagIds.Add(tagId);
                 if (!existingTagIds.Contains(tagId))
                 {
-                    return UpdateExistingTag(tagId);
+                    await UpdateExistingTag(tagId);
                 }
-
-                return Task.CompletedTask;
-            }).ToList();
-
-            await Task.WhenAll(newTagTasks);
-            newTagIds.AddRange(newTagTasks.Select(t => t.Result));
-
-            await Task.WhenAll(existingTagTasks);
+            }
 
             // Find tags to remove (Tìm các tags cần xóa)
             var tagsToRemove = existingTagIds.Except(processedTagIds).ToList();
@@ -70,8 +69,10 @@ public class PostUpdatedEventConsumer(
             newTagIds.AddRange(processedTagIds.Where(tagId => !existingTagIds.Contains(tagId)));
 
             // Decrease UsageCount for removed tags (Giảm UsageCount cho các tags cần xóa)
-            var decreaseTasks = tagsToRemove.Select(DecreaseTagUsageCount).ToList();
-            await Task.WhenAll(decreaseTasks);
+            foreach (var tagId in tagsToRemove)
+            {
+                await DecreaseTagUsageCount(tagId);
+            }
 
             await transaction.CommitAsync();
 

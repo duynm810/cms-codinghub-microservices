@@ -6,6 +6,7 @@ using Infrastructure.Extensions;
 using Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using PostInTag.Grpc.Protos;
@@ -35,7 +36,7 @@ public static class ServiceExtensions
 
         // Register database context
         services.AddDatabaseContext();
-        
+
         // Register gRPC services
         services.AddGrpcServices();
 
@@ -83,9 +84,8 @@ public static class ServiceExtensions
                                     $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
-        
-        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
-        services.Configure<EventBusSettings>(configuration.GetSection(nameof(EventBusSettings)));
+
+        services.AddSingleton<EventBusSettings>(sp => sp.GetRequiredService<IOptions<EventBusSettings>>().Value);
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)

@@ -39,14 +39,20 @@ public class PostCreatedEventConsumer(
             var newTags = message.RawTags.Where(t => !t.IsExisting).ToList();
             var existingTags = message.RawTags.Where(t => t.IsExisting).ToList();
 
-            var newTagTasks = newTags.Select(CreateNewTag).ToList();
-            var existingTagTasks = existingTags.Select(UpdateExistingTag).ToList();
+            foreach (var tag in newTags)
+            {
+                var tagId = await CreateNewTag(tag);
+                tagIds.Add(tagId);
+            }
 
-            var newTagIds = await Task.WhenAll(newTagTasks);
-            tagIds.AddRange(newTagIds);
-
-            var existingTagIds = await Task.WhenAll(existingTagTasks);
-            tagIds.AddRange(existingTagIds.Where(id => id != Guid.Empty));
+            foreach (var tag in existingTags)
+            {
+                var tagId = await UpdateExistingTag(tag);
+                if (tagId != Guid.Empty)
+                {
+                    tagIds.Add(tagId);
+                }
+            }
 
             await transaction.CommitAsync();
 

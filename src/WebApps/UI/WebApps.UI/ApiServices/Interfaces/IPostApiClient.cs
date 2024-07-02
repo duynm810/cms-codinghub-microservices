@@ -8,7 +8,7 @@ public interface IPostApiClient
 {
     Task<ApiResult<Guid>> CreatePost(CreatePostDto request);
 
-    Task<ApiResult<PostDto>> UpdatePost(Guid id, UpdatePostDto request);
+    Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostDto request);
 
     Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request);
     

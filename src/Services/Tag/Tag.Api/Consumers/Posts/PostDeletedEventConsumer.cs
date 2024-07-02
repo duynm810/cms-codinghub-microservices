@@ -37,13 +37,11 @@ public class PostDeletedEventConsumer(
             {
                 var tags = await tagRepository.GetTagsByIds(tagIdList);
 
-                var tasks = tags.Select(tag =>
+                foreach (var tag in tags)
                 {
                     tag.UsageCount--;
-                    return tagRepository.UpdateTag(tag);
-                }).ToList();
-
-                await Task.WhenAll(tasks);
+                    await tagRepository.UpdateTag(tag);
+                }
             }
 
             await transaction.CommitAsync();
