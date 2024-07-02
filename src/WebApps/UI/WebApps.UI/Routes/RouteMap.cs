@@ -85,6 +85,11 @@ public static class RouteMap
             "add-new-comment",
             "/posts/add-new-comment",
             new { controller = "Posts", action = "AddNewComment" });
+        
+        app.MapControllerRoute(
+            "reply-to-comment",
+            "/posts/reply-to-comment",
+            new { controller = "Posts", action = "ReplyToComment" });
 
         #endregion
 

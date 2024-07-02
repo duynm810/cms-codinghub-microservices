@@ -108,7 +108,7 @@ const postsController = function () {
                 console.log('Reply form submitted for commentId:', commentId);
 
                 const form = $(this);
-                const url = form.attr('action');
+                const url = form.attr('action') + "?parentId=" + commentId;
                 const $replyContent = $('#txt_reply_content_' + commentId);
                 const $childrenComments = $('#children_comments_' + commentId);
                 const $hiddenNumberOfComments = $('#hid_number_comments');
@@ -117,10 +117,12 @@ const postsController = function () {
                 console.log('Submitting reply form to URL:', url);
 
                 $.ajax({
-                    type: 'POST', url: url, contentType: 'application/json', data: JSON.stringify({
+                    type: 'POST', 
+                    url: url, 
+                    contentType: 'application/json', 
+                    data: JSON.stringify({
                         postId: form.find("input[name='postId']").val(),
-                        content: $replyContent.val(),
-                        parentId: commentId
+                        content: $replyContent.val()
                     }), success: function (response) {
                         // Kiểm tra phản hồi
                         console.log('Reply form submission successful:', response);
@@ -220,7 +222,7 @@ const postsController = function () {
     function generateReplyFormHtml(commentId) {
         return `
             <div class="comment-form form-contact rounded bordered">
-                <form action="/posts/add-new-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
+                <form action="/posts/reply-to-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
                     <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
                     <input type="hidden" name="parentId" value="${commentId}" />
                     <div class="messages"></div>

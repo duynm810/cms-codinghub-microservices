@@ -11,5 +11,5 @@ public interface ICommentService
 
     Task<ApiResult<bool>> LikeComment(string commentId);
 
-    Task<ApiResult<bool>> ReplyToComment(string parentId, CreateCommentDto newCommentDto);
+    Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto newCommentDto);
 }

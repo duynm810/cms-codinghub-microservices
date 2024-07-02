@@ -112,9 +112,9 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
         return result;
     }
     
-    public async Task<ApiResult<bool>> ReplyToComment(string parentId, CreateCommentDto newCommentDto)
+    public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto newCommentDto)
     {
-        var result = new ApiResult<bool>();
+        var result = new ApiResult<CommentDto>();
         const string methodName = nameof(ReplyToComment);
 
         try
@@ -151,7 +151,9 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
                 return result;
             }
             
-            result.Success(true);
+            var data = mapper.Map<CommentDto>(newComment);
+            
+            result.Success(data);
             logger.Information("END {MethodName} - Successfully replied to comment with ID: {ParentId}", methodName, parentId);
         }
         catch (Exception e)
