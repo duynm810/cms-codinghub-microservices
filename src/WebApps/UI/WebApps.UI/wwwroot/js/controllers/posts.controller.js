@@ -23,7 +23,6 @@ const postsController = function () {
                                 let replyContent = childItem.content || '';
                                 let replyCreatedDate = childItem.createdDate || '';
                                 let replyUserFullName = (childItem.user && childItem.user.fullName) || '';
-
                                 childrenHtml += generateReplyHtml(replyId, replyContent, replyCreatedDate, replyUserFullName);
                             });
                         }
@@ -69,7 +68,8 @@ const postsController = function () {
 
                     // Generate the HTML for the new comment and add it to the comments list
                     const currentLoginName = $('#hid_current_login_name').val();
-                    const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName);
+                    const currentUserName = $('#hid_current_user_name').val();
+                    const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName, currentUserName);
 
                     // Reset form and update interface
                     $("#txt_new_comment_content").val(''); // Clear the content of the input
@@ -161,6 +161,7 @@ const postsController = function () {
     }
 
     function generateCommentHtml(id, content, createdDate, fullName, childrenHtml = '') {
+        const authorUrl = "/author/" + '';
         return `
             <li class="comment-item">
                 <div class="single-comment justify-content-between d-flex">
@@ -172,7 +173,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${fullName}</a></h5>
+                                    <h5><a href="${authorUrl}">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                                 <div class="reply-btn">
@@ -192,7 +193,8 @@ const postsController = function () {
         `;
     }
 
-    function generateReplyHtml(id, content, createdDate, fullName) {
+    function generateReplyHtml(id, content, createdDate, fullName, userName) {
+        const authorUrl = "/author/" + '';
         return `
             <li class="comment-item">
                 <div class="single-comment depth-2 justify-content-between d-flex mt-30">
@@ -204,7 +206,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${fullName}</a></h5>
+                                    <h5><a href="${authorUrl}">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                             </div>
