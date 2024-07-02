@@ -78,17 +78,14 @@ public static class ServiceExtensions
 
         services.AddSingleton(databaseSettings);
 
-        var eventBusSetings = configuration.GetSection(nameof(EventBusSettings)).Get<EventBusSettings>()
-                              ?? throw new ArgumentNullException(
-                                  $"{nameof(EventBusSettings)} is not configured properly");
-
-        services.AddSingleton(eventBusSetings);
-
         var apiConfigurations = configuration.GetSection(nameof(ApiConfigurations)).Get<ApiConfigurations>()
                                 ?? throw new ArgumentNullException(
                                     $"{nameof(ApiConfigurations)} is not configured properly");
 
         services.AddSingleton(apiConfigurations);
+        
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<EventBusSettings>(configuration.GetSection(nameof(EventBusSettings)));
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)

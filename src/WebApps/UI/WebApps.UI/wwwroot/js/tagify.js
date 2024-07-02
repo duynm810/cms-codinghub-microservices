@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Function to load existing tags
-    const loadExistingTags = (tags) => {
+    window.loadExistingTags = function(tags) {
         const tagItems = tags.map(tag => ({
             value: tag.name,
             name: tag.name,
@@ -24,11 +24,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }));
         tagify.addTags(tagItems);
     };
-
-    // Initializing with existing tags from the server
-    const existingTagsElement = document.getElementById('tagsData');
-    const existingTags = JSON.parse(existingTagsElement.getAttribute('data-tags'));
-    loadExistingTags(existingTags);
 
     // Fetch tag suggestions when the page is loaded (Lấy danh sách gợi ý tags khi trang được tải)
     $.get('/tags/suggest', { count: 10 }, function (response) {

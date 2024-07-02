@@ -1,14 +1,13 @@
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using Post.Domain.GrpcClients;
 using PostInTag.Grpc.Protos;
 using Serilog;
 using Shared.Constants;
-using Shared.Helpers;
 
 namespace Post.Infrastructure.GrpcClients;
 
-public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ICacheService cacheService, ILogger logger) : IPostInTagGrpcClient
+public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ILogger logger)
+    : IPostInTagGrpcClient
 {
     public async Task<IEnumerable<Guid>> GetTagIdsByPostIdAsync(Guid postId)
     {
@@ -27,21 +26,25 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
                 logger.Warning("{MethodName}: No tags found for post id {Id}", methodName, postId);
                 return Enumerable.Empty<Guid>();
             }
-        
+
             var tagIds = result.TagIds.Select(Guid.Parse);
-            
+
             var tagIdList = tagIds as Guid[] ?? tagIds.ToArray();
-            
+
             return tagIdList;
         }
         catch (RpcException rpcEx)
         {
-            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting tags by post id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, postId, rpcEx.StatusCode, rpcEx.Message);
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting tags by post id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, postId, rpcEx.StatusCode, rpcEx.Message);
             return Enumerable.Empty<Guid>();
         }
         catch (Exception e)
         {
-            logger.Error(e, "{MethodName}: Unexpected error occurred while getting tags by post id {Id}. Message: {ErrorMessage}", methodName, postId, e.Message);
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting tags by post id {Id}. Message: {ErrorMessage}",
+                methodName, postId, e.Message);
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
@@ -49,7 +52,7 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
     public async Task<IEnumerable<Guid>> GetPostIdsInTagAsync(Guid tagId)
     {
         const string methodName = nameof(GetPostIdsInTagAsync);
-        
+
         try
         {
             var request = new GetPostIdsInTagRequest
@@ -69,12 +72,16 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
         }
         catch (RpcException rpcEx)
         {
-            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting posts by tag id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, tagId, rpcEx.StatusCode, rpcEx.Message);
+            logger.Error(rpcEx,
+                "{MethodName}: gRPC error occurred while getting posts by tag id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
+                methodName, tagId, rpcEx.StatusCode, rpcEx.Message);
             return Enumerable.Empty<Guid>();
         }
         catch (Exception e)
         {
-            logger.Error(e, "{MethodName}: Unexpected error occurred while getting posts by tag id {Id}. Message: {ErrorMessage}", methodName, tagId, e.Message);
+            logger.Error(e,
+                "{MethodName}: Unexpected error occurred while getting posts by tag id {Id}. Message: {ErrorMessage}",
+                methodName, tagId, e.Message);
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }

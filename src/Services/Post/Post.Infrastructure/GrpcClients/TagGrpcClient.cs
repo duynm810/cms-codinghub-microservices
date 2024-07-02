@@ -12,7 +12,6 @@ namespace Post.Infrastructure.GrpcClients;
 
 public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ITagGrpcClient
 {

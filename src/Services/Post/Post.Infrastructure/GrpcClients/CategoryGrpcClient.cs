@@ -13,7 +13,6 @@ namespace Post.Infrastructure.GrpcClients;
 
 public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryGrpcClient
 {

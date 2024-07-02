@@ -18,6 +18,13 @@
         controller.initialize();
         controller.checkRequiredFields();
 
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initializing with existing tags from the server
+            const existingTagsElement = document.getElementById('tagsData');
+            const existingTags = JSON.parse(existingTagsElement.getAttribute('data-tags'));
+            window.loadExistingTags(existingTags);
+        });
+
         const thumbnailUrl = document.getElementById("thumbnailUrl").value;
 
         // Display uploaded images when loading the update page (Hiển thị hình ảnh đã upload khi tải trang cập nhật)
