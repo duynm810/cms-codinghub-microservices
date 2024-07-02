@@ -47,38 +47,45 @@ const postsController = function () {
         console.log('Registering events');
 
         // Handle submission of new comment form (Xử lý submit form bình luận mới)
-        $("#commentform").submit(function (e) {
+        $("#btn_send_comment").on("click", function (e) {
             e.preventDefault();
 
-            // Check form submission (Kiểm tra việc submit form)
-            console.log('Comment form submitted');
-
-            const form = $(this);
+            const form = $("#commentForm");
             const url = form.attr('action');
+            const postId = form.find("input[name='postId']").val();
+            const content = $("#txt_new_comment_content").val();
 
-            // Check URL (Kiểm tra URL)
-            console.log('Submitting form to URL:', url);
+            const commentData = {
+                postId: postId,
+                content: content
+            };
 
-            $.post(url, form.serialize()).done(function (response) {
-                // Check response (Kiểm tra phản hồi)
-                console.log('Form submission successful:', response);
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                data: JSON.stringify(commentData),
+                success: function (response) {
+                    console.log('Form submission successful:', response);
 
-                // Generate the HTML for the new comment and add it to the comments list (Tạo HTML cho bình luận mới và thêm vào danh sách bình luận)
-                const content = $("#txt_new_comment_content").val();
-                const currentLoginName = $('#hid_current_login_name').val();
-                const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName);
+                    // Generate the HTML for the new comment and add it to the comments list
+                    const currentLoginName = $('#hid_current_login_name').val();
+                    const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName);
 
-                // Reset form and update interface (Reset form và cập nhật giao diện)
-                content.val('');
-                $('#comment_list').prepend(newCommentHtml);
+                    // Reset form and update interface
+                    $("#comment").val('');
+                    $('#comment_list').prepend(newCommentHtml);
 
-                const $hiddenNumberOfComments = $('#hid_number_comments');
-                const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
-                $hiddenNumberOfComments.val(numberOfComments);
-                $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                    const $hiddenNumberOfComments = $('#hid_number_comments');
+                    const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
+                    $hiddenNumberOfComments.val(numberOfComments);
+                    $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                },
+                error: function (error) {
+                    console.error('Error submitting form:', error);
+                }
             });
         });
-
 
         // Handle when the user clicks the "Reply" button (Xử lý khi người dùng nhấp vào nút "Reply")
         $('body').on('click', '.comment-reply-link', function (e) {
@@ -229,23 +236,23 @@ const postsController = function () {
 
     function generateReplyFormHtml(commentId) {
         return `
-        <div class="comment-form form-contact rounded bordered">
-            <form action="/posts/add-new-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
-                <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
-                <input type="hidden" name="replyId" value="${commentId}" />
-                <div class="messages"></div>
-                <div class="row">
-                    <div class="column col-md-12">
-                        <div class="d-flex align-items-center">
-                            <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
-                            <button type="submit" id="btn_send_reply" class="btn btn_send_reply ml-2">
-                               <i class="fas fa-paper-plane"></i>
-                            </button>
+            <div class="comment-form form-contact rounded bordered">
+                    <form action="/posts/add-new-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
+                        <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
+                        <input type="hidden" name="replyId" value="${commentId}" />
+                        <div class="messages"></div>
+                        <div class="row">
+                            <div class="column col-md-12">
+                                <div class="d-flex align-items-center">
+                                    <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
+                                    <button type="button" id="btn_send_reply_${commentId}" class="btn btn_send_reply ml-2">
+                                       <i class="fas fa-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </form>
-        </div>
-        `;
+            `;
     }
 }

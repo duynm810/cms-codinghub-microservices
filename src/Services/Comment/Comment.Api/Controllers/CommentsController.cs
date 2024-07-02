@@ -3,6 +3,7 @@ using System.Net;
 using Comment.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Comment;
+using Shared.Extensions;
 using Shared.Responses;
 
 namespace Comment.Api.Controllers;
@@ -15,6 +16,8 @@ public class CommentsController(ICommentService commentService) : ControllerBase
     [ProducesResponseType(typeof(ApiResult<CommentDto>), (int)HttpStatusCode.Created)]
     public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto request)
     {
+        request.UserId = User.GetUserId();
+        
         var result = await commentService.CreateComment(request);
         return Ok(result);
     }
