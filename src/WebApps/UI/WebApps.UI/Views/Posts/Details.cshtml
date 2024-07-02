@@ -1,3 +1,4 @@
+@using Shared.Extensions
 @model PostDetailViewModel
 @{
     ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
@@ -243,6 +244,7 @@
         {
             <form class="form-contact comment_form" id="commentForm" asp-controller="Posts" asp-action="AddNewComment">
                 <input type="hidden" name="postId" value="@detail.Id"/>
+                <input type="hidden" id="hid_current_login_name" value="@User.GetFullName()" />
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">

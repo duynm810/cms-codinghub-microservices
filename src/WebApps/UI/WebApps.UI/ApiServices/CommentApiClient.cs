@@ -13,6 +13,6 @@ public class CommentApiClient(IBaseApiClient baseApiClient) : ICommentApiClient
 
     public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment)
     {
-        return await baseApiClient.PostAsync<CreateCommentDto, CommentDto>($"/comments", comment);
+        return await baseApiClient.PostAsync<CreateCommentDto, CommentDto>($"/comments", comment, true);
     }
 }

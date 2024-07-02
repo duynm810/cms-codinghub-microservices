@@ -74,7 +74,7 @@ const postsController = function () {
 
                     // Reset form and update interface
                     $("#comment").val('');
-                    $('#comment_list').prepend(newCommentHtml);
+                    $('#comment_list').append(newCommentHtml);
 
                     const $hiddenNumberOfComments = $('#hid_number_comments');
                     const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
