@@ -12,7 +12,7 @@
 .sidebar-widget ul.menu li:last-child{border:0;}
 
 /*Tagcloud*/
-.widget_tagcloud .tag-cloud-link{-moz-user-select:none;text-transform:capitalize;display:inline-block;font-size:13px;font-weight:400;line-height:0;padding:15px 20px;border-radius:30px;margin:0 5px 10px 0;border:1px solid #ebebeb;background:#f2f3f5;}
+.widget_tagcloud .tag-cloud-link{-moz-user-select:none;display:inline-block;font-size:13px;font-weight:400;line-height:0;padding:15px 20px;border-radius:30px;margin:0 5px 10px 0;border:1px solid #ebebeb;background:#f2f3f5;}
 
 /*Widget about*/
 .about-author-img{border-radius:50%;width:64px;height:64px;box-shadow:0 2px 4px var(--button-shadow-color-normal),0 0 0 transparent}

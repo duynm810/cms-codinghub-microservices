@@ -159,7 +159,8 @@
                 @foreach (var item in detail.Tags)
                 {
                     var tagUrl = "/tag/" + item.Slug;
-                    <a href="@tagUrl" rel="tag">@item.Name</a>
+                    var tagDisplayName = "#" + item.Name;
+                    <a href="@tagUrl" rel="tag">@tagDisplayName</a>
                 }
             }
         </div>
