@@ -95,14 +95,10 @@ public class UpdatePostCommandHandler(
             var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
             if (rawTags != null)
             {
-                logger.Information("BEGIN HandlePostUpdatedEvent - PostId: {PostId}", request.Id);
-
                 TaskHelper.RunFireAndForget(() => postEventService.HandlePostUpdatedEvent(request.Id, rawTags), e =>
                 {
                     logger.Error("HandlePostUpdatedEvent failed. Message: {ErrorMessage}", e.Message);
                 });
-
-                logger.Information("END HandlePostUpdatedEvent - PostId: {PostId}", request.Id);
             }
 
             logger.Information("END {MethodName} - Post updated successfully with ID: {PostId}", methodName, request.Id);

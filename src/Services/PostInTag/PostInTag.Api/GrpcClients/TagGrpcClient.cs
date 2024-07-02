@@ -1,10 +1,8 @@
 using AutoMapper;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Tag;
-using Shared.Helpers;
 using Tag.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
@@ -12,7 +10,6 @@ namespace PostInTag.Api.GrpcClients;
 
 public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ITagGrpcClient
 {

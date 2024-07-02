@@ -46,5 +46,10 @@ public class TagRepository(TagContext dbContext, IUnitOfWork<TagContext> unitOfW
         return tags;
     }
 
+    public async Task<List<TagBase>> GetTagsByIds(IEnumerable<Guid> tagIds)
+    {
+        return await FindByCondition(tag => tagIds.Contains(tag.Id)).ToListAsync();
+    }
+
     #endregion
 }

@@ -1,18 +1,15 @@
 using AutoMapper;
 using Category.Grpc.Protos;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Category;
-using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.GrpcClients;
 
 public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryGrpcClient
 {

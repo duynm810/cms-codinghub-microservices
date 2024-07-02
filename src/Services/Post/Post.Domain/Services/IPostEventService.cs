@@ -7,4 +7,6 @@ public interface IPostEventService
     Task HandlePostCreatedEvent(Guid postId, List<RawTagDto> rawTags);
     
     Task HandlePostUpdatedEvent(Guid postId, List<RawTagDto> rawTags);
+
+    Task HandlePostDeletedEvent(Guid postId);
 }

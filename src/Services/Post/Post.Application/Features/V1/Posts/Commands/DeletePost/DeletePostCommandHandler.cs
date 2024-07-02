@@ -2,6 +2,7 @@ using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Helpers;
@@ -10,7 +11,11 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.DeletePost;
 
-public class DeletePostCommandHandler(IPostRepository postRepository, ICacheService cacheService, ILogger logger)
+public class DeletePostCommandHandler(
+    IPostRepository postRepository,
+    ICacheService cacheService,
+    IPostEventService postEventService,
+    ILogger logger)
     : IRequestHandler<DeletePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(DeletePostCommand request, CancellationToken cancellationToken)
@@ -35,18 +40,27 @@ public class DeletePostCommandHandler(IPostRepository postRepository, ICacheServ
             result.Success(true);
 
             // Xóa cache liên quan
-            var cacheKeys = new List<string>
+            TaskHelper.RunFireAndForget(async () =>
             {
-                CacheKeyHelper.Post.GetAllPostsKey(),
-                CacheKeyHelper.Post.GetPostByIdKey(post.Id),
-                CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
-                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
-                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, 1, 4)
-            };
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(request.Id),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                    CacheKeyHelper.Post.GetPostsByCategoryPagingKey(post.Slug, 1, 6),
+                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, 1, 4)
+                };
 
-            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e => { logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e); });
+
+            TaskHelper.RunFireAndForget(() => postEventService.HandlePostDeletedEvent(request.Id), e =>
+            {
+                logger.Error("HandlePostDeletedEvent failed. Message: {ErrorMessage}", e.Message);
+            });
 
             logger.Information("END {MethodName} - Post with ID {PostId} deleted successfully", methodName, request.Id);
         }

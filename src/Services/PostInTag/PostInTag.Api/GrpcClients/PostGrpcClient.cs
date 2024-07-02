@@ -1,20 +1,16 @@
 using AutoMapper;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using Post.Grpc.Protos;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
-using Shared.Dtos.Post;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
-using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.GrpcClients;
 
 public class PostGrpcClient(
     PostProtoService.PostProtoServiceClient postProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
     : IPostGrpcClient

@@ -74,4 +74,34 @@ public class PostEventService(IPublishEndpoint publishEndpoint, IOptions<EventBu
             throw;
         }
     }
+
+    public async Task HandlePostDeletedEvent(Guid postId)
+    {
+        const string methodName = nameof(HandlePostDeletedEvent);
+        
+        var serviceName = _eventBusSettings.ServiceName;
+
+        logger.Information("BEGIN Publish {MethodName} - PostId: {PostId}, SourceService: {SourceService}", methodName,
+            postId, serviceName);
+
+        try
+        {
+            var postDeletedEvent = new PostDeletedEvent(serviceName)
+            {
+                PostId = postId
+            };
+            
+            await publishEndpoint.Publish<IPostDeletedEvent>(postDeletedEvent);
+            
+            logger.Information(
+                "END Publish {MethodName} successfully - PostId: {PostId}, SourceService: {SourceService}", methodName,
+                postId, serviceName);
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "ERROR while publishing {MethodName} - PostId: {PostId}, SourceService: {SourceService}",
+                methodName, postId, serviceName);
+            throw;
+        }
+    }
 }
