@@ -189,6 +189,7 @@ public class PostsController(
         return Ok(new { data = comments.Data });
     }
     
+    [HttpPost]
     public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
     {
         var newComment = await commentApiClient.CreateComment(comment);

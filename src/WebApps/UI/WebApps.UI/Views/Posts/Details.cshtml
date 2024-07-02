@@ -241,7 +241,7 @@
         </div>
         @if (User.Identity is { IsAuthenticated: true })
         {
-            <form class="form-contact comment_form" action="/posts/addNewComment" id="commentForm">
+            <form class="form-contact comment_form" id="commentForm" asp-controller="Posts" asp-action="AddNewComment">
                 <input type="hidden" name="postId" value="@detail.Id"/>
                 <div class="row">
                     <div class="col-12">
