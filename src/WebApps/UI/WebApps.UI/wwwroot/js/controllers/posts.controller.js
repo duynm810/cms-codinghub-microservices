@@ -236,7 +236,7 @@ const postsController = function () {
                 <div class="messages"></div>
                 <div class="row">
                     <div class="column col-md-12">
-                        <div class="form-group d-flex align-items-center">
+                        <div class="d-flex align-items-center">
                             <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
                             <button type="submit" id="btn_send_reply" class="btn btn_send_reply ml-2">
                                <i class="fas fa-paper-plane"></i>
