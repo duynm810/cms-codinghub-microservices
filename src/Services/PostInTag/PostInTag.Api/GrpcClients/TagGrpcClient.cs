@@ -1,10 +1,8 @@
 using AutoMapper;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Tag;
-using Shared.Helpers;
 using Tag.Grpc.Protos;
 using ILogger = Serilog.ILogger;
 
@@ -12,7 +10,6 @@ namespace PostInTag.Api.GrpcClients;
 
 public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ITagGrpcClient
 {
@@ -22,14 +19,6 @@ public class TagGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(slug);
-
-            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
-            if (cachedTag != null)
-            {
-                return cachedTag;
-            }
-
             var request = new GetTagBySlugRequest { Slug = slug };
 
             var result = await tagProtoServiceClient.GetTagBySlugAsync(request);
@@ -40,10 +29,7 @@ public class TagGrpcClient(
             }
 
             var data = mapper.Map<TagDto>(result);
-
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
+            
             return data;
         }
         catch (RpcException rpcEx)
@@ -68,13 +54,6 @@ public class TagGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.TagGrpc.GetAllTagsKey();
-            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
-            if (cachedTags != null)
-            {
-                return cachedTags;
-            }
-
             var request = new GetTagsRequest();
 
             var result = await tagProtoServiceClient.GetTagsAsync(request);
@@ -86,10 +65,6 @@ public class TagGrpcClient(
 
             var tags = mapper.Map<IEnumerable<TagDto>>(result);
             var data = tags.ToList();
-
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
             return data;
         }
         catch (RpcException rpcEx)

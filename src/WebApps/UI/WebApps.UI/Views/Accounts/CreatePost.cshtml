@@ -1,17 +1,19 @@
 @model CreatePostViewModel
 @{
-    Layout = "_Layout";
+    ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
     var categories = Model.Categories;
 }
 
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
+    <script src="~/js/quill.js" asp-append-version="true"></script>
+    <script src="~/js/tagify.js" asp-append-version="true"></script>
     <script>
 
         // Initialize the accountsController
         const controller = new accountsController('frm-create-post');
         controller.initialize();
-        
+
         async function validateForm() {
             let form = document.getElementById('frm-create-post');
             let inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
@@ -19,17 +21,25 @@
             
             for (let i = 0; i < inputs.length; i++) {
                 let input = inputs[i];
-                if (input.hasAttribute('required') && !input.value.trim()) { // Kiểm tra thuộc tính required
+                if (input.hasAttribute('required') && !input.value.trim()) { // Check the required attribute (Kiểm tra thuộc tính required)
                     this.showErrorNotification('Please fill out the ' + input.name + ' field.');
                     valid = false;
-                    break; // Dừng lại sau khi tìm thấy trường không được nhập
+                    break; // Stop if any required attributes have not been entered (Dừng nếu có thuộc tính nào bắt buộc chưa nhập)
                 }
             }
             
             if (valid) {
                 if (document.getElementById('thumbnailUrl').value) {
+                    // Wait for the image to finish uploading before allowing submission (Đợi hình ảnh upload xong mới cho phép submit)
                     await controller.waitForUploadCompletion();
                 }
+                
+                // Set content data from quill editor (Gán nội dung được nhập từ quill editor vào content)
+                document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
+
+                const tagsData = window.getTagsData();
+                document.getElementById('tagsData').value = JSON.stringify(tagsData);
+                
                 form.submit();
             }
         }
@@ -48,9 +58,11 @@
     </div>
     <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     <form method="post" enctype="multipart/form-data" id="frm-create-post" novalidate asp-controller="Accounts" asp-action="CreatePost">
+        <!-- Category -->
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="category">Category</label>
                     <select class="dropdown-custom" name="CategoryId" id="category" required>
                         <option value="" disabled selected>Select category</option>
                         @foreach (var category in categories)
@@ -61,46 +73,68 @@
                 </div>
             </div>
         </div>
+        <!-- Title & Slug -->
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="title">Title</label>
                     <input type="text" class="form-control" required name="Title" id="title" placeholder="Title">
                 </div>
             </div>
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="slug">Slug</label>
                     <input type="text" class="form-control" required name="Slug" id="slug" placeholder="Slug (SEO)">
                 </div>
             </div>
         </div>
+        <!-- Summary -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="summary">Summary</label>
                     <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3"></textarea>
                 </div>
             </div>
         </div>
+        <!-- Content -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6"></textarea>
+                    <div id="editor" data-content=""></div>
+                    <input type="hidden" name="Content" id="content">
                 </div>
             </div>
         </div>
+        <!-- SEO Description -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3">
+                    <label for="seoDescription">SEO Description</label>
+                    <input class="form-control" name="SeoDescription" id="seoDescription" placeholder="SEO description" rows="3">
                 </div>
             </div>
         </div>
+        <!-- Source -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="source">Source</label>
                     <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)">
                 </div>
             </div>
         </div>
+        <!-- Tags -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" class="form-control" id="tags" placeholder="Add tags">
+                    <input type="hidden" name="RawTags" id="tagsData">
+                </div>
+            </div>
+        </div>
+        <!-- Thumbnail -->
         <div class="row">
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
@@ -128,10 +162,8 @@
         </div>
         <input type="hidden" name="Thumbnail" id="thumbnailUrl">
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
-                </div>
+            <div class="col-md-12 text-center">
+                <button type="button" class="button button-contactForm btn-block" onclick="validateForm()" id="submit-button" disabled>Submit</button>
             </div>
         </div>
     </form>

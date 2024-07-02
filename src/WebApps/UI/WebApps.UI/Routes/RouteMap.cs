@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace WebApps.UI.Routes;
 
@@ -6,7 +5,7 @@ public static class RouteMap
 {
     public static void RegisterRoutes(WebApplication app)
     {
-        #region Accounts
+        #region ACCOUNTS
 
         app.MapControllerRoute(
             "update_post_view",
@@ -22,6 +21,11 @@ public static class RouteMap
             "update-thumbnail",
             "/accounts/update-thumbnail/{id:guid}",
             new { controller = "Accounts", action = "UpdateThumbnail" });
+        
+        app.MapControllerRoute(
+            "delete_post",
+            "accounts/delete-post/{id:guid}",
+            new { controller = "Accounts", action = "DeletePost" });
 
         app.MapControllerRoute(
             "create-new-post",
@@ -40,7 +44,7 @@ public static class RouteMap
 
         #endregion
 
-        #region Posts
+        #region POSTS
 
         app.MapControllerRoute(
             "post-detail",
@@ -81,10 +85,15 @@ public static class RouteMap
             "add-new-comment",
             "/posts/add-new-comment",
             new { controller = "Posts", action = "AddNewComment" });
+        
+        app.MapControllerRoute(
+            "reply-to-comment",
+            "/posts/reply-to-comment",
+            new { controller = "Posts", action = "ReplyToComment" });
 
         #endregion
 
-        #region About
+        #region ABOUT
 
         app.MapControllerRoute(
             "about",
@@ -92,17 +101,8 @@ public static class RouteMap
             new { controller = "About", action = "Index" });
 
         #endregion
-        
-        #region Media
 
-        app.MapControllerRoute(
-            "media-upload",
-            "media/upload",
-            new { controller = "Media", action = "UploadImage" });
-
-        #endregion
-
-        #region Default
+        #region DEFAULT
 
         app.MapControllerRoute(
             name: "default",

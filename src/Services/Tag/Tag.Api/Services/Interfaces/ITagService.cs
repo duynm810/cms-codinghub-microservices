@@ -22,6 +22,10 @@ public interface ITagService
     #region OTHERS
 
     Task<ApiResult<TagDto>> GetTagBySlug(string slug);
+    
+    Task<ApiResult<TagDto>> GetTagByName(string name);
+
+    Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(string? keyword, int count);
 
     #endregion
 }

@@ -45,6 +45,16 @@ public static class ClaimsPrincipalExtensions
         var lastName = GetClaimValue(user, InternalClaimTypesConsts.Claims.LastName);
         return string.IsNullOrEmpty(lastName) ? "User" : lastName;
     }
+    
+    /// <summary>
+    /// Get username from claims.
+    /// </summary>
+    /// <param name="user">Current claims principal.</param>
+    /// <returns>Username of the user.</returns>
+    public static string GetUserName(this ClaimsPrincipal user)
+    {
+        return GetClaimValue(user, InternalClaimTypesConsts.Claims.UserName) ?? "UnknownUser";
+    }
 
     /// <summary>
     /// Get device id from claims.

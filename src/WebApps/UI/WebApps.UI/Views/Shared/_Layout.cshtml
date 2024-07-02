@@ -28,6 +28,13 @@
     
     <!-- Spinkit -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+
+    <!-- Quill Editor -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+    
+    <!-- Tagify -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.27.0/tagify.min.css" rel="stylesheet">
     
 </head>
 <body class="theme-mode">
@@ -53,7 +60,7 @@
 </div>
 
 <!-- Start Main content -->
-<main>
+<main class="@ViewData["MainClass"]">
     @RenderBody()
 </main>
 <!-- End Main content -->
@@ -93,18 +100,25 @@
 
 <!-- Sweet Alert 2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="~/js/alerts.js"></script>
+<script src="~/js/alerts.js" asp-append-version="true"></script>
 
 <!-- Font Awesome -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/js/all.min.js"></script>
 
 <!-- Notyf -->
 <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
-<script src="~/js/notyf.js"></script>
+<script src="~/js/notyf.js" asp-append-version="true"></script>
 
 <!-- Slugify -->
 <script src="https://cdn.jsdelivr.net/npm/slugify@1.6.6/slugify.min.js"></script>
-<script src="~/js/slugify-config.js"></script>
+<script src="~/js/slugify.js" asp-append-version="true"></script>
+
+<!-- Quill Editor -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+<!-- Tagify -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.27.0/tagify.min.js"></script>
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>

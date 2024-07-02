@@ -1,20 +1,16 @@
 using AutoMapper;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using Post.Grpc.Protos;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
-using Shared.Dtos.Post;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
-using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.GrpcClients;
 
 public class PostGrpcClient(
     PostProtoService.PostProtoServiceClient postProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
     : IPostGrpcClient
@@ -27,13 +23,6 @@ public class PostGrpcClient(
         {
             var idList = ids as Guid[] ?? ids.ToArray();
 
-            var cacheKey = CacheKeyHelper.PostGrpc.GetGrpcPostsByIdsKey(idList);
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostInTagDto>>(cacheKey);
-            if (cachedPosts != null)
-            {
-                return cachedPosts;
-            }
-
             // Convert each GUID to its string representation
             var request = new GetPostsByIdsRequest();
             request.Ids.AddRange(idList.Select(id => id.ToString()));
@@ -43,9 +32,6 @@ public class PostGrpcClient(
             {
                 var postsByIds = mapper.Map<IEnumerable<PostInTagDto>>(result.Posts);
                 var data = postsByIds.ToList();
-
-                // Lưu cache
-                await cacheService.SetAsync(cacheKey, data);
 
                 return data;
             }
@@ -71,13 +57,6 @@ public class PostGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
-            if (cachedPosts != null)
-            {
-                return cachedPosts;
-            }
-
             var request = new GetTop10PostsRequest();
 
             var result = await postProtoServiceClient.GetTop10PostsAsync(request);
@@ -85,10 +64,6 @@ public class PostGrpcClient(
             {
                 var posts = mapper.Map<IEnumerable<PostDto>>(result.Posts);
                 var data = posts.ToList();
-
-                // Lưu cache
-                await cacheService.SetAsync(cacheKey, data);
-
                 return data;
             }
 

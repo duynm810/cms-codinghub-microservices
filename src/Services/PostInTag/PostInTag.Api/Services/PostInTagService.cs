@@ -33,9 +33,20 @@ public class PostInTagService(
             await postInTagRepository.CreatePostToTag(postInTag);
             result.Success(true);
 
-            // Xoá cache
-            await cacheService.RemoveAsync(CacheKeyHelper.PostInTag.GetAllPostInTagByIdKey(request.TagId));
+            // Xóa cache liên quan
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.PostInTag.GetAllPostInTagByIdKey(request.TagId)
+                };
 
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
+            
             logger.Information(
                 "END {MethodName} - Successfully created post with ID: {PostId} to tag with ID: {TagId}",
                 methodName, request.PostId, request.TagId);
@@ -65,8 +76,19 @@ public class PostInTagService(
             await postInTagRepository.DeletePostToTag(postInTag);
             result.Success(true);
             
-            // Xoá cache
-            await cacheService.RemoveAsync(CacheKeyHelper.PostInTag.GetAllPostInTagByIdKey(request.TagId));
+            // Xóa cache liên quan
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.PostInTag.GetAllPostInTagByIdKey(request.TagId)
+                };
+
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information(
                 "END {MethodName} - Successfully deleted post with ID: {PostId} from tag with ID: {TagId}",

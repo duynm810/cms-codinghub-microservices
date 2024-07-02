@@ -22,13 +22,6 @@ public class SeriesGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id);
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
-            {
-                return cachedSeries;
-            }
-
             var request = new GetSeriesByIdRequest { Id = id.ToString() };
             var result = await seriesProtoServiceClient.GetSeriesByIdAsync(request);
         
@@ -39,10 +32,7 @@ public class SeriesGrpcClient(
             }
 
             var data = mapper.Map<SeriesDto>(result);
-
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
+            
             return data;
         }
         catch (RpcException rpcEx)
@@ -63,14 +53,6 @@ public class SeriesGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(slug);
-
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
-            {
-                return cachedSeries;
-            }
-
             var request = new GetSeriesBySlugRequest { Slug = slug };
             var result = await seriesProtoServiceClient.GetSeriesBySlugAsync(request);
 
@@ -81,10 +63,7 @@ public class SeriesGrpcClient(
             }
 
             var data = mapper.Map<SeriesDto>(result);
-
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
+            
             return data;
         }
         catch (RpcException rpcEx)

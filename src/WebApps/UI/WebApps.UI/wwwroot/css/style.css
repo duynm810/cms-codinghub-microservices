@@ -1350,7 +1350,6 @@ h1.page-404 {
 	margin-right: 5px;
 	border-radius: 2px;
 	font-size: 14px;
-	text-transform: capitalize;
 	font-style: italic;
 	border-bottom: 1px solid rgb(225, 225, 225);
 }
@@ -1580,8 +1579,13 @@ blockquote ol:last-child {
 .form-group {
 	margin-bottom: 1rem;
 	display: flex;
-	align-items: center;
+	flex-direction: column; /* Xếp các phần tử theo chiều dọc */
 }
+
+.form-group > * {
+	width: 100%; /* Đảm bảo tất cả các phần tử bên trong .form-group đều có chiều rộng 100% */
+}
+
 .form-group textarea {
 	min-height: 60px;
 }

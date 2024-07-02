@@ -59,6 +59,9 @@ public static class ConfigureServices
                                    $"{nameof(DatabaseSettings)} is not configured properly");
 
         services.AddSingleton(databaseSettings);
+        
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<EventBusSettings>(configuration.GetSection(nameof(EventBusSettings)));
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)
@@ -97,7 +100,8 @@ public static class ConfigureServices
             .AddScoped<IPostEmailTemplateService, PostEmailTemplateService>()
             .AddScoped<ISerializeService, SerializeService>()
             .AddScoped<ICacheService, CacheService>()
-            .AddScoped<IPostService, PostService>();
+            .AddScoped<IPostService, PostService>()
+            .AddScoped<IPostEventService, PostEventService>();
     }
 
     private static void AddGrpcServices(this IServiceCollection services)

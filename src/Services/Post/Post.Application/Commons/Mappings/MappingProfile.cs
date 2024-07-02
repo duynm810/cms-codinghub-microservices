@@ -37,13 +37,13 @@ public class MappingProfile : Profile
 
     private void ConfigurePostMappings()
     {
-        #region Get
+        #region GET
 
         CreateMap<PostBase, PostDto>();
 
         #endregion
 
-        #region Create
+        #region CREATE
 
         CreateMap<CreatePostDto, CreatePostCommand>();
         CreateMap<CreatePostCommand, PostBase>()
@@ -53,7 +53,7 @@ public class MappingProfile : Profile
 
         #endregion
 
-        #region Update
+        #region UPDATE
 
         CreateMap<UpdatePostDto, UpdatePostCommand>().IgnoreAllNonExisting();
         CreateMap<UpdateThumbnailDto, UpdateThumbnailCommand>().IgnoreAllNonExisting();

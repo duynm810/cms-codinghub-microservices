@@ -1,12 +1,15 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
+using EventBus.IntegrationEvents;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Entities;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -17,6 +20,8 @@ public class CreatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
+    ISerializeService serializeService,
+    IPostEventService postEventService,
     IMapper mapper,
     ILogger logger)
     : IRequestHandler<CreatePostCommand, ApiResult<Guid>>
@@ -60,19 +65,34 @@ public class CreatePostCommandHandler(
             result.Success(id);
 
             // Xóa cache liên quan
-            var cacheKeys = new List<string>
+            TaskHelper.RunFireAndForget(async () =>
             {
-                CacheKeyHelper.Post.GetAllPostsKey(),
-                CacheKeyHelper.Post.GetPostByIdKey(id),
-                CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
-                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
-                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
-                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
-            };
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(id),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                    CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 6),
+                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
+                };
 
-            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
+            
+            var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
+            if (rawTags != null)
+            {
+                TaskHelper.RunFireAndForget(() => postEventService.HandlePostCreatedEvent(id, rawTags), e =>
+                {
+                    logger.Error("HandlePostCreatedEvent failed. Message: {ErrorMessage}", e.Message);
+                });
+            }
 
             logger.Information("END {MethodName} - Post created successfully with ID: {PostId}", methodName, id);
         }

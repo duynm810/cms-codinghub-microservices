@@ -12,7 +12,6 @@ namespace Post.Infrastructure.GrpcClients;
 
 public class TagGrpcClient(
     TagProtoService.TagProtoServiceClient tagProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ITagGrpcClient
 {
@@ -23,13 +22,6 @@ public class TagGrpcClient(
         try
         {
             var idList = ids as Guid[] ?? ids.ToArray();
-        
-            var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagsByIdsKey(idList);
-            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
-            if (cachedTags != null)
-            {
-                return cachedTags;
-            }
 
             var request = new GetTagsByIdsRequest();
             request.Ids.AddRange(idList.Select(id => id.ToString()));
@@ -43,10 +35,7 @@ public class TagGrpcClient(
         
             var tagsByIds = mapper.Map<IEnumerable<TagDto>>(result);
             var data = tagsByIds.ToList();
-        
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
+            
             return data;
         }
         catch (RpcException rpcEx)
@@ -67,14 +56,6 @@ public class TagGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.TagGrpc.GetGrpcTagBySlugKey(slug);
-
-            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
-            if (cachedTag != null)
-            {
-                return cachedTag;
-            }
-
             var request = new GetTagBySlugRequest { Slug = slug };
 
             var result = await tagProtoServiceClient.GetTagBySlugAsync(request);
@@ -85,10 +66,7 @@ public class TagGrpcClient(
             }
 
             var data = mapper.Map<TagDto>(result);
-
-            // Lưu cache
-            await cacheService.SetAsync(cacheKey, data);
-
+            
             return data;
         }
         catch (RpcException rpcEx)

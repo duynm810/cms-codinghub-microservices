@@ -7,7 +7,6 @@ const accountsController = function (formId) {
         this.uploadFileHandlers();
         this.addSlugGenerator();
         this.addRequiredFieldListeners();
-        this.checkRequiredFields(); //Check fields immediately upon initialization (for update page)
     }
 
     this.addSlugGenerator = function() {

@@ -1,18 +1,15 @@
 using AutoMapper;
 using Category.Grpc.Protos;
-using Contracts.Commons.Interfaces;
 using Grpc.Core;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Category;
-using Shared.Helpers;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.GrpcClients;
 
 public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryGrpcClient
 {
@@ -23,14 +20,7 @@ public class CategoryGrpcClient(
         try
         {
             var idList = ids as long[] ?? ids.ToArray();
-
-            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcCategoriesByIdsKey(idList);
-            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-            if (cachedCategories != null)
-            {
-                return cachedCategories;
-            }
-
+            
             var request = new GetCategoriesByIdsRequest { Ids = { idList } };
             var result = await categoryProtoServiceClient.GetCategoriesByIdsAsync(request);
             if (result == null || result.Categories.Count == 0)
@@ -41,7 +31,6 @@ public class CategoryGrpcClient(
         
             var categoriesByIds = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = categoriesByIds.ToList();
-            await cacheService.SetAsync(cacheKey, data);
             return data;
         }
         catch (RpcException rpcEx)

@@ -189,9 +189,17 @@ public class PostsController(
         return Ok(new { data = comments.Data });
     }
     
+    [HttpPost]
     public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
     {
         var newComment = await commentApiClient.CreateComment(comment);
-        return Ok(new { data = newComment });
+        return Ok(new { data = newComment.Data });
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ReplyToComment([FromQuery] string parentId, [FromBody] CreateCommentDto comment)
+    {
+        var replyToComment = await commentApiClient.ReplyToComment(parentId, comment);
+        return Ok(new { data = replyToComment.Data });
     }
 }

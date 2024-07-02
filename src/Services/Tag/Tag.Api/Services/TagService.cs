@@ -24,8 +24,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating tag with name: {TagName}", methodName,
-                request.Name);
+            logger.Information("BEGIN {MethodName} - Creating tag with name: {TagName}", methodName, request.Name);
 
             var tag = mapper.Map<TagBase>(request);
             await tagRepository.CreateTag(tag);
@@ -33,14 +32,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             var data = mapper.Map<TagDto>(tag);
             result.Success(data);
 
-            // Clear tag list cache when a new tag is created (Xóa cache danh sách tag khi tạo mới)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey())
-            );
-
-            logger.Information("END {MethodName} - Tag created successfully with ID {TagId}", methodName,
-                data.Id);
+            logger.Information("END {MethodName} - Tag created successfully with ID {TagId}", methodName, data.Id);
         }
         catch (Exception e)
         {
@@ -75,13 +67,14 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             var data = mapper.Map<TagDto>(updateTag);
             result.Success(data);
 
-            // Delete tag list cache when updating (Xóa cache danh sách tag khi cập nhật)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id)),
-                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id))
-            );
+            var cacheKeys = new List<string>
+            {
+                CacheKeyHelper.Tag.GetTagByIdKey(id),
+                CacheKeyHelper.Tag.GetTagBySlugKey(updateTag.Slug),
+                CacheKeyHelper.Tag.GetTagByNameKey(updateTag.Name)
+            };
+            
+            await cacheService.RemoveMultipleAsync(cacheKeys);
 
             logger.Information("END {MethodName} - Tag with ID {TagId} updated successfully", methodName, id);
         }
@@ -121,22 +114,13 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
                 
                 // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
                 tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Tag.GetTagByIdKey(id)));
-                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetGrpcTagByIdKey(id)));
             }
             
-            // Execute all tasks in parallel (Thực hiện tất cả các nhiệm vụ song song)
             await Task.WhenAll(tasks);
-
-            // Delete tag list cache when deleting  (Xóa cache danh sách tag khi xóa dữ liệu)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Tag.GetAllTagsKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.TagGrpc.GetAllTagsKey())
-            );
-
+            
             result.Success(true);
 
-            logger.Information("END {MethodName} - Tags with IDs {TagIds} deleted successfully",
-                methodName, string.Join(", ", ids));
+            logger.Information("END {MethodName} - Tags with IDs {TagIds} deleted successfully", methodName, string.Join(", ", ids));
         }
         catch (Exception e)
         {
@@ -156,25 +140,13 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving all tags", methodName);
-
-            var cacheKey = CacheKeyHelper.Tag.GetAllTagsKey();
-            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
-            if (cachedTags != null)
-            {
-                result.Success(cachedTags);
-                logger.Information("END {MethodName} - Successfully retrieved tags from cache", methodName);
-                return result;
-            }
-
+            
             var categories = await tagRepository.GetTags(count);
             if (categories.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<TagDto>>(categories);
                 result.Success(data);
-
-                // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data);
-
+                
                 logger.Information("END {MethodName} - Successfully retrieved {TagCount} tags", methodName,
                     data.Count);
             }
@@ -276,6 +248,89 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             logger.Information("END {MethodName} - Successfully retrieved tag with slug {TagSlug}",
                 methodName,
                 slug);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    public async Task<ApiResult<TagDto>> GetTagByName(string name)
+    {
+        var result = new ApiResult<TagDto>();
+        const string methodName = nameof(GetTagByName);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving tag with name: {TagName}", methodName, name);
+
+            var cacheKey = CacheKeyHelper.Tag.GetTagByNameKey(name);
+            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cachedTag != null)
+            {
+                logger.Information("END {MethodName} - Successfully retrieved tag with name {TagName} from cache", methodName, name);
+                result.Success(cachedTag);
+                return result;
+            }
+
+            var tag = await tagRepository.GetTagByName(name);
+            if (tag == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Tag.TagNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<TagDto>(tag);
+            result.Success(data);
+
+            // Save cache (Lưu cache)
+            await cacheService.SetAsync(cacheKey, data);
+
+            logger.Information("END {MethodName} - Successfully retrieved tag with name {TagName}", methodName, name);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+    
+    public async Task<ApiResult<IEnumerable<TagDto>>> GetSuggestedTags(string? keyword, int count)
+    {
+        var result = new ApiResult<IEnumerable<TagDto>>();
+        const string methodName = nameof(GetSuggestedTags);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving suggested tags with keyword {Keyword}", methodName, keyword);
+
+            var cacheKey = CacheKeyHelper.Tag.GetSuggestedTagsKey(keyword, count);
+            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cachedTags != null)
+            {
+                result.Success(cachedTags);
+                logger.Information("END {MethodName} - Successfully retrieved suggested tags from cache", methodName);
+                return result;
+            }
+
+            var tags = await tagRepository.GetSuggestedTags(keyword, count);
+            if (tags.IsNotNullOrEmpty())
+            {
+                var data = mapper.Map<List<TagDto>>(tags);
+                result.Success(data);
+
+                await cacheService.SetAsync(cacheKey, data);
+
+                logger.Information("END {MethodName} - Successfully retrieved {TagCount} suggested tags with keyword {Keyword}", methodName, data.Count, keyword);
+            }
         }
         catch (Exception e)
         {

@@ -1,4 +1,5 @@
 using System.Net;
+using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -17,6 +18,8 @@ namespace WebApps.UI.Controllers;
 public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
+    IRazorRenderViewService razorRenderViewService,
+    ISerializeService serializeService,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
@@ -45,6 +48,8 @@ public class AccountsController(
         return RedirectToAction("Index", "Home");
     }
 
+    #region PROFILE
+
     public IActionResult Profile()
     {
         const string methodName = nameof(Profile);
@@ -56,6 +61,35 @@ public class AccountsController(
             };
 
             return View(item);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    #endregion
+
+    #region POST
+    
+    public async Task<IActionResult> GetPostsByCurrentUser([FromQuery] int page = 1)
+    {
+        const string methodName = nameof(GetPostsByCurrentUser);
+
+        try
+        {
+            var result = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
+            if (result is { IsSuccess: true, Data: not null })
+            {
+                var items = new ManagePostsViewModel()
+                {
+                    Posts = result.Data
+                };
+
+                return PartialView("Partials/Accounts/_PostsByCurrentUserTablePartial", items);
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -124,7 +158,7 @@ public class AccountsController(
                 var result = await postApiClient.CreatePost(request);
                 if (result is { IsSuccess: true })
                 {
-                    return RedirectToAction("ManagePosts");
+                    return RedirectToAction("ManagePosts", "Accounts");
                 }
 
                 TempData["ErrorMessage"] = "Failed to create post.";
@@ -173,6 +207,7 @@ public class AccountsController(
         }
     }
 
+    [HttpPut]
     public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
     {
         const string methodName = nameof(UpdatePost);
@@ -188,7 +223,7 @@ public class AccountsController(
             var result = await postApiClient.UpdatePost(id, request);
             if (result is { IsSuccess: true })
             {
-                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts") });
+                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
             }
 
             return HandleError((HttpStatusCode)result.StatusCode, methodName);
@@ -199,13 +234,50 @@ public class AccountsController(
         }
     }
 
+    [HttpPut]
     public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
     {
         var result = await postApiClient.UpdateThumbnail(id, request);
         return Ok(new { data = result });
     }
 
-    #region Helpers
+    [HttpDelete]
+    public async Task<IActionResult> DeletePost([FromRoute] Guid id, [FromQuery] int page = 1)
+    {
+        const string methodName = nameof(DeletePost);
+        
+        try
+        {
+            var result = await postApiClient.DeletePost(id);
+            if (result is { IsSuccess: true })
+            {
+                // Lấy lại danh sách bài viết sau khi xóa
+                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(page, 4);
+                if (postsResult is { IsSuccess: true, Data: not null })
+                {
+                    var items = new ManagePostsViewModel()
+                    {
+                        Posts = postsResult.Data
+                    };
+                    
+                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                    return Json(new { success = true, html });
+                }
+                
+                return Json(new { success = true, html = string.Empty });
+            }
+
+            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
+    #endregion
+    
+    #region HELPERS
 
     private async Task<IEnumerable<CategoryDto>> GetCategories()
     {

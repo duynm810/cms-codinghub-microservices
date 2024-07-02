@@ -49,8 +49,8 @@
                         foreach (var item in tags)
                         {
                             var tagUrl = "/tag/" + item.Slug;
-                            
-                            <a class="tag-cloud-link" href="@tagUrl">@item.Name</a>
+                            var tagDisplayName = "#" + item.Name;
+                            <a class="tag-cloud-link" href="@tagUrl">@tagDisplayName</a>
                         }
                     }
                 </div>

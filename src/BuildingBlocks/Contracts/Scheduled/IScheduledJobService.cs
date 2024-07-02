@@ -4,7 +4,7 @@ namespace Contracts.Scheduled;
 
 public interface IScheduledJobService
 {
-    #region Continuos Jobs
+    #region CONTINUOS JOBS
 
     /// <summary>
     /// Enqueue a job to run after a parent job completes.
@@ -16,7 +16,7 @@ public interface IScheduledJobService
 
     #endregion
 
-    #region Fire And Forget
+    #region FIRE AND FORGET
 
     /// <summary>
     /// Enqueue a fire-and-forget job.
@@ -35,7 +35,7 @@ public interface IScheduledJobService
 
     #endregion
 
-    #region Delayed Jobs
+    #region DELAYED JOBS
 
     /// <summary>
     /// Schedule a job to run after a delay.

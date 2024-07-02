@@ -5,7 +5,6 @@ using Post.Domain.Services;
 using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 using Shared.SeedWorks;
-using Shared.Utilities;
 
 namespace Post.Infrastructure.Services;
 

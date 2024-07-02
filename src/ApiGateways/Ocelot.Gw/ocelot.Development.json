@@ -660,6 +660,36 @@
       "SwaggerKey": "tag-service"
     },
     {
+      "UpstreamPathTemplate": "/tags/by-name/{name}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-name/{name}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/suggest",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/suggest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5010
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
       "UpstreamPathTemplate": "/tags/{id}",
       "UpstreamHttpMethod": [
         "GET"

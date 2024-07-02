@@ -11,21 +11,21 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        #region Permission
+        #region PERMISSION
 
         CreateMap<CreateOrUpdatePermissionDto, Permission>();
         CreateMap<Permission, PermissionDto>();
 
         #endregion
 
-        #region Role
+        #region ROLE
 
         CreateMap<CreateOrUpdateRoleDto, IdentityRole>();
         CreateMap<IdentityRole, RoleDto>();
 
         #endregion
 
-        #region User
+        #region USER
 
         CreateMap<CreateUserDto, User>();
         CreateMap<UpdateUserDto, User>();

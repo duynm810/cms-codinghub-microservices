@@ -10,19 +10,19 @@ public class PostSubmittedForApprovalEventConsumer(IBackgroundJobService backgro
 {
     public async Task Consume(ConsumeContext<IPostSubmittedForApprovalEvent> context)
     {
-        var emailEvent = context.Message;
+        var message = context.Message;
 
-        var jobId = backgroundJobService.SendEmail(emailEvent.To, emailEvent.Subject, emailEvent.EmailContent,
-            emailEvent.EnqueueAt);
+        var jobId = backgroundJobService.SendEmail(message.To, message.Subject, message.EmailContent,
+            message.EnqueueAt);
 
         if (jobId != null)
         {
             logger.Information("Processed PostSubmittedForApprovalEvent - Event Id: {EventId}, Job Id: {JobId}",
-                emailEvent.Id, jobId);
+                message.Id, jobId);
         }
         else
         {
-            logger.Warning("Failed to process PostSubmittedForApprovalEvent - Event Id: {EventId}", emailEvent.Id);
+            logger.Warning("Failed to process PostSubmittedForApprovalEvent - Event Id: {EventId}", message.Id);
         }
 
         await Task.CompletedTask;

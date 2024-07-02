@@ -9,4 +9,6 @@ public class TagDto
     public required string Slug { get; set; }
     
     public string? Description { get; set; }
+    
+    public int UsageCount { get; set; }
 }

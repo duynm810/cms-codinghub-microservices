@@ -4,9 +4,10 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
+using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Tag;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -17,13 +18,15 @@ public class UpdatePostCommandHandler(
     IPostRepository postRepository,
     ICategoryGrpcClient categoryGrpcClient,
     ICacheService cacheService,
+    ISerializeService serializeService,
+    IPostEventService postEventService,
     IMapper mapper,
     ILogger logger)
-    : IRequestHandler<UpdatePostCommand, ApiResult<PostDto>>
+    : IRequestHandler<UpdatePostCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<PostDto>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
     {
-        var result = new ApiResult<PostDto>();
+        var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePostCommand);
 
         try
@@ -65,27 +68,40 @@ public class UpdatePostCommandHandler(
             // Set category id get by categories services
             updatePost.CategoryId = category.Id;
 
-            await postRepository.UpdatePost(updatePost);
-
-            var data = mapper.Map<PostDto>(updatePost);
+            var data = await postRepository.UpdatePost(updatePost);
             result.Success(data);
-
+            
             // Xóa cache liên quan
-            var cacheKeys = new List<string>
+            TaskHelper.RunFireAndForget(async () =>
             {
-                CacheKeyHelper.Post.GetAllPostsKey(),
-                CacheKeyHelper.Post.GetPostByIdKey(request.Id),
-                CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
-                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 10),
-                CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 10),
-                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
-            };
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(request.Id),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                    CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 6),
+                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
+                };
 
-            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
+            
+            var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
+            if (rawTags != null)
+            {
+                TaskHelper.RunFireAndForget(() => postEventService.HandlePostUpdatedEvent(request.Id, rawTags), e =>
+                {
+                    logger.Error("HandlePostUpdatedEvent failed. Message: {ErrorMessage}", e.Message);
+                });
+            }
 
-            logger.Information("END {MethodName} - Post with ID {PostId} updated successfully", methodName, request.Id);
+            logger.Information("END {MethodName} - Post updated successfully with ID: {PostId}", methodName, request.Id);
         }
         catch (Exception e)
         {

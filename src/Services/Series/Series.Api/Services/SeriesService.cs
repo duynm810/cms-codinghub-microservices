@@ -43,10 +43,7 @@ public class SeriesService(
             result.Success(data);
 
             // Clear series list cache when a new series is created (Xóa cache danh sách series khi tạo mới)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(request.Slug))
-            );
+            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
 
             logger.Information("END {MethodName} - Series created successfully with ID {SeriesId}", methodName,
                 data.Id);
@@ -89,9 +86,7 @@ public class SeriesService(
             await Task.WhenAll(
                 cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
                 cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)),
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug)),
-                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id)),
-                cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(series.Slug))
+                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug))
             );
 
             logger.Information("END {MethodName} - Series with ID {SeriesId} updated successfully", methodName, id);
@@ -134,8 +129,6 @@ public class SeriesService(
                 // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
                 tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)));
                 tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug)));
-                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesByIdKey(id)));
-                tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.SeriesGrpc.GetGrpcSeriesBySlugKey(series.Slug)));
             }
 
             // Execute all tasks in parallel

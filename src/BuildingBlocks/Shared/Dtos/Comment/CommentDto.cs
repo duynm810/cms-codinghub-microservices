@@ -28,5 +28,8 @@ public class CommentDto
     /// </summary>
     public UserDto? User { get; set; }
 
+    /// <summary>
+    /// Thông tin bình luận phản hồi
+    /// </summary>
     public List<CommentDto>? Replies { get; set; }
 }

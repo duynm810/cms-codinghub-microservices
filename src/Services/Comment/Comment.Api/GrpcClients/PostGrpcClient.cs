@@ -24,13 +24,6 @@ public class PostGrpcClient(
 
         try
         {
-            var cacheKey = CacheKeyHelper.PostGrpc.GetTop10PostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey);
-            if (cachedPosts != null)
-            {
-                return cachedPosts;
-            }
-
             var request = new GetTop10PostsRequest();
 
             var result = await postProtoServiceClient.GetTop10PostsAsync(request);
@@ -38,10 +31,6 @@ public class PostGrpcClient(
             {
                 var posts = mapper.Map<IEnumerable<PostDto>>(result.Posts);
                 var data = posts.ToList();
-
-                // Lưu cache
-                await cacheService.SetAsync(cacheKey, data);
-
                 return data;
             }
 

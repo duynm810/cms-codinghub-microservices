@@ -7,6 +7,11 @@ public static class ErrorMessagesConsts
         public const string UnhandledException = "Unhandled exception";
     }
 
+    public static class Cache
+    {
+        public const string CacheKeyRemovalError = "An error occurred while removing cache keys.";
+    }
+
     public static class Authentication
     {
         public const string InvalidCredentials = "Invalid credentials provided.";

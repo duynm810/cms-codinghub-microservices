@@ -120,13 +120,6 @@ public class BaseApiClient(
         var client = await CreateClientAsync(requiredLogin);
         var response = await client.GetAsync(url);
 
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorContent = await response.Content.ReadAsStringAsync();
-            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
-                errorContent));
-        }
-
         var responseContent = await response.Content.ReadAsStringAsync();
         var result = serializeService.Deserialize<ApiResult<T>>(responseContent);
 

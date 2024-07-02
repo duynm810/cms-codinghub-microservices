@@ -8,17 +8,42 @@
         function updatePost(button) {
             let slug = button.getAttribute('data-slug');
             let urlTemplate = button.getAttribute('data-url');
-            let url = urlTemplate.replace('__slug__', encodeURIComponent(slug));
+            window.location.href = urlTemplate.replace('__slug__', encodeURIComponent(slug));
+        }
 
-            console.log("Slug:", slug); // Log để kiểm tra giá trị slug
-            console.log("URL Template:", urlTemplate); // Log để kiểm tra giá trị URL template
-            console.log("URL:", url); // Log để kiểm tra URL cuối cùng
+        function deletePost(button) {
+            let postId = button.getAttribute('data-id');
+            let deleteUrl = `@Url.Action("DeletePost", "Accounts")/${postId}`;
 
-            window.location.href = url;
+            showConfirmAlert(
+                'Are you sure?',
+                "You won't be able to revert this!",
+                'Yes, delete it!',
+                'Cancel',
+                () => {
+                    $.ajax({
+                        url: deleteUrl,
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        success: function(data) {
+                            if (data.success) {
+                                showSuccessNotification('Your post has been deleted.');
+                                if (data.html) {
+                                    $('#posts-table-body').html(data.html); // Update table content
+                                }
+                            } else {
+                                showErrorNotification('There was a problem deleting your post.');
+                            }
+                        },
+                        error: function() {
+                            showErrorNotification('There was a problem deleting your post.');
+                        }
+                    });
+                }
+            );
         }
     </script>
 }
-
 
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
@@ -48,44 +73,8 @@
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    @if (posts.Items != null && posts.Items.Count != 0)
-                    {
-                        foreach (var item in posts.Items)
-                        {
-                            var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
-                            
-                            <tr class="alert" role="alert">
-                                <td>
-                                    <label class="checkbox-wrap checkbox-primary">
-                                        <input type="checkbox">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </td>
-                                <td>@item.Category.Name</td>
-                                <td>@item.Title</td>
-                                <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
-                                <td>@item.ViewCount.ToString("N0")</td>
-                                <td class="status">
-                                    <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
-                                </td>
-                                <td>
-                                    <div class="button-container">
-                                        <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
-                                            <span aria-hidden="true">
-                                                <i class="fa fa-pencil"></i>
-                                            </span>
-                                        </button>
-                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                            <span aria-hidden="true">
-                                                <i class="fa fa-close"></i>
-                                            </span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    }
+                    <tbody id="posts-table-body">
+                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>

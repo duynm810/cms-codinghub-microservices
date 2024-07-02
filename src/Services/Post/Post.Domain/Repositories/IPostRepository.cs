@@ -10,7 +10,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Guid CreatePost(PostBase post);
 
-    Task<PostBase> UpdatePost(PostBase post);
+    Task<bool> UpdatePost(PostBase post);
 
     Task DeletePost(PostBase post);
 

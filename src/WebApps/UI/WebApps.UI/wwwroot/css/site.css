@@ -1,5 +1,7 @@
 /* wwwroot/css/site.css */
 
+/*---------------------- Common ----------------------*/
+
 .small-swal-popup {
     max-width: 400px;
     font-size: 0.9rem;
@@ -34,7 +36,13 @@
     cursor: not-allowed;
 }
 
-/*----------------------- Start Spinner ----------------------*/
+.form-group label {
+    margin-bottom: 0.3rem;
+    margin-left: 0.2rem;
+    display: block;
+}
+
+/*----------------------- Spinner ----------------------*/
 
 .spinner {
     display: none;
@@ -64,9 +72,19 @@
     20% { transform: scaleY(1.0) }
 }
 
-/*---------------------- End Spinner ----------------------*/
+.form-control, .btn {
+    border-radius: 5px;
+}
 
-/*-------------------------------------------------------------------*/
+.pl-3,
+.px-3 {
+    padding-left: 1rem !important; }
+
+.text-right-custom {
+    text-align: right;
+}
+
+/*----------------------- Upload Files (Drag Or Drop) ----------------------*/
 
 .upload-container {
     position: relative;
@@ -161,6 +179,8 @@
     color: #c82333;
 }
 
+/*----------------------- Select (Dropdown) ----------------------*/
+
 .dropdown-custom {
     width: 100%;
     height: 47px;
@@ -170,9 +190,7 @@
     background-color: #fff;
 }
 
-.form-control, .btn {
-    border-radius: 5px;
-}
+/*----------------------- Button Submit ----------------------*/
 
 .button-contactForm {
     background-color: #007bff;
@@ -186,7 +204,7 @@
     border-color: #0056b3;
 }
 
-/*-------------------------------------------------------------------*/
+/*----------------------- Table ----------------------*/
 
 .table-wrap {
     overflow-x: auto;
@@ -282,6 +300,14 @@
     background: #27ae60; /* Green Dot */
 }
 
+@media screen and (max-width: 768px) {
+    .table-wrap {
+        overflow-x: scroll;
+    }
+}
+
+/*----------------------- Checkbox ----------------------*/
+
 .checkbox-wrap {
     display: block;
     position: relative;
@@ -334,6 +360,8 @@
     border-width: 0 3px 3px 0;
     transform: rotate(45deg);
 }
+
+/*----------------------- Action Button ----------------------*/
 
 .button-container {
     display: flex;
@@ -394,16 +422,19 @@ button.btn-update:not(:disabled):not(.disabled):focus {
 a.close.disabled {
     pointer-events: none; }
 
-.pl-3,
-.px-3 {
-    padding-left: 1rem !important; }
+/*----------------------- Quill Editor ----------------------*/
 
-.text-right-custom {
-    text-align: right;
+.ql-editor {
+    background-color: white;
 }
 
-@media screen and (max-width: 768px) {
-    .table-wrap {
-        overflow-x: scroll;
-    }
+/*----------------------- Tagify ----------------------*/
+
+.tagify+input{
+    display: block !important;
+    position: static !important;
+    transform: none !important;
+    width: 90%;
+    margin-top: 1em;
+    padding: .5em;
 }

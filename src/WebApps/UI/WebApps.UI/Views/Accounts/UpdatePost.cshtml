@@ -1,12 +1,14 @@
 @model UpdatePostViewModel
 @{
-    Layout = "_Layout";
+    ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
     var post = Model.Post;
     var categories = Model.Categories;
 }
 
 @section scripts {
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
+    <script src="~/js/quill.js" asp-append-version="true"></script>
+    <script src="~/js/tagify.js" asp-append-version="true"></script>
 
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>
@@ -14,7 +16,15 @@
         // Initialize the accountsController
         const controller = new accountsController('frm-update-post');
         controller.initialize();
-        
+        controller.checkRequiredFields();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Initializing with existing tags from the server
+            const existingTagsElement = document.getElementById('tagsData');
+            const existingTags = JSON.parse(existingTagsElement.getAttribute('data-tags'));
+            window.loadExistingTags(existingTags);
+        });
+
         const thumbnailUrl = document.getElementById("thumbnailUrl").value;
 
         // Display uploaded images when loading the update page (Hiển thị hình ảnh đã upload khi tải trang cập nhật)
@@ -83,8 +93,32 @@
             fileList.appendChild(fileItem);
         }
 
+        async function updatePostThumbnail(postId) {
+            try {
+                console.log(`Updating thumbnail for post with ID: ${postId}`);
+                const response = await $.ajax({
+                    url: `/accounts/update-thumbnail/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        thumbnail: null // Set the thumbnail to null
+                    })
+                });
+
+                console.log('Post thumbnail updated successfully', response);
+            } catch (error) {
+                showErrorNotification(`Error updating post: ${error.responseText || error.message}`);
+            }
+        }
+
         async function submitUpdatePostForm() {
             const form = document.getElementById('frm-update-post');
+
+            const content = quill.root.innerHTML;
+            document.querySelector('input[name="Content"]').value = content;
+
+            const tagsData = window.getTagsData();
+
             const formData = new FormData(form);
 
             const postId = document.getElementById('postId').value;
@@ -93,12 +127,13 @@
             const data = {
                 Title: formData.get('Title'),
                 Slug: formData.get('Slug'),
-                Content: formData.get('Content'),
+                Content: content,
                 Summary: formData.get('Summary'),
                 Thumbnail: formData.get('Thumbnail'),
                 SeoDescription: formData.get('SeoDescription'),
                 Source: formData.get('Source'),
-                CategoryId: formData.get('category')
+                CategoryId: formData.get('CategoryId'),
+                RawTags: JSON.stringify(tagsData)
             };
 
             try {
@@ -120,24 +155,7 @@
                 showErrorNotification('An error occurred while updating the post.');
             }
         }
-
-        async function updatePostThumbnail(postId) {
-            try {
-                console.log(`Updating thumbnail for post with ID: ${postId}`);
-                const response = await $.ajax({
-                    url: `/accounts/update-thumbnail/${postId}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        thumbnail: null // Set the thumbnail to null
-                    })
-                });
-
-                console.log('Post thumbnail updated successfully', response);
-            } catch (error) {
-                showErrorNotification(`Error updating post: ${error.responseText || error.message}`);
-            }
-        }
+        
     </script>
 }
 
@@ -153,11 +171,14 @@
     </div>
     <form enctype="multipart/form-data" id="frm-update-post" novalidate>
         @Html.AntiForgeryToken()
+        <!-- Id -->
         <input type="hidden" name="PostId" id="postId" value="@post.Id"/>
+        <!-- Category -->
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
-                    <select class="dropdown-custom" name="category" required="">
+                    <label for="category">Category</label>
+                    <select class="dropdown-custom" name="CategoryId" id="category" required>
                         <option value="" disabled>Select category</option>
                         @foreach (var category in categories)
                         {
@@ -174,46 +195,69 @@
                 </div>
             </div>
         </div>
+        <!-- Title -->
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="title">Title</label>
                     <input type="text" required class="form-control" name="Title" id="title" placeholder="Title" value="@post.Title">
                 </div>
             </div>
+            <!-- Slug -->
             <div class="col-md-6">
                 <div class="form-group">
+                    <label for="slug">Slug</label>
                     <input type="text" required class="form-control" name="Slug" id="slug" placeholder="Slug (SEO)" value="@post.Slug">
                 </div>
             </div>
         </div>
+        <!-- Summary -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="summary">Summary</label>
                     <textarea class="form-control" required name="Summary" id="summary" placeholder="Summary" rows="3">@post.Summary</textarea>
                 </div>
             </div>
         </div>
+        <!-- Content -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <textarea class="form-control" required name="Content" id="content" placeholder="Content" rows="6">@post.Content</textarea>
+                    <div id="editor" data-content='@Html.Raw(post.Content)'></div>
+                    <input type="hidden" name="Content" id="content">
                 </div>
             </div>
         </div>
+        <!-- Seo Description -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <input class="form-control" name="SeoDescription" placeholder="SEO description" rows="3" value="@post.SeoDescription">
+                    <label for="seoDescription">SEO Description</label>
+                    <input class="form-control" name="SeoDescription" id="seoDescription" placeholder="SEO description" rows="3" value="@post.SeoDescription">
                 </div>
             </div>
         </div>
+        <!-- Source -->
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
+                    <label for="source">Source</label>
                     <input type="text" class="form-control" name="Source" id="source" placeholder="Reference source (URL or source)" value="@post.Source">
                 </div>
             </div>
         </div>
+        <!-- Tags -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <label for="tags">Tags</label>
+                    <input type="text" class="form-control" id="tags" placeholder="Add tags">
+                    <input type="hidden" name="RawTags" id="tagsData" data-tags='@Html.Raw(Json.Serialize(Model.Post.Tags))'>
+                </div>
+            </div>
+        </div>
+        <!-- Thumbnail -->
         <div class="row">
             <div class="col-md-12">
                 <div id="upload-section" class="upload-container">
@@ -241,10 +285,8 @@
         </div>
         <input type="hidden" name="Thumbnail" id="thumbnailUrl" value="@post.Thumbnail"/>
         <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <button type="button" class="button button-contactForm btn-block" onclick="submitUpdatePostForm()" id="submit-button" disabled>Submit</button>
-                </div>
+            <div class="col-md-12 text-center">
+                <button type="button" class="button button-contactForm btn-block" onclick="submitUpdatePostForm()" id="submit-button" disabled>Submit</button>
             </div>
         </div>
     </form>

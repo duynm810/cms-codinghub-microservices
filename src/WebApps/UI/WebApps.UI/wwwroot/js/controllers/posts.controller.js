@@ -23,7 +23,6 @@ const postsController = function () {
                                 let replyContent = childItem.content || '';
                                 let replyCreatedDate = childItem.createdDate || '';
                                 let replyUserFullName = (childItem.user && childItem.user.fullName) || '';
-
                                 childrenHtml += generateReplyHtml(replyId, replyContent, replyCreatedDate, replyUserFullName);
                             });
                         }
@@ -47,41 +46,48 @@ const postsController = function () {
         console.log('Registering events');
 
         // Handle submission of new comment form (Xử lý submit form bình luận mới)
-        $("#commentform").submit(function (e) {
+        $("#btn_send_comment").on("click", function (e) {
             e.preventDefault();
 
-            // Check form submission (Kiểm tra việc submit form)
-            console.log('Comment form submitted');
-
-            const form = $(this);
+            const form = $("#commentForm");
             const url = form.attr('action');
+            const postId = form.find("input[name='postId']").val();
+            const content = $("#txt_new_comment_content").val();
 
-            // Check URL (Kiểm tra URL)
-            console.log('Submitting form to URL:', url);
+            const commentData = {
+                postId: postId, content: content
+            };
 
-            $.post(url, form.serialize()).done(function (response) {
-                // Check response (Kiểm tra phản hồi)
-                console.log('Form submission successful:', response);
+            $.ajax({
+                type: "POST",
+                url: url,
+                contentType: "application/json",
+                data: JSON.stringify(commentData),
+                success: function (response) {
+                    console.log('Form submission successful:', response);
 
-                // Generate the HTML for the new comment and add it to the comments list (Tạo HTML cho bình luận mới và thêm vào danh sách bình luận)
-                const content = $("#txt_new_comment_content").val();
-                const currentLoginName = $('#hid_current_login_name').val();
-                const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName);
+                    // Generate the HTML for the new comment and add it to the comments list
+                    const currentLoginName = $('#hid_current_login_name').val();
+                    const currentUserName = $('#hid_current_user_name').val();
+                    const newCommentHtml = generateCommentHtml(response.data.id, content, new Date(), currentLoginName, currentUserName);
 
-                // Reset form and update interface (Reset form và cập nhật giao diện)
-                content.val('');
-                $('#comment_list').prepend(newCommentHtml);
+                    // Reset form and update interface
+                    $("#txt_new_comment_content").val(''); // Clear the content of the input
+                    $('#comment_list').append(newCommentHtml);
 
-                const $hiddenNumberOfComments = $('#hid_number_comments');
-                const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
-                $hiddenNumberOfComments.val(numberOfComments);
-                $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                    const $hiddenNumberOfComments = $('#hid_number_comments');
+                    const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
+                    $hiddenNumberOfComments.val(numberOfComments);
+                    $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                },
+                error: function (error) {
+                    console.error('Error submitting form:', error);
+                }
             });
         });
 
-
         // Handle when the user clicks the "Reply" button (Xử lý khi người dùng nhấp vào nút "Reply")
-        $('body').on('click', '.comment-reply-link', function (e) {
+        $(document).on('click', '.comment-reply-link', function (e) {
             e.preventDefault();
 
             // Check for clicking on the reply link (Kiểm tra việc click vào reply link)
@@ -91,67 +97,51 @@ const postsController = function () {
             const commentId = $(this).data('commentid');
             const replyFormHtml = generateReplyFormHtml(commentId);
             const $replyComment = $('#reply_comment_' + commentId);
-            const $replyContent = $('#txt_reply_content_' + commentId);
-            const $childrenComments = $('#children_comments_' + commentId);
-            const $hiddenNumberOfComments = $('#hid_number_comments');
 
             $replyComment.html(replyFormHtml);
 
-            // Set a timeout to hide the reply form if there is no input after 10 seconds (Thiết lập thời gian chờ để ẩn form trả lời nếu không có nhập liệu sau 10 giây)
-            let replyTimeout = setTimeout(function () {
-                if ($replyContent.val().trim() === '') {
-                    $replyComment.html('');
-                }
-            }, 5000); // 10 giây
-
-            // If the user starts typing, cancel the timeout (Nếu người dùng bắt đầu nhập, hủy bỏ thời gian chờ)
-            $replyContent.on('input', function () {
-                clearTimeout(replyTimeout);
-            });
-
-            // Nếu người dùng rời khỏi textarea mà không nhập gì, thiết lập thời gian chờ để ẩn form
-            $replyContent.on('blur', function () {
-                replyTimeout = setTimeout(function () {
-                    if ($replyContent.val().trim() === '') {
-                        $replyComment.html('');
-                    }
-                }, 5000); // 10 giây
-            });
-
-            // Nếu người dùng quay lại textarea, hủy bỏ thời gian chờ
-            $replyContent.on('focus', function () {
-                clearTimeout(replyTimeout);
-            });
-
             // Handle submit form to reply to comments (Xử lý submit form trả lời bình luận)
-            $("#frm_reply_comment_" + commentId).submit(function (e) {
+            $("#frm_reply_comment_" + commentId).on('submit', function (e) {
                 e.preventDefault();
 
                 // Check the submission of the answer form (Kiểm tra việc submit form trả lời)
                 console.log('Reply form submitted for commentId:', commentId);
 
                 const form = $(this);
-                const url = form.attr('action');
+                const url = form.attr('action') + "?parentId=" + commentId;
+                const $replyContent = $('#txt_reply_content_' + commentId);
+                const $childrenComments = $('#children_comments_' + commentId);
+                const $hiddenNumberOfComments = $('#hid_number_comments');
 
                 // Check url (Kiểm tra URL)
                 console.log('Submitting reply form to URL:', url);
 
-                $.post(url, form.serialize()).done(function (response) {
-                    // Kiểm tra phản hồi
-                    console.log('Reply form submission successful:', response);
+                $.ajax({
+                    type: 'POST', 
+                    url: url, 
+                    contentType: 'application/json', 
+                    data: JSON.stringify({
+                        postId: form.find("input[name='postId']").val(),
+                        content: $replyContent.val()
+                    }), success: function (response) {
+                        // Kiểm tra phản hồi
+                        console.log('Reply form submission successful:', response);
 
-                    const content = $replyContent.val();
-                    const currentLoginName = $('#hid_current_login_name').val();
-                    const newReplyHtml = generateReplyHtml(response.data.id, content, new Date(), currentLoginName);
+                        const content = $replyContent.val();
+                        const currentLoginName = $('#hid_current_login_name').val();
+                        const newReplyHtml = generateReplyHtml(response.data.id, content, new Date(), currentLoginName);
 
-                    // Reset form and update interface (Reset form và cập nhật giao diện)
-                    $replyContent.val('');
-                    $replyComment.html('');
-                    $childrenComments.prepend(newReplyHtml);
+                        // Reset form and update interface (Reset form và cập nhật giao diện)
+                        $replyContent.val('');
+                        $replyComment.html('');
+                        $childrenComments.append(newReplyHtml); // Thêm bình luận mới vào cuối danh sách con
 
-                    const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
-                    $hiddenNumberOfComments.val(numberOfComments);
-                    $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                        const numberOfComments = parseInt($hiddenNumberOfComments.val()) + 1;
+                        $hiddenNumberOfComments.val(numberOfComments);
+                        $('#comments-title').text('Các bình luận (' + numberOfComments + ')');
+                    }, error: function (error) {
+                        console.error('Error submitting reply form:', error);
+                    }
                 });
             });
         });
@@ -173,6 +163,7 @@ const postsController = function () {
     }
 
     function generateCommentHtml(id, content, createdDate, fullName, childrenHtml = '') {
+        const authorUrl = "/author/" + '';
         return `
             <li class="comment-item">
                 <div class="single-comment justify-content-between d-flex">
@@ -184,7 +175,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${fullName}</a></h5>
+                                    <h5><a href="${authorUrl}">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                                 <div class="reply-btn">
@@ -204,7 +195,8 @@ const postsController = function () {
         `;
     }
 
-    function generateReplyHtml(id, content, createdDate, fullName) {
+    function generateReplyHtml(id, content, createdDate, fullName, userName) {
+        const authorUrl = "/author/" + '';
         return `
             <li class="comment-item">
                 <div class="single-comment depth-2 justify-content-between d-flex mt-30">
@@ -216,7 +208,7 @@ const postsController = function () {
                             <p class="comment">${content}</p>
                             <div class="d-flex justify-content-between align-items-center info-row">
                                 <div class="d-flex align-items-center">
-                                    <h5><a href="#">${fullName}</a></h5>
+                                    <h5><a href="${authorUrl}">${fullName}</a></h5>
                                     <p class="date">${formatRelativeTime(new Date(createdDate))}</p>
                                 </div>
                             </div>
@@ -229,23 +221,23 @@ const postsController = function () {
 
     function generateReplyFormHtml(commentId) {
         return `
-        <div class="comment-form form-contact rounded bordered">
-            <form action="/posts/add-new-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
-                <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
-                <input type="hidden" name="replyId" value="${commentId}" />
-                <div class="messages"></div>
-                <div class="row">
-                    <div class="column col-md-12">
-                        <div class="form-group d-flex align-items-center">
-                            <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
-                            <button type="submit" id="btn_send_reply" class="btn btn_send_reply ml-2">
-                               <i class="fas fa-paper-plane"></i>
-                            </button>
+            <div class="comment-form form-contact rounded bordered">
+                <form action="/posts/reply-to-comment" id="frm_reply_comment_${commentId}" class="comment-form" method="post">
+                    <input type="hidden" name="postId" value="${$('#hid_post_id').val()}" />
+                    <input type="hidden" name="parentId" value="${commentId}" />
+                    <div class="messages"></div>
+                    <div class="row">
+                        <div class="column col-md-12">
+                            <div class="d-flex align-items-center">
+                                <textarea name="content" id="txt_reply_content_${commentId}" class="form-control" rows="2" placeholder="Please enter a comment..." required="required"></textarea>
+                                <button type="submit" class="btn btn_send_reply ml-2">
+                                   <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
         `;
     }
 }

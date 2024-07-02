@@ -15,14 +15,19 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.PostAsync<CreatePostDto, Guid>($"/posts", request, true);
     }
 
-    public async Task<ApiResult<PostDto>> UpdatePost(Guid id, UpdatePostDto request)
+    public async Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostDto request)
     {
-        return await baseApiClient.PutAsync<UpdatePostDto, PostDto>($"/posts/{id}", request, true);
+        return await baseApiClient.PutAsync<UpdatePostDto, bool>($"/posts/{id}", request, true);
     }
 
     public async Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request)
     {
         return await baseApiClient.PutAsync<UpdateThumbnailDto, bool>($"/posts/update-thumbnail/{id}", request, true);
+    }
+
+    public async Task<ApiResult<bool>> DeletePost(Guid id)
+    {
+        return await baseApiClient.DeleteAsync<bool>($"/posts/{id}", true);
     }
     
     public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)
