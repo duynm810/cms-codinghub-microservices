@@ -85,7 +85,8 @@ public static class ServiceExtensions
 
         services.AddSingleton(apiConfigurations);
 
-        services.AddSingleton<EventBusSettings>(sp => sp.GetRequiredService<IOptions<EventBusSettings>>().Value);
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<EventBusSettings>(configuration.GetSection(nameof(EventBusSettings)));
     }
 
     private static void AddDatabaseContext(this IServiceCollection services)

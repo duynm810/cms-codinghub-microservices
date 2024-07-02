@@ -47,7 +47,7 @@ public class PostDeletedEventConsumer(
             await transaction.CommitAsync();
 
             // Publish event for processed tags (Phát hành sự kiện cho các tags đã được xử lý)
-            await PublishPostTagsDeletedEvent(message.Id);
+            await PublishPostTagsDeletedEvent(message.PostId);
 
             logger.Information("END processing {ClassName} successfully - PostId: {PostId}", className, message.PostId);
         }
