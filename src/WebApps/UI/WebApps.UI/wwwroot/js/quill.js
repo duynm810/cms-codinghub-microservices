@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
     $(document).ready(function () {
+        const serverUrl = 'http://localhost:6001'; // Thay thế bằng URL của server của bạn
+
         // Apply nice-select to all select elements, except elements with class 'ql-header'
         $('select').not('.ql-header').niceSelect();
 
@@ -54,5 +56,74 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Remove nice-select from Quill elements
         $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
+
+        // Add event listener for image upload
+        quill.getModule('toolbar').addHandler('image', function() {
+            selectLocalImage();
+        });
+
+        function selectLocalImage() {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+            input.click();
+
+            input.onchange = () => {
+                const file = input.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('type', 'posts');
+
+                    $.ajax({
+                        url: '/media/upload-image',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function(result) {
+                            const range = quill.getSelection();
+                            const imageUrl = `${serverUrl}/${result.data}`; // Thêm serverUrl vào trước URL của hình ảnh
+                            quill.insertEmbed(range.index, 'image', imageUrl);
+                        },
+                        error: function(xhr, status, error) {
+                            showErrorNotification('Error uploading image:', error);
+                        }
+                    });
+                }
+            };
+        }
+
+        // Function to get all image URLs in the content
+        function getAllImageUrls() {
+            const images = quill.root.querySelectorAll('img');
+            return Array.from(images).map(img => img.src);
+        }
+
+        let currentImageUrls = getAllImageUrls();
+
+        // Event listener to detect changes in the editor
+        quill.on('text-change', function(delta, oldDelta, source) {
+            const newImageUrls = getAllImageUrls();
+            const deletedImageUrls = currentImageUrls.filter(url => !newImageUrls.includes(url));
+
+            // Call API to delete images
+            deletedImageUrls.forEach(url => {
+                let imagePath = new URL(url).pathname; // Lấy phần path của URL
+                imagePath = imagePath.replace(/^\/+/, ''); // Loại bỏ ký tự '/' ở đầu nếu có
+                $.ajax({
+                    url: `/media/delete-image/${encodeURIComponent(imagePath)}`,
+                    type: 'DELETE',
+                    success: function(result) {
+                        showSuccessNotification('Image deleted successfully');
+                    },
+                    error: function(xhr, status, error) {
+                        showErrorNotification('Error deleting image:', error);
+                    }
+                });
+            });
+
+            currentImageUrls = newImageUrls;
+        });
     });
 });
