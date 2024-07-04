@@ -84,18 +84,21 @@ document.addEventListener('DOMContentLoaded', function () {
                             reader.onload = (e) => {
                                 // handle the inserted image
                                 const dataUrl = e.target.result
-                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, file.name))
+                                const range = quill.getSelection();
+                                quill.insertEmbed(range.index, 'image', dataUrl);
+                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, file.name), range.index);
                                 fileInput.value = ''
                             }
                             reader.readAsDataURL(file)
                         }
                     })
+                    this.container.appendChild(fileInput);
                 }
                 fileInput.click()
             }
         })
 
-        function imageHandler(imageDataUrl, type, imageData) {
+        function imageHandler(imageDataUrl, type, imageData, index) {
             imageData
                 .minify({
                     maxWidth: 320,
@@ -103,8 +106,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     quality: 0.7,
                 })
                 .then((miniImageData) => {
-                    const blob = miniImageData.toBlob()
-                    const file = miniImageData.toFile()
+                    const blob = miniImageData.toBlob();
+                    const file = miniImageData.toFile();
 
                     // Upload the image to the server
                     const formData = new FormData();
@@ -112,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     formData.append('type', 'posts');
 
                     $.ajax({
-                        url: '/media/upload-image',
+                        url: `/media/upload-image`,
                         type: 'POST',
                         data: formData,
                         contentType: false,
@@ -120,15 +123,20 @@ document.addEventListener('DOMContentLoaded', function () {
                         success: function (result) {
                             const imageUrl = result.data;
 
-                            // Insert the image URL into the Quill editor
-                            const range = quill.getSelection();
-                            quill.insertEmbed(range.index, 'image', `${serverUrl}/${result.data}`);
+                            // Thay thế ảnh base64 bằng URL ảnh từ server
+                            const delta = quill.getContents();
+                            delta.ops.forEach((op, i) => {
+                                if (op.insert && op.insert.image === imageDataUrl) {
+                                    quill.deleteText(i, 1); // Xóa ảnh base64
+                                    quill.insertEmbed(i, 'image', `${serverUrl}/${imageUrl}`); // Thay thế bằng URL ảnh từ server
+                                }
+                            });
                         },
                         error: function (xhr, status, error) {
                             showErrorNotification('Error uploading image:', error);
                         }
                     });
-                })
+                });
         }
     });
 });
