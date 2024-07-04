@@ -1,11 +1,14 @@
 document.addEventListener('DOMContentLoaded', function () {
     $(document).ready(function () {
-        const serverUrl = 'http://localhost:6001'; // Thay thế bằng URL của server của bạn
-
         let currentImages = new Set();
+        
+        const serverUrl = 'http://localhost:6001';
+
+        const ImageData = QuillImageDropAndPaste.ImageData;
         
         // Apply nice-select to all select elements, except elements with class 'ql-header'
         $('select').not('.ql-header').niceSelect();
+        $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
 
         const toolbarOptions = [
             // Text formatting (Định dạng văn bản như in đậm, in nghiêng, gạch chân, gạch ngang)
@@ -56,12 +59,11 @@ document.addEventListener('DOMContentLoaded', function () {
             placeholder: 'Compose an epic...'
         });
 
+        // Set content data
         const contentFromServer = document.getElementById('editor').getAttribute('data-content');
         quill.root.innerHTML = contentFromServer || '';
-
-        $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
-
-        const ImageData = QuillImageDropAndPaste.ImageData;
+        
+        // Upload image by button
         quill.getModule('toolbar').addHandler('image', function (clicked) {
             if (clicked) {
                 let fileInput = this.container.querySelector('input.ql-image[type=file]')
@@ -94,43 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
 
-        function imageHandler(imageDataUrl, type, imageData) {
-            imageData
-                .minify({
-                    maxWidth: 1024,
-                    maxHeight: 1024,
-                    quality: 0.9,
-                })
-                .then((miniImageData) => {
-                    const blob = miniImageData.toBlob();
-                    const file = miniImageData.toFile(generateRandomFileName(type));
-
-                    // Upload the image to the server
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    formData.append('type', 'posts');
-
-                    $.ajax({
-                        url: `/media/upload-image`,
-                        type: 'POST',
-                        data: formData,
-                        contentType: false,
-                        processData: false,
-                        success: function (result) {
-                            const imageUrl = result.data;
-
-                            // Chèn URL ảnh từ server vào editor
-                            const range = quill.getSelection();
-                            quill.insertEmbed(range.index, 'image', `${serverUrl}/${imageUrl}`);
-                            updateCurrentImages();
-                        },
-                        error: function (xhr, status, error) {
-                            showErrorNotification('Error uploading image:', error);
-                        }
-                    });
-                });
-        }
-        
+        // Detect delete image
         quill.on('text-change', function(delta, oldDelta, source) {
             if (source === 'user') {
                 const newImages = new Set();
@@ -167,6 +133,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentImages = newImages;
             }
         });
+        
+        function imageHandler(imageDataUrl, type, imageData) {
+            imageData
+                .minify({
+                    maxWidth: 1024,
+                    maxHeight: 1024,
+                    quality: 0.9,
+                })
+                .then((miniImageData) => {
+                    const blob = miniImageData.toBlob();
+                    const file = miniImageData.toFile(generateRandomFileName(type));
+
+                    // Upload the image to the server
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    formData.append('type', 'posts');
+
+                    $.ajax({
+                        url: `/media/upload-image`,
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false,
+                        success: function (result) {
+                            const imageUrl = result.data;
+
+                            // Chèn URL ảnh từ server vào editor
+                            const range = quill.getSelection();
+                            quill.insertEmbed(range.index, 'image', `${serverUrl}/${imageUrl}`);
+                            updateCurrentImages();
+                        },
+                        error: function (xhr, status, error) {
+                            showErrorNotification('Error uploading image:', error);
+                        }
+                    });
+                });
+        }
 
         function updateCurrentImages() {
             const images = document.querySelectorAll('img');
