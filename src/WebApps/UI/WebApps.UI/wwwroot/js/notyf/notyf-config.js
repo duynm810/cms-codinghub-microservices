@@ -1,5 +1,5 @@
-// Initialize notyf
-let notyf = new Notyf({
+// Initialize notyfConfig
+let notyfConfig = new Notyf({
     duration: 5000,
     position: {
         x: 'right',
@@ -9,10 +9,10 @@ let notyf = new Notyf({
 
 // Show error function using Notyf
 function showErrorNotification(message) {
-    notyf.error(message);
+    notyfConfig.error(message);
 }
 
 // Show success function using Notyf
 function showSuccessNotification(message) {
-    notyf.success(message);
+    notyfConfig.success(message);
 }
