@@ -2,6 +2,8 @@ document.addEventListener('DOMContentLoaded', function () {
     $(document).ready(function () {
         const serverUrl = 'http://localhost:6001'; // Thay thế bằng URL của server của bạn
 
+        let currentImages = new Set();
+        
         // Apply nice-select to all select elements, except elements with class 'ql-header'
         $('select').not('.ql-header').niceSelect();
 
@@ -86,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 const dataUrl = e.target.result
                                 const range = quill.getSelection();
                                 quill.insertEmbed(range.index, 'image', dataUrl);
-                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, file.name), range.index);
+                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, generateRandomFileName(type)), range.index);
                                 fileInput.value = ''
                             }
                             reader.readAsDataURL(file)
@@ -131,6 +133,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                     quill.insertEmbed(i, 'image', `${serverUrl}/${imageUrl}`); // Thay thế bằng URL ảnh từ server
                                 }
                             });
+
+                            // Cập nhật danh sách hình ảnh hiện tại
+                            updateCurrentImages();
                         },
                         error: function (xhr, status, error) {
                             showErrorNotification('Error uploading image:', error);
@@ -138,5 +143,65 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 });
         }
+
+        function updateCurrentImages() {
+            const images = document.querySelectorAll('img');
+            currentImages = new Set();
+            images.forEach(img => {
+                currentImages.add(img.src);
+            });
+        }
+
+        function generateRandomFileName(type) {
+            const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const extension = type.split('/')[1];
+            return `${randomString}.${extension}`;
+        }
+
+        // Lắng nghe sự kiện text-change của quill
+        quill.on('text-change', function(delta, oldDelta, source) {
+            if (source === 'user') {
+                console.log('Delta:', delta);
+                console.log('Old Delta:', oldDelta);
+
+                const newImages = new Set();
+                const images = document.querySelectorAll('img');
+                images.forEach(img => {
+                    newImages.add(img.src);
+                });
+
+                const deletedImages = [];
+                currentImages.forEach(image => {
+                    if (!newImages.has(image)) {
+                        deletedImages.push(image);
+                    }
+                });
+
+                console.log('Deleted Images:', deletedImages);
+
+                deletedImages.forEach(fullImageUrl => {
+                    let imagePath = new URL(fullImageUrl).pathname;
+                    imagePath = imagePath.replace(/^\/+/, '');
+
+                    // Gọi API để xóa ảnh trên server
+                    $.ajax({
+                        url: `/media/delete-image/${encodeURIComponent(imagePath)}`,
+                        type: 'DELETE',
+                        contentType: 'application/json',
+                        success: function (result) {
+                            console.log(`Image deleted: ${imagePath}`);
+                        },
+                        error: function (xhr, status, error) {
+                            showErrorNotification('Error deleting image:', error);
+                        }
+                    });
+                });
+
+                currentImages = newImages;
+            }
+        });
+
+        // Khởi tạo danh sách các hình ảnh hiện tại trong tài liệu
+        updateCurrentImages();
     });
 });
