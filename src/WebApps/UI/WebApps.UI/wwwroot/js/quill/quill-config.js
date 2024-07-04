@@ -55,6 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 imageDropAndPaste: {
                     handler: imageHandler,
                 },
+                history: {
+                    userOnly: true, // Recommend to turn on this option
+                },
             },
             placeholder: 'Compose an epic...'
         });
