@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
 
-        function imageHandler(imageDataUrl, type, imageData, index) {
+        function imageHandler(imageDataUrl, type, imageData) {
             imageData
                 .minify({
                     maxWidth: 1024,
