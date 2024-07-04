@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
             theme: 'snow',
             modules: {
                 toolbar: toolbarOptions,
-                syntax: true,  // Include syntax module
+                syntax: true,
                 imageDropAndPaste: {
                     handler: imageHandler,
                 },
@@ -56,14 +56,11 @@ document.addEventListener('DOMContentLoaded', function () {
             placeholder: 'Compose an epic...'
         });
 
-        // Set content data
         const contentFromServer = document.getElementById('editor').getAttribute('data-content');
         quill.root.innerHTML = contentFromServer || '';
 
-        // Remove nice-select from Quill elements
         $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
 
-        // Add event listener for image upload
         const ImageData = QuillImageDropAndPaste.ImageData;
         quill.getModule('toolbar').addHandler('image', function (clicked) {
             if (clicked) {
@@ -84,11 +81,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             const type = file.type
                             const reader = new FileReader()
                             reader.onload = (e) => {
-                                // handle the inserted image
                                 const dataUrl = e.target.result
-                                const range = quill.getSelection();
-                                quill.insertEmbed(range.index, 'image', dataUrl);
-                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, generateRandomFileName(type)), range.index);
+                                imageHandler(dataUrl, type, new ImageData(dataUrl, type, generateRandomFileName(type)));
                                 fileInput.value = ''
                             }
                             reader.readAsDataURL(file)
@@ -109,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then((miniImageData) => {
                     const blob = miniImageData.toBlob();
-                    const file = miniImageData.toFile();
+                    const file = miniImageData.toFile(generateRandomFileName(type));
 
                     // Upload the image to the server
                     const formData = new FormData();
@@ -125,16 +119,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         success: function (result) {
                             const imageUrl = result.data;
 
-                            // Thay thế ảnh base64 bằng URL ảnh từ server
-                            const delta = quill.getContents();
-                            delta.ops.forEach((op, i) => {
-                                if (op.insert && op.insert.image === imageDataUrl) {
-                                    quill.deleteText(i, 1); // Xóa ảnh base64
-                                    quill.insertEmbed(i, 'image', `${serverUrl}/${imageUrl}`); // Thay thế bằng URL ảnh từ server
-                                }
-                            });
-
-                            // Cập nhật danh sách hình ảnh hiện tại
+                            // Chèn URL ảnh từ server vào editor
+                            const range = quill.getSelection();
+                            quill.insertEmbed(range.index, 'image', `${serverUrl}/${imageUrl}`);
                             updateCurrentImages();
                         },
                         error: function (xhr, status, error) {
@@ -143,27 +130,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
                 });
         }
-
-        function updateCurrentImages() {
-            const images = document.querySelectorAll('img');
-            currentImages = new Set();
-            images.forEach(img => {
-                currentImages.add(img.src);
-            });
-        }
-
-        function generateRandomFileName(type) {
-            const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-            const extension = type.split('/')[1];
-            return `${randomString}.${extension}`;
-        }
-
-        // Lắng nghe sự kiện text-change của quill
+        
         quill.on('text-change', function(delta, oldDelta, source) {
             if (source === 'user') {
-                console.log('Delta:', delta);
-                console.log('Old Delta:', oldDelta);
-
                 const newImages = new Set();
                 const images = document.querySelectorAll('img');
                 images.forEach(img => {
@@ -176,8 +145,6 @@ document.addEventListener('DOMContentLoaded', function () {
                         deletedImages.push(image);
                     }
                 });
-
-                console.log('Deleted Images:', deletedImages);
 
                 deletedImages.forEach(fullImageUrl => {
                     let imagePath = new URL(fullImageUrl).pathname;
@@ -201,7 +168,20 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Khởi tạo danh sách các hình ảnh hiện tại trong tài liệu
+        function updateCurrentImages() {
+            const images = document.querySelectorAll('img');
+            currentImages = new Set();
+            images.forEach(img => {
+                currentImages.add(img.src);
+            });
+        }
+
+        function generateRandomFileName(type) {
+            const randomString = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+            const extension = type.split('/')[1];
+            return `${randomString}.${extension}`;
+        }
+
         updateCurrentImages();
     });
 });
