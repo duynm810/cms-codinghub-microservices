@@ -101,9 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
         function imageHandler(imageDataUrl, type, imageData, index) {
             imageData
                 .minify({
-                    maxWidth: 320,
-                    maxHeight: 320,
-                    quality: 0.7,
+                    /*quality: 0.7,*/
                 })
                 .then((miniImageData) => {
                     const blob = miniImageData.toBlob();

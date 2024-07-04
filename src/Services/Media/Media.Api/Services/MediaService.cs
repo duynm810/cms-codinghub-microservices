@@ -88,7 +88,10 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
             try
             {
                 // Process the image (Xử lý hình ảnh)
-                await ProcessImage(request.File, filePath, fileExtension);
+                /*await ProcessImage(request.File, filePath, fileExtension);*/
+                await using var fileStream = new FileStream(filePath, FileMode.Create);
+                await request.File.CopyToAsync(fileStream);
+                
                 logger.Information("Image processed and saved successfully.");
 
                 var data = Path.Combine(imageFolder, filename).Replace("\\", "/");
