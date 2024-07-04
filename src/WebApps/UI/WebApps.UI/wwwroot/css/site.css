@@ -427,6 +427,8 @@ a.close.disabled {
 .ql-editor {
     background-color: white;
     min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto; 
 }
 
 .ql-editor img {
