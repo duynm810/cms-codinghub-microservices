@@ -82,6 +82,7 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\jquery\LICENSE.txt" />
       <_ContentIncludedByDefault Remove="Views\Partials\_FeaturedPosts.cshtml" />
       <_ContentIncludedByDefault Remove="Views\Partials\_RelatedPosts.cshtml" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\slugify\slugify-config.js" />
     </ItemGroup>
 
     <ItemGroup>
@@ -91,6 +92,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="wwwroot\js\packages\" />
       <Folder Include="wwwroot\lib\" />
     </ItemGroup>
 

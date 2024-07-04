@@ -19,7 +19,6 @@ public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
     IRazorRenderViewService razorRenderViewService,
-    ISerializeService serializeService,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
