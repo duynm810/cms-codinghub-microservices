@@ -22,9 +22,9 @@ public class PagerViewComponent : ViewComponent
         var urlTemplate = new StringBuilder();
 
         // Kiểm tra nếu là trang chủ
-        if (controllerName.Equals("Home") && actionName.Equals("Index"))
+        if (controllerName.Equals("Dashboard") && actionName.Equals("Index"))
         {
-            urlTemplate.Append("/home?page={0}");
+            urlTemplate.Append("/dashboard");
         }
         else
         {
