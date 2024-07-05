@@ -139,7 +139,8 @@
           "Port": 6005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "featured-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/pinned",
@@ -154,7 +155,8 @@
           "Port": 6005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "pinned-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/most-commented",
@@ -184,7 +186,8 @@
           "Port": 6005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "most-liked-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/{id}",
@@ -302,7 +305,8 @@
           "Port": 6005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "latest-posts-paging"
     },
     {
       "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
@@ -687,7 +691,8 @@
           "Port": 6010
         }
       ],
-      "SwaggerKey": "tag-service"
+      "SwaggerKey": "tag-service",
+      "Key": "suggest-tags"
     },
     {
       "UpstreamPathTemplate": "/tags/{id}",
@@ -858,6 +863,19 @@
           "Port": 6019
         }
       ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "featured-posts",
+        "most-liked-posts",
+        "pinned-posts",
+        "latest-posts-paging",
+        "suggest-tags"
+      ],
+      "UpstreamPathTemplate": "/dashboard",
+      "Aggregator": "DashboardAggregator"
     }
   ],
   "SwaggerEndPoints": [
