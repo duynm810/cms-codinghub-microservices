@@ -6,7 +6,7 @@ using Shared.Responses;
 
 namespace WebApps.UI.Models.Commons;
 
-public class HomeViewModel
+public class DashboardViewModel
 {
     public IEnumerable<PostDto> FeaturedPosts { get; set; } = default!;
 
@@ -16,5 +16,5 @@ public class HomeViewModel
 
     public IEnumerable<PostDto> MostLikedPosts { get; set; } = default!;
     
-    public IEnumerable<TagDto> Tags { get; set; } = default!;
+    public IEnumerable<TagDto> SuggestTags { get; set; } = default!;
 }

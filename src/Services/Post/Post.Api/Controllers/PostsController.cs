@@ -186,10 +186,10 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
     public async Task<IActionResult> GetLatestPostsPaging(
-        [FromQuery, Required] int pageNumber = 1,
-        [FromQuery, Required] int pageSize = 10)
+        [FromQuery] int? pageNumber,
+        [FromQuery] int? pageSize)
     {
-        var query = new GetLatestPostsPagingQuery(pageNumber, pageSize);
+        var query = new GetLatestPostsPagingQuery(pageNumber ?? 1, pageSize ?? 10);
         var result = await mediator.Send(query);
         return Ok(result);
     }
