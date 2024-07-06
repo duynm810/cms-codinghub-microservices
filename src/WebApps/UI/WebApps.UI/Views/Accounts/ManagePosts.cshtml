@@ -12,7 +12,7 @@
         }
 
         function deletePost(button) {
-            let postId = button.getAttribute('data-id');
+            const postId = button.getAttribute('data-id');
             let deleteUrl = `@Url.Action("DeletePost", "Accounts")/${postId}`;
 
             showConfirmAlert(
@@ -42,6 +42,40 @@
                 }
             );
         }
+
+        function confirmPin(button) {
+            showConfirmAlert(
+                'Confirm Pin',
+                'Are you sure you want to pin this post?',
+                'Yes, Pin it',
+                'Cancel',
+                () => {
+                    const postId = button.getAttribute('data-id');
+                    pinPost(postId);
+                }
+            );
+        }
+
+        function confirmFeature(button) {
+            showConfirmAlert(
+                'Confirm Feature',
+                'Are you sure you want to feature this post?',
+                'Yes, Feature it',
+                'Cancel',
+                () => {
+                    const postId = button.getAttribute('data-id');
+                    featurePost(postId);
+                }
+            );
+        }
+
+        function pinPost(postId) {
+            console.log("Pin post:", postId);
+        }
+
+        function featurePost(postId) {
+            console.log("Feature post:", postId);
+        }
     </script>
 }
 
@@ -65,16 +99,21 @@
                     <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th>Category</th>
-                        <th>Title</th>
-                        <th>Created date</th>
-                        <th>Views</th>
-                        <th>Status</th>
+                        <th style="min-width: 50px;">Pinned</th>
+                        <th style="min-width: 50px;">Featured</th>
+                        <th style="min-width: 100px;">Status</th>
+                        <th style="min-width: 150px;">Category</th>
+                        <th style="min-width: 300px;">Title</th>
+                        <th style="min-width: 120px;">Created date</th>
+                        <th style="min-width: 80px;">Views</th>
+                        <th style="min-width: 80px;">Comments</th>
+                        <th style="min-width: 80px;">Likes</th>
+                        <th style="min-width: 150px;">Published date</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>

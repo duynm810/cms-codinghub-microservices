@@ -208,10 +208,28 @@
 
 .table-wrap {
     overflow-x: auto;
+    overflow-y: auto;
+}
+
+.table-wrap::-webkit-scrollbar {
+    height: 8px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb {
+    background: #cccccc;
+    border-radius: 4px;
+}
+
+.table-wrap::-webkit-scrollbar-thumb:hover {
+    background: #b3b3b3;
+}
+
+.table-wrap::-webkit-scrollbar-track {
+    background: #f1f1f1;
 }
 
 .table {
-    min-width: 1000px;
+    min-width: 1200px; /* Updated minimum width */
     width: 100%;
     box-shadow: 0 5px 12px -12px rgba(0, 0, 0, 0.29);
 }
@@ -306,6 +324,32 @@
     }
 }
 
+.button-container .btn-pin, .button-container .btn-feature {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.button-container .btn-pin i, .button-container .btn-feature i {
+    font-size: 18px;
+}
+
+td i.fa {
+    vertical-align: middle; /* Ensure icons are vertically aligned */
+}
+
+td .icon-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.table tbody td.pin-column, .table tbody td.feature-column {
+    text-align: center; /* Ensure text alignment */
+}
+
 /*----------------------- Checkbox ----------------------*/
 
 .checkbox-wrap {
@@ -316,6 +360,7 @@
     font-weight: 500;
     user-select: none;
     vertical-align: middle; /* Ensure vertical alignment */
+    margin-right: 15px;
 }
 
 .checkbox-wrap input {

@@ -16,18 +16,53 @@
                     <span class="checkmark"></span>
                 </label>
             </td>
+            <td class="pin-column">
+                <div class="icon-container">
+                    @if (item.IsPinned)
+                    {
+                        <i class="fa fa-thumbtack" aria-hidden="true" style="color: green;"></i>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" onclick="confirmPin(this)">
+                            <span aria-hidden="true">
+                                <i class="fa fa-thumbtack" style="color: gray;"></i>
+                            </span>
+                        </button>
+                    }
+                </div>
+            </td>
+            <td class="feature-column">
+                <div class="icon-container">
+                    @if (item.IsFeatured)
+                    {
+                        <i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" onclick="confirmFeature(this)">
+                            <span aria-hidden="true">
+                                <i class="fa fa-star" style="color: gray;"></i>
+                            </span>
+                        </button>
+                    }
+                </div>
+            </td>
+            <td class="status">
+                <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
+            </td>
             <td>@item.Category.Name</td>
             <td>@item.Title</td>
             <td>@item.CreatedDate.ToString("dd/MM/yyyy")</td>
             <td>@item.ViewCount.ToString("N0")</td>
-            <td class="status">
-                <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
-            </td>
+            <td>@item.CommentCount.ToString("N0")</td>
+            <td>@item.LikeCount.ToString("N0")</td>
+            <td>@item.PublishedDate?.ToString("dd/MM/yyyy")</td>
             <td>
                 <div class="button-container">
                     <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
                         <span aria-hidden="true">
-                            <i class="fa fa-pencil"></i>
+                            <i class="fa fa-edit"></i>
                         </span>
                     </button>
                     <button type="button" class="close" data-id="@item.Id" aria-label="Close" onclick="deletePost(this)">
