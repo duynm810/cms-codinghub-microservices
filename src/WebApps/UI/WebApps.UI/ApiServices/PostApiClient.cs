@@ -30,16 +30,6 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.DeleteAsync<bool>($"/posts/{id}", true);
     }
     
-    public async Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count)
-    {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/featured?count={count}");
-    }
-
-    public async Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count)
-    {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/pinned?count={count}");
-    }
-    
     public async Task<ApiResult<PostDto>> GetPostBySlug(string slug)
     {
         return await baseApiClient.GetAsync<PostDto>($"/posts/slug/{slug}", true);
@@ -80,12 +70,6 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetAsync<PostsBySlugDto>($"/posts/detail/by-slug/{slug}?relatedCount={relatedCount}");
     }
 
-    public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)
-    {
-        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-            $"/posts/latest/paging?pageNumber={pageNumber}&pageSize={pageSize}");
-    }
-
     public async Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(string keyword, int pageNumber, int pageSize)
     {
         if (!string.IsNullOrEmpty(keyword))
@@ -101,14 +85,18 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetListAsync<PostDto>($"/posts/most-commented?count={count}");
     }
 
-    public async Task<ApiResult<List<PostDto>>> GetMostLikedPosts(int count)
-    {
-        return await baseApiClient.GetListAsync<PostDto>($"/posts/most-liked?count={count}");
-    }
-
     public async Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory(int count)
     {
         return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category?count={count}");
     }
     
+    public async Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusDto request)
+    {
+        return await baseApiClient.PutAsync<TogglePinStatusDto, bool>($"/posts/toggle-pin-status/{id}", request, true);
+    }
+    
+    public async Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusDto request)
+    {
+        return await baseApiClient.PutAsync<ToggleFeaturedStatusDto, bool>($"/posts/toggle-featured-status/{id}", request, true);
+    }
 }

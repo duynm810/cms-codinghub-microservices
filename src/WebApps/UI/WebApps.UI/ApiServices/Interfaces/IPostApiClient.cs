@@ -14,10 +14,6 @@ public interface IPostApiClient
     
     Task<ApiResult<bool>> DeletePost(Guid id);
     
-    Task<ApiResult<List<PostDto>>> GetFeaturedPosts(int count);
-    
-    Task<ApiResult<List<PostDto>>> GetPinnedPosts(int count);
-
     Task<ApiResult<PostDto>> GetPostBySlug(string slug);
 
     Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
@@ -32,13 +28,13 @@ public interface IPostApiClient
     
     Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount);
 
-    Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize);
-
     Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(string keyword, int pageNumber, int pageSize);
 
     Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count);
 
-    Task<ApiResult<List<PostDto>>> GetMostLikedPosts(int count);
-
     Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory(int count);
+
+    Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusDto request);
+
+    Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusDto request);
 }

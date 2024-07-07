@@ -10,6 +10,8 @@ using Post.Application.Features.V1.Posts.Commands.CreatePost;
 using Post.Application.Features.V1.Posts.Commands.DeletePost;
 using Post.Application.Features.V1.Posts.Commands.RejectPostWithReason;
 using Post.Application.Features.V1.Posts.Commands.SubmitPostForApproval;
+using Post.Application.Features.V1.Posts.Commands.ToggleFeaturedStatus;
+using Post.Application.Features.V1.Posts.Commands.TogglePinStatus;
 using Post.Application.Features.V1.Posts.Commands.UpdatePost;
 using Post.Application.Features.V1.Posts.Commands.UpdateThumbnail;
 using Post.Application.Features.V1.Posts.Queries.GetDetailBySlug;
@@ -141,7 +143,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpGet("by-tag/{tagSlug}/paging")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostByTagPaging([FromRoute, Required] string tagSlug, [FromQuery] int? pageNumber,
+    public async Task<IActionResult> GetPostByTagPaging([FromRoute, Required] string tagSlug,
+        [FromQuery] int? pageNumber,
         [FromQuery] int? pageSize)
     {
         var query = new GetPostsByTagPagingQuery(tagSlug, pageNumber ?? 1, pageSize ?? 10);
@@ -151,7 +154,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpGet("by-series/{seriesSlug}/paging")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute, Required] string seriesSlug, [FromQuery] int? pageNumber,
+    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute, Required] string seriesSlug,
+        [FromQuery] int? pageNumber,
         [FromQuery] int? pageSize)
     {
         var query = new GetPostsBySeriesPagingQuery(seriesSlug, pageNumber ?? 1, pageSize ?? 10);
@@ -276,9 +280,28 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> RejectPostWithReasonCommand([FromRoute] Guid id, [FromBody] RejectPostWithReasonDto request)
+    public async Task<IActionResult> RejectPostWithReasonCommand([FromRoute] Guid id,
+        [FromBody] RejectPostWithReasonDto request)
     {
         var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPut("toggle-pin-status/{id:guid}")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> TogglePinStatusCommand([FromRoute] Guid id, [FromBody] TogglePinStatusDto request)
+    {
+        var command = new TogglePinStatusCommand(id, request);
+        var result = await mediator.Send(command);
+        return Ok(result);
+    }
+
+    [HttpPut("toggle-featured-status/{id:guid}")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusDto request)
+    {
+        var command = new ToggleFeaturedStatusCommand(id, request);
         var result = await mediator.Send(command);
         return Ok(result);
     }

@@ -79,7 +79,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return response;
     }
-    
+
     public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId,
         int pageNumber = 1, int pageSize = 10)
     {
@@ -226,7 +226,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return await query.ToListAsync();
     }
-    
+
     public async Task<IEnumerable<PostBase>> GetTop10Posts()
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
@@ -264,6 +264,20 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     {
         post.Status = PostStatusEnum.Rejected;
         await UpdateAsync(post);
+    }
+
+    public async Task<bool> TogglePinStatus(PostBase post, bool isPinned)
+    {
+        post.IsPinned = isPinned;
+        await UpdateAsync(post);
+        return true;
+    }
+
+    public async Task<bool> ToggleFeaturedStatus(PostBase post, bool isFeatured)
+    {
+        post.IsFeatured = isFeatured;
+        await UpdateAsync(post);
+        return true;
     }
 
     #endregion

@@ -479,6 +479,44 @@
       "SwaggerKey": "post-service"
     },
     {
+      "UpstreamPathTemplate": "/posts/toggle-pin-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-pin-status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/toggle-featured-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-featured-status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
       "UpstreamPathTemplate": "/series",
       "UpstreamHttpMethod": [
         "GET"

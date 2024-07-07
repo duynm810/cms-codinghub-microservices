@@ -60,5 +60,9 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task RejectPostWithReason(PostBase post);
 
+    Task<bool> TogglePinStatus(PostBase post, bool isPinned);
+    
+    Task<bool> ToggleFeaturedStatus(PostBase post, bool isFeatured);
+
     #endregion
 }
