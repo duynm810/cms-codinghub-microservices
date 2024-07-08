@@ -24,7 +24,7 @@ public static class CategorySeedData
             {
                 Id = 1,
                 Name = "Home",
-                Slug = "home",
+                Slug = "dashboard",
                 SeoDescription = "Welcome to the home page.",
                 ParentId = null,
                 Icon = "icon_house_alt",

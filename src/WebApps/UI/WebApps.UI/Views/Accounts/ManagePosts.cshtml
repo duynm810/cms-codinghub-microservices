@@ -45,77 +45,84 @@
             );
         }
 
-        function confirmPin(button) {
+        function confirmPin(button, shouldPin) {
+            const action = shouldPin ? 'pin' : 'unpin';
+            const message = shouldPin ? 'pin this post' : 'unpin this post';
+
             showConfirmAlert(
-                'Confirm Pin',
-                'Are you sure you want to pin this post?',
-                'Yes, Pin it',
+                `Confirm ${action}`,
+                `Are you sure you want to ${message}?`,
+                `Yes, ${action} it`,
                 'Cancel',
                 () => {
                     const postId = button.getAttribute('data-id');
-                    pinPost(postId);
+                    pinPost(postId, shouldPin);
                 }
             );
         }
 
-        function confirmFeature(button) {
+        function confirmFeature(button, shouldFeature) {
+            const action = shouldFeature ? 'feature' : 'unfeature';
+            const message = shouldFeature ? 'feature this post' : 'unfeature this post';
+
             showConfirmAlert(
-                'Confirm Feature',
-                'Are you sure you want to feature this post?',
-                'Yes, Feature it',
+                `Confirm ${action}`,
+                `Are you sure you want to ${message}?`,
+                `Yes, ${action} it`,
                 'Cancel',
                 () => {
                     const postId = button.getAttribute('data-id');
-                    featurePost(postId);
+                    featurePost(postId, shouldFeature);
                 }
             );
         }
 
-        async function pinPost(postId) {
+        async function pinPost(postId, shouldPin) {
             try {
-                console.log("Pin post:", postId);
+                console.log(`${shouldPin ? 'Pin' : 'Unpin'} post:`, postId);
                 const response = await $.ajax({
                     url: `/accounts/toggle-pin-status/${postId}`,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        isPinned: true
+                        isPinned: shouldPin
                     })
                 });
 
                 if (response.success) {
                     $('#posts-table-body').html(response.html); // Update table content
-                    showSuccessNotification('Post pinned successfully.');
+                    showSuccessNotification(`Post ${shouldPin ? 'pinned' : 'unpinned'} successfully.`);
                 } else {
-                    showErrorNotification('There was a problem pinning your post.');
+                    showErrorNotification(`There was a problem ${shouldPin ? 'pinning' : 'unpinning'} your post.`);
                 }
             } catch (error) {
-                showErrorNotification(`Error pinning post: ${error.responseText || error.message}`);
+                showErrorNotification(`Error ${shouldPin ? 'pinning' : 'unpinning'} post: ${error.responseText || error.message}`);
             }
         }
 
-        async function featurePost(postId) {
+        async function featurePost(postId, shouldFeature) {
             try {
-                console.log("Feature post:", postId);
+                console.log(`${shouldFeature ? 'Feature' : 'Unfeature'} post:`, postId);
                 const response = await $.ajax({
                     url: `/accounts/toggle-featured-status/${postId}`,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        isFeatured: true
+                        isFeatured: shouldFeature
                     })
                 });
 
                 if (response.success) {
                     $('#posts-table-body').html(response.html); // Update table content
-                    showSuccessNotification('Post featured successfully.');
+                    showSuccessNotification(`Post ${shouldFeature ? 'featured' : 'unfeatured'} successfully.`);
                 } else {
-                    showErrorNotification('There was a problem featuring your post.');
+                    showErrorNotification(`There was a problem ${shouldFeature ? 'featuring' : 'unfeaturing'} your post.`);
                 }
             } catch (error) {
-                showErrorNotification(`Error featuring post: ${error.responseText || error.message}`);
+                showErrorNotification(`Error ${shouldFeature ? 'featuring' : 'unfeaturing'} post: ${error.responseText || error.message}`);
             }
         }
+
     </script>
 }
 
@@ -139,8 +146,11 @@
                     <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th style="min-width: 50px;">Pinned</th>
-                        <th style="min-width: 50px;">Featured</th>
+                        @if (isAdmin)
+                        {
+                            <th style="min-width: 50px;">Pinned</th>
+                            <th style="min-width: 50px;">Featured</th>
+                        }
                         <th style="min-width: 100px;">Status</th>
                         <th style="min-width: 150px;">Category</th>
                         <th style="min-width: 300px;">Title</th>
@@ -153,7 +163,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>

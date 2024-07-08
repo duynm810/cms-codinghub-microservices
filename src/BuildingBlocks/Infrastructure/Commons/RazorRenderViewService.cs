@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ namespace Infrastructure.Commons;
 public class RazorRenderViewService(
     IRazorViewEngine razorView,
     ITempDataProvider tempDataProvider,
+    IHttpContextAccessor httpContextAccessor,
     IServiceProvider serviceProvider)
     : IRazorRenderViewService
 {
@@ -62,6 +64,10 @@ public class RazorRenderViewService(
             new TempDataDictionary(actionContext.HttpContext, tempDataProvider),
             output,
             new HtmlHelperOptions());
+        
+        // Set HttpContext and User to ensure authentication is not lost (Đảm bảo HttpContext và User không bị mất)
+        viewContext.HttpContext = actionContext.HttpContext;
+        viewContext.HttpContext.User = actionContext.HttpContext.User;
 
         await view.RenderAsync(viewContext);
 
@@ -109,15 +115,19 @@ public class RazorRenderViewService(
     /// <returns>ActionContext is initialized with HttpContext, RouteData, and ActionDescriptor.</returns>
     private ActionContext GetActionContext()
     {
+        // Get the current HttpContext (Lấy HttpContext hiện tại)
+        var currentHttpContext = httpContextAccessor.HttpContext;
+
         // Create an HttpContext object with RequestServices (Tạo một đối tượng HttpContext với RequestServices)
         var httpContext = new DefaultHttpContext
         {
-            RequestServices = serviceProvider
+            RequestServices = serviceProvider,
+            User = currentHttpContext?.User ?? new ClaimsPrincipal(new ClaimsIdentity()) // Ensure user is passed correctly (Đảm bảo user được truyền đúng cách)
         };
 
         // Get routing data from HttpContext (Lấy dữ liệu định tuyến từ HttpContext)
-        var routeData = httpContext.GetRouteData();
-        
+        var routeData = currentHttpContext?.GetRouteData() ?? new RouteData();
+
         // If there are no Routers in RouteData, add a new RouteCollection to Routers (Nếu không có Router nào trong RouteData, thêm một RouteCollection mới vào Routers)
         if (!routeData.Routers.Any())
         {

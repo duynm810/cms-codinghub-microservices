@@ -18,38 +18,50 @@
                     <span class="checkmark"></span>
                 </label>
             </td>
-            <td class="pin-column">
-                <div class="icon-container">
-                    @if (item.IsPinned)
-                    {
-                    <i class="fa fa-thumbtack" aria-hidden="true" style="color: green;"></i>
-                    }
-                    else
-                    {
-                    <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" onclick="confirmPin(this)">
+            @if (isAdmin)
+            {
+                <td class="pin-column">
+                    <div class="icon-container">
+                        @if (item.IsPinned)
+                        {
+                            <button type="button" class="btn btn-pin" aria-label="Unpin" data-id="@item.Id" title="Unpin this post" onclick="confirmPin(this, false)">
                                 <span aria-hidden="true">
-                                    <i class="fa fa-thumbtack" style="color: gray;"></i>
+                                    <i class="fa fa-thumbtack" style="color: darkgreen;"></i> <!-- Sử dụng màu xanh lá cây đậm -->
                                 </span>
-                    </button>
-                    }
-                </div>
-            </td>
-            <td class="feature-column">
-                <div class="icon-container">
-                    @if (item.IsFeatured)
-                    {
-                    <i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>
-                    }
-                    else
-                    {
-                    <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" onclick="confirmFeature(this)">
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" title="Pin this post" onclick="confirmPin(this, true)">
+                                <span aria-hidden="true">
+                                    <i class="fa fa-thumbtack" style="color: deepskyblue;"></i> <!-- Sử dụng màu xanh lam nhạt -->
+                                </span>
+                            </button>
+                        }
+
+                    </div>
+                </td>
+                <td class="feature-column">
+                    <div class="icon-container">
+                        @if (item.IsFeatured)
+                        {
+                            <button type="button" class="btn btn-feature" aria-label="Unfeature" data-id="@item.Id" title="Unfeature this post" onclick="confirmFeature(this, false)">
+                                <span aria-hidden="true">
+                                    <i class="fa fa-star" style="color: gold;"></i>
+                                </span>
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" title="Feature this post" onclick="confirmFeature(this, true)">
                                 <span aria-hidden="true">
                                     <i class="fa fa-star" style="color: gray;"></i>
                                 </span>
-                    </button>
-                    }
-                </div>
-            </td>
+                            </button>
+                        }
+                    </div>
+                </td>
+            }
             <td class="status">
                 <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
             </td>
