@@ -71,12 +71,38 @@
             );
         }
 
-        function pinPost(postId) {
-            console.log("Pin post:", postId);
+        async function pinPost(postId) {
+            try {
+                console.log("Pin post:", postId);
+                const response = await $.ajax({
+                    url: `/accounts/toggle-pin-status/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        isPinned: true
+                    })
+                });
+                console.log('Post pinned successfully', response);
+            } catch (error) {
+                showErrorNotification(`Error pinning post: ${error.responseText || error.message}`);
+            }
         }
 
-        function featurePost(postId) {
-            console.log("Feature post:", postId);
+        async function featurePost(postId) {
+            try {
+                console.log("Feature post:", postId);
+                const response = await $.ajax({
+                    url: `/accounts/toggle-featured-status/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        isFeatured: true
+                    })
+                });
+                console.log('Post featured successfully', response);
+            } catch (error) {
+                showErrorNotification(`Error featuring post: ${error.responseText || error.message}`);
+            }
         }
     </script>
 }
