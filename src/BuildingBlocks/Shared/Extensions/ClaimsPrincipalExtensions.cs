@@ -95,6 +95,11 @@ public static class ClaimsPrincipalExtensions
     /// <returns>Token.</returns>
     public static string? GetToken(this ClaimsPrincipal user)
         => GetClaimValue(user, InternalClaimTypesConsts.Claims.Token);
+    
+    public static bool IsInRole(this ClaimsPrincipal principal, string role)
+    {
+        return principal?.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == role) ?? false;
+    }
 
     /// <summary>
     /// Gets a flag specifying whether the request is using an api key.
