@@ -23,6 +23,16 @@ public static class RouteMap
             new { controller = "Accounts", action = "UpdateThumbnail" });
         
         app.MapControllerRoute(
+            "toggle-pin-status",
+            "/accounts/toggle-pin-status/{id:guid}",
+            new { controller = "Accounts", action = "TogglePinStatus" });
+        
+        app.MapControllerRoute(
+            "toggle-featured-status",
+            "/accounts/toggle-featured-status/{id:guid}",
+            new { controller = "Accounts", action = "ToggleFeaturedStatus" });
+        
+        app.MapControllerRoute(
             "delete_post",
             "accounts/delete-post/{id:guid}",
             new { controller = "Accounts", action = "DeletePost" });

@@ -274,6 +274,20 @@ public class AccountsController(
         }
     }
 
+    [HttpPut]
+    public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusDto request)
+    {
+        var result = await postApiClient.TogglePinStatus(id, request);
+        return Ok(new { data = result });
+    }
+    
+    [HttpPut]
+    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusDto request)
+    {
+        var result = await postApiClient.ToggleFeaturedStatus(id, request);
+        return Ok(new { data = result });
+    }
+
     #endregion
     
     #region HELPERS
