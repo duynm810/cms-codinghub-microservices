@@ -82,7 +82,13 @@
                         isPinned: true
                     })
                 });
-                console.log('Post pinned successfully', response);
+
+                if (response.success) {
+                    $('#posts-table-body').html(response.html); // Update table content
+                    showSuccessNotification('Post pinned successfully.');
+                } else {
+                    showErrorNotification('There was a problem pinning your post.');
+                }
             } catch (error) {
                 showErrorNotification(`Error pinning post: ${error.responseText || error.message}`);
             }
@@ -99,7 +105,13 @@
                         isFeatured: true
                     })
                 });
-                console.log('Post featured successfully', response);
+
+                if (response.success) {
+                    $('#posts-table-body').html(response.html); // Update table content
+                    showSuccessNotification('Post featured successfully.');
+                } else {
+                    showErrorNotification('There was a problem featuring your post.');
+                }
             } catch (error) {
                 showErrorNotification(`Error featuring post: ${error.responseText || error.message}`);
             }
@@ -127,11 +139,8 @@
                     <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        @if (isAdmin)
-                        {
-                            <th style="min-width: 50px;">Pinned</th>
-                            <th style="min-width: 50px;">Featured</th>
-                        }
+                        <th style="min-width: 50px;">Pinned</th>
+                        <th style="min-width: 50px;">Featured</th>
                         <th style="min-width: 100px;">Status</th>
                         <th style="min-width: 150px;">Category</th>
                         <th style="min-width: 300px;">Title</th>
@@ -144,7 +153,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>

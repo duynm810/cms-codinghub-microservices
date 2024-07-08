@@ -18,41 +18,38 @@
                     <span class="checkmark"></span>
                 </label>
             </td>
-            @if (isAdmin)
-            {
-                <td class="pin-column">
-                    <div class="icon-container">
-                        @if (item.IsPinned)
-                        {
-                            <i class="fa fa-thumbtack" aria-hidden="true" style="color: green;"></i>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" onclick="confirmPin(this)">
+            <td class="pin-column">
+                <div class="icon-container">
+                    @if (item.IsPinned)
+                    {
+                    <i class="fa fa-thumbtack" aria-hidden="true" style="color: green;"></i>
+                    }
+                    else
+                    {
+                    <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" onclick="confirmPin(this)">
                                 <span aria-hidden="true">
                                     <i class="fa fa-thumbtack" style="color: gray;"></i>
                                 </span>
-                            </button>
-                        }
-                    </div>
-                </td>
-                <td class="feature-column">
-                    <div class="icon-container">
-                        @if (item.IsFeatured)
-                        {
-                            <i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>
-                        }
-                        else
-                        {
-                            <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" onclick="confirmFeature(this)">
+                    </button>
+                    }
+                </div>
+            </td>
+            <td class="feature-column">
+                <div class="icon-container">
+                    @if (item.IsFeatured)
+                    {
+                    <i class="fa fa-star" aria-hidden="true" style="color: gold;"></i>
+                    }
+                    else
+                    {
+                    <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" onclick="confirmFeature(this)">
                                 <span aria-hidden="true">
                                     <i class="fa fa-star" style="color: gray;"></i>
                                 </span>
-                            </button>
-                        }
-                    </div>
-                </td>
-            }
+                    </button>
+                    }
+                </div>
+            </td>
             <td class="status">
                 <span class="@(item.Status.ToString())">@item.Status.ToString()</span>
             </td>

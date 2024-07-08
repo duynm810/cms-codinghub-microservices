@@ -1,14 +1,13 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
-using Post.Application.Features.V1.Posts.Commands.ApprovePost;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Enums;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -57,11 +56,19 @@ public class RejectPostWithReasonCommandHandler(
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
 
+                result.Success(true);
+
                 try
                 {
-                    // Send email to author
-                    await postEmailTemplateService.SendPostRejectionEmail(post.Title, postActivityLog.Note)
-                        .ConfigureAwait(false);
+                    TaskHelper.RunFireAndForget(async () =>
+                    {
+                        // Send email to author
+                        await postEmailTemplateService.SendPostRejectionEmail(post.Title, postActivityLog.Note)
+                            .ConfigureAwait(false);
+                    }, e =>
+                    {
+                        logger.Error("Send rejection post email failed. Message: {ErrorMessage}", e.Message);
+                    });
                 }
                 catch (Exception emailEx)
                 {
@@ -71,10 +78,6 @@ public class RejectPostWithReasonCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-
-                // Xóa cache liên quan
-
-                result.Success(true);
             }
             catch (Exception e)
             {

@@ -1,13 +1,14 @@
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Enums;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -17,6 +18,7 @@ public class ApprovePostCommandHandler(
     IPostRepository postRepository,
     IPostActivityLogRepository postActivityLogRepository,
     IPostEmailTemplateService postEmailTemplateService,
+    ICacheService cacheService,
     ILogger logger) : IRequestHandler<ApprovePostCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ApprovePostCommand request, CancellationToken cancellationToken)
@@ -54,12 +56,39 @@ public class ApprovePostCommandHandler(
 
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
+                
+                result.Success(true);
+                
+                // Xóa cache liên quan
+                TaskHelper.RunFireAndForget(async () =>
+                {
+                    var cacheKeys = new List<string>
+                    {
+                        CacheKeyHelper.Post.GetAllPostsKey(),
+                        CacheKeyHelper.Post.GetPostByIdKey(post.Id),
+                        CacheKeyHelper.Post.GetPinnedPostsKey(),
+                        CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                        CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                        CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                        CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, 1, 4)
+                    };
+
+                    await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                }, e =>
+                {
+                    logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+                });
 
                 try
                 {
-                    // Send email to author
-                    await postEmailTemplateService
-                        .SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
+                    TaskHelper.RunFireAndForget(async () =>
+                    {
+                        // Send email to author
+                        await postEmailTemplateService.SendApprovedPostEmail(post.Id, post.Title, post.Content, post.Summary).ConfigureAwait(false);
+                    }, e =>
+                    {
+                        logger.Error("Send approved post email failed. Message: {ErrorMessage}", e.Message);
+                    });
                 }
                 catch (Exception emailEx)
                 {
@@ -69,10 +98,6 @@ public class ApprovePostCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-
-                // Xóa cache liên quan
-
-                result.Success(true);
             }
             catch (Exception e)
             {

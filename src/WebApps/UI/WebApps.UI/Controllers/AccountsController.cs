@@ -278,14 +278,48 @@ public class AccountsController(
     public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusDto request)
     {
         var result = await postApiClient.TogglePinStatus(id, request);
-        return Ok(new { data = result });
+        if (result is { IsSuccess: true })
+        {
+            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(1, 4);
+            if (postsResult is { IsSuccess: true, Data: not null })
+            {
+                var items = new ManagePostsViewModel()
+                {
+                    Posts = postsResult.Data
+                };
+            
+                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                return Json(new { success = true, html });
+            }
+        
+            return Json(new { success = true, html = string.Empty });
+        }
+
+        return Json(new { success = false });
     }
     
     [HttpPut]
     public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusDto request)
     {
         var result = await postApiClient.ToggleFeaturedStatus(id, request);
-        return Ok(new { data = result });
+        if (result is { IsSuccess: true })
+        {
+            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(1, 4);
+            if (postsResult is { IsSuccess: true, Data: not null })
+            {
+                var items = new ManagePostsViewModel()
+                {
+                    Posts = postsResult.Data
+                };
+            
+                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                return Json(new { success = true, html });
+            }
+        
+            return Json(new { success = true, html = string.Empty });
+        }
+
+        return Json(new { success = false });
     }
 
     #endregion

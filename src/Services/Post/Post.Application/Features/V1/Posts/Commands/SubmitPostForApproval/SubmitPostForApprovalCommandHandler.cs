@@ -9,6 +9,7 @@ using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Enums;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -58,12 +59,19 @@ public class SubmitPostForApprovalCommandHandler(
 
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
-
+                
+                result.Success(true);
+                
                 try
                 {
-                    // Send email to author
-                    await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Title)
-                        .ConfigureAwait(false);
+                    TaskHelper.RunFireAndForget(async () =>
+                    {
+                        // Send email to author
+                        await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Title).ConfigureAwait(false);
+                    }, e =>
+                    {
+                        logger.Error("Send submission for approval post email failed. Message: {ErrorMessage}", e.Message);
+                    });
                 }
                 catch (Exception emailEx)
                 {
@@ -73,10 +81,6 @@ public class SubmitPostForApprovalCommandHandler(
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-
-                // Xóa cache liên quan
-
-                result.Success(true);
             }
             catch (Exception e)
             {

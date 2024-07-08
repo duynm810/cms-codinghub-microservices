@@ -31,7 +31,7 @@ public class TogglePinStatusCommandHandler(IPostRepository postRepository, ICach
                 return result;
             }
 
-            var data = await postRepository.ToggleFeaturedStatus(post, request.TogglePinStatus.IsPinned);
+            var data = await postRepository.TogglePinStatus(post, request.TogglePinStatus.IsPinned);
             result.Success(data);
             
             // Xóa cache liên quan
