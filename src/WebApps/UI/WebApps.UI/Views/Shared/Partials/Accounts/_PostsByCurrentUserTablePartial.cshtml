@@ -2,7 +2,7 @@
 @{
     var posts = Model.Posts;
     var user = User;
-    var isAdmin = user.IsInRole(UserRolesConsts.Administrator);
+    var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);
 }
 
 @if (posts.Items != null && posts.Items.Count != 0)

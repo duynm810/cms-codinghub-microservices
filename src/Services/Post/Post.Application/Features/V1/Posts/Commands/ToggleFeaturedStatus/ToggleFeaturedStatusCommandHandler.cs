@@ -1,14 +1,16 @@
+using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Commands.ToggleFeaturedStatus;
 
-public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, ILogger logger)
+public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, ICacheService cacheService, ILogger logger)
     : IRequestHandler<ToggleFeaturedStatusCommand, ApiResult<bool>>
 {
     public async Task<ApiResult<bool>> Handle(ToggleFeaturedStatusCommand request, CancellationToken cancellationToken)
@@ -31,6 +33,26 @@ public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, 
 
             var data = await postRepository.ToggleFeaturedStatus(post, request.ToggleFeaturedStatus.IsFeatured);
             result.Success(data);
+            
+            // Xóa cache liên quan
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(post.Id),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
+                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, 1, 4)
+                };
+
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
             
             logger.Information("BEGIN {MethodName} - Toogle featured status with ID: {PostId}", methodName, request.Id);
         }
