@@ -1,5 +1,34 @@
 @model HomeViewModel
 
+@section scripts {
+    <script>
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            const page = $(this).attr('href').split('page=')[1];
+            loadLatestPosts(page);
+        });
+
+        function loadLatestPosts(page) {
+            $.ajax({
+                url: '/Home/LatestPosts',
+                type: 'GET',
+                data: { page: page },
+                success: function (response) {
+                    if (response.success) {
+                        $('#latest-posts-container').html(response.html);
+                    } else {
+                        showErrorNotification('Error loading posts');
+                    }
+                },
+                error: function () {
+                    showErrorNotification('Error loading posts');
+                }
+            });
+        }
+    </script>
+}
+
+<input type="hidden" id="current-page" value="@Model.LatestPosts.MetaData.CurrentPage" />
 <div class="featured-1">
     <div class="container">
         <div class="row">
@@ -35,7 +64,9 @@
                     @await Html.PartialAsync("Partials/Home/_MostLikedPosts")
                 </div>
                 <!-- Begin Latest Posts -->
-                @await Html.PartialAsync("Partials/Home/_LatestPosts")
+                <div id="latest-posts-container">
+                    @await Html.PartialAsync("Partials/Home/_LatestPosts")
+                </div>
                 <!-- End Latest Posts -->
             </div>
             <div class="col-lg-4">

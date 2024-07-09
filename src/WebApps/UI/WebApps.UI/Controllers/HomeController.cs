@@ -1,3 +1,4 @@
+using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
@@ -8,6 +9,8 @@ namespace WebApps.UI.Controllers;
 
 public class HomeController(
     IDashboardApiClient dashboardApiClient,
+    IPostApiClient postApiClient,
+    IRazorRenderViewService razorRenderViewService,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
@@ -31,11 +34,6 @@ public class HomeController(
                 viewModel.PinnedPosts = pinnedPosts;
             }
 
-            if (data.LatestPosts.Data is { Items: not null } latestPosts)
-            {
-                viewModel.LatestPosts = latestPosts;
-            }
-
             if (data.MostLikedPosts.Data is { Count: > 0 } mostLikedPosts)
             {
                 viewModel.MostLikedPosts = mostLikedPosts;
@@ -45,6 +43,12 @@ public class HomeController(
             {
                 viewModel.SuggestTags = suggestTags;
             }
+            
+            var latestPosts = await postApiClient.GetLatestPostsPaging(page, 6);
+            if (latestPosts is { IsSuccess: true, Data: not null })
+            {
+                viewModel.LatestPosts = latestPosts.Data;
+            }
 
             return View(viewModel);
         }
@@ -53,4 +57,27 @@ public class HomeController(
             return HandleException(e, methodName);
         }
     }
+    
+    public async Task<IActionResult> LatestPosts(int page = 1)
+    {
+        const string methodName = nameof(LatestPosts);
+
+        try
+        {
+            var posts = await postApiClient.GetLatestPostsPaging(page, 6);
+            if (posts is { IsSuccess: true, Data: not null })
+            {
+                var viewModel = new HomeViewModel { LatestPosts = posts.Data };
+                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Home/_LatestPosts.cshtml", viewModel);
+                return Json(new { success = true, html });
+            }
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+
+        return Json(new { success = false });
+    }
+
 }

@@ -24,7 +24,7 @@ public class PagerViewComponent : ViewComponent
         // Kiểm tra nếu là trang chủ
         if (controllerName.Equals("Home") && actionName.Equals("Index"))
         {
-            urlTemplate.Append("/home");
+            urlTemplate.Append(Url.Action("Index", "Home") + "?page={0}");
         }
         else
         {

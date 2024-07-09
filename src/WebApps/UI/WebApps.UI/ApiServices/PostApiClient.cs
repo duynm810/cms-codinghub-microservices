@@ -65,6 +65,12 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
             $"/posts/by-current-user/paging?pageNumber={pageNumber}&pageSize={pageSize}", true);
     }
     
+    public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)
+    {
+        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
+            $"/posts/latest/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+    }
+    
     public async Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount)
     {
         return await baseApiClient.GetAsync<PostsBySlugDto>($"/posts/detail/by-slug/{slug}?relatedCount={relatedCount}");
