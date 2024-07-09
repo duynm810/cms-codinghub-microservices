@@ -12,7 +12,6 @@ namespace WebApps.UI.Controllers;
 public class PostsController(
     IPostApiClient postApiClient,
     ICommentApiClient commentApiClient,
-    PaginationSettings paginationSettings,
     IErrorService errorService,
     ILogger logger)
     : BaseController(errorService, logger)
@@ -24,9 +23,7 @@ public class PostsController(
 
         try
         {
-            var pageSize = paginationSettings.FeaturedPostPageSize;
-
-            var result = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, pageSize);
+            var result = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, 6);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByCategoryViewModel
@@ -44,7 +41,7 @@ public class PostsController(
             return HandleException(e, methodName);
         }
     }
-    
+
     [HttpGet("series/{seriesSlug}")]
     public async Task<IActionResult> PostsBySeries(string seriesSlug, int page = 1)
     {
@@ -52,9 +49,7 @@ public class PostsController(
 
         try
         {
-            var pageSize = paginationSettings.PostInSeriesPageSize;
-
-            var result = await postApiClient.GetPostsBySeriesPaging(seriesSlug, page, pageSize);
+            var result = await postApiClient.GetPostsBySeriesPaging(seriesSlug, page, 6);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInSeriesViewModel
@@ -80,9 +75,7 @@ public class PostsController(
 
         try
         {
-            var pageSize = paginationSettings.PostInSeriesPageSize;
-
-            var result = await postApiClient.GetPostsByTagPaging(tagSlug, page, pageSize);
+            var result = await postApiClient.GetPostsByTagPaging(tagSlug, page, 6);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInTagViewModel
@@ -100,7 +93,7 @@ public class PostsController(
             return HandleException(e, methodName);
         }
     }
-    
+
     [HttpGet("author/{userName}")]
     public async Task<IActionResult> PostsByAuthor([FromRoute] string userName, [FromQuery] int page = 1)
     {
@@ -108,9 +101,7 @@ public class PostsController(
 
         try
         {
-            var pageSize = paginationSettings.FeaturedPostPageSize;
-
-            var result = await postApiClient.GetPostsByAuthorPaging(userName, page, pageSize);
+            var result = await postApiClient.GetPostsByAuthorPaging(userName, page, 6);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByAuthorViewModel
@@ -143,7 +134,7 @@ public class PostsController(
                 {
                     Posts = result.Data
                 };
-                
+
                 return View(items);
             }
 
@@ -161,9 +152,7 @@ public class PostsController(
 
         try
         {
-            var pageSize = paginationSettings.SearchPostPageSize;
-
-            var result = await postApiClient.SearchPostsPaging(keyword, page, pageSize);
+            var result = await postApiClient.SearchPostsPaging(keyword, page, 6);
             if (result is { IsSuccess: true, Data: not null })
             {
                 var items = new PostSearchViewModel()
@@ -182,13 +171,13 @@ public class PostsController(
             return HandleException(e, methodName);
         }
     }
-    
+
     public async Task<IActionResult> GetCommentsByPostId([FromQuery] Guid postId)
     {
         var comments = await commentApiClient.GetCommentsByPostId(postId);
         return Ok(new { data = comments.Data });
     }
-    
+
     [HttpPost]
     public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
     {

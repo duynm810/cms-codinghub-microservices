@@ -62,12 +62,6 @@ public static class ServiceExtensions
                 $"{nameof(IdentityServerSettings)} is not configured properly");
 
         services.AddSingleton(identityServerSettings);
-
-        var paginationSettings = configuration.GetSection(nameof(PaginationSettings)).Get<PaginationSettings>()
-                                 ?? throw new ArgumentNullException(
-                                     $"{nameof(PaginationSettings)} is not configured properly");
-
-        services.AddSingleton(paginationSettings);
     }
 
     private static void AddApiClientServices(this IServiceCollection services)

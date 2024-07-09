@@ -48,7 +48,8 @@
         function confirmPin(button, shouldPin) {
             const action = shouldPin ? 'pin' : 'unpin';
             const message = shouldPin ? 'pin this post' : 'unpin this post';
-
+            const currentPage = document.getElementById('current-page').value;
+            
             showConfirmAlert(
                 `Confirm ${action}`,
                 `Are you sure you want to ${message}?`,
@@ -56,7 +57,7 @@
                 'Cancel',
                 () => {
                     const postId = button.getAttribute('data-id');
-                    pinPost(postId, shouldPin);
+                    pinPost(postId, shouldPin, currentPage);
                 }
             );
         }
@@ -64,6 +65,7 @@
         function confirmFeature(button, shouldFeature) {
             const action = shouldFeature ? 'feature' : 'unfeature';
             const message = shouldFeature ? 'feature this post' : 'unfeature this post';
+            const currentPage = document.getElementById('current-page').value;
 
             showConfirmAlert(
                 `Confirm ${action}`,
@@ -72,20 +74,22 @@
                 'Cancel',
                 () => {
                     const postId = button.getAttribute('data-id');
-                    featurePost(postId, shouldFeature);
+                    featurePost(postId, shouldFeature, currentPage);
                 }
             );
         }
 
-        async function pinPost(postId, shouldPin) {
+        async function pinPost(postId, shouldPin, currentPage) {
             try {
                 console.log(`${shouldPin ? 'Pin' : 'Unpin'} post:`, postId);
+                console.log(currentPage);
                 const response = await $.ajax({
                     url: `/accounts/toggle-pin-status/${postId}`,
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        isPinned: shouldPin
+                        isPinned: shouldPin,
+                        currentPage: currentPage
                     })
                 });
 
@@ -100,7 +104,7 @@
             }
         }
 
-        async function featurePost(postId, shouldFeature) {
+        async function featurePost(postId, shouldFeature, currentPage) {
             try {
                 console.log(`${shouldFeature ? 'Feature' : 'Unfeature'} post:`, postId);
                 const response = await $.ajax({
@@ -108,7 +112,8 @@
                     method: 'PUT',
                     contentType: 'application/json',
                     data: JSON.stringify({
-                        isFeatured: shouldFeature
+                        isFeatured: shouldFeature,
+                        currentPage: currentPage
                     })
                 });
 
@@ -126,6 +131,7 @@
     </script>
 }
 
+<input type="hidden" id="current-page" value="@Model.Posts.MetaData.CurrentPage" />
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
         <h1 class="entry-title mb-20 font-weight-900">

@@ -280,12 +280,12 @@ public class AccountsController(
         var result = await postApiClient.TogglePinStatus(id, request);
         if (result is { IsSuccess: true })
         {
-            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(1, 4);
+            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(request.CurrentPage, 4);
             if (postsResult is { IsSuccess: true, Data: not null })
             {
                 var items = new ManagePostsViewModel()
                 {
-                    Posts = postsResult.Data
+                    Posts = postsResult.Data,
                 };
             
                 var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
@@ -304,7 +304,7 @@ public class AccountsController(
         var result = await postApiClient.ToggleFeaturedStatus(id, request);
         if (result is { IsSuccess: true })
         {
-            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(1, 4);
+            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(request.CurrentPage, 4);
             if (postsResult is { IsSuccess: true, Data: not null })
             {
                 var items = new ManagePostsViewModel()
