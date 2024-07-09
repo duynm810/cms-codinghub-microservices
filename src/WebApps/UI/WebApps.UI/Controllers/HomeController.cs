@@ -6,12 +6,12 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class DashboardController(
+public class HomeController(
     IDashboardApiClient dashboardApiClient,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
         const string methodName = nameof(Index);
         
@@ -19,7 +19,7 @@ public class DashboardController(
         {
             var data = await dashboardApiClient.GetDashboard();
     
-            var viewModel = new DashboardViewModel();
+            var viewModel = new HomeViewModel();
 
             if (data.FeaturedPosts.Data is { Count: > 0 } featuredPosts)
             {

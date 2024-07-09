@@ -44,7 +44,7 @@ public class AccountsController(
     {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         await HttpContext.SignOutAsync(OpenIdConnectDefaults.AuthenticationScheme);
-        return RedirectToAction("Index", "Dashboard");
+        return RedirectToAction("Index", "Home");
     }
 
     #region PROFILE

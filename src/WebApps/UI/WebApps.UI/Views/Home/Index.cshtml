@@ -1,4 +1,4 @@
-@model DashboardViewModel
+@model HomeViewModel
 
 <div class="featured-1">
     <div class="container">
@@ -23,7 +23,7 @@
 </div>
 <!-- Start Featured Posts -->
 <div class="container">
-    @await Html.PartialAsync("Partials/Dashboard/_FeaturedPosts")
+    @await Html.PartialAsync("Partials/Home/_FeaturedPosts")
 </div>
 <!-- End Featured Posts -->
 
@@ -32,10 +32,10 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="post-module-2">
-                    @await Html.PartialAsync("Partials/Dashboard/_MostLikedPosts")
+                    @await Html.PartialAsync("Partials/Home/_MostLikedPosts")
                 </div>
                 <!-- Begin Latest Posts -->
-                @await Html.PartialAsync("Partials/Dashboard/_LatestPosts")
+                @await Html.PartialAsync("Partials/Home/_LatestPosts")
                 <!-- End Latest Posts -->
             </div>
             <div class="col-lg-4">
