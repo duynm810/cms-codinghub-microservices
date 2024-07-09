@@ -16,7 +16,6 @@ public class DashboardAggregator(ILogger logger) : IDefinedAggregator
         { "featured-posts", "featured-posts" },
         { "most-liked-posts", "most-liked-posts" },
         { "pinned-posts", "pinned-posts" },
-        { "latest-posts-paging", "latest-posts-paging" },
         { "suggest-tags", "suggest-tags" }
     };
 

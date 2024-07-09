@@ -305,8 +305,7 @@
           "Port": 6005
         }
       ],
-      "SwaggerKey": "post-service",
-      "Key": "latest-posts-paging"
+      "SwaggerKey": "post-service"
     },
     {
       "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
@@ -909,7 +908,6 @@
         "featured-posts",
         "most-liked-posts",
         "pinned-posts",
-        "latest-posts-paging",
         "suggest-tags"
       ],
       "UpstreamPathTemplate": "/dashboard",
