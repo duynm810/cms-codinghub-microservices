@@ -43,9 +43,7 @@ public class TogglePinStatusCommandHandler(IPostRepository postRepository, ICach
                     CacheKeyHelper.Post.GetPostByIdKey(post.Id),
                     CacheKeyHelper.Post.GetPinnedPostsKey(),
                     CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
-                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
-                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, request.TogglePinStatus.CurrentPage, 4)
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug)
                 };
 
                 await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

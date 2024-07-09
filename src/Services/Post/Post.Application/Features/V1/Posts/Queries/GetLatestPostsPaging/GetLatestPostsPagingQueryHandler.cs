@@ -27,15 +27,6 @@ public class GetLatestPostsPagingQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving latest posts for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
 
-            var cacheKey = CacheKeyHelper.Post.GetLatestPostsPagingKey(request.PageNumber, request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PagedResponse<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
-            {
-                logger.Information("END {MethodName} - Successfully retrieved latest posts from cache for page {PageNumber} with page size {PageSize}", methodName, request.PageNumber, request.PageSize);
-                result.Success(cachedPosts);
-                return result;
-            }
-
             var posts = await postRepository.GetLatestPostsPaging(request.PageNumber, request.PageSize);
 
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
@@ -43,10 +34,7 @@ public class GetLatestPostsPagingQueryHandler(
                 var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
                 
                 result.Success(data);
-
-                // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
-
+                
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} latest posts for page {PageNumber} with page size {PageSize}", methodName, data.MetaData.TotalItems, request.PageNumber, request.PageSize);
             }
         }

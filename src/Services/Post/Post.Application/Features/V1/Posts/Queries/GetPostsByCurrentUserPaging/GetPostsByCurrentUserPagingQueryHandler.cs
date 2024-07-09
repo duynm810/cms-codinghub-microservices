@@ -27,24 +27,12 @@ public class GetPostsByCurrentUserPagingQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUserId, request.PageNumber, request.PageSize);
 
-            var cacheKey = CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.CurrentUserId, request.PageNumber, request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PagedResponse<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
-            {
-                logger.Information("END {MethodName} - Successfully retrieved posts from cache for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUserId, request.PageNumber, request.PageSize);
-                result.Success(cachedPosts);
-                return result;
-            }
-            
             var posts = await postRepository.GetPostsByCurrentUserPaging(request.CurrentUserId, request.PageNumber, request.PageSize);
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
                 
                 result.Success(data);
-
-                // Save cache (Lưu cache)
-                await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
                 logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}", methodName, data.MetaData.TotalItems, request.CurrentUserId, request.PageNumber, request.PageSize);
             }
