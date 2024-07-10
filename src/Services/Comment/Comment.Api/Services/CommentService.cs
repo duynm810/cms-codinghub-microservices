@@ -87,6 +87,45 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
         return result;
     }
 
+    public async Task<ApiResult<List<CommentDto>>> GetLatestComments(int count)
+    {
+        var result = new ApiResult<List<CommentDto>>();
+        const string methodName = nameof(GetLatestComments);
+
+        try
+        {
+            var comments = await commentRepository.GetLatestComments(count);
+            
+            // Get list of userIds from comments
+            var userIds = comments.Select(c => c.UserId).Distinct().ToArray();
+        
+            var users = await identityGrpcClient.GetUsersInfo(userIds);
+            var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.Id);
+        
+            var commentList = mapper.Map<List<CommentDto>>(comments);
+            
+            foreach (var comment in commentList)
+            {
+                if (userInfos.TryGetValue(comment.UserId, out var userInfo))
+                {
+                    comment.User = userInfo;
+                }
+            }
+        
+            result.Success(commentList);
+
+            logger.Information("END {MethodName} - Successfully retrieved the latest {Count} comments", methodName, count);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     public async Task<ApiResult<bool>> LikeComment(string commentId)
     {
         var result = new ApiResult<bool>();

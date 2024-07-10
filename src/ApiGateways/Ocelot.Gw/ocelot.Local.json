@@ -850,6 +850,21 @@
       "SwaggerKey": "comment-service"
     },
     {
+      "UpstreamPathTemplate": "/comments/latest/{count}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/latest/{count}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "POST"

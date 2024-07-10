@@ -31,6 +31,15 @@ public class CommentsController(ICommentService commentService) : ControllerBase
         return Ok(result);
     }
     
+    [Route("latest/{count:int}")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<CommentDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetLatestComments([Required] int count = 6)
+    {
+        var result = await commentService.GetLatestComments(count);
+        return Ok(result);
+    }
+    
     [Route("like/{commentId}")]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]

@@ -9,6 +9,8 @@ public interface ICommentService
     
     Task<ApiResult<IEnumerable<CommentDto>>> GetCommentsByPostId(Guid postId);
 
+    Task<ApiResult<List<CommentDto>>> GetLatestComments(int count);
+
     Task<ApiResult<bool>> LikeComment(string commentId);
 
     Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto newCommentDto);

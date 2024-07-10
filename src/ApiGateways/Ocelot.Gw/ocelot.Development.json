@@ -850,6 +850,21 @@
       "SwaggerKey": "comment-service"
     },
     {
+      "UpstreamPathTemplate": "/comments/latest/{count}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/latest/{count}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "POST"
