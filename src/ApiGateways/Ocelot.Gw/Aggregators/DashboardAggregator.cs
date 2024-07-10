@@ -16,8 +16,7 @@ public class DashboardAggregator(ILogger logger) : IDefinedAggregator
         { "featured-posts", "featured-posts" },
         { "most-liked-posts", "most-liked-posts" },
         { "pinned-posts", "pinned-posts" },
-        { "suggest-tags", "suggest-tags" },
-        { "latest-comments", "latest-comments" }
+        { "suggest-tags", "suggest-tags" }
     };
 
     public async Task<DownstreamResponse> Aggregate(List<HttpContext> responses)

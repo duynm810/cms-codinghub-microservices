@@ -850,11 +850,11 @@
       "SwaggerKey": "comment-service"
     },
     {
-      "UpstreamPathTemplate": "/comments/latest/{count}",
+      "UpstreamPathTemplate": "/comments/latest",
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/comments/latest/{count}",
+      "DownstreamPathTemplate": "/api/comments/latest",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -862,8 +862,7 @@
           "Port": 5014
         }
       ],
-      "SwaggerKey": "comment-service",
-      "Key": "latest-comments"
+      "SwaggerKey": "comment-service"
     },
     {
       "UpstreamPathTemplate": "/media/upload-image",
@@ -922,8 +921,7 @@
         "featured-posts",
         "most-liked-posts",
         "pinned-posts",
-        "suggest-tags",
-        "latest-comments"
+        "suggest-tags"
       ],
       "UpstreamPathTemplate": "/dashboard",
       "Aggregator": "DashboardAggregator"

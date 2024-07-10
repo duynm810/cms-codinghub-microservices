@@ -1,4 +1,3 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
@@ -7,7 +6,7 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService errorService, ILogger logger)
+public class SidebarViewComponent(IPostApiClient postApiClient, ICommentApiClient commentApiClient, IErrorService errorService, ILogger logger)
     : BaseViewComponent(errorService, logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
@@ -15,17 +14,14 @@ public class SidebarViewComponent(IPostApiClient postApiClient, IErrorService er
         try
         {
             var posts = await postApiClient.GetMostCommentedPosts(6);
-            if (posts is { IsSuccess: true, Data: not null })
+            var latestComments = await commentApiClient.GetLatestComments(4);
+            var items = new SidebarViewModel
             {
-                var items = new SidebarViewModel
-                {
-                    Posts = posts.Data
-                };
+                Posts = posts.Data,
+                LatestComments = latestComments.Data
+            };
 
-                return View(items);
-            }
-
-            return HandleError((HttpStatusCode)posts.StatusCode, nameof(InvokeAsync));
+            return View(items);
         }
         catch (Exception e)
         {

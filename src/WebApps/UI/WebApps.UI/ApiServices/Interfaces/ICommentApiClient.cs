@@ -6,6 +6,8 @@ namespace WebApps.UI.ApiServices.Interfaces;
 public interface ICommentApiClient
 {
     Task<ApiResult<List<CommentDto>>> GetCommentsByPostId(Guid postId);
+    
+    Task<ApiResult<List<CommentDto>>> GetLatestComments(int count);
 
     Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment);
 

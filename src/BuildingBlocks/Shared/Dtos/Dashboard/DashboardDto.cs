@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
+using Shared.Dtos.Comment;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.Tag;
 using Shared.Responses;
@@ -22,6 +23,9 @@ public class DashboardDto
     
     [JsonProperty("suggest-tags")]
     public SuggestTags SuggestTags { get; set; } = default!;
+    
+    [JsonProperty("latest-comments")]
+    public LatestComments LatestComments { get; set; } = default!;
 }
 
 public class FeaturedPosts : ApiResult<List<PostDto>>;
@@ -33,3 +37,5 @@ public class PinnedPosts :  ApiResult<List<PostDto>>;
 public class LatestPosts : ApiResult<PagedResponse<PostDto>>;
 
 public class SuggestTags : ApiResult<List<TagDto>>;
+
+public class LatestComments : ApiResult<List<CommentDto>>;
