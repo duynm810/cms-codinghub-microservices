@@ -862,7 +862,8 @@
           "Port": 6014
         }
       ],
-      "SwaggerKey": "comment-service"
+      "SwaggerKey": "comment-service",
+      "Key": "latest-comments"
     },
     {
       "UpstreamPathTemplate": "/media/upload-image",
@@ -923,7 +924,8 @@
         "featured-posts",
         "most-liked-posts",
         "pinned-posts",
-        "suggest-tags"
+        "suggest-tags",
+        "latest-comments"
       ],
       "UpstreamPathTemplate": "/dashboard",
       "Aggregator": "DashboardAggregator"
