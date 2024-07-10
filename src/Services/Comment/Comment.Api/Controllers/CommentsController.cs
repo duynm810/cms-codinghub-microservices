@@ -31,10 +31,10 @@ public class CommentsController(ICommentService commentService) : ControllerBase
         return Ok(result);
     }
     
-    [Route("latest/{count:int}")]
+    [Route("latest")]
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<CommentDto>>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IEnumerable<CommentDto>>> GetLatestComments([FromRoute] int count)
+    public async Task<ActionResult<IEnumerable<CommentDto>>> GetLatestComments([FromQuery] int count)
     {
         var result = await commentService.GetLatestComments(count);
         return Ok(result);

@@ -16,6 +16,4 @@ public class HomeViewModel
     public List<PostDto> MostLikedPosts { get; set; } = default!;
     
     public List<TagDto> SuggestTags { get; set; } = default!;
-    
-    public List<CommentDto> LatestComments { get; set; } = default!;
 }
