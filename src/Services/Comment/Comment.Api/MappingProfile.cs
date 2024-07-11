@@ -50,7 +50,8 @@ public class MappingProfile : Profile
             {
                 Id = Guid.Parse(u.Id),
                 FirstName = u.FirstName,
-                LastName = u.LastName
+                LastName = u.LastName,
+                UserName = u.UserName
             }).ToList());
     }
 }
