@@ -33,8 +33,8 @@ public class CommentsController(ICommentService commentService) : ControllerBase
     
     [Route("latest")]
     [HttpGet]
-    [ProducesResponseType(typeof(ApiResult<IEnumerable<CommentDto>>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IEnumerable<CommentDto>>> GetLatestComments([FromQuery] int count)
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<LatestCommentDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<IEnumerable<LatestCommentDto>>> GetLatestComments([FromQuery] int count)
     {
         var result = await commentService.GetLatestComments(count);
         return Ok(result);

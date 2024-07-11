@@ -50,11 +50,12 @@
             {
                 foreach (var item in latestComments)
                 {
+                    var postUrl = "/post/" + item.PostSlug;
                     var authorUrl = "/author/" + item.User?.UserName;
                     <li class="mb-30">
                         <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
                             <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html">
+                                <a class="color-white" href="@postUrl">
                                     <img src="~/imgs/authors/author-2.jpg" alt="">
                                 </a>
                             </div>

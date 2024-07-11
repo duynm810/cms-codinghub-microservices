@@ -7,5 +7,5 @@ public class SidebarViewModel
 {
     public List<PostDto> Posts { get; set; } = default!;
     
-    public List<CommentDto> LatestComments { get; set; } = default!;
+    public List<LatestCommentDto> LatestComments { get; set; } = default!;
 }

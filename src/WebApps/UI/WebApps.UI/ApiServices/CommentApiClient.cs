@@ -11,9 +11,9 @@ public class CommentApiClient(IBaseApiClient baseApiClient) : ICommentApiClient
         return await baseApiClient.GetListAsync<CommentDto>($"/comments/by-post/{postId}");
     }
     
-    public async Task<ApiResult<List<CommentDto>>> GetLatestComments(int count)
+    public async Task<ApiResult<List<LatestCommentDto>>> GetLatestComments(int count)
     {
-        return await baseApiClient.GetListAsync<CommentDto>($"/comments/latest?count={count}");
+        return await baseApiClient.GetListAsync<LatestCommentDto>($"/comments/latest?count={count}");
     }
 
     public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment)

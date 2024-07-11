@@ -6,13 +6,19 @@ using Comment.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
+using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
 
 namespace Comment.Api.Services;
 
-public class CommentService(ICommentRepository commentRepository, IIdentityGrpcClient identityGrpcClient, IMapper mapper, ILogger logger) : ICommentService
+public class CommentService(
+    ICommentRepository commentRepository,
+    IIdentityGrpcClient identityGrpcClient,
+    IPostGrpcClient postGrpcClient,
+    IMapper mapper,
+    ILogger logger) : ICommentService
 {
     public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto request)
     {
@@ -53,15 +59,15 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
             logger.Information("BEGIN {MethodName} - Retrieving comment with post ID: {PostId}", methodName, postId);
 
             var comments = await commentRepository.GetCommentsByPostId(postId);
-            
+
             // Get list of userIds from comments (Lấy danh sách userIds từ comments)
             var userIds = comments.Select(c => c.UserId).Distinct().ToArray();
-            
+
             var users = await identityGrpcClient.GetUsersInfo(userIds);
             var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.Id);
-            
+
             var commentList = mapper.Map<List<CommentDto>>(comments);
-            
+
             foreach (var comment in commentList)
             {
                 if (userInfos.TryGetValue(comment.UserId, out var userInfo))
@@ -69,7 +75,7 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
                     comment.User = userInfo;
                 }
             }
-            
+
             var data = BuildCommentTree(commentList.ToList());
 
             result.Success(data);
@@ -87,38 +93,59 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
         return result;
     }
 
-    public async Task<ApiResult<List<CommentDto>>> GetLatestComments(int count)
+    public async Task<ApiResult<List<LatestCommentDto>>> GetLatestComments(int count)
     {
-        var result = new ApiResult<List<CommentDto>>();
+        var result = new ApiResult<List<LatestCommentDto>>();
         const string methodName = nameof(GetLatestComments);
 
         try
         {
             var comments = await commentRepository.GetLatestComments(count);
-            
-            // Get list of userIds from comments
+
+            if (comments.Count == 0)
+            {
+                result.Success([]);
+                return result;
+            }
+
+            // Get list of userIds and postIds from comments
             var userIds = comments.Select(c => c.UserId).Distinct().ToArray();
-        
-            var users = await identityGrpcClient.GetUsersInfo(userIds);
+            var postIds = comments.Select(c => c.PostId).Distinct().ToArray();
+
+            // Parallelize gRPC calls
+            var userTask = identityGrpcClient.GetUsersInfo(userIds);
+            var postTask = postGrpcClient.GetPostsByIds(postIds);
+
+            await Task.WhenAll(userTask, postTask);
+
+            var users = userTask.Result;
+            var posts = postTask.Result;
+
             var userInfos = mapper.Map<List<UserDto>>(users).ToDictionary(u => u.Id);
-        
-            var commentList = mapper.Map<List<CommentDto>>(comments);
-            
-            foreach (var comment in commentList)
+            var postInfos = mapper.Map<List<PostDto>>(posts).ToDictionary(u => u.Id);
+
+            var data = mapper.Map<List<LatestCommentDto>>(comments);
+
+            foreach (var comment in data)
             {
                 if (userInfos.TryGetValue(comment.UserId, out var userInfo))
                 {
                     comment.User = userInfo;
                 }
+
+                if (postInfos.TryGetValue(comment.PostId, out var postInfo))
+                {
+                    comment.PostSlug = postInfo.Slug;
+                }
             }
-        
-            result.Success(commentList);
+
+            result.Success(data);
 
             logger.Information("END {MethodName} - Successfully retrieved the latest {Count} comments", methodName, count);
         }
         catch (Exception e)
         {
-            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
@@ -150,7 +177,7 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
 
         return result;
     }
-    
+
     public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto newCommentDto)
     {
         var result = new ApiResult<CommentDto>();
@@ -168,10 +195,10 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
                 logger.Warning("{MethodName} - Parent comment with ID: {ParentId} not found.", methodName, parentId);
                 return result;
             }
-            
+
             var newComment = mapper.Map<CommentBase>(newCommentDto);
             newComment.ParentId = parentId;
-          
+
             var created = await commentRepository.CreateComment(newComment);
             if (!created)
             {
@@ -186,14 +213,16 @@ public class CommentService(ICommentRepository commentRepository, IIdentityGrpcC
             {
                 result.Messages.Add(ErrorMessagesConsts.Comment.RepliesCountUpdateFailed);
                 result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
-                logger.Error("{MethodName} - Failed to update replies count for comment with ID: {ParentId}", methodName, parentId);
+                logger.Error("{MethodName} - Failed to update replies count for comment with ID: {ParentId}",
+                    methodName, parentId);
                 return result;
             }
-            
+
             var data = mapper.Map<CommentDto>(newComment);
-            
+
             result.Success(data);
-            logger.Information("END {MethodName} - Successfully replied to comment with ID: {ParentId}", methodName, parentId);
+            logger.Information("END {MethodName} - Successfully replied to comment with ID: {ParentId}", methodName,
+                parentId);
         }
         catch (Exception e)
         {

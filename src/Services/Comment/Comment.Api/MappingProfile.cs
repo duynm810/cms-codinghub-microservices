@@ -21,6 +21,7 @@ public class MappingProfile : Profile
     private void ConfigureCommentMappings()
     {
         CreateMap<CommentBase, CommentDto>().ReverseMap();
+        CreateMap<CommentBase, LatestCommentDto>().ReverseMap();
         CreateMap<CommentBase, CreateCommentDto>().ReverseMap();
     }
 
@@ -28,13 +29,16 @@ public class MappingProfile : Profile
     {
         CreateMap<PostModel, PostDto>().ReverseMap();
         CreateMap<PostDto, GetTop10PostsResponse>().ReverseMap();
-        CreateMap<GetTop10PostsResponse, IEnumerable<PostDto>>()
+        CreateMap<GetTop10PostsResponse, List<PostDto>>()
             .ConvertUsing(src => src.Posts.Select(p => new PostDto
             {
                 Id = Guid.Parse(p.Id),
                 Title = p.Title,
                 Slug = p.Slug
             }).ToList());
+        
+        CreateMap<List<PostDto>, GetPostsByIdsResponse>().ForMember(dest => dest.Posts,
+            opt => opt.MapFrom(src => src));
     }
 
     private void ConfigureIdentityGrpcMappings()
