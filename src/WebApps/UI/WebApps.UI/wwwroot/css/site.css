@@ -42,6 +42,11 @@
     display: block;
 }
 
+.comment-author-info {
+    display: flex;
+    align-items: center;
+}
+
 /*----------------------- Spinner ----------------------*/
 
 .spinner {
