@@ -179,10 +179,10 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpPost("by-current-user/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetPostsByCurrentUserPaging(
-        [FromBody] GetPostsByCurrentUserDto request)
+        [FromBody] GetPostsByCurrentUserDto filter)
     {
         var currentUser = User.GetCurrentUser();
-        var query = new GetPostsByCurrentUserPagingQuery(request, currentUser);
+        var query = new GetPostsByCurrentUserPagingQuery(filter, currentUser);
         var result = await mediator.Send(query);
         return Ok(result);
     }
