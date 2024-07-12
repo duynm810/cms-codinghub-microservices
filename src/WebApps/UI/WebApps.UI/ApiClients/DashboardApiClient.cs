@@ -1,9 +1,9 @@
 using Contracts.Commons.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Dashboard;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 
-namespace WebApps.UI.ApiServices;
+namespace WebApps.UI.ApiClients;
 
 public class DashboardApiClient(IBaseApiClient baseApiClient, ISerializeService serializeService) : IDashboardApiClient
 {

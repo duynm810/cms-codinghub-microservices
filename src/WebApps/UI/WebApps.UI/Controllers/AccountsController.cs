@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Category;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;

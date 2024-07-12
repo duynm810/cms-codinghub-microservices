@@ -1,7 +1,7 @@
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Requests.Post.Queries;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;

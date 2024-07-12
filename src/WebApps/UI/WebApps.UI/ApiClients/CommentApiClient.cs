@@ -1,9 +1,9 @@
 using Shared.Dtos.Comment;
 using Shared.Requests.Comment;
 using Shared.Responses;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 
-namespace WebApps.UI.ApiServices;
+namespace WebApps.UI.ApiClients;
 
 public class CommentApiClient(IBaseApiClient baseApiClient) : ICommentApiClient
 {

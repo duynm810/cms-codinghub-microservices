@@ -2,9 +2,9 @@ using Shared.Dtos.Post;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
 using Shared.Responses;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 
-namespace WebApps.UI.ApiServices;
+namespace WebApps.UI.ApiClients;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {

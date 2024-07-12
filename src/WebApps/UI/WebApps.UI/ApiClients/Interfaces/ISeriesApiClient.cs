@@ -1,7 +1,7 @@
 using Shared.Dtos.Series;
 using Shared.Responses;
 
-namespace WebApps.UI.ApiServices.Interfaces;
+namespace WebApps.UI.ApiClients.Interfaces;
 
 public interface ISeriesApiClient
 {

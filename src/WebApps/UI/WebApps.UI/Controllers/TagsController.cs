@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 
 namespace WebApps.UI.Controllers;
 

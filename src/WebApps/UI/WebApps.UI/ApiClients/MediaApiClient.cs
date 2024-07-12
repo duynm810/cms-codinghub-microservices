@@ -3,10 +3,10 @@ using Contracts.Commons.Interfaces;
 using Shared.Constants;
 using Shared.Responses;
 using Shared.Utilities;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 using ILogger = Serilog.ILogger;
 
-namespace WebApps.UI.ApiServices;
+namespace WebApps.UI.ApiClients;
 
 public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService serializeService, ILogger logger)
     : IMediaApiClient

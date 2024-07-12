@@ -3,7 +3,7 @@ using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
-namespace WebApps.UI.ApiServices.Interfaces;
+namespace WebApps.UI.ApiClients.Interfaces;
 
 public interface IPostApiClient
 {

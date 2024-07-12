@@ -1,9 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Dtos.Comment;
 using Shared.Requests.Comment;
 using Shared.Requests.Post.Queries;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;

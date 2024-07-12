@@ -1,6 +1,6 @@
 using Shared.Dtos.Dashboard;
 
-namespace WebApps.UI.ApiServices.Interfaces;
+namespace WebApps.UI.ApiClients.Interfaces;
 
 public interface IDashboardApiClient
 {
