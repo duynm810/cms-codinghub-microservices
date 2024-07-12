@@ -1,11 +1,9 @@
-using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Dtos.Post.Queries;
-using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -13,7 +11,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 
 public class GetPostsPagingQueryHandler(
     IPostRepository postRepository,
-    ICacheService cacheService,
     IPostService postService,
     ILogger logger) : IRequestHandler<GetPostsPagingQuery, ApiResult<PagedResponse<PostDto>>>
 {

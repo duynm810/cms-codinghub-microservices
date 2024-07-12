@@ -5,6 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
+using Shared.Constants;
+using Shared.Dtos.Identity.User;
+using Shared.Dtos.Post.Queries;
 using Shared.Enums;
 using Shared.Responses;
 
@@ -94,20 +97,37 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, bool isAdmin, int pageNumber,
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(SearchPostByCurrentUserDto filter, CurrentUserDto currentUser, int pageNumber,
         int pageSize)
     {
         IQueryable<PostBase> query;
         
+        var isAdmin = currentUser.Roles.Contains(UserRolesConsts.Administrator);
+        
         if (isAdmin)
         {
-            query = FindByCondition(x =>
-                    x.Status == PostStatusEnum.Draft || x.Status == PostStatusEnum.WaitingForApproval)
-                .OrderByDescending(x => x.CreatedDate);
+            query = FindAll();
+            
+            if (!string.IsNullOrEmpty(filter.Keyword))
+            {
+                query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
+            }
+            
+            if (filter.Status != null)
+            {
+                query = query.Where(x => x.Status == filter.Status);
+            }
+            
+            if (filter.UserId.HasValue)
+            {
+                query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
+            }
+            
+            query = query.OrderByDescending(x => x.CreatedDate);
         }
         else
         {
-            query = FindByCondition(x => x.AuthorUserId == userId)
+            query = FindByCondition(x => x.AuthorUserId == currentUser.UserId)
                 .OrderByDescending(x => x.CreatedDate);
         }
         

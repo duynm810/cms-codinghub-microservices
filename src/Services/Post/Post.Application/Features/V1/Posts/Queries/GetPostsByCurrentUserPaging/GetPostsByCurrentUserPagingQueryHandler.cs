@@ -5,6 +5,7 @@ using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
+using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
@@ -14,7 +15,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetPostsByCurrentUserPaging
 
 public class GetPostsByCurrentUserPagingQueryHandler(
     IPostRepository postRepository,
-    ICacheService cacheService,
     IPostService postService,
     ILogger logger) : IRequestHandler<GetPostsByCurrentUserPagingQuery, ApiResult<PagedResponse<PostDto>>>
 {
@@ -28,9 +28,7 @@ public class GetPostsByCurrentUserPagingQueryHandler(
         {
             logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUser.UserId, request.PageNumber, request.PageSize);
 
-            var isAdmin = request.CurrentUser.Roles.Contains(UserRolesConsts.Administrator);
-            
-            var posts = await postRepository.GetPostsByCurrentUserPaging(request.CurrentUser.UserId, isAdmin, request.PageNumber, request.PageSize);
+            var posts = await postRepository.GetPostsByCurrentUserPaging(request.Filter, request.CurrentUser, request.PageNumber, request.PageSize);
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
