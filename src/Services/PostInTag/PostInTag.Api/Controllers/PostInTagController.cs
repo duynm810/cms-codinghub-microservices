@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using PostInTag.Api.Services.Interfaces;
 using Shared.Dtos.PostInTag;
+using Shared.Requests.PostInTag;
 
 namespace PostInTag.Api.Controllers;
 
@@ -12,14 +13,14 @@ namespace PostInTag.Api.Controllers;
 public class PostInTagController(IPostInTagService postInTagService) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> CreatePostToTag(CreatePostInTagDto request)
+    public async Task<IActionResult> CreatePostToTag(CreatePostInTagRequest request)
     {
         var result = await postInTagService.CreatePostToTag(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);
     }
 
     [HttpDelete]
-    public async Task<IActionResult> DeletePostToTag(DeletePostInTagDto request)
+    public async Task<IActionResult> DeletePostToTag(DeletePostInTagRequest request)
     {
         var result = await postInTagService.DeletePostToTag(request);
         return result.IsSuccess ? Ok(result) : BadRequest(result);

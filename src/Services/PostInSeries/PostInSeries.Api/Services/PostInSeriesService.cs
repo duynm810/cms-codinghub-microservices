@@ -5,6 +5,7 @@ using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
 using Shared.Dtos.PostInSeries;
 using Shared.Helpers;
+using Shared.Requests.PostInSeries;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -19,7 +20,7 @@ public class PostInSeriesService(
 {
     #region CRUD
 
-    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesDto request)
+    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(CreatePostToSeries);
@@ -52,7 +53,7 @@ public class PostInSeriesService(
         return result;
     }
 
-    public async Task<ApiResult<bool>> DeletePostToSeries(DeletePostInSeriesDto request)
+    public async Task<ApiResult<bool>> DeletePostToSeries(DeletePostInSeriesRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(DeletePostToSeries);

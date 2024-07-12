@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Series;
+namespace Shared.Requests.Series;
 
-public class CreateOrUpdateSeriesDto
+public class CreateOrUpdateSeriesRequest
 {
     public required string Title { get; set; }
 

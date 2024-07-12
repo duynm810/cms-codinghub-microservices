@@ -5,6 +5,7 @@ using Post.Grpc.Protos;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
+using Shared.Requests.Comment;
 
 namespace Comment.Api;
 
@@ -21,7 +22,7 @@ public class MappingProfile : Profile
     {
         CreateMap<CommentBase, CommentDto>().ReverseMap();
         CreateMap<CommentBase, LatestCommentDto>().ReverseMap();
-        CreateMap<CommentBase, CreateCommentDto>().ReverseMap();
+        CreateMap<CommentBase, CreateCommentRequest>().ReverseMap();
     }
 
     private void ConfigurePostGrpcMappings()

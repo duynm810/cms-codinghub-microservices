@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Identity.Permission;
+using Shared.Requests.Identity.Permission;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -17,7 +18,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
 {
     #region CRUD
 
-    public async Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionDto request)
+    public async Task<ApiResult<PermissionDto?>> CreatePermission(string roleId, CreateOrUpdatePermissionRequest request)
     {
         var result = new ApiResult<PermissionDto?>();
         const string methodName = nameof(CreatePermission);
@@ -58,8 +59,7 @@ public class PermissionService(IIdentityReposityManager reposityManager, IMapper
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdatePermissions(string roleId,
-        IEnumerable<CreateOrUpdatePermissionDto> permissions)
+    public async Task<ApiResult<bool>> UpdatePermissions(string roleId, IEnumerable<CreateOrUpdatePermissionRequest> permissions)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePermissions);

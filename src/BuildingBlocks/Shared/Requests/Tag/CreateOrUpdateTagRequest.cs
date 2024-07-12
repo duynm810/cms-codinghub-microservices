@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Tag;
+namespace Shared.Requests.Tag;
 
-public class CreateOrUpdateTagDto
+public class CreateOrUpdateTagRequest
 {
     public required string Name { get; set; }
     

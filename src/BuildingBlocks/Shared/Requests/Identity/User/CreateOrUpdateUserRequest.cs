@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Identity.User;
+namespace Shared.Requests.Identity.User;
 
-public class CreateOrUpdateUserDto
+public class CreateOrUpdateUserRequest
 {
     public string? FirstName { get; set; }
 

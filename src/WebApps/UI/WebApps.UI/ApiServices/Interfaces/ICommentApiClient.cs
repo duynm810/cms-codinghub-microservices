@@ -1,4 +1,5 @@
 using Shared.Dtos.Comment;
+using Shared.Requests.Comment;
 using Shared.Responses;
 
 namespace WebApps.UI.ApiServices.Interfaces;
@@ -9,7 +10,7 @@ public interface ICommentApiClient
     
     Task<ApiResult<List<LatestCommentDto>>> GetLatestComments(int count);
 
-    Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment);
+    Task<ApiResult<CommentDto>> CreateComment(CreateCommentRequest request);
 
-    Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto comment);
+    Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentRequest request);
 }

@@ -90,7 +90,7 @@
     {
       "UpstreamPathTemplate": "/categories/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/categories/paging",
       "DownstreamScheme": "http",
@@ -614,7 +614,7 @@
     {
       "UpstreamPathTemplate": "/series/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/series/paging",
       "DownstreamScheme": "http",

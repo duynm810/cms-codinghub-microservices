@@ -1,4 +1,5 @@
 using Shared.Dtos.Identity.User;
+using Shared.Requests.Identity.User;
 using Shared.Responses;
 
 namespace Identity.Infrastructure.Services.Interfaces;
@@ -7,9 +8,9 @@ public interface IUserService
 {
     #region CRUD
 
-    Task<ApiResult<UserDto?>> CreateUser(CreateUserDto model);
+    Task<ApiResult<UserDto?>> CreateUser(CreateUserRequest request);
 
-    Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserDto model);
+    Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserRequest request);
 
     Task<ApiResult<bool>> DeleteUser(Guid userId);
 
@@ -21,7 +22,7 @@ public interface IUserService
 
     #region OTHERS
 
-    Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto model);
+    Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserRequest request);
 
     #endregion
 }

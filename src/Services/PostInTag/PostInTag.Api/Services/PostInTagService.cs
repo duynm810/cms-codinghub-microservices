@@ -5,6 +5,7 @@ using PostInTag.Api.Repositories.Interfaces;
 using PostInTag.Api.Services.Interfaces;
 using Shared.Dtos.PostInTag;
 using Shared.Helpers;
+using Shared.Requests.PostInTag;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -17,7 +18,7 @@ public class PostInTagService(
     IMapper mapper,
     ILogger logger) : IPostInTagService
 {
-    public async Task<ApiResult<bool>> CreatePostToTag(CreatePostInTagDto request)
+    public async Task<ApiResult<bool>> CreatePostToTag(CreatePostInTagRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(CreatePostToTag);
@@ -61,7 +62,7 @@ public class PostInTagService(
         return result;
     }
 
-    public async Task<ApiResult<bool>> DeletePostToTag(DeletePostInTagDto request)
+    public async Task<ApiResult<bool>> DeletePostToTag(DeletePostInTagRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(DeletePostToTag);

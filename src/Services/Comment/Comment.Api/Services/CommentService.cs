@@ -7,6 +7,7 @@ using Shared.Constants;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
+using Shared.Requests.Comment;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;
@@ -20,7 +21,7 @@ public class CommentService(
     IMapper mapper,
     ILogger logger) : ICommentService
 {
-    public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto request)
+    public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentRequest request)
     {
         var result = new ApiResult<CommentDto>();
         const string methodName = nameof(CreateComment);
@@ -178,7 +179,7 @@ public class CommentService(
         return result;
     }
 
-    public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto newCommentDto)
+    public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentRequest request)
     {
         var result = new ApiResult<CommentDto>();
         const string methodName = nameof(ReplyToComment);
@@ -196,7 +197,7 @@ public class CommentService(
                 return result;
             }
 
-            var newComment = mapper.Map<CommentBase>(newCommentDto);
+            var newComment = mapper.Map<CommentBase>(request);
             newComment.ParentId = parentId;
 
             var created = await commentRepository.CreateComment(newComment);

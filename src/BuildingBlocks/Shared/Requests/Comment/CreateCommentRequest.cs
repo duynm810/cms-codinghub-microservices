@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Comment;
+namespace Shared.Requests.Comment;
 
-public class CreateCommentDto
+public class CreateCommentRequest
 {
     public Guid UserId { get; set; }
     

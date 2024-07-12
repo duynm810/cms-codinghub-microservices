@@ -1,6 +1,6 @@
-namespace Shared.Dtos.PostInTag;
+namespace Shared.Requests.PostInTag;
 
-public class DeletePostInTagDto
+public class DeletePostInTagRequest
 {
     public Guid TagId { get; set; }
 

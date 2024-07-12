@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Tag;
+using Shared.Requests.Tag;
 using Tag.Api.Services.Interfaces;
 
 namespace Tag.Api.Controllers;
@@ -8,13 +9,13 @@ public static class TagsController
 {
     public static void MapTagApi(this WebApplication app)
     {
-        app.MapPost("/api/tags", async ([FromServices] ITagService tagService, [FromBody] CreateTagDto request) =>
+        app.MapPost("/api/tags", async ([FromServices] ITagService tagService, [FromBody] CreateTagRequest request) =>
         {
             var result = await tagService.CreateTag(request);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);
         }).RequireAuthorization("Bearer");
 
-        app.MapPut("/api/tags/{id:guid}", async ([FromServices] ITagService tagService, Guid id, UpdateTagDto request) =>
+        app.MapPut("/api/tags/{id:guid}", async ([FromServices] ITagService tagService, Guid id, UpdateTagRequest request) =>
         {
             var result = await tagService.UpdateTag(id, request);
             return result.IsSuccess ? Results.Ok(result) : Results.BadRequest(result);

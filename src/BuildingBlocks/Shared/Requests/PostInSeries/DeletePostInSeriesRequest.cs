@@ -1,6 +1,6 @@
-namespace Shared.Dtos.PostInSeries;
+namespace Shared.Requests.PostInSeries;
 
-public class DeletePostInSeriesDto
+public class DeletePostInSeriesRequest
 {
     public Guid SeriesId { get; set; }
 

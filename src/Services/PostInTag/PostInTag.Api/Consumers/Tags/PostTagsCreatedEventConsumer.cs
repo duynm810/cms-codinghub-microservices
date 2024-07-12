@@ -4,6 +4,7 @@ using MassTransit;
 using PostInTag.Api.Entities;
 using PostInTag.Api.Repositories.Interfaces;
 using Shared.Dtos.PostInTag;
+using Shared.Requests.PostInTag;
 using ILogger = Serilog.ILogger;
 
 namespace PostInTag.Api.Consumers.Tags;
@@ -26,14 +27,14 @@ public class PostTagsCreatedEventConsumer(IPostInTagRepository postInTagReposito
 
             foreach (var tagId in message.TagIds)
             {
-                var postInTagDto = new CreatePostInTagDto
+                var postInTagRequest = new CreatePostInTagRequest
                 {
                     TagId = tagId,
                     PostId = message.PostId,
                     SortOrder = sortOrder++
                 };
 
-                var postInTag = mapper.Map<PostInTagBase>(postInTagDto);
+                var postInTag = mapper.Map<PostInTagBase>(postInTagRequest);
                 await postInTagRepository.CreatePostToTag(postInTag);
             }
 

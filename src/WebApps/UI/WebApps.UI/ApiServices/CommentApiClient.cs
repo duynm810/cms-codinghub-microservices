@@ -1,4 +1,5 @@
 using Shared.Dtos.Comment;
+using Shared.Requests.Comment;
 using Shared.Responses;
 using WebApps.UI.ApiServices.Interfaces;
 
@@ -16,13 +17,13 @@ public class CommentApiClient(IBaseApiClient baseApiClient) : ICommentApiClient
         return await baseApiClient.GetListAsync<LatestCommentDto>($"/comments/latest?count={count}");
     }
 
-    public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentDto comment)
+    public async Task<ApiResult<CommentDto>> CreateComment(CreateCommentRequest request)
     {
-        return await baseApiClient.PostAsync<CreateCommentDto, CommentDto>($"/comments", comment, true);
+        return await baseApiClient.PostAsync<CreateCommentRequest, CommentDto>($"/comments", request, true);
     }
     
-    public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentDto comment)
+    public async Task<ApiResult<CommentDto>> ReplyToComment(string parentId, CreateCommentRequest request)
     {
-        return await baseApiClient.PostAsync<CreateCommentDto, CommentDto>($"/comments/reply?parentId={parentId}", comment, true);
+        return await baseApiClient.PostAsync<CreateCommentRequest, CommentDto>($"/comments/reply?parentId={parentId}", request, true);
     }
 }

@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Category;
+namespace Shared.Requests.Category;
 
-public class CreateOrUpdateCategoryDto
+public class CreateCategoryRequest
 {
     public required string Name { get; set; }
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Identity.User;
+using Shared.Requests.Identity.User;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -15,7 +16,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 {
     #region CRUD
 
-    public async Task<ApiResult<UserDto?>> CreateUser(CreateUserDto request)
+    public async Task<ApiResult<UserDto?>> CreateUser(CreateUserRequest request)
     {
         var result = new ApiResult<UserDto?>();
         const string methodName = nameof(CreateUser);
@@ -43,7 +44,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserDto request)
+    public async Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdateUser);
@@ -184,7 +185,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 
     #region OTHERS
 
-    public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserDto request)
+    public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(ChangePassword);

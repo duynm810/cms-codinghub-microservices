@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Identity;
 using Shared.Dtos.Identity.Permission;
 using Shared.Dtos.Identity.Role;
 using Shared.Dtos.Identity.User;
+using Shared.Requests.Identity.Permission;
+using Shared.Requests.Identity.Role;
+using Shared.Requests.Identity.User;
 
 namespace Identity.Api;
 
@@ -13,22 +16,22 @@ public class MappingProfile : Profile
     {
         #region PERMISSION
 
-        CreateMap<CreateOrUpdatePermissionDto, Permission>();
+        CreateMap<CreateOrUpdatePermissionRequest, Permission>();
         CreateMap<Permission, PermissionDto>();
 
         #endregion
 
         #region ROLE
 
-        CreateMap<CreateOrUpdateRoleDto, IdentityRole>();
+        CreateMap<CreateOrUpdateRoleRequest, IdentityRole>();
         CreateMap<IdentityRole, RoleDto>();
 
         #endregion
 
         #region USER
 
-        CreateMap<CreateUserDto, User>();
-        CreateMap<UpdateUserDto, User>();
+        CreateMap<CreateUserRequest, User>();
+        CreateMap<UpdateUserRequest, User>();
         CreateMap<User, UserDto>();
 
         #endregion

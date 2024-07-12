@@ -5,6 +5,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Identity.Permission;
+using Shared.Requests.Identity.Permission;
 using Shared.Responses;
 
 namespace Identity.Presentation.Controllers;
@@ -16,7 +17,7 @@ public class PermissionsController(IPermissionService permissionService) : Contr
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<PermissionDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreatePermission(string roleId, [FromBody] CreateOrUpdatePermissionDto request)
+    public async Task<IActionResult> CreatePermission(string roleId, [FromBody] CreateOrUpdatePermissionRequest request)
     {
         var result = await permissionService.CreatePermission(roleId, request);
         return Ok(result);
@@ -24,8 +25,7 @@ public class PermissionsController(IPermissionService permissionService) : Contr
 
     [HttpPut]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> UpdatePermissions(string roleId,
-        [FromBody] IEnumerable<CreateOrUpdatePermissionDto> permissions)
+    public async Task<IActionResult> UpdatePermissions(string roleId, [FromBody] IEnumerable<CreateOrUpdatePermissionRequest> permissions)
     {
         var result = await permissionService.UpdatePermissions(roleId, permissions);
         return Ok(result);

@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Comment;
+using Shared.Requests.Comment;
 using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Posts;
@@ -184,14 +185,14 @@ public class PostsController(
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddNewComment([FromBody] CreateCommentDto comment)
+    public async Task<IActionResult> AddNewComment([FromBody] CreateCommentRequest comment)
     {
         var newComment = await commentApiClient.CreateComment(comment);
         return Ok(new { data = newComment.Data });
     }
 
     [HttpPost]
-    public async Task<IActionResult> ReplyToComment([FromQuery] string parentId, [FromBody] CreateCommentDto comment)
+    public async Task<IActionResult> ReplyToComment([FromQuery] string parentId, [FromBody] CreateCommentRequest comment)
     {
         var replyToComment = await commentApiClient.ReplyToComment(parentId, comment);
         return Ok(new { data = replyToComment.Data });

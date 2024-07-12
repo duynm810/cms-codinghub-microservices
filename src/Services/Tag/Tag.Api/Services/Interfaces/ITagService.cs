@@ -1,4 +1,5 @@
 using Shared.Dtos.Tag;
+using Shared.Requests.Tag;
 using Shared.Responses;
 
 namespace Tag.Api.Services.Interfaces;
@@ -7,9 +8,9 @@ public interface ITagService
 {
     #region CRUD
 
-    Task<ApiResult<TagDto>> CreateTag(CreateTagDto request);
+    Task<ApiResult<TagDto>> CreateTag(CreateTagRequest request);
 
-    Task<ApiResult<TagDto>> UpdateTag(Guid id, UpdateTagDto request);
+    Task<ApiResult<TagDto>> UpdateTag(Guid id, UpdateTagRequest request);
 
     Task<ApiResult<bool>> DeleteTag(List<Guid> ids);
 

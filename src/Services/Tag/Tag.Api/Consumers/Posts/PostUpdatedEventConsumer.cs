@@ -5,6 +5,7 @@ using MassTransit;
 using Microsoft.Extensions.Options;
 using Shared.Constants;
 using Shared.Dtos.Tag;
+using Shared.Requests.Tag;
 using Shared.Settings;
 using Tag.Api.Entities;
 using Tag.Api.GrpcClients.Interfaces;
@@ -131,13 +132,13 @@ public class PostUpdatedEventConsumer(
 
         try
         {
-            var tagDto = new CreateTagDto
+            var tagRequest = new CreateTagRequest
             {
                 Name = rawTag.Name,
                 Slug = rawTag.Slug
             };
 
-            var tag = mapper.Map<TagBase>(tagDto);
+            var tag = mapper.Map<TagBase>(tagRequest);
 
             // Set initial usage count to 1 (Thiết lập usage count ban đầu là 1)
             tag.UsageCount = 1;

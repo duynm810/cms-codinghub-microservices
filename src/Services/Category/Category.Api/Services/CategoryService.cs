@@ -7,6 +7,7 @@ using AutoMapper;
  using Shared.Constants;
  using Shared.Dtos.Category;
  using Shared.Helpers;
+ using Shared.Requests.Category;
  using Shared.Responses;
  using Shared.Utilities;
  using ILogger = Serilog.ILogger;
@@ -22,7 +23,7 @@ using AutoMapper;
  {
      #region CRUD
  
-     public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryDto request)
+     public async Task<ApiResult<CategoryDto>> CreateCategory(CreateCategoryRequest request)
      {
          var result = new ApiResult<CategoryDto>();
          const string methodName = nameof(CreateCategory);
@@ -59,7 +60,7 @@ using AutoMapper;
          return result;
      }
  
-     public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryDto request)
+     public async Task<ApiResult<CategoryDto>> UpdateCategory(long id, UpdateCategoryRequest request)
      {
          var result = new ApiResult<CategoryDto>();
          const string methodName = nameof(UpdateCategory);
@@ -250,7 +251,7 @@ using AutoMapper;
  
      #region OTHERS
  
-     public async Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(int pageNumber, int pageSize)
+     public async Task<ApiResult<PagedResponse<CategoryDto>>> GetCategoriesPaging(GetCategoriesRequest request)
      {
          var result = new ApiResult<PagedResponse<CategoryDto>>();
          const string methodName = nameof(GetCategoriesPaging);
@@ -259,20 +260,20 @@ using AutoMapper;
          {
              logger.Information(
                  "BEGIN {MethodName} - Retrieving categories for page {PageNumber} with page size {PageSize}",
-                 methodName, pageNumber, pageSize);
+                 methodName, request.PageNumber, request.PageSize);
  
-             var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(pageNumber, pageSize);
+             var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(request.PageNumber, request.PageSize);
              var cachedCategories = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
              if (cachedCategories != null)
              {
                  result.Success(cachedCategories);
                  logger.Information(
                      "END {MethodName} - Successfully retrieved categories for page {PageNumber} from cache", methodName,
-                     pageNumber);
+                     request.PageNumber);
                  return result;
              }
  
-             var categories = await categoryRepository.GetCategoriesPaging(pageNumber, pageSize);
+             var categories = await categoryRepository.GetCategoriesPaging(request);
              var data = new PagedResponse<CategoryDto>()
              {
                  Items = mapper.Map<List<CategoryDto>>(categories.Items),
@@ -286,7 +287,7 @@ using AutoMapper;
  
              logger.Information(
                  "END {MethodName} - Successfully retrieved {CategoryCount} categories for page {PageNumber} with page size {PageSize}",
-                 methodName, data.Items.Count, pageNumber, pageSize);
+                 methodName, data.Items.Count, request.PageNumber, request.PageSize);
          }
          catch (Exception e)
          {

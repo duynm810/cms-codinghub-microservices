@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Series.Api.Entities;
 using Series.Api.Persistence;
 using Series.Api.Repositories.Interfaces;
+using Shared.Requests.Series;
 using Shared.Responses;
 
 namespace Series.Api.Repositories;
@@ -32,11 +33,11 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
     #region OTHERS
 
-    public async Task<PagedResponse<SeriesBase>> GetSeriesPaging(int pageNumber, int pageSize)
+    public async Task<PagedResponse<SeriesBase>> GetSeriesPaging(GetSeriesRequest request)
     {
         var query = FindAll();
 
-        var items = await PagedList<SeriesBase>.ToPagedList(query, pageNumber, pageSize, x => x.CreatedDate);
+        var items = await PagedList<SeriesBase>.ToPagedList(query, request.PageNumber, request.PageSize, x => x.CreatedDate);
 
         var response = new PagedResponse<SeriesBase>
         {

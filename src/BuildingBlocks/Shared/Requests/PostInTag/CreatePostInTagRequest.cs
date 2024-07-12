@@ -1,6 +1,6 @@
-namespace Shared.Dtos.PostInTag;
+namespace Shared.Requests.PostInTag;
 
-public class CreatePostInTagDto
+public class CreatePostInTagRequest
 {
     public Guid TagId { get; set; }
 

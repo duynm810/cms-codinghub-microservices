@@ -1,6 +1,6 @@
-namespace Shared.Dtos.PostInSeries;
+namespace Shared.Requests.PostInSeries;
 
-public class CreatePostInSeriesDto
+public class CreatePostInSeriesRequest
 {
     public Guid SeriesId { get; set; }
 

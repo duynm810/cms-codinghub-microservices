@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Identity.User;
+namespace Shared.Requests.Identity.User;
 
-public class ChangePasswordUserDto
+public class ChangePasswordUserRequest
 {
     public required string CurrentPassword { get; set; }
 

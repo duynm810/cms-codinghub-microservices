@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Identity.Role;
+using Shared.Requests.Identity.Role;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -15,7 +16,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
 {
     #region CRUD
 
-    public async Task<ApiResult<RoleDto?>> CreateRole(CreateOrUpdateRoleDto request)
+    public async Task<ApiResult<RoleDto?>> CreateRole(CreateOrUpdateRoleRequest request)
     {
         var result = new ApiResult<RoleDto?>();
         const string methodName = nameof(CreateRole);
@@ -42,7 +43,7 @@ public class RoleService(IIdentityReposityManager repositoryManager, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<bool>> UpdateRole(Guid roleId, CreateOrUpdateRoleDto request)
+    public async Task<ApiResult<bool>> UpdateRole(Guid roleId, CreateOrUpdateRoleRequest request)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdateRole);
