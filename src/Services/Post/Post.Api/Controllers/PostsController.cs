@@ -176,10 +176,10 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpGet("by-current-user/paging")]
+    [HttpPost("by-current-user/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetPostsByCurrentUserPaging(
-        [FromBody] SearchPostByCurrentUserDto filter,
+        [FromBody] SearchPostByCurrentUserDto? filter,
         [FromQuery] int? pageNumber,
         [FromQuery] int? pageSize)
     {

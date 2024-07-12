@@ -97,7 +97,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(SearchPostByCurrentUserDto filter, CurrentUserDto currentUser, int pageNumber,
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(SearchPostByCurrentUserDto? filter, CurrentUserDto currentUser, int pageNumber,
         int pageSize)
     {
         IQueryable<PostBase> query;
@@ -107,20 +107,23 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         if (isAdmin)
         {
             query = FindAll();
-            
-            if (!string.IsNullOrEmpty(filter.Keyword))
+
+            if (filter != null)
             {
-                query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
-            }
+                if (!string.IsNullOrEmpty(filter.Keyword))
+                {
+                    query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
+                }
             
-            if (filter.Status != null)
-            {
-                query = query.Where(x => x.Status == filter.Status);
-            }
+                if (filter.Status != null)
+                {
+                    query = query.Where(x => x.Status == filter.Status);
+                }
             
-            if (filter.UserId.HasValue)
-            {
-                query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
+                if (filter.UserId.HasValue)
+                {
+                    query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
+                }
             }
             
             query = query.OrderByDescending(x => x.CreatedDate);

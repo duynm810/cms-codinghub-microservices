@@ -370,7 +370,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-current-user/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
       "DownstreamScheme": "http",
