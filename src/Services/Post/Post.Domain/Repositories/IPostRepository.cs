@@ -2,6 +2,7 @@ using Contracts.Domains.Repositories;
 using Post.Domain.Entities;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post.Queries;
+using Shared.Requests.Post;
 using Shared.Responses;
 
 namespace Post.Domain.Repositories;
@@ -30,7 +31,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     
     Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize);
     
-    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserDto filter, CurrentUserDto currentUser);
+    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserRequest request, CurrentUserDto currentUser);
     
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 

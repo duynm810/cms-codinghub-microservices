@@ -1,9 +1,9 @@
 using Shared.Enums;
-using Shared.Models;
+using Shared.Models.Common;
 
-namespace Shared.Dtos.Post.Queries;
+namespace Shared.Requests.Post;
 
-public class GetPostsByCurrentUserDto : Pagination
+public class GetPostsByCurrentUserRequest : Pagination
 {
     public string? Keyword { get; set; }
     

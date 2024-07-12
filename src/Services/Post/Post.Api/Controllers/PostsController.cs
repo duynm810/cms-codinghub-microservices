@@ -33,6 +33,7 @@ using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
 using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
 using Shared.Extensions;
+using Shared.Requests.Post;
 using Shared.Responses;
 
 namespace Post.Api.Controllers;
@@ -179,10 +180,10 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpPost("by-current-user/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetPostsByCurrentUserPaging(
-        [FromBody] GetPostsByCurrentUserDto filter)
+        [FromBody] GetPostsByCurrentUserRequest request)
     {
         var currentUser = User.GetCurrentUser();
-        var query = new GetPostsByCurrentUserPagingQuery(filter, currentUser);
+        var query = new GetPostsByCurrentUserPagingQuery(request, currentUser);
         var result = await mediator.Send(query);
         return Ok(result);
     }

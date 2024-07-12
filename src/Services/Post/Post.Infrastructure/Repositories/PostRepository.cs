@@ -7,8 +7,8 @@ using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
 using Shared.Constants;
 using Shared.Dtos.Identity.User;
-using Shared.Dtos.Post.Queries;
 using Shared.Enums;
+using Shared.Requests.Post;
 using Shared.Responses;
 
 namespace Post.Infrastructure.Repositories;
@@ -40,16 +40,16 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     #region OTHERS
 
-    public async Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsPaging(string? request, int pageNumber, int pageSize)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published);
 
-        if (!string.IsNullOrEmpty(filter))
+        if (!string.IsNullOrEmpty(request))
         {
-            query = query.Where(x => (x.Title.Contains(filter))
-                                     || (x.Slug.Contains(filter))
-                                     || (x.Content != null && x.Content.Contains(filter))
-                                     || (x.Summary != null && x.Summary.Contains(filter)));
+            query = query.Where(x => (x.Title.Contains(request))
+                                     || (x.Slug.Contains(request))
+                                     || (x.Content != null && x.Content.Contains(request))
+                                     || (x.Summary != null && x.Summary.Contains(request)));
         }
 
         query = query.OrderByDescending(x => x.PublishedDate);
@@ -97,7 +97,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserDto filter, CurrentUserDto currentUser)
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserRequest request, CurrentUserDto currentUser)
     {
         IQueryable<PostBase> query;
         
@@ -107,19 +107,19 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         {
             query = FindAll();
 
-            if (!string.IsNullOrEmpty(filter.Keyword))
+            if (!string.IsNullOrEmpty(request.Keyword))
             {
-                query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
+                query = query.Where(x => x.Title.Contains(request.Keyword, StringComparison.CurrentCultureIgnoreCase));
             }
             
-            if (filter.Status != null)
+            if (request.Status != null)
             {
-                query = query.Where(x => x.Status == filter.Status);
+                query = query.Where(x => x.Status == request.Status);
             }
             
-            if (filter.UserId.HasValue)
+            if (request.UserId.HasValue)
             {
-                query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
+                query = query.Where(x => x.AuthorUserId == request.UserId.Value);
             }
             
             query = query.OrderByDescending(x => x.CreatedDate);
@@ -130,7 +130,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
                 .OrderByDescending(x => x.CreatedDate);
         }
         
-        var items = await PagedList<PostBase>.ToPagedList(query, filter.PageNumber, filter.PageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
