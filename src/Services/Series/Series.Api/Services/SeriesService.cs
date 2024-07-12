@@ -152,7 +152,7 @@ public class SeriesService(
         return result;
     }
 
-    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries(int count)
+    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries()
     {
         var result = new ApiResult<IEnumerable<SeriesDto>>();
         const string methodName = nameof(GetSeries);
@@ -170,7 +170,7 @@ public class SeriesService(
                 return result;
             }
 
-            var series = await seriesRepository.GetSeries(count);
+            var series = await seriesRepository.GetSeries();
             if (series.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<SeriesDto>>(series);

@@ -13,7 +13,7 @@ public interface ISeriesService
 
     Task<ApiResult<bool>> DeleteSeries(List<Guid> ids);
 
-    Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries(int count);
+    Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries();
 
     Task<ApiResult<SeriesDto>> GetSeriesById(Guid id);
 
