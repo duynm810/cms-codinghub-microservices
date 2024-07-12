@@ -50,4 +50,10 @@ public class CommentRepository(IMongoClient client, MongoDbSettings settings)
         var result = await Collection.UpdateOneAsync(filter, update);
         return result.ModifiedCount > 0;
     }
+    
+    public async Task DeleteCommentsByPostId(Guid postId)
+    {
+        var filters = Builders<CommentBase>.Filter.Eq("PostId", postId);
+        await Collection.DeleteManyAsync(filters);
+    }
 }

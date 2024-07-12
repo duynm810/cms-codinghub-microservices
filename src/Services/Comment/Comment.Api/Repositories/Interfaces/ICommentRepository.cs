@@ -15,4 +15,6 @@ public interface ICommentRepository
     Task<bool> UpdateLikeCount(string commentId, int increment);
 
     Task<bool> UpdateRepliesCount(string parentId, int increment);
+
+    Task DeleteCommentsByPostId(Guid postId);
 }
