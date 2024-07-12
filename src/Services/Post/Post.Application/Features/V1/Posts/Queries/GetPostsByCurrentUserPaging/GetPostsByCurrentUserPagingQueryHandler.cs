@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Post.Queries;
 using Shared.Helpers;
 using Shared.Responses;
@@ -25,16 +26,18 @@ public class GetPostsByCurrentUserPagingQueryHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUserId, request.PageNumber, request.PageSize);
+            logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, request.CurrentUser.UserId, request.PageNumber, request.PageSize);
 
-            var posts = await postRepository.GetPostsByCurrentUserPaging(request.CurrentUserId, request.PageNumber, request.PageSize);
+            var isAdmin = request.CurrentUser.Roles.Contains(UserRolesConsts.Administrator);
+            
+            var posts = await postRepository.GetPostsByCurrentUserPaging(request.CurrentUser.UserId, isAdmin, request.PageNumber, request.PageSize);
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
                 
                 result.Success(data);
 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}", methodName, data.MetaData.TotalItems, request.CurrentUserId, request.PageNumber, request.PageSize);
+                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}", methodName, data.MetaData.TotalItems, request.CurrentUser.UserId, request.PageNumber, request.PageSize);
             }
         }
         catch (Exception e)

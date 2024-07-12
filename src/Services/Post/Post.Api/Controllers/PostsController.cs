@@ -182,8 +182,8 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         [FromQuery] int? pageNumber,
         [FromQuery] int? pageSize)
     {
-        var userId = User.GetUserId();
-        var query = new GetPostsByCurrentUserPagingQuery(userId, pageNumber ?? 1, pageSize ?? 10);
+        var currentUser = User.GetCurrentUser();
+        var query = new GetPostsByCurrentUserPagingQuery(currentUser, pageNumber ?? 1, pageSize ?? 10);
         var result = await mediator.Send(query);
         return Ok(result);
     }

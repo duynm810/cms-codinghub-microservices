@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Shared.Constants;
+using Shared.Dtos.Identity.User;
 
 namespace Shared.Extensions;
 
@@ -54,6 +55,18 @@ public static class ClaimsPrincipalExtensions
     public static string GetUserName(this ClaimsPrincipal user)
     {
         return GetClaimValue(user, InternalClaimTypesConsts.Claims.UserName) ?? "UnknownUser";
+    }
+    
+    public static CurrentUserDto GetCurrentUser(this ClaimsPrincipal user)
+    {
+        var userId = GetClaimValue(user, InternalClaimTypesConsts.Claims.UserId);
+        var roles = GetClaimValue(user, InternalClaimTypesConsts.Claims.Roles);
+
+        return new CurrentUserDto
+        {
+            UserId = string.IsNullOrEmpty(userId) ? default : Guid.Parse(userId),
+            Roles = string.IsNullOrEmpty(roles) ? new List<string>() : roles.Split(';').ToList()
+        };
     }
 
     /// <summary>

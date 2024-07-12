@@ -28,7 +28,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     
     Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize);
     
-    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber, int pageSize);
+    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, bool isAdmin, int pageNumber, int pageSize);
     
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 

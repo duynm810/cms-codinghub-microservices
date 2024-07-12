@@ -7,7 +7,6 @@ using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
 using Shared.Enums;
 using Shared.Responses;
-using Shared.Utilities;
 
 namespace Post.Infrastructure.Repositories;
 
@@ -95,12 +94,23 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber,
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, bool isAdmin, int pageNumber,
         int pageSize)
     {
-        var query = FindByCondition(x => x.AuthorUserId == currentUserId)
-            .OrderByDescending(x => x.CreatedDate);
-
+        IQueryable<PostBase> query;
+        
+        if (isAdmin)
+        {
+            query = FindByCondition(x =>
+                    x.Status == PostStatusEnum.Draft || x.Status == PostStatusEnum.WaitingForApproval)
+                .OrderByDescending(x => x.CreatedDate);
+        }
+        else
+        {
+            query = FindByCondition(x => x.AuthorUserId == userId)
+                .OrderByDescending(x => x.CreatedDate);
+        }
+        
         var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
 
         var response = new PagedResponse<PostBase>
