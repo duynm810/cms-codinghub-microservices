@@ -167,44 +167,20 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count)
     {
-        // Get featured articles first (Lấy các bài viết nổi bật trước)
         var featuredPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsFeatured)
             .OrderByDescending(x => x.ViewCount)
             .Take(count)
             .ToListAsync();
-
-        // If the number of featured posts is less than required, add non-featured posts (Nếu số lượng bài viết nổi bật ít hơn yêu cầu, bổ sung thêm các bài viết không nổi bật)
-        if (featuredPosts.Count < count)
-        {
-            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsFeatured)
-                .OrderByDescending(x => x.ViewCount)
-                .Take(count - featuredPosts.Count)
-                .ToListAsync();
-
-            featuredPosts.AddRange(additionalPosts);
-        }
 
         return featuredPosts;
     }
 
     public async Task<IEnumerable<PostBase>> GetPinnedPosts(int count)
     {
-        // Get pinned posts first (Lấy các bài viết ghim trước)
         var pinnedPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsPinned)
             .OrderByDescending(x => x.ViewCount)
             .Take(count)
             .ToListAsync();
-
-        // If the number of pinned posts is less than required, add non-pinned posts (Nếu số lượng bài viết ghim ít hơn yêu cầu, bổ sung thêm các bài viết không ghim)
-        if (pinnedPosts.Count < count)
-        {
-            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsPinned)
-                .OrderByDescending(x => x.ViewCount)
-                .Take(count - pinnedPosts.Count)
-                .ToListAsync();
-
-            pinnedPosts.AddRange(additionalPosts);
-        }
 
         return pinnedPosts;
     }
