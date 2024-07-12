@@ -22,13 +22,13 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     #region OTHERS
 
-    Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber, int pageSize);
 
-    Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber, int pageSize);
     
-    Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize);
     
-    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber, int pageSize);
     
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 

@@ -63,8 +63,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1,
-        int pageSize = 10)
+    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber, int pageSize)
     {
         var query = FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
@@ -80,8 +79,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId,
-        int pageNumber = 1, int pageSize = 10)
+    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize)
     {
         var query = FindByCondition(x => x.AuthorUserId == authorId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
@@ -97,8 +95,8 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber = 1,
-        int pageSize = 10)
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber,
+        int pageSize)
     {
         var query = FindByCondition(x => x.AuthorUserId == currentUserId)
             .OrderByDescending(x => x.CreatedDate);
