@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Post.Commands;
+namespace Shared.Requests.Post.Commands;
 
-public class CreateOrUpdatePostDto
+public class CreateOrUpdatePostRequest
 {
     public required string Title { get; set; }
 

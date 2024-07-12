@@ -1,4 +1,4 @@
-namespace Shared.Dtos.Post.Queries;
+namespace Shared.Dtos.Post;
 
 public class PostsBySlugDto
 {

@@ -30,10 +30,8 @@ using Post.Application.Features.V1.Posts.Queries.GetPostsByNonStaticPageCategory
 using Post.Application.Features.V1.Posts.Queries.GetPostsBySeriesPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsByTagPaging;
 using Post.Application.Features.V1.Posts.Queries.GetPostsPaging;
-using Shared.Dtos.Post.Commands;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Extensions;
-using Shared.Requests.Post;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
 using Shared.Responses;
@@ -47,7 +45,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<Guid>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody, Required] CreatePostDto request)
+    public async Task<ActionResult<ApiResult<Guid>>> CreatePost([FromBody, Required] CreatePostRequest request)
     {
         var command = mapper.Map<CreatePostCommand>(request);
         command.AuthorUserId = User.GetUserId();
@@ -72,7 +70,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("update-thumbnail/{id:guid}")]
     public async Task<ActionResult<bool>> UpdateThumbnail([FromRoute, Required] Guid id,
-        [FromBody, Required] UpdateThumbnailDto request)
+        [FromBody, Required] UpdateThumbnailRequest request)
     {
         var command = mapper.Map<UpdateThumbnailCommand>(request);
         command.SetId(id);
@@ -267,7 +265,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> RejectPostWithReasonCommand([FromRoute] Guid id,
-        [FromBody] RejectPostWithReasonDto request)
+        [FromBody] RejectPostWithReasonRequest request)
     {
         var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);
         var result = await mediator.Send(command);

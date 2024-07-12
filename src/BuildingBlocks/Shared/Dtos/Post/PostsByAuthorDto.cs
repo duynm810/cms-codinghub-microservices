@@ -1,7 +1,7 @@
 using Shared.Dtos.Identity.User;
 using Shared.Responses;
 
-namespace Shared.Dtos.Post.Queries;
+namespace Shared.Dtos.Post;
 
 public class PostsByAuthorDto
 {

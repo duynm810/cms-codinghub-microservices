@@ -1,7 +1,7 @@
 using Shared.Dtos.Series;
 using Shared.Responses;
 
-namespace Shared.Dtos.Post.Queries;
+namespace Shared.Dtos.Post;
 
 public class PostsBySeriesDto
 {

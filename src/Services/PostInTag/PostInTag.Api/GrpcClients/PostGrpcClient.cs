@@ -3,7 +3,7 @@ using Grpc.Core;
 using Post.Grpc.Protos;
 using PostInTag.Api.GrpcClients.Interfaces;
 using Shared.Constants;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Dtos.PostInTag;
 using ILogger = Serilog.ILogger;
 

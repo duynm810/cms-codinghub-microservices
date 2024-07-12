@@ -7,7 +7,7 @@ using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Category;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;

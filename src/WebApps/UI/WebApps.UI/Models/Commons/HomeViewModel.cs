@@ -1,5 +1,5 @@
 using Shared.Dtos.Comment;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Dtos.Tag;
 using Shared.Responses;
 

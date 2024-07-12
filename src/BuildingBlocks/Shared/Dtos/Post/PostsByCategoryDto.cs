@@ -1,7 +1,7 @@
 using Shared.Dtos.Category;
 using Shared.Responses;
 
-namespace Shared.Dtos.Post.Queries;
+namespace Shared.Dtos.Post;
 
 public class PostsByCategoryDto
 {

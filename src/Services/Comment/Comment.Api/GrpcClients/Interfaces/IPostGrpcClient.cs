@@ -1,4 +1,4 @@
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 
 namespace Comment.Api.GrpcClients.Interfaces;
 

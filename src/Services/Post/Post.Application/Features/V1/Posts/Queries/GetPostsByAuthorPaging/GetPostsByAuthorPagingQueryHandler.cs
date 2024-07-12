@@ -5,7 +5,7 @@ using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;

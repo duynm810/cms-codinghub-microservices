@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Category;
-using Shared.Dtos.Post.Commands;
 using Shared.Requests.Post.Commands;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
@@ -145,7 +144,7 @@ public class AccountsController(
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> CreatePost(CreatePostDto request)
+    public async Task<IActionResult> CreatePost(CreatePostRequest request)
     {
         const string methodName = nameof(CreatePost);
 
@@ -208,7 +207,7 @@ public class AccountsController(
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostDto request)
+    public async Task<IActionResult> UpdatePost([FromRoute] Guid id, [FromBody] UpdatePostRequest request)
     {
         const string methodName = nameof(UpdatePost);
 
@@ -235,7 +234,7 @@ public class AccountsController(
     }
 
     [HttpPut]
-    public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailDto request)
+    public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailRequest request)
     {
         var result = await postApiClient.UpdateThumbnail(id, request);
         return Ok(new { data = result });

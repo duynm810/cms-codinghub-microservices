@@ -5,7 +5,6 @@ using Post.Grpc.Protos;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
-using Shared.Dtos.Post.Queries;
 
 namespace Comment.Api;
 

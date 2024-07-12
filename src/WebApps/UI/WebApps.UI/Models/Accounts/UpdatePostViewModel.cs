@@ -1,6 +1,5 @@
 using Shared.Dtos.Category;
-using Shared.Dtos.Post.Commands;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 
 namespace WebApps.UI.Models.Accounts;
 

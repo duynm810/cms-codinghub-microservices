@@ -1,8 +1,4 @@
 using Shared.Dtos.Post;
-using Shared.Dtos.Post.Commands;
-using Shared.Dtos.Post.Queries;
-using Shared.Dtos.PostInSeries;
-using Shared.Dtos.PostInTag;
 using Shared.Requests.Post.Commands;
 using Shared.Responses;
 using WebApps.UI.ApiServices.Interfaces;
@@ -11,19 +7,19 @@ namespace WebApps.UI.ApiServices;
 
 public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
 {
-    public async Task<ApiResult<Guid>> CreatePost(CreatePostDto request)
+    public async Task<ApiResult<Guid>> CreatePost(CreatePostRequest request)
     {
-        return await baseApiClient.PostAsync<CreatePostDto, Guid>($"/posts", request, true);
+        return await baseApiClient.PostAsync<CreatePostRequest, Guid>($"/posts", request, true);
     }
 
-    public async Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostDto request)
+    public async Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostRequest request)
     {
-        return await baseApiClient.PutAsync<UpdatePostDto, bool>($"/posts/{id}", request, true);
+        return await baseApiClient.PutAsync<UpdatePostRequest, bool>($"/posts/{id}", request, true);
     }
 
-    public async Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request)
+    public async Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailRequest request)
     {
-        return await baseApiClient.PutAsync<UpdateThumbnailDto, bool>($"/posts/update-thumbnail/{id}", request, true);
+        return await baseApiClient.PutAsync<UpdateThumbnailRequest, bool>($"/posts/update-thumbnail/{id}", request, true);
     }
 
     public async Task<ApiResult<bool>> DeletePost(Guid id)

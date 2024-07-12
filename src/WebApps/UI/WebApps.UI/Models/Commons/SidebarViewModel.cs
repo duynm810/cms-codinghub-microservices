@@ -1,5 +1,5 @@
 using Shared.Dtos.Comment;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 
 namespace WebApps.UI.Models.Commons;
 

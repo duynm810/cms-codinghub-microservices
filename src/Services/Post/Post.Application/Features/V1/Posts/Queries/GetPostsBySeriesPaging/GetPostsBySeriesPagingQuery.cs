@@ -1,5 +1,5 @@
 using MediatR;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Requests.Post;
 using Shared.Requests.Post.Queries;
 using Shared.Responses;

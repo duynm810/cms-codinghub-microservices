@@ -1,5 +1,5 @@
 using Post.Domain.Entities;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Responses;
 
 namespace Post.Domain.Services;

@@ -1,5 +1,4 @@
 using MediatR;
-using Shared.Dtos.Post.Commands;
 using Shared.Requests.Post.Commands;
 using Shared.Responses;
 

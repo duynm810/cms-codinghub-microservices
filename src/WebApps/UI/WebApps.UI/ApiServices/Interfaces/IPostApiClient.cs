@@ -1,5 +1,4 @@
-using Shared.Dtos.Post.Commands;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Requests.Post.Commands;
 using Shared.Responses;
 
@@ -7,11 +6,11 @@ namespace WebApps.UI.ApiServices.Interfaces;
 
 public interface IPostApiClient
 {
-    Task<ApiResult<Guid>> CreatePost(CreatePostDto request);
+    Task<ApiResult<Guid>> CreatePost(CreatePostRequest request);
 
-    Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostDto request);
+    Task<ApiResult<bool>> UpdatePost(Guid id, UpdatePostRequest request);
 
-    Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailDto request);
+    Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailRequest request);
     
     Task<ApiResult<bool>> DeletePost(Guid id);
     

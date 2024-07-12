@@ -6,7 +6,7 @@ using Comment.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 using ILogger = Serilog.ILogger;

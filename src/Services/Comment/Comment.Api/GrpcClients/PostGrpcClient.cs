@@ -3,7 +3,7 @@ using Comment.Api.GrpcClients.Interfaces;
 using Grpc.Core;
 using Post.Grpc.Protos;
 using Shared.Constants;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using ILogger = Serilog.ILogger;
 
 namespace Comment.Api.GrpcClients;

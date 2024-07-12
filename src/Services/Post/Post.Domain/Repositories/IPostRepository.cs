@@ -1,7 +1,6 @@
 using Contracts.Domains.Repositories;
 using Post.Domain.Entities;
 using Shared.Dtos.Identity.User;
-using Shared.Dtos.Post.Queries;
 using Shared.Requests.Post;
 using Shared.Requests.Post.Queries;
 using Shared.Responses;
