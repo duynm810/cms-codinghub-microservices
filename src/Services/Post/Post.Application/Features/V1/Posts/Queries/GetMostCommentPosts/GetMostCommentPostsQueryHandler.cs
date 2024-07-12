@@ -16,7 +16,7 @@ public class GetMostCommentPostsQueryHandler(
     IPostService postService,
     ILogger logger) : IRequestHandler<GetMostCommentPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetMostCommentPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetMostCommentPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
@@ -35,7 +35,7 @@ public class GetMostCommentPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetMostCommentPosts(request.Count);
+            var posts = await postRepository.GetMostCommentPosts(query.Count);
             
             var postList = posts.ToList();
             if (postList.Count != 0)

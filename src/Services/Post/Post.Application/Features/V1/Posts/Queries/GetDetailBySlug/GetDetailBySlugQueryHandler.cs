@@ -27,7 +27,7 @@ public class GetDetailBySlugQueryHandler(
     ILogger logger)
     : IRequestHandler<GetDetailBySlugQuery, ApiResult<PostsBySlugDto>>
 {
-    public async Task<ApiResult<PostsBySlugDto>> Handle(GetDetailBySlugQuery request,
+    public async Task<ApiResult<PostsBySlugDto>> Handle(GetDetailBySlugQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostsBySlugDto>();
@@ -35,21 +35,21 @@ public class GetDetailBySlugQueryHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("BEGIN {MethodName} - Retrieving post with slug: {PostSlug}", methodName, query.Slug);
 
-            var cacheKey = CacheKeyHelper.Post.GetDetailBySlugKey(request.Slug);
+            var cacheKey = CacheKeyHelper.Post.GetDetailBySlugKey(query.Slug);
             var cachedPost = await cacheService.GetAsync<PostsBySlugDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
-                logger.Information("Retrieved post from cache with slug: {PostSlug}", request.Slug);
+                logger.Information("Retrieved post from cache with slug: {PostSlug}", query.Slug);
                 result.Success(cachedPost);
                 return result;
             }
 
-            var post = await postRepository.GetPostBySlug(request.Slug);
+            var post = await postRepository.GetPostBySlug(query.Slug);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, request.Slug);
+                logger.Warning("{MethodName} - Post not found with slug: {PostSlug}", methodName, query.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -59,7 +59,7 @@ public class GetDetailBySlugQueryHandler(
 
             // Fetch category, related posts, tag ids, and author user info in parallel
             var categoryTask = categoryGrpcClient.GetCategoryById(post.CategoryId);
-            var relatedPostsTask = postRepository.GetRelatedPosts(post, request.RelatedCount);
+            var relatedPostsTask = postRepository.GetRelatedPosts(post, query.RelatedCount);
             var tagIdsTask = postInTagGrpcClient.GetTagIdsByPostIdAsync(post.Id);
             var authorUserInfoTask = identityGrpcClient.GetUserInfo(post.AuthorUserId);
 
@@ -105,7 +105,7 @@ public class GetDetailBySlugQueryHandler(
             result.Success(data);
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("END {MethodName} - Successfully retrieved post with slug: {PostSlug}", methodName, query.Slug);
         }
         catch (Exception e)
         {

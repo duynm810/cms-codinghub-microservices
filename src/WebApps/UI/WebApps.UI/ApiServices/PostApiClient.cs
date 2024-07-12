@@ -3,6 +3,7 @@ using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.PostInTag;
+using Shared.Requests.Post.Commands;
 using Shared.Responses;
 using WebApps.UI.ApiServices.Interfaces;
 
@@ -96,13 +97,13 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetListAsync<PostsByNonStaticPageCategoryDto>($"/posts/by-non-static-page-category?count={count}");
     }
     
-    public async Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusDto request)
+    public async Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusRequest request)
     {
-        return await baseApiClient.PutAsync<TogglePinStatusDto, bool>($"/posts/toggle-pin-status/{id}", request, true);
+        return await baseApiClient.PutAsync<TogglePinStatusRequest, bool>($"/posts/toggle-pin-status/{id}", request, true);
     }
     
-    public async Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusDto request)
+    public async Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusRequest request)
     {
-        return await baseApiClient.PutAsync<ToggleFeaturedStatusDto, bool>($"/posts/toggle-featured-status/{id}", request, true);
+        return await baseApiClient.PutAsync<ToggleFeaturedStatusRequest, bool>($"/posts/toggle-featured-status/{id}", request, true);
     }
 }

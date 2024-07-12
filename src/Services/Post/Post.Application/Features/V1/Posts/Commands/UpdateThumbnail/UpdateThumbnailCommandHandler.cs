@@ -14,7 +14,7 @@ public class UpdateThumbnailCommandHandler(
     ICacheService cacheService,
     ILogger logger) : IRequestHandler<UpdateThumbnailCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(UpdateThumbnailCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(UpdateThumbnailCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdateThumbnailCommand);
@@ -22,20 +22,20 @@ public class UpdateThumbnailCommandHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Updating thumbnail for post with ID: {PostId}", methodName,
-                request.Id);
+                command.Id);
 
             // Fetch the post
-            var post = await postRepository.GetPostById(request.Id);
+            var post = await postRepository.GetPostById(command.Id);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                 result.Messages.Add("Post not found.");
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
             // Update the thumbnail
-            post.Thumbnail = request.Thumbnail;
+            post.Thumbnail = command.Thumbnail;
 
             await postRepository.UpdatePost(post);
 

@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Post.Commands;
+namespace Shared.Requests.Post.Commands;
 
-public class TogglePinStatusDto
+public class TogglePinStatusRequest
 {
     public bool IsPinned { get; set; }
 

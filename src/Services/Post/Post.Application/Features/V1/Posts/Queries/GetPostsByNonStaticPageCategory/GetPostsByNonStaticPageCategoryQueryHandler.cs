@@ -17,7 +17,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
     ILogger logger)
     : IRequestHandler<GetPostsByNonStaticPageCategoryQuery, ApiResult<IEnumerable<PostsByNonStaticPageCategoryDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostsByNonStaticPageCategoryDto>>> Handle(GetPostsByNonStaticPageCategoryQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<IEnumerable<PostsByNonStaticPageCategoryDto>>> Handle(GetPostsByNonStaticPageCategoryQuery query, CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostsByNonStaticPageCategoryDto>>();
         const string methodName = nameof(GetPostsByNonStaticPageCategoryQuery);
@@ -40,7 +40,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
             
             foreach (var category in nonStaticPageCategories)
             {
-                var posts = await postRepository.GetPostsByCategoryId(category.Id, request.Count);
+                var posts = await postRepository.GetPostsByCategoryId(category.Id, query.Count);
                 var postList = posts.ToList();
                 if (postList.Count != 0)
                 {

@@ -1,6 +1,6 @@
-namespace Shared.Dtos.Post.Commands;
+namespace Shared.Requests.Post.Commands;
 
-public class ToggleFeaturedStatusDto
+public class ToggleFeaturedStatusRequest
 {
     public bool IsFeatured { get; set; }
     

@@ -280,7 +280,7 @@
     {
       "UpstreamPathTemplate": "/posts/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/paging",
       "DownstreamScheme": "http",
@@ -295,7 +295,7 @@
     {
       "UpstreamPathTemplate": "/posts/latest/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/latest/paging",
       "DownstreamScheme": "http",
@@ -310,7 +310,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
       "DownstreamScheme": "http",
@@ -325,7 +325,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-tag/{tagSlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-tag/{tagSlug}/paging",
       "DownstreamScheme": "http",
@@ -340,7 +340,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-series/{seriesSlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-series/{seriesSlug}/paging",
       "DownstreamScheme": "http",
@@ -355,7 +355,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-author/{authorId}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-author/{authorId}/paging",
       "DownstreamScheme": "http",

@@ -1,5 +1,6 @@
 using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
+using Shared.Requests.Post.Commands;
 using Shared.Responses;
 
 namespace WebApps.UI.ApiServices.Interfaces;
@@ -36,7 +37,7 @@ public interface IPostApiClient
 
     Task<ApiResult<List<PostsByNonStaticPageCategoryDto>>> GetPostsByNonStaticPageCategory(int count);
 
-    Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusDto request);
+    Task<ApiResult<bool>> TogglePinStatus(Guid id, TogglePinStatusRequest request);
 
-    Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusDto request);
+    Task<ApiResult<bool>> ToggleFeaturedStatus(Guid id, ToggleFeaturedStatusRequest request);
 }

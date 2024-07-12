@@ -6,9 +6,9 @@ using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
 using Shared.Constants;
-using Shared.Dtos.Identity.User;
 using Shared.Enums;
 using Shared.Requests.Post;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Infrastructure.Repositories;
@@ -40,21 +40,21 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     #region OTHERS
 
-    public async Task<PagedResponse<PostBase>> GetPostsPaging(string? request, int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsPaging(GetPostsRequest request)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published);
 
-        if (!string.IsNullOrEmpty(request))
+        if (!string.IsNullOrEmpty(request.Filter))
         {
-            query = query.Where(x => (x.Title.Contains(request))
-                                     || (x.Slug.Contains(request))
-                                     || (x.Content != null && x.Content.Contains(request))
-                                     || (x.Summary != null && x.Summary.Contains(request)));
+            query = query.Where(x => (x.Title.Contains(request.Filter))
+                                     || (x.Slug.Contains(request.Filter))
+                                     || (x.Content != null && x.Content.Contains(request.Filter))
+                                     || (x.Summary != null && x.Summary.Contains(request.Filter)));
         }
 
         query = query.OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -65,12 +65,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, GetPostsByCategoryRequest request)
     {
         var query = FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -81,12 +81,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, GetPostsByAuthorRequest request)
     {
         var query = FindByCondition(x => x.AuthorUserId == authorId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -97,11 +97,11 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserRequest request, CurrentUserDto currentUser)
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, List<string> roles, GetPostsByCurrentUserRequest request)
     {
         IQueryable<PostBase> query;
         
-        var isAdmin = currentUser.Roles.Contains(UserRolesConsts.Administrator);
+        var isAdmin = roles.Contains(UserRolesConsts.Administrator);
         
         if (isAdmin)
         {
@@ -126,7 +126,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         }
         else
         {
-            query = FindByCondition(x => x.AuthorUserId == currentUser.UserId)
+            query = FindByCondition(x => x.AuthorUserId == userId)
                 .OrderByDescending(x => x.CreatedDate);
         }
         
@@ -141,12 +141,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(GetLatestPostsRequest request)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageNumber);
 
         var response = new PagedResponse<PostBase>
         {

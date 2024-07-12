@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post.Commands;
+using Shared.Requests.Post.Commands;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
@@ -275,7 +276,7 @@ public class AccountsController(
     }
 
     [HttpPut]
-    public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusDto request)
+    public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusRequest request)
     {
         var result = await postApiClient.TogglePinStatus(id, request);
         if (result is { IsSuccess: true })
@@ -299,7 +300,7 @@ public class AccountsController(
     }
     
     [HttpPut]
-    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusDto request)
+    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusRequest request)
     {
         var result = await postApiClient.ToggleFeaturedStatus(id, request);
         if (result is { IsSuccess: true })

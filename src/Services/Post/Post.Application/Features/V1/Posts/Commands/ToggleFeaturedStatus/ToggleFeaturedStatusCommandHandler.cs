@@ -13,25 +13,25 @@ namespace Post.Application.Features.V1.Posts.Commands.ToggleFeaturedStatus;
 public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, ICacheService cacheService, ILogger logger)
     : IRequestHandler<ToggleFeaturedStatusCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(ToggleFeaturedStatusCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(ToggleFeaturedStatusCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(Handle);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Toogle featured status with ID: {PostId}", methodName, request.Id);
+            logger.Information("BEGIN {MethodName} - Toogle featured status with ID: {PostId}", methodName, command.Id);
             
-            var post = await postRepository.GetPostById(request.Id);
+            var post = await postRepository.GetPostById(command.Id);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
-            var data = await postRepository.ToggleFeaturedStatus(post, request.ToggleFeaturedStatus.IsFeatured);
+            var data = await postRepository.ToggleFeaturedStatus(post, command.ToggleFeaturedStatus.IsFeatured);
             result.Success(data);
             
             // Xóa cache liên quan
@@ -52,7 +52,7 @@ public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, 
                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             });
             
-            logger.Information("BEGIN {MethodName} - Toogle featured status with ID: {PostId}", methodName, request.Id);
+            logger.Information("BEGIN {MethodName} - Toogle featured status with ID: {PostId}", methodName, command.Id);
         }
         catch (Exception e)
         {

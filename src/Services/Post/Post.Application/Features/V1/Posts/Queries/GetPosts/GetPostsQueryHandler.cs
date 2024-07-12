@@ -18,7 +18,7 @@ public class GetPostsQueryHandler(
     ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();

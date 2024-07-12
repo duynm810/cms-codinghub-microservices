@@ -21,7 +21,7 @@ public class SubmitPostForApprovalCommandHandler(
     IPostEmailTemplateService postEmailTemplateService,
     ILogger logger) : IRequestHandler<SubmitPostForApprovalCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(SubmitPostForApprovalCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(SubmitPostForApprovalCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(Handle);
@@ -33,17 +33,17 @@ public class SubmitPostForApprovalCommandHandler(
             await using var transaction = await postRepository.BeginTransactionAsync();
             try
             {
-                var post = await postRepository.GetPostById(request.Id);
+                var post = await postRepository.GetPostById(command.Id);
                 if (post == null)
                 {
-                    logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                    logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                     result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
 
                 // TODO: Implement check current user id
-                var currentUserId = request.UserId;
+                var currentUserId = command.UserId;
 
                 await postRepository.SubmitPostForApproval(post);
 
@@ -52,8 +52,8 @@ public class SubmitPostForApprovalCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.WaitingForApproval,
-                    UserId = request.UserId,
-                    PostId = request.Id
+                    UserId = command.UserId,
+                    PostId = command.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 
@@ -76,7 +76,7 @@ public class SubmitPostForApprovalCommandHandler(
                 catch (Exception emailEx)
                 {
                     logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
-                        methodName, request.Id, emailEx);
+                        methodName, command.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;

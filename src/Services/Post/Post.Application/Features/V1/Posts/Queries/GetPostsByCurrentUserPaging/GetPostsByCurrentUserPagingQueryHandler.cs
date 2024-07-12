@@ -22,16 +22,22 @@ public class GetPostsByCurrentUserPagingQueryHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}", methodName, query.CurrentUser.UserId, query.Request.PageNumber, query.Request.PageSize);
+            logger.Information(
+                "BEGIN {MethodName} - Retrieving posts for current user {CurrentUserId} on page {PageNumber} with page size {PageSize}",
+                methodName, query.CurrentUser.UserId, query.Request.PageNumber, query.Request.PageSize);
 
-            var posts = await postRepository.GetPostsByCurrentUserPaging(query.Request, query.CurrentUser);
+            var posts = await postRepository.GetPostsByCurrentUserPaging(query.CurrentUser.UserId, query.CurrentUser.Roles, query.Request);
+            
             if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
             {
                 var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
-                
+
                 result.Success(data);
 
-                logger.Information("END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}", methodName, data.MetaData.TotalItems, query.CurrentUser.UserId, query.Request.PageNumber, query.Request.PageSize);
+                logger.Information(
+                    "END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}",
+                    methodName, data.MetaData.TotalItems, query.CurrentUser.UserId, query.Request.PageNumber,
+                    query.Request.PageSize);
             }
         }
         catch (Exception e)

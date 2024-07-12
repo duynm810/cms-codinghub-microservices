@@ -26,36 +26,36 @@ public class CreatePostCommandHandler(
     ILogger logger)
     : IRequestHandler<CreatePostCommand, ApiResult<Guid>>
 {
-    public async Task<ApiResult<Guid>> Handle(CreatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<Guid>> Handle(CreatePostCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<Guid>();
         const string methodName = nameof(Handle);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Creating post with title: {Title}", methodName, request.Title);
+            logger.Information("BEGIN {MethodName} - Creating post with title: {Title}", methodName, command.Title);
 
             // Check slug exists
-            var slugExists = await postRepository.SlugExists(request.Slug);
+            var slugExists = await postRepository.SlugExists(command.Slug);
             if (slugExists)
             {
-                logger.Warning("{MethodName} - Slug already exists: {PostSlug}", methodName, request.Slug);
+                logger.Warning("{MethodName} - Slug already exists: {PostSlug}", methodName, command.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
             }
 
             // Check valid category id
-            var category = await categoryGrpcClient.GetCategoryById(request.CategoryId);
+            var category = await categoryGrpcClient.GetCategoryById(command.CategoryId);
             if (category == null)
             {
-                logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, request.CategoryId);
+                logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, command.CategoryId);
                 result.Messages.Add(ErrorMessagesConsts.Category.InvalidCategoryId);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
-            var post = mapper.Map<PostBase>(request);
+            var post = mapper.Map<PostBase>(command);
 
             // Set category id get by categories services
             post.CategoryId = category.Id;
@@ -75,7 +75,7 @@ public class CreatePostCommandHandler(
                     CacheKeyHelper.Post.GetMostLikedPostsKey(),
                     CacheKeyHelper.Post.GetMostCommentPostsKey(),
                     CacheKeyHelper.Post.GetPostByIdKey(id),
-                    CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
+                    CacheKeyHelper.Post.GetPostBySlugKey(command.Slug),
                     CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
                 };
 
@@ -85,7 +85,7 @@ public class CreatePostCommandHandler(
                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             });
             
-            var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
+            var rawTags = serializeService.Deserialize<List<RawTagDto>>(command.RawTags);
             if (rawTags != null)
             {
                 TaskHelper.RunFireAndForget(() => postEventService.HandlePostCreatedEvent(id, rawTags), e =>

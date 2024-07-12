@@ -34,6 +34,8 @@ using Shared.Dtos.Post.Commands;
 using Shared.Dtos.Post.Queries;
 using Shared.Extensions;
 using Shared.Requests.Post;
+using Shared.Requests.Post.Commands;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Api.Controllers;
@@ -107,7 +109,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpGet("slug/{slug}")]
+    [HttpPost("slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<PostDto>> GetPostBySlug([FromRoute, Required] string slug)
     {
@@ -116,71 +118,57 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpGet("paging")]
+    [HttpPost("paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostsPaging(
-        [FromQuery] string? filter,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetPostsPaging([FromBody] GetPostsRequest request)
     {
-        var query = new GetPostsPagingQuery(filter, pageNumber ?? 1, pageSize ?? 10);
+        var query = new GetPostsPagingQuery(request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
-    [HttpGet("by-category/{categorySlug}/paging")]
+    [HttpPost("by-category/{categorySlug}/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostsByCategoryPaging(
-        [FromRoute] string categorySlug,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetPostsByCategoryPaging([FromRoute] string categorySlug, [FromBody] GetPostsByCategoryRequest request)
     {
-        var query = new GetPostsByCategoryPagingQuery(categorySlug, pageNumber ?? 1, pageSize ?? 10);
+        var query = new GetPostsByCategoryPagingQuery(categorySlug, request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
-    [HttpGet("by-tag/{tagSlug}/paging")]
+    [HttpPost("by-tag/{tagSlug}/paging")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostByTagPaging([FromRoute, Required] string tagSlug,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetPostsByTagPaging([FromRoute, Required] string tagSlug, [FromBody] GetPostsByTagRequest request)
     {
-        var query = new GetPostsByTagPagingQuery(tagSlug, pageNumber ?? 1, pageSize ?? 10);
+        var query = new GetPostsByTagPagingQuery(tagSlug, request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
-    [HttpGet("by-series/{seriesSlug}/paging")]
+    [HttpPost("by-series/{seriesSlug}/paging")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute, Required] string seriesSlug,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute] string seriesSlug, [FromBody] GetPostBySeriesRequest request)
     {
-        var query = new GetPostsBySeriesPagingQuery(seriesSlug, pageNumber ?? 1, pageSize ?? 10);
+        var query = new GetPostsBySeriesPagingQuery(seriesSlug, request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
-    [HttpGet("by-author/{username}/paging")]
+    [HttpPost("by-author/{username}/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostsByAuthorPaging(
-        [FromRoute] string username,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetPostsByAuthorPaging([FromRoute] string username, [FromBody] GetPostsByAuthorRequest request)
     {
-        var query = new GetPostsByAuthorPagingQuery(username, pageNumber ?? 1, pageSize ?? 10);
+        var query = new GetPostsByAuthorPagingQuery(username, request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
 
     [HttpPost("by-current-user/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetPostsByCurrentUserPaging(
-        [FromBody] GetPostsByCurrentUserRequest request)
+    public async Task<IActionResult> GetPostsByCurrentUserPaging([FromBody] GetPostsByCurrentUserRequest request)
     {
         var currentUser = User.GetCurrentUser();
         var query = new GetPostsByCurrentUserPagingQuery(request, currentUser);
@@ -188,14 +176,12 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpGet("latest/paging")]
+    [HttpPost("latest/paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetLatestPostsPaging(
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize)
+    public async Task<IActionResult> GetLatestPostsPaging([FromBody] GetLatestPostsRequest request)
     {
-        var query = new GetLatestPostsPagingQuery(pageNumber ?? 1, pageSize ?? 6);
+        var query = new GetLatestPostsPagingQuery(request);
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -290,7 +276,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("toggle-pin-status/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> TogglePinStatusCommand([FromRoute] Guid id, [FromBody] TogglePinStatusDto request)
+    public async Task<IActionResult> TogglePinStatusCommand([FromRoute] Guid id, [FromBody] TogglePinStatusRequest request)
     {
         var command = new TogglePinStatusCommand(id, request);
         var result = await mediator.Send(command);
@@ -299,7 +285,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPut("toggle-featured-status/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusDto request)
+    public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusRequest request)
     {
         var command = new ToggleFeaturedStatusCommand(id, request);
         var result = await mediator.Send(command);

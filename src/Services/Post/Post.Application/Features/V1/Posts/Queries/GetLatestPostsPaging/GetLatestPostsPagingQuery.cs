@@ -1,12 +1,12 @@
 using MediatR;
 using Shared.Dtos.Post.Queries;
+using Shared.Requests.Post;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 
-public class GetLatestPostsPagingQuery(int pageNumber, int pageSize) : IRequest<ApiResult<PagedResponse<PostDto>>>
+public class GetLatestPostsPagingQuery(GetLatestPostsRequest request) : IRequest<ApiResult<PagedResponse<PostDto>>>
 {
-    public int PageNumber { get; set; } = pageNumber;
-
-    public int PageSize { get; set; } = pageSize;
+    public GetLatestPostsRequest Request { get; set; } = request;
 }

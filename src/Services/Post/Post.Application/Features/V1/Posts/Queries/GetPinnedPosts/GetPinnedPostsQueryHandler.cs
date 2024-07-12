@@ -17,7 +17,7 @@ public class GetPinnedPostsQueryHandler(
     IPostService postService,
     ILogger logger) : IRequestHandler<GetPinnedPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPinnedPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPinnedPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
@@ -36,7 +36,7 @@ public class GetPinnedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetPinnedPosts(request.Count);
+            var posts = await postRepository.GetPinnedPosts(query.Count);
 
             var postList = posts.ToList();
 
