@@ -30,7 +30,7 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     
     Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber, int pageSize);
     
-    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(SearchPostByCurrentUserDto? filter, CurrentUserDto currentUser, int pageNumber, int pageSize);
+    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserDto filter, CurrentUserDto currentUser);
     
     Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
 

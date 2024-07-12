@@ -97,8 +97,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(SearchPostByCurrentUserDto? filter, CurrentUserDto currentUser, int pageNumber,
-        int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserDto filter, CurrentUserDto currentUser)
     {
         IQueryable<PostBase> query;
         
@@ -108,22 +107,19 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         {
             query = FindAll();
 
-            if (filter != null)
+            if (!string.IsNullOrEmpty(filter.Keyword))
             {
-                if (!string.IsNullOrEmpty(filter.Keyword))
-                {
-                    query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
-                }
+                query = query.Where(x => x.Title.Contains(filter.Keyword, StringComparison.CurrentCultureIgnoreCase));
+            }
             
-                if (filter.Status != null)
-                {
-                    query = query.Where(x => x.Status == filter.Status);
-                }
+            if (filter.Status != null)
+            {
+                query = query.Where(x => x.Status == filter.Status);
+            }
             
-                if (filter.UserId.HasValue)
-                {
-                    query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
-                }
+            if (filter.UserId.HasValue)
+            {
+                query = query.Where(x => x.AuthorUserId == filter.UserId.Value);
             }
             
             query = query.OrderByDescending(x => x.CreatedDate);
@@ -134,7 +130,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
                 .OrderByDescending(x => x.CreatedDate);
         }
         
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, filter.PageNumber, filter.PageSize);
 
         var response = new PagedResponse<PostBase>
         {

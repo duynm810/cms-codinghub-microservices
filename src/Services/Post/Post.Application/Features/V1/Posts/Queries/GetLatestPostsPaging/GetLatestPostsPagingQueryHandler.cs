@@ -13,7 +13,6 @@ namespace Post.Application.Features.V1.Posts.Queries.GetLatestPostsPaging;
 
 public class GetLatestPostsPagingQueryHandler(
     IPostRepository postRepository,
-    ICacheService cacheService,
     IPostService postService,
     ILogger logger) : IRequestHandler<GetLatestPostsPagingQuery, ApiResult<PagedResponse<PostDto>>>
 {
