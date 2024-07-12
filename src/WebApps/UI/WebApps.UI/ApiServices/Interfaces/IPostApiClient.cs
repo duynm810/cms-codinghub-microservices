@@ -1,5 +1,6 @@
 using Shared.Dtos.Post;
 using Shared.Requests.Post.Commands;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace WebApps.UI.ApiServices.Interfaces;
@@ -16,21 +17,21 @@ public interface IPostApiClient
     
     Task<ApiResult<PostDto>> GetPostBySlug(string slug);
 
-    Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize);
+    Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, GetPostsByCategoryRequest request);
 
-    Task<ApiResult<PostsBySeriesDto>> GetPostsBySeriesPaging(string seriesSlug, int pageNumber, int pageSize);
+    Task<ApiResult<PostsBySeriesDto>> GetPostsBySeriesPaging(string seriesSlug, GetPostsBySeriesRequest request);
     
-    Task<ApiResult<PostsByTagDto>> GetPostsByTagPaging(string tagSlug, int pageNumber, int pageSize);
+    Task<ApiResult<PostsByTagDto>> GetPostsByTagPaging(string tagSlug, GetPostsByTagRequest request);
     
-    Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName, int pageNumber, int pageSize);
+    Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName, GetPostsByAuthorRequest request);
 
-    Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize);
+    Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserRequest request);
     
-    Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize);
+    Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(GetLatestPostsRequest request);
     
     Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount);
 
-    Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(string keyword, int pageNumber, int pageSize);
+    Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(GetPostsRequest request);
 
     Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count);
 

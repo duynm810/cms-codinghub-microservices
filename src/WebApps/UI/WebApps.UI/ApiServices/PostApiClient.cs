@@ -1,5 +1,6 @@
 using Shared.Dtos.Post;
 using Shared.Requests.Post.Commands;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 using WebApps.UI.ApiServices.Interfaces;
 
@@ -32,40 +33,34 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetAsync<PostDto>($"/posts/slug/{slug}", true);
     }
 
-    public async Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsByCategoryDto>> GetPostsByCategoryPaging(string categorySlug, GetPostsByCategoryRequest request)
     {
-        return await baseApiClient.GetAsync<PostsByCategoryDto>(
-            $"/posts/by-category/{categorySlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetPostsByCategoryRequest, PostsByCategoryDto>($"/posts/by-category/{categorySlug}/paging", request);
     }
     
-    public async Task<ApiResult<PostsBySeriesDto>> GetPostsBySeriesPaging(string seriesSlug, int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsBySeriesDto>> GetPostsBySeriesPaging(string seriesSlug, GetPostsBySeriesRequest request)
     {
-        return await baseApiClient.GetAsync<PostsBySeriesDto>(
-            $"/posts/by-series/{seriesSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetPostsBySeriesRequest, PostsBySeriesDto>($"/posts/by-series/{seriesSlug}/paging", request);
     }
 
-    public async Task<ApiResult<PostsByTagDto>> GetPostsByTagPaging(string tagSlug, int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsByTagDto>> GetPostsByTagPaging(string tagSlug, GetPostsByTagRequest request)
     {
-        return await baseApiClient.GetAsync<PostsByTagDto>(
-            $"/posts/by-tag/{tagSlug}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetPostsByTagRequest, PostsByTagDto>($"/posts/by-tag/{tagSlug}/paging", request);
     }
     
-    public async Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName, int pageNumber, int pageSize)
+    public async Task<ApiResult<PostsByAuthorDto>> GetPostsByAuthorPaging(string userName, GetPostsByAuthorRequest request)
     {
-        return await baseApiClient.GetAsync<PostsByAuthorDto>(
-            $"/posts/by-author/{userName}/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetPostsByAuthorRequest, PostsByAuthorDto>($"/posts/by-author/{userName}/paging", request);
     }
     
-    public async Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(int pageNumber, int pageSize)
+    public async Task<ApiResult<PagedResponse<PostDto>>> GetPostsByCurrentUserPaging(GetPostsByCurrentUserRequest request)
     {
-        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-            $"/posts/by-current-user/paging?pageNumber={pageNumber}&pageSize={pageSize}", true);
+        return await baseApiClient.PostAsync<GetPostsByCurrentUserRequest, PagedResponse<PostDto>>($"/posts/by-current-user/paging", request, true);
     }
     
-    public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(int pageNumber, int pageSize)
+    public async Task<ApiResult<PagedResponse<PostDto>>> GetLatestPostsPaging(GetLatestPostsRequest request)
     {
-        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-            $"/posts/latest/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetLatestPostsRequest, PagedResponse<PostDto>>("/posts/latest/paging", request);
     }
     
     public async Task<ApiResult<PostsBySlugDto>> GetDetailBySlug(string slug, int relatedCount)
@@ -73,14 +68,9 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.GetAsync<PostsBySlugDto>($"/posts/detail/by-slug/{slug}?relatedCount={relatedCount}");
     }
 
-    public async Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(string keyword, int pageNumber, int pageSize)
+    public async Task<ApiResult<PagedResponse<PostDto>>> SearchPostsPaging(GetPostsRequest request)
     {
-        if (!string.IsNullOrEmpty(keyword))
-            return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-                $"/posts/paging?filter={keyword}&pageNumber={pageNumber}&pageSize={pageSize}");
-
-        return await baseApiClient.GetAsync<PagedResponse<PostDto>>(
-            $"/posts/paging?pageNumber={pageNumber}&pageSize={pageSize}");
+        return await baseApiClient.PostAsync<GetPostsRequest, PagedResponse<PostDto>>($"/posts/paging", request);
     }
     
     public async Task<ApiResult<List<PostDto>>> GetMostCommentedPosts(int count)

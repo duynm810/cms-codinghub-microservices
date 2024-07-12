@@ -1,5 +1,6 @@
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
@@ -20,31 +21,31 @@ public class HomeController(
         
         try
         {
-            var data = await dashboardApiClient.GetDashboard();
+            var response = await dashboardApiClient.GetDashboard();
     
             var viewModel = new HomeViewModel();
 
-            if (data.FeaturedPosts.Data is { Count: > 0 } featuredPosts)
+            if (response.FeaturedPosts.Data is { Count: > 0 } featuredPosts)
             {
                 viewModel.FeaturedPosts = featuredPosts;
             }
 
-            if (data.PinnedPosts.Data is { Count: > 0 } pinnedPosts)
+            if (response.PinnedPosts.Data is { Count: > 0 } pinnedPosts)
             {
                 viewModel.PinnedPosts = pinnedPosts;
             }
 
-            if (data.MostLikedPosts.Data is { Count: > 0 } mostLikedPosts)
+            if (response.MostLikedPosts.Data is { Count: > 0 } mostLikedPosts)
             {
                 viewModel.MostLikedPosts = mostLikedPosts;
             }
 
-            if (data.SuggestTags.Data is { Count: > 0 } suggestTags)
+            if (response.SuggestTags.Data is { Count: > 0 } suggestTags)
             {
                 viewModel.SuggestTags = suggestTags;
             }
-            
-            var latestPosts = await postApiClient.GetLatestPostsPaging(page, 6);
+
+            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page });
             if (latestPosts is { IsSuccess: true, Data: not null })
             {
                 viewModel.LatestPosts = latestPosts.Data;
@@ -64,10 +65,11 @@ public class HomeController(
 
         try
         {
-            var posts = await postApiClient.GetLatestPostsPaging(page, 6);
-            if (posts is { IsSuccess: true, Data: not null })
+            var request = new GetLatestPostsRequest { PageNumber = page };
+            var response = await postApiClient.GetLatestPostsPaging(request);
+            if (response is { IsSuccess: true, Data: not null })
             {
-                var viewModel = new HomeViewModel { LatestPosts = posts.Data };
+                var viewModel = new HomeViewModel { LatestPosts = response.Data };
                 var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Home/_LatestPosts.cshtml", viewModel);
                 return Json(new { success = true, html });
             }

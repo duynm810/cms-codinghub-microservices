@@ -6,10 +6,10 @@ using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsBySeriesPaging;
 
-public class GetPostsBySeriesPagingQuery(string seriesSlug, GetPostBySeriesRequest request) : IRequest<ApiResult<PostsBySeriesDto>>
+public class GetPostsBySeriesPagingQuery(string seriesSlug, GetPostsBySeriesRequest request) : IRequest<ApiResult<PostsBySeriesDto>>
 {
     public string SeriesSlug { get; set; } = seriesSlug;
 
-    public GetPostBySeriesRequest Request { get; set; } = request;
+    public GetPostsBySeriesRequest Request { get; set; } = request;
 
 }

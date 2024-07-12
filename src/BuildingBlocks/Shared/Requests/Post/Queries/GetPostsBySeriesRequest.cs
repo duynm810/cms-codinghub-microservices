@@ -2,7 +2,7 @@ using Shared.Models.Common;
 
 namespace Shared.Requests.Post.Queries;
 
-public class GetPostBySeriesRequest : Pagination
+public class GetPostsBySeriesRequest : Pagination
 {
     
 }

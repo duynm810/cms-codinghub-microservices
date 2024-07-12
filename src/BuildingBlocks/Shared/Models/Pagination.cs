@@ -14,7 +14,7 @@ public class Pagination
 
     protected Pagination()
     {
-        PageNumber = 0;
+        PageNumber = 1;
         PageSize = 10;
     }
 }

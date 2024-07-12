@@ -1,7 +1,7 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Comment;
-using Shared.Settings;
+using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiServices.Interfaces;
 using WebApps.UI.Models.Posts;
 using WebApps.UI.Services.Interfaces;
@@ -23,18 +23,19 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetPostsByCategoryPaging(categorySlug, page, 6);
-            if (result is { IsSuccess: true, Data: not null })
+            var request = new GetPostsByCategoryRequest { PageNumber = page };
+            var response =await postApiClient.GetPostsByCategoryPaging(categorySlug, request);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByCategoryViewModel
                 {
-                    Datas = result.Data
+                    Datas = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -49,18 +50,19 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetPostsBySeriesPaging(seriesSlug, page, 6);
-            if (result is { IsSuccess: true, Data: not null })
+            var request = new GetPostsBySeriesRequest { PageNumber = page };
+            var response =await postApiClient.GetPostsBySeriesPaging(seriesSlug, request);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInSeriesViewModel
                 {
-                    Datas = result.Data
+                    Datas = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -75,18 +77,19 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetPostsByTagPaging(tagSlug, page, 6);
-            if (result is { IsSuccess: true, Data: not null })
+            var request = new GetPostsByTagRequest { PageNumber = page };
+            var response =await postApiClient.GetPostsByTagPaging(tagSlug, request);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInTagViewModel
                 {
-                    Datas = result.Data
+                    Datas = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -101,18 +104,19 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetPostsByAuthorPaging(userName, page, 6);
-            if (result is { IsSuccess: true, Data: not null })
+            var request = new GetPostsByAuthorRequest { PageNumber = page };
+            var response =await postApiClient.GetPostsByAuthorPaging(userName, request);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByAuthorViewModel
                 {
-                    Datas = result.Data
+                    Datas = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -127,18 +131,18 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.GetDetailBySlug(slug, 2);
-            if (result is { IsSuccess: true, Data: not null })
+            var response =await postApiClient.GetDetailBySlug(slug, 2);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostDetailViewModel()
                 {
-                    Posts = result.Data
+                    Posts = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
@@ -152,19 +156,20 @@ public class PostsController(
 
         try
         {
-            var result = await postApiClient.SearchPostsPaging(keyword, page, 6);
-            if (result is { IsSuccess: true, Data: not null })
+            var request = new GetPostsRequest { PageNumber = page };
+            var response =await postApiClient.SearchPostsPaging(request);
+            if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostSearchViewModel()
                 {
                     Keyword = keyword,
-                    Posts = result.Data
+                    Posts = response.Data
                 };
 
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)result.StatusCode, methodName);
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {

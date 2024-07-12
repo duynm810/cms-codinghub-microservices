@@ -146,7 +146,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageNumber);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {

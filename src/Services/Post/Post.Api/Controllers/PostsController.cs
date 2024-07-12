@@ -147,7 +147,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("by-series/{seriesSlug}/paging")]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute] string seriesSlug, [FromBody] GetPostBySeriesRequest request)
+    public async Task<IActionResult> GetPostBySeriesPaging([FromRoute] string seriesSlug, [FromBody] GetPostsBySeriesRequest request)
     {
         var query = new GetPostsBySeriesPagingQuery(seriesSlug, request);
         var result = await mediator.Send(query);

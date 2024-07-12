@@ -10,14 +10,14 @@ public class TagsController(ITagApiClient tagApiClient) :  ControllerBase
     [HttpGet("suggest")]
     public async Task<IActionResult> GetSuggestedTags([FromQuery] int count = 5)
     {
-        var result = await tagApiClient.GetSuggestedTags(count);
-        return Ok(result);
+        var response = await tagApiClient.GetSuggestedTags(count);
+        return Ok(response);
     }
     
     [HttpGet("check")]
     public async Task<IActionResult> GetTagByName([FromQuery] string name)
     {
-        var result = await tagApiClient.GetTagByName(name);
-        return Ok(result);
+        var response = await tagApiClient.GetTagByName(name);
+        return Ok(response);
     }
 }
