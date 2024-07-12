@@ -42,16 +42,26 @@ public class UpdateThumbnailCommandHandler(
             result.Success(true);
 
             // Xóa cache liên quan
-            var cacheKeys = new List<string>
+            TaskHelper.RunFireAndForget(async () =>
             {
-                CacheKeyHelper.Post.GetAllPostsKey(),
-                CacheKeyHelper.Post.GetPostByIdKey(post.Id),
-                CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                CacheKeyHelper.Post.GetPostBySlugKey(post.Slug)
-            };
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetMostLikedPostsKey(),
+                    CacheKeyHelper.Post.GetMostCommentPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(post.Id),
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetDetailBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
+                };
 
-            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
         }
         catch (Exception e)
         {

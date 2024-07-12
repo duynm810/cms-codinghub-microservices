@@ -65,10 +65,13 @@ public class ApprovePostCommandHandler(
                     var cacheKeys = new List<string>
                     {
                         CacheKeyHelper.Post.GetAllPostsKey(),
-                        CacheKeyHelper.Post.GetPostByIdKey(post.Id),
                         CacheKeyHelper.Post.GetPinnedPostsKey(),
                         CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                        CacheKeyHelper.Post.GetPostBySlugKey(post.Slug)
+                        CacheKeyHelper.Post.GetMostLikedPostsKey(),
+                        CacheKeyHelper.Post.GetMostCommentPostsKey(),
+                        CacheKeyHelper.Post.GetPostByIdKey(post.Id),
+                        CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                        CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
                     };
 
                     await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);

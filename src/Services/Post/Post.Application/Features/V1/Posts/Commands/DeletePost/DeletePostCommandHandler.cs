@@ -48,8 +48,7 @@ public class DeletePostCommandHandler(
                     CacheKeyHelper.Post.GetPostByIdKey(request.Id),
                     CacheKeyHelper.Post.GetPinnedPostsKey(),
                     CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
-                    CacheKeyHelper.Post.GetPostsByCategoryPagingKey(post.Slug, 1, 6)
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug)
                 };
 
                 await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
