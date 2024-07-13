@@ -1,6 +1,6 @@
-@using Shared.Enums
 @model ManagePostsViewModel
 @{
+    ViewData["ShowBottom"] = false;
     var posts = Model.Posts;
     var user = User;
     var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);
