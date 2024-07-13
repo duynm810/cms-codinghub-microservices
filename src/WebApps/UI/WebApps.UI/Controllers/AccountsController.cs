@@ -72,13 +72,13 @@ public class AccountsController(
 
     #region POST
     
-    public async Task<IActionResult> GetPostsByCurrentUser([FromQuery] int page = 1)
+    [HttpPost]
+    public async Task<IActionResult> GetPostsByCurrentUser([FromBody] GetPostsByCurrentUserRequest request)
     {
         const string methodName = nameof(GetPostsByCurrentUser);
 
         try
         {
-            var request = new GetPostsByCurrentUserRequest { PageNumber = page };
             var response =await postApiClient.GetPostsByCurrentUserPaging(request);
             if (response is { IsSuccess: true, Data: not null })
             {
@@ -87,7 +87,8 @@ public class AccountsController(
                     Posts = response.Data
                 };
 
-                return PartialView("Partials/Accounts/_PostsByCurrentUserTablePartial", items);
+                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                return Json(new { success = true, html });
             }
 
             return HandleError((HttpStatusCode)response.StatusCode, methodName);

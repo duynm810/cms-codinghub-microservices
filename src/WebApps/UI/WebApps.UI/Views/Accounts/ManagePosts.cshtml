@@ -8,6 +8,49 @@
 
 @section Scripts {
     <script>
+        $(document).on('change', '#status-filter', function () {
+            loadPosts(1); // Load first page when filter changes
+        });
+
+        $(document).on('input', '#keyword-filter', function () {
+            let keyword = $(this).val();
+            if (keyword.length >= 3) {
+                loadPosts(1); // Load first page when keyword is 3 or more characters
+            } else if (keyword.length === 0) {
+                loadPosts(1); // Load first page when keyword is cleared
+            }
+        });
+
+        function loadPosts(page) {
+            let status = $('#status-filter').val();
+            if (status === "") {
+                status = null; // Treat empty string as null for int status
+            }
+            
+            const keyword = $('#keyword-filter').val();
+
+            $.ajax({
+                url: '/accounts/posts-by-current-user',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    status: status,
+                    keyword: keyword,
+                    pageNumber: page
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        $('#posts-table-body').html(response.html); // Update table content
+                    } else {
+                        // Handle error
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                }
+            });
+        }
+        
         function updatePost(button) {
             let slug = button.getAttribute('data-slug');
             let urlTemplate = button.getAttribute('data-url');
@@ -128,7 +171,8 @@
                 showErrorNotification(`Error ${shouldFeature ? 'featuring' : 'unfeaturing'} post: ${error.responseText || error.message}`);
             }
         }
-
+    
+    
     </script>
 }
 
@@ -147,12 +191,21 @@
         </div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-2">
+            <select id="status-filter" class="custom-dropdown form-control">
+                <option value="" selected>All</option>
+                <option value="0">Draft</option>
+                <option value="1">Waiting approval</option>
+                <option value="2">Rejected</option>
+                <option value="3">Published</option>
+            </select>
+        </div>
         <div class="col-md-3">
-            @Html.EnumDropDownListFor("statusFilter", PostStatusEnum.Draft, new { @class = "custom-dropdown" })
+            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..." />
         </div>
     </div>
-    
+
     <div class="row">
         <div class="col-md-12">
             <div class="table-wrap">

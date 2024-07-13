@@ -73,6 +73,11 @@
     background-color: #fff;
 }
 
+.search-input {
+    display: inline-block;
+    width: 100%;
+    vertical-align: middle;
+}
 /*----------------------- Spinner ----------------------*/
 
 .spinner {

@@ -112,9 +112,10 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
                 query = query.Where(x => x.Title.Contains(request.Keyword, StringComparison.CurrentCultureIgnoreCase));
             }
             
-            if (request.Status != null)
+            if (request.Status.HasValue)
             {
-                query = query.Where(x => x.Status == request.Status);
+                var statusEnum = (PostStatusEnum)request.Status.Value;
+                query = query.Where(x => x.Status == statusEnum);
             }
             
             if (request.UserId.HasValue)

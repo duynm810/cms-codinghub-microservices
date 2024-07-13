@@ -51,6 +51,11 @@ public static class RouteMap
             "manage-posts",
             "/accounts/manage-posts",
             new { controller = "Accounts", action = "ManagePosts" });
+        
+        app.MapControllerRoute(
+            "posts-by-current-user",
+            "/accounts/posts-by-current-user",
+            new { controller = "Accounts", action = "GetPostsByCurrentUser" });
 
         #endregion
 
