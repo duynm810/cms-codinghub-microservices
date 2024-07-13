@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 
+[ViewComponent(Name = "Pager")]
 public class PagerViewComponent : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(MetaData metaData)

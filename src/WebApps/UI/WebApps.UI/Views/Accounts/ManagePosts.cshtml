@@ -41,6 +41,7 @@
                 success: function (response) {
                     if (response.success) {
                         $('#posts-table-body').html(response.html); // Update table content
+                        $('#pagination-area').html(response.paginationHtml); // Update table content
                     } else {
                         // Handle error
                     }
@@ -235,7 +236,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="6">
-                            <div class="pagination-area mb-30">
+                            <div class="pagination-area mb-30" id="pagination-area">
                                 @await Component.InvokeAsync("Pager", posts.MetaData)
                             </div>
                         </td>

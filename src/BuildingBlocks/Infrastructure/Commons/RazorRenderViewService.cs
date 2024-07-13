@@ -1,4 +1,5 @@
 using System.Security.Claims;
+using System.Text.Encodings.Web;
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.ViewFeatures.Buffers;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Commons;
 
@@ -30,6 +34,43 @@ public class RazorRenderViewService(
     public async Task<string> RenderPartialViewToStringAsync<TModel>(string viewName, TModel model)
     {
         return await RenderAsync(viewName, model, false);
+    }
+    
+    public async Task<string> RenderViewComponentAsync(string viewComponent, object args)
+    {
+        var httpContext = httpContextAccessor.HttpContext;
+
+        if (httpContext == null)
+        {
+            throw new InvalidOperationException("No HttpContext available.");
+        }
+
+        var sp = httpContext.RequestServices;
+
+        var helper = new DefaultViewComponentHelper(
+            sp.GetRequiredService<IViewComponentDescriptorCollectionProvider>(),
+            HtmlEncoder.Default,
+            sp.GetRequiredService<IViewComponentSelector>(),
+            sp.GetRequiredService<IViewComponentInvokerFactory>(),
+            sp.GetRequiredService<IViewBufferScope>());
+
+        await using var writer = new StringWriter();
+        var context = new ViewContext(
+            new ActionContext(
+                httpContext,
+                httpContext.GetRouteData(),
+                new ActionDescriptor()),
+            NullView.Instance,
+            new ViewDataDictionary(_metadataProvider, _modelState),
+            new TempDataDictionary(httpContext, tempDataProvider),
+            writer,
+            new HtmlHelperOptions());
+
+        helper.Contextualize(context);
+        var result = await helper.InvokeAsync(viewComponent, args);
+        result.WriteTo(writer, HtmlEncoder.Default);
+        await writer.FlushAsync();
+        return writer.ToString();
     }
 
     #region HELPERS
@@ -136,6 +177,20 @@ public class RazorRenderViewService(
         }
 
         return new ActionContext(httpContext, routeData, new ActionDescriptor());
+    }
+    
+    private class NullView : IView
+    {
+        public static readonly NullView Instance = new();
+
+        public string Path => string.Empty;
+
+        public Task RenderAsync(ViewContext context)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+
+            return Task.CompletedTask;
+        }
     }
 
     #endregion

@@ -88,7 +88,8 @@ public class AccountsController(
                 };
 
                 var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                return Json(new { success = true, html });
+                var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
+                return Json(new { success = true, html, paginationHtml });
             }
 
             return HandleError((HttpStatusCode)response.StatusCode, methodName);
