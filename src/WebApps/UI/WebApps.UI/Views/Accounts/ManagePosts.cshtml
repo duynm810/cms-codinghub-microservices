@@ -19,12 +19,10 @@
         });
 
         $(document).on('input', '#keyword-filter', function () {
-            let keyword = $(this).val();
-            if (keyword.length >= 3) {
-                loadPosts(1); // Load first page when keyword is 3 or more characters
-            } else if (keyword.length === 0) {
-                loadPosts(1); // Load first page when keyword is cleared
-            }
+            let keyword = $(this).val().toLowerCase();
+            $('#posts-table-body tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            });
         });
 
         function loadPosts(page) {
@@ -33,15 +31,12 @@
                 status = null; // Treat empty string as null for int status
             }
             
-            const keyword = $('#keyword-filter').val();
-
             $.ajax({
                 url: '/accounts/posts-by-current-user',
                 method: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({
                     status: status,
-                    keyword: keyword,
                     pageNumber: page
                 }),
                 success: function (response) {

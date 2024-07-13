@@ -106,11 +106,6 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         if (isAdmin)
         {
             query = FindAll();
-
-            if (!string.IsNullOrEmpty(request.Keyword))
-            {
-                query = query.Where(x => x.Title.Contains(request.Keyword, StringComparison.CurrentCultureIgnoreCase));
-            }
             
             if (request.Status.HasValue)
             {
