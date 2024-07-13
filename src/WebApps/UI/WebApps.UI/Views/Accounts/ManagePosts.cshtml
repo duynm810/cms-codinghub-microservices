@@ -8,6 +8,12 @@
 
 @section Scripts {
     <script>
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            const page = $(this).attr('href').split('page=')[1];
+            loadPosts(page);
+        });
+        
         $(document).on('change', '#status-filter', function () {
             loadPosts(1); // Load first page when filter changes
         });
@@ -172,6 +178,7 @@
                 showErrorNotification(`Error ${shouldFeature ? 'featuring' : 'unfeaturing'} post: ${error.responseText || error.message}`);
             }
         }
+    
     
     
     </script>
