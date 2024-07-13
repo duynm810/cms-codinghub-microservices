@@ -14,6 +14,12 @@ public interface IPostApiClient
     Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailRequest request);
     
     Task<ApiResult<bool>> DeletePost(Guid id);
+
+    Task<ApiResult<bool>> ApprovePost(Guid id);
+
+    Task<ApiResult<bool>> SubmitPostForApproval(Guid id);
+
+    Task<ApiResult<bool>> RejectPostWithReason(Guid id, RejectPostWithReasonRequest request);
     
     Task<ApiResult<PostDto>> GetPostBySlug(string slug);
 

@@ -78,6 +78,51 @@
     width: 100%;
     vertical-align: middle;
 }
+
+.btn-group .dropdown-toggle {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 13px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-group .dropdown-toggle svg {
+    margin-right: 5px;
+}
+
+.btn-group .dropdown-toggle:hover,
+.btn-group .dropdown-toggle:focus {
+    background-color: #0056b3;
+}
+
+.dropdown-menu {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: none;
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #343a40;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu .dropdown-item svg {
+    margin-right: 10px; /* Tạo khoảng cách giữa icon và text */
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #e9ecef;
+    color: #343a40;
+}
+
 /*----------------------- Spinner ----------------------*/
 
 .spinner {

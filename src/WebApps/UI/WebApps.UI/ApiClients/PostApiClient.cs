@@ -17,7 +17,7 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     {
         return await baseApiClient.PutAsync<UpdatePostRequest, bool>($"/posts/{id}", request, true);
     }
-
+    
     public async Task<ApiResult<bool>> UpdateThumbnail(Guid id, UpdateThumbnailRequest request)
     {
         return await baseApiClient.PutAsync<UpdateThumbnailRequest, bool>($"/posts/update-thumbnail/{id}", request, true);
@@ -26,6 +26,21 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
     public async Task<ApiResult<bool>> DeletePost(Guid id)
     {
         return await baseApiClient.DeleteAsync<bool>($"/posts/{id}", true);
+    }
+    
+    public async Task<ApiResult<bool>> ApprovePost(Guid id)
+    {
+        return await baseApiClient.PostAsync<bool>($"/posts/approve/{id}", true);
+    }
+
+    public async Task<ApiResult<bool>> SubmitPostForApproval(Guid id)
+    {
+        return await baseApiClient.PostAsync<bool>($"/posts/submit-for-approval/{id}", true);
+    }
+    
+    public async Task<ApiResult<bool>> RejectPostWithReason(Guid id, RejectPostWithReasonRequest request)
+    {
+        return await baseApiClient.PostAsync<RejectPostWithReasonRequest, bool>($"/posts/reject/{id}", request, true);
     }
     
     public async Task<ApiResult<PostDto>> GetPostBySlug(string slug)

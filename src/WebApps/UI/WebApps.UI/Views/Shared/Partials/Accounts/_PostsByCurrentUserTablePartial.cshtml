@@ -13,10 +13,22 @@
 
         <tr class="alert" role="alert">
             <td>
-                <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox">
-                    <span class="checkmark"></span>
-                </label>
+                <div class="btn-group">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog"></i> Action
+                    </button>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="#" >
+                            <i class="fas fa-check"></i> Approve
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            <i class="fas fa-clock"></i> Waiting
+                        </a>
+                    </div>
+                </div>
             </td>
             @if (isAdmin)
             {

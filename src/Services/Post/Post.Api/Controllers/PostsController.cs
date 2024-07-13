@@ -107,7 +107,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpPost("slug/{slug}")]
+    [HttpGet("slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<PostDto>> GetPostBySlug([FromRoute, Required] string slug)
     {
@@ -264,7 +264,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> RejectPostWithReasonCommand([FromRoute] Guid id,
+    public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id,
         [FromBody] RejectPostWithReasonRequest request)
     {
         var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);

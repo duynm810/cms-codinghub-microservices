@@ -79,7 +79,7 @@ public class AccountsController(
 
         try
         {
-            var response =await postApiClient.GetPostsByCurrentUserPaging(request);
+            var response = await postApiClient.GetPostsByCurrentUserPaging(request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new ManagePostsViewModel()
@@ -106,7 +106,7 @@ public class AccountsController(
 
         try
         {
-            var response =await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = page });
+            var response = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = page });
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new ManagePostsViewModel()
@@ -158,7 +158,7 @@ public class AccountsController(
 
             if (ModelState.IsValid)
             {
-                var response =await postApiClient.CreatePost(request);
+                var response = await postApiClient.CreatePost(request);
                 if (response is { IsSuccess: true })
                 {
                     return RedirectToAction("ManagePosts", "Accounts");
@@ -223,7 +223,7 @@ public class AccountsController(
                 return BadRequest(ModelState);
             }
 
-            var response =await postApiClient.UpdatePost(id, request);
+            var response = await postApiClient.UpdatePost(id, request);
             if (response is { IsSuccess: true })
             {
                 return Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
@@ -240,7 +240,7 @@ public class AccountsController(
     [HttpPut]
     public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailRequest request)
     {
-        var response =await postApiClient.UpdateThumbnail(id, request);
+        var response = await postApiClient.UpdateThumbnail(id, request);
         return Ok(new { data = response });
     }
 
@@ -251,7 +251,7 @@ public class AccountsController(
         
         try
         {
-            var response =await postApiClient.DeletePost(id);
+            var response = await postApiClient.DeletePost(id);
             if (response is { IsSuccess: true })
             {
                 // Lấy lại danh sách bài viết sau khi xóa
@@ -265,7 +265,8 @@ public class AccountsController(
                     };
                     
                     var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                    return Json(new { success = true, html });
+                    var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
+                    return Json(new { success = true, html, paginationHtml });
                 }
                 
                 return Json(new { success = true, html = string.Empty });
@@ -279,10 +280,71 @@ public class AccountsController(
         }
     }
 
+    [HttpPost]
+    public async Task<IActionResult> ApprovePost([FromRoute] Guid id)
+    {
+        const string methodName = nameof(ApprovePost);
+        
+        try
+        {
+            var response = await postApiClient.ApprovePost(id);
+            if (response is { IsSuccess: true })
+            {
+                
+            }
+            
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id)
+    {
+        const string methodName = nameof(SubmitPostForApproval);
+        
+        try
+        {
+            var response = await postApiClient.SubmitPostForApproval(id);
+            if (response is { IsSuccess: true })
+            {
+            }
+            
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id, [FromBody] RejectPostWithReasonRequest request)
+    {
+        const string methodName = nameof(RejectPostWithReason);
+        
+        try
+        {
+            var response = await postApiClient.RejectPostWithReason(id, request);
+            if (response is { IsSuccess: true })
+            {
+            }
+            
+            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+    }
+
     [HttpPut]
     public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusRequest request)
     {
-        var response =await postApiClient.TogglePinStatus(id, request);
+        var response = await postApiClient.TogglePinStatus(id, request);
         if (response is { IsSuccess: true })
         {
             var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
@@ -306,7 +368,7 @@ public class AccountsController(
     [HttpPut]
     public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusRequest request)
     {
-        var response =await postApiClient.ToggleFeaturedStatus(id, request);
+        var response = await postApiClient.ToggleFeaturedStatus(id, request);
         if (response is { IsSuccess: true })
         {
             var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
