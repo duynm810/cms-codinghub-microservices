@@ -5,9 +5,9 @@ using Post.Grpc.Protos;
 using PostInTag.Api.Entities;
 using Shared.Dtos.Category;
 using Shared.Dtos.Post;
-using Shared.Dtos.Post.Queries;
 using Shared.Dtos.PostInTag;
 using Shared.Dtos.Tag;
+using Shared.Requests.PostInTag;
 using Tag.Grpc.Protos;
 
 namespace PostInTag.Api;
@@ -24,8 +24,8 @@ public class MappingProfile : Profile
 
     private void ConfigurePostInTagMappings()
     {
-        CreateMap<CreatePostInTagDto, PostInTagBase>();
-        CreateMap<DeletePostInTagDto, PostInTagBase>();
+        CreateMap<CreatePostInTagRequest, PostInTagBase>();
+        CreateMap<DeletePostInTagRequest, PostInTagBase>();
     }
 
     private void ConfigurePostGrpcMappings()

@@ -4,6 +4,7 @@ using Comment.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Comment;
 using Shared.Extensions;
+using Shared.Requests.Comment;
 using Shared.Responses;
 
 namespace Comment.Api.Controllers;
@@ -14,7 +15,7 @@ public class CommentsController(ICommentService commentService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<CommentDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateComment([FromBody] CreateCommentDto request)
+    public async Task<IActionResult> CreateComment([FromBody] CreateCommentRequest request)
     {
         request.UserId = User.GetUserId();
         
@@ -31,6 +32,15 @@ public class CommentsController(ICommentService commentService) : ControllerBase
         return Ok(result);
     }
     
+    [Route("latest")]
+    [HttpGet]
+    [ProducesResponseType(typeof(ApiResult<IEnumerable<LatestCommentDto>>), (int)HttpStatusCode.OK)]
+    public async Task<ActionResult<IEnumerable<LatestCommentDto>>> GetLatestComments([FromQuery] int count)
+    {
+        var result = await commentService.GetLatestComments(count);
+        return Ok(result);
+    }
+    
     [Route("like/{commentId}")]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
@@ -43,7 +53,7 @@ public class CommentsController(ICommentService commentService) : ControllerBase
     [Route("reply")]
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ReplyToComment([FromQuery, Required] string parentId, [FromBody] CreateCommentDto request)
+    public async Task<IActionResult> ReplyToComment([FromQuery, Required] string parentId, [FromBody] CreateCommentRequest request)
     {
         var result = await commentService.ReplyToComment(parentId, request);
         return Ok(result);

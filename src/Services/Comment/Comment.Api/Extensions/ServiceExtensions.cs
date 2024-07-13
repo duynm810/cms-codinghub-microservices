@@ -64,6 +64,9 @@ public static class ServiceExtensions
 
         // Register authorization services
         services.AddAuthorizationServices();
+        
+        // Register MassTransit with RabbitMQ
+        services.AddMassTransitWithRabbitMq();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -79,6 +82,9 @@ public static class ServiceExtensions
                                 $"{nameof(CacheSettings)} is not configured properly");
 
         services.AddSingleton(cacheSettings);
+        
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<EventBusSettings>(configuration.GetSection(nameof(EventBusSettings)));
     }
 
     private static string GetMongoConnectionString(this IServiceCollection services)

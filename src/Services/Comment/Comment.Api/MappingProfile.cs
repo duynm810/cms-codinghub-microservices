@@ -5,7 +5,7 @@ using Post.Grpc.Protos;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
-using Shared.Dtos.Post.Queries;
+using Shared.Requests.Comment;
 
 namespace Comment.Api;
 
@@ -21,20 +21,24 @@ public class MappingProfile : Profile
     private void ConfigureCommentMappings()
     {
         CreateMap<CommentBase, CommentDto>().ReverseMap();
-        CreateMap<CommentBase, CreateCommentDto>().ReverseMap();
+        CreateMap<CommentBase, LatestCommentDto>().ReverseMap();
+        CreateMap<CommentBase, CreateCommentRequest>().ReverseMap();
     }
 
     private void ConfigurePostGrpcMappings()
     {
         CreateMap<PostModel, PostDto>().ReverseMap();
         CreateMap<PostDto, GetTop10PostsResponse>().ReverseMap();
-        CreateMap<GetTop10PostsResponse, IEnumerable<PostDto>>()
+        CreateMap<GetTop10PostsResponse, List<PostDto>>()
             .ConvertUsing(src => src.Posts.Select(p => new PostDto
             {
                 Id = Guid.Parse(p.Id),
                 Title = p.Title,
                 Slug = p.Slug
             }).ToList());
+        
+        CreateMap<List<PostDto>, GetPostsByIdsResponse>().ForMember(dest => dest.Posts,
+            opt => opt.MapFrom(src => src));
     }
 
     private void ConfigureIdentityGrpcMappings()
@@ -50,7 +54,8 @@ public class MappingProfile : Profile
             {
                 Id = Guid.Parse(u.Id),
                 FirstName = u.FirstName,
-                LastName = u.LastName
+                LastName = u.LastName,
+                UserName = u.UserName
             }).ToList());
     }
 }

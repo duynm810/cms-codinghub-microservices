@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -18,7 +18,7 @@ public class GetPostsQueryHandler(
     ILogger logger)
     : IRequestHandler<GetPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();

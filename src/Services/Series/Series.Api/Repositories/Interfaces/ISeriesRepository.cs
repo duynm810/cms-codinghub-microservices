@@ -1,5 +1,6 @@
 using Contracts.Domains.Repositories;
 using Series.Api.Entities;
+using Shared.Requests.Series;
 using Shared.Responses;
 
 namespace Series.Api.Repositories.Interfaces;
@@ -14,7 +15,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task DeleteSeries(SeriesBase series);
 
-    Task<IEnumerable<SeriesBase>> GetSeries(int count);
+    Task<IEnumerable<SeriesBase>> GetSeries();
 
     Task<SeriesBase?> GetSeriesById(Guid id);
 
@@ -22,7 +23,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     #region OTHERS
 
-    Task<PagedResponse<SeriesBase>> GetSeriesPaging(int pageNumber, int pageSize);
+    Task<PagedResponse<SeriesBase>> GetSeriesPaging(GetSeriesRequest request);
 
     Task<SeriesBase?> GetSeriesBySlug(string slug);
 

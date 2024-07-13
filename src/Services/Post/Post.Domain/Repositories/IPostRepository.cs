@@ -1,5 +1,8 @@
 using Contracts.Domains.Repositories;
 using Post.Domain.Entities;
+using Shared.Dtos.Identity.User;
+using Shared.Requests.Post;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Domain.Repositories;
@@ -22,15 +25,15 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     #region OTHERS
 
-    Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsPaging(GetPostsRequest request);
 
-    Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, GetPostsByCategoryRequest request);
     
-    Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, GetPostsByAuthorRequest request);
     
-    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, List<string> roles, GetPostsByCurrentUserRequest request);
     
-    Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize);
+    Task<PagedResponse<PostBase>> GetLatestPostsPaging(GetLatestPostsRequest request);
 
     Task<IEnumerable<PostBase>> GetPostsByCategoryId(long categoryId, int count);
 
@@ -59,6 +62,10 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
     Task SubmitPostForApproval(PostBase post);
 
     Task RejectPostWithReason(PostBase post);
+
+    Task<bool> TogglePinStatus(PostBase post, bool isPinned);
+    
+    Task<bool> ToggleFeaturedStatus(PostBase post, bool isFeatured);
 
     #endregion
 }

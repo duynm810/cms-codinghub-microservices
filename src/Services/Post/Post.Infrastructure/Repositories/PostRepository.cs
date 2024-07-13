@@ -5,9 +5,11 @@ using Microsoft.EntityFrameworkCore;
 using Post.Domain.Entities;
 using Post.Domain.Repositories;
 using Post.Infrastructure.Persistence;
+using Shared.Constants;
 using Shared.Enums;
+using Shared.Requests.Post;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
-using Shared.Utilities;
 
 namespace Post.Infrastructure.Repositories;
 
@@ -38,21 +40,21 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     #region OTHERS
 
-    public async Task<PagedResponse<PostBase>> GetPostsPaging(string? filter, int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetPostsPaging(GetPostsRequest request)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published);
 
-        if (!string.IsNullOrEmpty(filter))
+        if (!string.IsNullOrEmpty(request.Filter))
         {
-            query = query.Where(x => (x.Title.Contains(filter))
-                                     || (x.Slug.Contains(filter))
-                                     || (x.Content != null && x.Content.Contains(filter))
-                                     || (x.Summary != null && x.Summary.Contains(filter)));
+            query = query.Where(x => (x.Title.Contains(request.Filter))
+                                     || (x.Slug.Contains(request.Filter))
+                                     || (x.Content != null && x.Content.Contains(request.Filter))
+                                     || (x.Summary != null && x.Summary.Contains(request.Filter)));
         }
 
         query = query.OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -63,13 +65,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, int pageNumber = 1,
-        int pageSize = 10)
+    public async Task<PagedResponse<PostBase>> GetPostsByCategoryPaging(long categoryId, GetPostsByCategoryRequest request)
     {
         var query = FindByCondition(x => x.CategoryId == categoryId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -79,14 +80,13 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return response;
     }
-    
-    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId,
-        int pageNumber = 1, int pageSize = 10)
+
+    public async Task<PagedResponse<PostBase>> GetPostsByAuthorPaging(Guid authorId, GetPostsByAuthorRequest request)
     {
         var query = FindByCondition(x => x.AuthorUserId == authorId && x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -97,13 +97,36 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid currentUserId, int pageNumber = 1,
-        int pageSize = 10)
+    public async Task<PagedResponse<PostBase>> GetPostsByCurrentUserPaging(Guid userId, List<string> roles, GetPostsByCurrentUserRequest request)
     {
-        var query = FindByCondition(x => x.AuthorUserId == currentUserId)
-            .OrderByDescending(x => x.CreatedDate);
-
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        IQueryable<PostBase> query;
+        
+        var isAdmin = roles.Contains(UserRolesConsts.Administrator);
+        
+        if (isAdmin)
+        {
+            query = FindAll();
+            
+            if (request.Status.HasValue)
+            {
+                var statusEnum = (PostStatusEnum)request.Status.Value;
+                query = query.Where(x => x.Status == statusEnum);
+            }
+            
+            if (request.UserId.HasValue)
+            {
+                query = query.Where(x => x.AuthorUserId == request.UserId.Value);
+            }
+            
+            query = query.OrderByDescending(x => x.CreatedDate);
+        }
+        else
+        {
+            query = FindByCondition(x => x.AuthorUserId == userId)
+                .OrderByDescending(x => x.CreatedDate);
+        }
+        
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -114,12 +137,12 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return response;
     }
 
-    public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(int pageNumber, int pageSize)
+    public async Task<PagedResponse<PostBase>> GetLatestPostsPaging(GetLatestPostsRequest request)
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
             .OrderByDescending(x => x.PublishedDate);
 
-        var items = await PagedList<PostBase>.ToPagedList(query, pageNumber, pageSize);
+        var items = await PagedList<PostBase>.ToPagedList(query, request.PageNumber, request.PageSize);
 
         var response = new PagedResponse<PostBase>
         {
@@ -167,44 +190,20 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
     public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count)
     {
-        // Get featured articles first (Lấy các bài viết nổi bật trước)
         var featuredPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsFeatured)
             .OrderByDescending(x => x.ViewCount)
             .Take(count)
             .ToListAsync();
-
-        // If the number of featured posts is less than required, add non-featured posts (Nếu số lượng bài viết nổi bật ít hơn yêu cầu, bổ sung thêm các bài viết không nổi bật)
-        if (featuredPosts.Count < count)
-        {
-            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsFeatured)
-                .OrderByDescending(x => x.ViewCount)
-                .Take(count - featuredPosts.Count)
-                .ToListAsync();
-
-            featuredPosts.AddRange(additionalPosts);
-        }
 
         return featuredPosts;
     }
 
     public async Task<IEnumerable<PostBase>> GetPinnedPosts(int count)
     {
-        // Get pinned posts first (Lấy các bài viết ghim trước)
         var pinnedPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsPinned)
             .OrderByDescending(x => x.ViewCount)
             .Take(count)
             .ToListAsync();
-
-        // If the number of pinned posts is less than required, add non-pinned posts (Nếu số lượng bài viết ghim ít hơn yêu cầu, bổ sung thêm các bài viết không ghim)
-        if (pinnedPosts.Count < count)
-        {
-            var additionalPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && !x.IsPinned)
-                .OrderByDescending(x => x.ViewCount)
-                .Take(count - pinnedPosts.Count)
-                .ToListAsync();
-
-            pinnedPosts.AddRange(additionalPosts);
-        }
 
         return pinnedPosts;
     }
@@ -226,7 +225,7 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
 
         return await query.ToListAsync();
     }
-    
+
     public async Task<IEnumerable<PostBase>> GetTop10Posts()
     {
         var query = FindByCondition(x => x.Status == PostStatusEnum.Published)
@@ -264,6 +263,20 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
     {
         post.Status = PostStatusEnum.Rejected;
         await UpdateAsync(post);
+    }
+
+    public async Task<bool> TogglePinStatus(PostBase post, bool isPinned)
+    {
+        post.IsPinned = isPinned;
+        await UpdateAsync(post);
+        return true;
+    }
+
+    public async Task<bool> ToggleFeaturedStatus(PostBase post, bool isFeatured)
+    {
+        post.IsFeatured = isFeatured;
+        await UpdateAsync(post);
+        return true;
     }
 
     #endregion

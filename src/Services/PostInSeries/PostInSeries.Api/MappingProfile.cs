@@ -7,6 +7,7 @@ using Series.Grpc.Protos;
 using Shared.Dtos.Category;
 using Shared.Dtos.PostInSeries;
 using Shared.Dtos.Series;
+using Shared.Requests.PostInSeries;
 
 namespace PostInSeries.Api;
 
@@ -32,8 +33,8 @@ public class MappingProfile : Profile
 
     private void ConfigurePostInSeriesMappings()
     {
-        CreateMap<CreatePostInSeriesDto, PostInSeriesBase>();
-        CreateMap<DeletePostInSeriesDto, PostInSeriesBase>();
+        CreateMap<CreatePostInSeriesRequest, PostInSeriesBase>();
+        CreateMap<DeletePostInSeriesRequest, PostInSeriesBase>();
     }
 
     private void ConfigureCategoryGrpcMappings()

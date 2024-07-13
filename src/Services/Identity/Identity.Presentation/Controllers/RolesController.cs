@@ -4,6 +4,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Identity.Role;
+using Shared.Requests.Identity.Role;
 using Shared.Responses;
 
 namespace Identity.Presentation.Controllers;
@@ -15,7 +16,7 @@ public class RolesController(IRoleService roleService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<RoleDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateRole([FromBody] CreateOrUpdateRoleDto request)
+    public async Task<IActionResult> CreateRole([FromBody] CreateOrUpdateRoleRequest request)
     {
         var result = await roleService.CreateRole(request);
         return Ok(result);
@@ -23,7 +24,7 @@ public class RolesController(IRoleService roleService) : ControllerBase
 
     [HttpPut("{roleId:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> UpdateRole(Guid roleId, [FromBody] CreateOrUpdateRoleDto request)
+    public async Task<IActionResult> UpdateRole(Guid roleId, [FromBody] CreateOrUpdateRoleRequest request)
     {
         var result = await roleService.UpdateRole(roleId, request);
         return Ok(result);

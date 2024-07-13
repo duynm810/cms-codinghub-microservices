@@ -9,6 +9,7 @@ using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
 using Shared.Enums;
+using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -20,7 +21,7 @@ public class SubmitPostForApprovalCommandHandler(
     IPostEmailTemplateService postEmailTemplateService,
     ILogger logger) : IRequestHandler<SubmitPostForApprovalCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(SubmitPostForApprovalCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(SubmitPostForApprovalCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(Handle);
@@ -32,17 +33,17 @@ public class SubmitPostForApprovalCommandHandler(
             await using var transaction = await postRepository.BeginTransactionAsync();
             try
             {
-                var post = await postRepository.GetPostById(request.Id);
+                var post = await postRepository.GetPostById(command.Id);
                 if (post == null)
                 {
-                    logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                    logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                     result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
 
                 // TODO: Implement check current user id
-                var currentUserId = request.UserId;
+                var currentUserId = command.UserId;
 
                 await postRepository.SubmitPostForApproval(post);
 
@@ -51,32 +52,35 @@ public class SubmitPostForApprovalCommandHandler(
                     Id = Guid.NewGuid(),
                     FromStatus = post.Status,
                     ToStatus = PostStatusEnum.WaitingForApproval,
-                    UserId = request.UserId,
-                    PostId = request.Id
+                    UserId = command.UserId,
+                    PostId = command.Id
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 
                 await postRepository.SaveChangesAsync();
                 await postRepository.EndTransactionAsync();
-
+                
+                result.Success(true);
+                
                 try
                 {
-                    // Send email to author
-                    await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Title)
-                        .ConfigureAwait(false);
+                    TaskHelper.RunFireAndForget(async () =>
+                    {
+                        // Send email to author
+                        await postEmailTemplateService.SendPostSubmissionForApprovalEmail(post.Id, post.Title).ConfigureAwait(false);
+                    }, e =>
+                    {
+                        logger.Error("Send submission for approval post email failed. Message: {ErrorMessage}", e.Message);
+                    });
                 }
                 catch (Exception emailEx)
                 {
                     logger.Error("{MethodName} - Error sending email for Post ID: {PostId}. Message: {ErrorMessage}",
-                        methodName, request.Id, emailEx);
+                        methodName, command.Id, emailEx);
                     result.Messages.Add("Error sending email: " + emailEx.Message);
                     result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
                     throw;
                 }
-
-                // Xóa cache liên quan
-
-                result.Success(true);
             }
             catch (Exception e)
             {

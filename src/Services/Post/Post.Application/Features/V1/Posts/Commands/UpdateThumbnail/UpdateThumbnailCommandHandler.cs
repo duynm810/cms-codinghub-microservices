@@ -14,7 +14,7 @@ public class UpdateThumbnailCommandHandler(
     ICacheService cacheService,
     ILogger logger) : IRequestHandler<UpdateThumbnailCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(UpdateThumbnailCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(UpdateThumbnailCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdateThumbnailCommand);
@@ -22,38 +22,46 @@ public class UpdateThumbnailCommandHandler(
         try
         {
             logger.Information("BEGIN {MethodName} - Updating thumbnail for post with ID: {PostId}", methodName,
-                request.Id);
+                command.Id);
 
             // Fetch the post
-            var post = await postRepository.GetPostById(request.Id);
+            var post = await postRepository.GetPostById(command.Id);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                 result.Messages.Add("Post not found.");
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
             // Update the thumbnail
-            post.Thumbnail = request.Thumbnail;
+            post.Thumbnail = command.Thumbnail;
 
             await postRepository.UpdatePost(post);
 
             result.Success(true);
 
             // Xóa cache liên quan
-            var cacheKeys = new List<string>
+            TaskHelper.RunFireAndForget(async () =>
             {
-                CacheKeyHelper.Post.GetAllPostsKey(),
-                CacheKeyHelper.Post.GetPostByIdKey(post.Id),
-                CacheKeyHelper.Post.GetPinnedPostsKey(),
-                CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
-                CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
-                CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(post.AuthorUserId, 1, 4)
-            };
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Post.GetAllPostsKey(),
+                    CacheKeyHelper.Post.GetPinnedPostsKey(),
+                    CacheKeyHelper.Post.GetFeaturedPostsKey(),
+                    CacheKeyHelper.Post.GetMostLikedPostsKey(),
+                    CacheKeyHelper.Post.GetMostCommentPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(post.Id),
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetDetailBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
+                };
 
-            await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+                await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
         }
         catch (Exception e)
         {

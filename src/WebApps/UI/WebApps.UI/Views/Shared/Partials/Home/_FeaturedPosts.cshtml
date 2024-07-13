@@ -1,10 +1,9 @@
-@using MongoDB.Driver.Linq
 @model HomeViewModel
 
 @{
     var featuredPosts = Model.FeaturedPosts.ToList();
     var pinnedPosts = Model.PinnedPosts.ToList();
-    var tags = Model.Tags.ToList();
+    var tags = Model.SuggestTags.ToList();
 }
 
 <div class="hot-tags pt-30 pb-30 font-small align-self-center">

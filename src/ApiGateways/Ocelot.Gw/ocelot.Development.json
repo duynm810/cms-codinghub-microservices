@@ -90,7 +90,7 @@
     {
       "UpstreamPathTemplate": "/categories/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/categories/paging",
       "DownstreamScheme": "http",
@@ -139,7 +139,8 @@
           "Port": 5005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "featured-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/pinned",
@@ -154,7 +155,8 @@
           "Port": 5005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "pinned-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/most-commented",
@@ -184,7 +186,8 @@
           "Port": 5005
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "most-liked-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/{id}",
@@ -277,7 +280,7 @@
     {
       "UpstreamPathTemplate": "/posts/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/paging",
       "DownstreamScheme": "http",
@@ -292,7 +295,7 @@
     {
       "UpstreamPathTemplate": "/posts/latest/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/latest/paging",
       "DownstreamScheme": "http",
@@ -307,7 +310,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
       "DownstreamScheme": "http",
@@ -322,7 +325,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-tag/{tagSlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-tag/{tagSlug}/paging",
       "DownstreamScheme": "http",
@@ -337,7 +340,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-series/{seriesSlug}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-series/{seriesSlug}/paging",
       "DownstreamScheme": "http",
@@ -352,7 +355,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-author/{authorId}/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-author/{authorId}/paging",
       "DownstreamScheme": "http",
@@ -367,7 +370,7 @@
     {
       "UpstreamPathTemplate": "/posts/by-current-user/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
       "DownstreamScheme": "http",
@@ -461,6 +464,44 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/reject/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/toggle-pin-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-pin-status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/toggle-featured-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-featured-status/{id}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -573,7 +614,7 @@
     {
       "UpstreamPathTemplate": "/series/paging",
       "UpstreamHttpMethod": [
-        "GET"
+        "POST"
       ],
       "DownstreamPathTemplate": "/api/series/paging",
       "DownstreamScheme": "http",
@@ -687,7 +728,8 @@
           "Port": 5010
         }
       ],
-      "SwaggerKey": "tag-service"
+      "SwaggerKey": "tag-service",
+      "Key": "suggest-tags"
     },
     {
       "UpstreamPathTemplate": "/tags/{id}",
@@ -808,6 +850,21 @@
       "SwaggerKey": "comment-service"
     },
     {
+      "UpstreamPathTemplate": "/comments/latest",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/latest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5014
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/upload-image",
       "UpstreamHttpMethod": [
         "POST"
@@ -856,6 +913,18 @@
           "Port": 5019
         }
       ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "featured-posts",
+        "most-liked-posts",
+        "pinned-posts",
+        "suggest-tags"
+      ],
+      "UpstreamPathTemplate": "/dashboard",
+      "Aggregator": "DashboardAggregator"
     }
   ],
   "SwaggerEndPoints": [

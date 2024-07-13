@@ -13,6 +13,14 @@ public class CommentRepository(IMongoClient client, MongoDbSettings settings)
         await FindAll().Find(x => x.PostId == postId).ToListAsync();
 
     public async Task<CommentBase?> GetCommentById(string id) => await FindByIdAsync(id);
+    
+    public async Task<List<CommentBase>> GetLatestComments(int count)
+    {
+        return await FindAll().Find(_ => true)
+            .SortByDescending(c => c.CreatedDate)
+            .Limit(count)
+            .ToListAsync();
+    }
 
     public async Task<bool> CreateComment(CommentBase comment)
     {
@@ -41,5 +49,11 @@ public class CommentRepository(IMongoClient client, MongoDbSettings settings)
         var update = Builders<CommentBase>.Update.Inc(c => c.RepliesCount, increment);
         var result = await Collection.UpdateOneAsync(filter, update);
         return result.ModifiedCount > 0;
+    }
+    
+    public async Task DeleteCommentsByPostId(Guid postId)
+    {
+        var filters = Builders<CommentBase>.Filter.Eq("PostId", postId);
+        await Collection.DeleteManyAsync(filters);
     }
 }

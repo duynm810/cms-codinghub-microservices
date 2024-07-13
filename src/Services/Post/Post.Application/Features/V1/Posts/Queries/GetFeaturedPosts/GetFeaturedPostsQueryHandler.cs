@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -17,7 +17,7 @@ public class GetFeaturedPostsQueryHandler(
     IPostService postService,
     ILogger logger) : IRequestHandler<GetFeaturedPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetFeaturedPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetFeaturedPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
@@ -36,7 +36,7 @@ public class GetFeaturedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetFeaturedPosts(request.Count);
+            var posts = await postRepository.GetFeaturedPosts(query.Count);
             
             var postList = posts.ToList();
             if (postList.IsNotNullOrEmpty())

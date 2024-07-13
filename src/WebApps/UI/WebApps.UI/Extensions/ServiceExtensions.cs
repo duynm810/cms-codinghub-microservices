@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Shared.Settings;
-using WebApps.UI.ApiServices;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Attributes;
 using WebApps.UI.Services;
 using WebApps.UI.Services.Interfaces;
@@ -62,12 +62,6 @@ public static class ServiceExtensions
                 $"{nameof(IdentityServerSettings)} is not configured properly");
 
         services.AddSingleton(identityServerSettings);
-
-        var paginationSettings = configuration.GetSection(nameof(PaginationSettings)).Get<PaginationSettings>()
-                                 ?? throw new ArgumentNullException(
-                                     $"{nameof(PaginationSettings)} is not configured properly");
-
-        services.AddSingleton(paginationSettings);
     }
 
     private static void AddApiClientServices(this IServiceCollection services)
@@ -79,7 +73,8 @@ public static class ServiceExtensions
             .AddScoped<ISeriesApiClient, SeriesApiClient>()
             .AddScoped<ITagApiClient, TagApiClient>()
             .AddScoped<ICommentApiClient, CommentApiClient>()
-            .AddScoped<IMediaApiClient, MediaApiClient>();
+            .AddScoped<IMediaApiClient, MediaApiClient>()
+            .AddScoped<IDashboardApiClient, DashboardApiClient>();
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)

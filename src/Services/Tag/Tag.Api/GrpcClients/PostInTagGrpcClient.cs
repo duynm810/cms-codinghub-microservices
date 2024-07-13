@@ -8,7 +8,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Tag.Api.GrpcClients;
 
-public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ICacheService cacheService, ILogger logger) : IPostInTagGrpcClient
+public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInTagServiceClient, ILogger logger) : IPostInTagGrpcClient
 {
     public async Task<IEnumerable<Guid>> GetTagIdsByPostIdAsync(Guid postId)
     {

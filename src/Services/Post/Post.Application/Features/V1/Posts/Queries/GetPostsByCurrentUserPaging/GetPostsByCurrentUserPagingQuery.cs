@@ -1,14 +1,15 @@
 using MediatR;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Identity.User;
+using Shared.Dtos.Post;
+using Shared.Requests.Post;
+using Shared.Requests.Post.Queries;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsByCurrentUserPaging;
 
-public class GetPostsByCurrentUserPagingQuery(Guid currentUserId, int pageNumber, int pageSize) : IRequest<ApiResult<PagedResponse<PostDto>>>
+public class GetPostsByCurrentUserPagingQuery(GetPostsByCurrentUserRequest request, CurrentUserDto currentUser) : IRequest<ApiResult<PagedResponse<PostDto>>>
 {
-    public Guid CurrentUserId { get; set; } = currentUserId;
-
-    public int PageNumber { get; set; } = pageNumber;
-
-    public int PageSize { get; set; } = pageSize;
+    public GetPostsByCurrentUserRequest Request { get; set; } = request;
+    
+    public CurrentUserDto CurrentUser { get; set; } = currentUser;
 }

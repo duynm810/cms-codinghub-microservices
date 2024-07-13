@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text;
 using System.Web;
 
+[ViewComponent(Name = "Pager")]
 public class PagerViewComponent : ViewComponent
 {
     public async Task<IViewComponentResult> InvokeAsync(MetaData metaData)
@@ -24,7 +25,7 @@ public class PagerViewComponent : ViewComponent
         // Kiểm tra nếu là trang chủ
         if (controllerName.Equals("Home") && actionName.Equals("Index"))
         {
-            urlTemplate.Append("/home?page={0}");
+            urlTemplate.Append(Url.Action("Index", "Home") + "?page={0}");
         }
         else
         {

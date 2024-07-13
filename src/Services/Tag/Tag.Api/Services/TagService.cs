@@ -3,6 +3,7 @@ using Contracts.Commons.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Tag;
 using Shared.Helpers;
+using Shared.Requests.Tag;
 using Shared.Responses;
 using Shared.Utilities;
 using Tag.Api.Entities;
@@ -17,7 +18,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
 {
     #region CRUD
 
-    public async Task<ApiResult<TagDto>> CreateTag(CreateTagDto request)
+    public async Task<ApiResult<TagDto>> CreateTag(CreateTagRequest request)
     {
         var result = new ApiResult<TagDto>();
         const string methodName = nameof(CreateTag);
@@ -44,7 +45,7 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
         return result;
     }
 
-    public async Task<ApiResult<TagDto>> UpdateTag(Guid id, UpdateTagDto request)
+    public async Task<ApiResult<TagDto>> UpdateTag(Guid id, UpdateTagRequest request)
     {
         var result = new ApiResult<TagDto>();
         const string methodName = nameof(UpdateTag);

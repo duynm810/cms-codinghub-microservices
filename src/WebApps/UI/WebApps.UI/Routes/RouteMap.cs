@@ -23,6 +23,16 @@ public static class RouteMap
             new { controller = "Accounts", action = "UpdateThumbnail" });
         
         app.MapControllerRoute(
+            "toggle-pin-status",
+            "/accounts/toggle-pin-status/{id:guid}",
+            new { controller = "Accounts", action = "TogglePinStatus" });
+        
+        app.MapControllerRoute(
+            "toggle-featured-status",
+            "/accounts/toggle-featured-status/{id:guid}",
+            new { controller = "Accounts", action = "ToggleFeaturedStatus" });
+        
+        app.MapControllerRoute(
             "delete_post",
             "accounts/delete-post/{id:guid}",
             new { controller = "Accounts", action = "DeletePost" });
@@ -41,6 +51,11 @@ public static class RouteMap
             "manage-posts",
             "/accounts/manage-posts",
             new { controller = "Accounts", action = "ManagePosts" });
+        
+        app.MapControllerRoute(
+            "posts-by-current-user",
+            "/accounts/posts-by-current-user",
+            new { controller = "Accounts", action = "GetPostsByCurrentUser" });
 
         #endregion
 

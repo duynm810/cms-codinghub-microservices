@@ -24,46 +24,46 @@ public class UpdatePostCommandHandler(
     ILogger logger)
     : IRequestHandler<UpdatePostCommand, ApiResult<bool>>
 {
-    public async Task<ApiResult<bool>> Handle(UpdatePostCommand request, CancellationToken cancellationToken)
+    public async Task<ApiResult<bool>> Handle(UpdatePostCommand command, CancellationToken cancellationToken)
     {
         var result = new ApiResult<bool>();
         const string methodName = nameof(UpdatePostCommand);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Updating post with ID: {PostId}", methodName, request.Id);
+            logger.Information("BEGIN {MethodName} - Updating post with ID: {PostId}", methodName, command.Id);
 
-            var post = await postRepository.GetPostById(request.Id);
+            var post = await postRepository.GetPostById(command.Id);
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, request.Id);
+                logger.Warning("{MethodName} - Post not found with ID: {PostId}", methodName, command.Id);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
 
             // Check slug exists
-            var slugExists = await postRepository.SlugExists(request.Slug, request.Id);
+            var slugExists = await postRepository.SlugExists(command.Slug, command.Id);
             if (slugExists)
             {
                 logger.Warning("{MethodName} - Slug already exists for post with ID: {PostId}, Slug: {PostSlug}",
-                    methodName, request.Id, request.Slug);
+                    methodName, command.Id, command.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.SlugExists);
                 result.Failure(StatusCodes.Status409Conflict, result.Messages);
                 return result;
             }
 
             // Check valid category id
-            var category = await categoryGrpcClient.GetCategoryById(request.CategoryId);
+            var category = await categoryGrpcClient.GetCategoryById(command.CategoryId);
             if (category == null)
             {
-                logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, request.CategoryId);
+                logger.Warning("{MethodName} - Invalid category ID: {CategoryId}", methodName, command.CategoryId);
                 result.Messages.Add(ErrorMessagesConsts.Category.InvalidCategoryId);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
 
-            var updatePost = mapper.Map(request, post);
+            var updatePost = mapper.Map(command, post);
 
             // Set category id get by categories services
             updatePost.CategoryId = category.Id;
@@ -77,13 +77,14 @@ public class UpdatePostCommandHandler(
                 var cacheKeys = new List<string>
                 {
                     CacheKeyHelper.Post.GetAllPostsKey(),
-                    CacheKeyHelper.Post.GetPostByIdKey(request.Id),
                     CacheKeyHelper.Post.GetPinnedPostsKey(),
                     CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                    CacheKeyHelper.Post.GetPostBySlugKey(request.Slug),
-                    CacheKeyHelper.Post.GetLatestPostsPagingKey(1, 5),
-                    CacheKeyHelper.Post.GetPostsByCategoryPagingKey(category.Slug, 1, 6),
-                    CacheKeyHelper.Post.GetPostsByCurrentUserPagingKey(request.AuthorUserId, 1, 4)
+                    CacheKeyHelper.Post.GetMostLikedPostsKey(),
+                    CacheKeyHelper.Post.GetMostCommentPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(command.Id),
+                    CacheKeyHelper.Post.GetPostBySlugKey(command.Slug),
+                    CacheKeyHelper.Post.GetDetailBySlugKey(command.Slug),
+                    CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
                 };
 
                 await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
@@ -92,16 +93,16 @@ public class UpdatePostCommandHandler(
                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
             });
             
-            var rawTags = serializeService.Deserialize<List<RawTagDto>>(request.RawTags);
+            var rawTags = serializeService.Deserialize<List<RawTagDto>>(command.RawTags);
             if (rawTags != null)
             {
-                TaskHelper.RunFireAndForget(() => postEventService.HandlePostUpdatedEvent(request.Id, rawTags), e =>
+                TaskHelper.RunFireAndForget(() => postEventService.HandlePostUpdatedEvent(command.Id, rawTags), e =>
                 {
                     logger.Error("HandlePostUpdatedEvent failed. Message: {ErrorMessage}", e.Message);
                 });
             }
 
-            logger.Information("END {MethodName} - Post updated successfully with ID: {PostId}", methodName, request.Id);
+            logger.Information("END {MethodName} - Post updated successfully with ID: {PostId}", methodName, command.Id);
         }
         catch (Exception e)
         {

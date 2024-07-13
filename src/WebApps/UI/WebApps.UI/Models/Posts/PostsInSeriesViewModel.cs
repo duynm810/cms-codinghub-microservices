@@ -1,4 +1,4 @@
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 
 namespace WebApps.UI.Models.Posts;
 

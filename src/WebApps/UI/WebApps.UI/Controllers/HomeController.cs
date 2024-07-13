@@ -1,7 +1,7 @@
-using System.Net;
+using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Shared.Settings;
-using WebApps.UI.ApiServices.Interfaces;
+using Shared.Requests.Post.Queries;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
@@ -9,9 +9,9 @@ using ILogger = Serilog.ILogger;
 namespace WebApps.UI.Controllers;
 
 public class HomeController(
+    IDashboardApiClient dashboardApiClient,
     IPostApiClient postApiClient,
-    ITagApiClient tagApiClient,
-    PaginationSettings paginationSettings,
+    IRazorRenderViewService razorRenderViewService,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
@@ -21,42 +21,65 @@ public class HomeController(
         
         try
         {
-            var pageSize = paginationSettings.LatestPostPageSize;
+            var response = await dashboardApiClient.GetDashboard();
+    
+            var viewModel = new HomeViewModel();
 
-            var featuredPosts = await postApiClient.GetFeaturedPosts(4);
-            var pinnedPosts = await postApiClient.GetPinnedPosts(4);
-            var latestPosts = await postApiClient.GetLatestPostsPaging(page, pageSize);
-            var mostLikedPosts = await postApiClient.GetMostLikedPosts(4);
-            var tags = await tagApiClient.GetTags(4);
-
-            if (featuredPosts is { IsSuccess: true, Data: not null } &&
-                pinnedPosts is { IsSuccess: true, Data: not null } &&
-                latestPosts is { IsSuccess: true, Data: not null } &&
-                mostLikedPosts is { IsSuccess: true, Data: not null } &&
-                tags is { IsSuccess: true, Data: not null })
+            if (response.FeaturedPosts.Data is { Count: > 0 } featuredPosts)
             {
-                var items = new HomeViewModel
-                {
-                    FeaturedPosts = featuredPosts.Data,
-                    PinnedPosts = featuredPosts.Data,
-                    LatestPosts = latestPosts.Data,
-                    MostLikedPosts = mostLikedPosts.Data,
-                    Tags = tags.Data
-                };
-
-                return View(items);
+                viewModel.FeaturedPosts = featuredPosts;
             }
 
-            return HandleError(HttpStatusCode.NotFound, methodName);
+            if (response.PinnedPosts.Data is { Count: > 0 } pinnedPosts)
+            {
+                viewModel.PinnedPosts = pinnedPosts;
+            }
+
+            if (response.MostLikedPosts.Data is { Count: > 0 } mostLikedPosts)
+            {
+                viewModel.MostLikedPosts = mostLikedPosts;
+            }
+
+            if (response.SuggestTags.Data is { Count: > 0 } suggestTags)
+            {
+                viewModel.SuggestTags = suggestTags;
+            }
+
+            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page });
+            if (latestPosts is { IsSuccess: true, Data: not null })
+            {
+                viewModel.LatestPosts = latestPosts.Data;
+            }
+
+            return View(viewModel);
         }
         catch (Exception e)
         {
             return HandleException(e, methodName);
         }
     }
-
-    public IActionResult Privacy()
+    
+    public async Task<IActionResult> LatestPosts(int page = 1)
     {
-        return View();
+        const string methodName = nameof(LatestPosts);
+
+        try
+        {
+            var request = new GetLatestPostsRequest { PageNumber = page };
+            var response = await postApiClient.GetLatestPostsPaging(request);
+            if (response is { IsSuccess: true, Data: not null })
+            {
+                var viewModel = new HomeViewModel { LatestPosts = response.Data };
+                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Home/_LatestPosts.cshtml", viewModel);
+                return Json(new { success = true, html });
+            }
+        }
+        catch (Exception e)
+        {
+            return HandleException(e, methodName);
+        }
+
+        return Json(new { success = false });
     }
+
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Category;
 using Shared.Enums;
+using Shared.Requests.Category;
 using Shared.Responses;
 
 namespace Category.Api.Controllers;
@@ -19,7 +20,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.Created)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Create)]
-    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryDto request)
+    public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequest request)
     {
         var result = await categoryService.CreateCategory(request);
         return Ok(result);
@@ -29,7 +30,7 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [ProducesResponseType(typeof(ApiResult<CategoryDto>), (int)HttpStatusCode.NoContent)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.Update)]
     public async Task<IActionResult> UpdateCategory([FromRoute, Required] long id,
-        [FromBody] UpdateCategoryDto request)
+        [FromBody] UpdateCategoryRequest request)
     {
         var result = await categoryService.UpdateCategory(id, request);
         return Ok(result);
@@ -65,11 +66,9 @@ public class CategoriesController(ICategoryService categoryService) : Controller
     [HttpGet("paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<CategoryDto>>), (int)HttpStatusCode.OK)]
     [ClaimRequirement(FunctionCodeEnum.Category, CommandCodeEnum.View)]
-    public async Task<IActionResult> GetCategoriesPaging(
-        [FromQuery, Required] int pageNumber = 1,
-        [FromQuery, Required] int pageSize = 10)
+    public async Task<IActionResult> GetCategoriesPaging([FromBody] GetCategoriesRequest request)
     {
-        var result = await categoryService.GetCategoriesPaging(pageNumber, pageSize);
+        var result = await categoryService.GetCategoriesPaging(request);
         return Ok(result);
     }
 

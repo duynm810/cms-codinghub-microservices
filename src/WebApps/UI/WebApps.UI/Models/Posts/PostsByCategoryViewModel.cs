@@ -1,6 +1,5 @@
 using Shared.Dtos.Category;
 using Shared.Dtos.Post;
-using Shared.Dtos.Post.Queries;
 using Shared.Responses;
 using WebApps.UI.Models.Commons;
 

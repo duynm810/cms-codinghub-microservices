@@ -1,6 +1,6 @@
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.ApiServices.Interfaces;
+using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
 using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;

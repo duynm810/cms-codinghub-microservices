@@ -8,9 +8,13 @@ public interface ICommentRepository
     
     Task<List<CommentBase>> GetCommentsByPostId(Guid postId);
 
+    Task<List<CommentBase>> GetLatestComments(int count);
+
     Task<CommentBase?> GetCommentById(string id);
 
     Task<bool> UpdateLikeCount(string commentId, int increment);
 
     Task<bool> UpdateRepliesCount(string parentId, int increment);
+
+    Task DeleteCommentsByPostId(Guid postId);
 }

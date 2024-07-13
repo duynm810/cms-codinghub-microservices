@@ -2,7 +2,7 @@ using AutoMapper;
 using Post.Domain.Entities;
 using Post.Domain.GrpcClients;
 using Post.Domain.Services;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.SeedWorks;
 

@@ -12,7 +12,6 @@ namespace PostInSeries.Api.GrpcClients;
 
 public class PostGrpcClient(
     PostProtoService.PostProtoServiceClient postProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger)
     : IPostGrpcClient

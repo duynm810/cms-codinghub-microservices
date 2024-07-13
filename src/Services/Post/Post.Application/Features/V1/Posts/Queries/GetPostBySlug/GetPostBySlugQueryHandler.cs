@@ -7,7 +7,7 @@ using Post.Domain.Repositories;
 using Serilog;
 using Shared.Constants;
 using Shared.Dtos.Category;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 using Shared.Utilities;
@@ -24,30 +24,30 @@ public class GetPostBySlugQueryHandler(
     ILogger logger)
     : IRequestHandler<GetPostBySlugQuery, ApiResult<PostDto>>
 {
-    public async Task<ApiResult<PostDto>> Handle(GetPostBySlugQuery request, CancellationToken cancellationToken)
+    public async Task<ApiResult<PostDto>> Handle(GetPostBySlugQuery query, CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostDto>();
         const string methodName = nameof(GetPostBySlugQuery);
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving post with Slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("BEGIN {MethodName} - Retrieving post with Slug: {PostSlug}", methodName, query.Slug);
 
-            var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(request.Slug);
+            var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(query.Slug);
             var cachedPost = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
             if (cachedPost != null)
             {
-                logger.Information("END {MethodName} - Successfully retrieved post from cache with Slug: {PostSlug}", methodName, request.Slug);
+                logger.Information("END {MethodName} - Successfully retrieved post from cache with Slug: {PostSlug}", methodName, query.Slug);
                 result.Success(cachedPost);
                 return result;
             }
 
-            var postTask = postRepository.GetPostBySlug(request.Slug);
+            var postTask = postRepository.GetPostBySlug(query.Slug);
             var post = await postTask;
 
             if (post == null)
             {
-                logger.Warning("{MethodName} - Post not found with Slug: {PostSlug}", methodName, request.Slug);
+                logger.Warning("{MethodName} - Post not found with Slug: {PostSlug}", methodName, query.Slug);
                 result.Messages.Add(ErrorMessagesConsts.Post.PostNotFound);
                 result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
@@ -86,7 +86,7 @@ public class GetPostBySlugQueryHandler(
             result.Success(data);
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
-            logger.Information("END {MethodName} - Successfully retrieved post with Slug: {PostSlug}", methodName, request.Slug);
+            logger.Information("END {MethodName} - Successfully retrieved post with Slug: {PostSlug}", methodName, query.Slug);
         }
         catch (Exception e)
         {

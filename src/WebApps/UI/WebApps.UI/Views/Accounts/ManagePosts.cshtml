@@ -1,10 +1,58 @@
 @model ManagePostsViewModel
 @{
+    ViewData["ShowBottom"] = false;
     var posts = Model.Posts;
+    var user = User;
+    var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);
 }
 
 @section Scripts {
     <script>
+        $(document).on('click', '.pagination a', function (e) {
+            e.preventDefault();
+            const page = $(this).attr('href').split('page=')[1];
+            loadPosts(page);
+        });
+        
+        $(document).on('change', '#status-filter', function () {
+            loadPosts(1); // Load first page when filter changes
+        });
+
+        $(document).on('input', '#keyword-filter', function () {
+            let keyword = $(this).val().toLowerCase();
+            $('#posts-table-body tr').filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            });
+        });
+
+        function loadPosts(page) {
+            let status = $('#status-filter').val();
+            if (status === "") {
+                status = null; // Treat empty string as null for int status
+            }
+            
+            $.ajax({
+                url: '/accounts/posts-by-current-user',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    status: status,
+                    pageNumber: page
+                }),
+                success: function (response) {
+                    if (response.success) {
+                        $('#posts-table-body').html(response.html); // Update table content
+                        $('#pagination-area').html(response.paginationHtml); // Update table content
+                    } else {
+                        // Handle error
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle AJAX error
+                }
+            });
+        }
+        
         function updatePost(button) {
             let slug = button.getAttribute('data-slug');
             let urlTemplate = button.getAttribute('data-url');
@@ -12,7 +60,7 @@
         }
 
         function deletePost(button) {
-            let postId = button.getAttribute('data-id');
+            const postId = button.getAttribute('data-id');
             let deleteUrl = `@Url.Action("DeletePost", "Accounts")/${postId}`;
 
             showConfirmAlert(
@@ -42,9 +90,96 @@
                 }
             );
         }
+
+        function confirmPin(button, shouldPin) {
+            const action = shouldPin ? 'pin' : 'unpin';
+            const message = shouldPin ? 'pin this post' : 'unpin this post';
+            const currentPage = document.getElementById('current-page').value;
+            
+            showConfirmAlert(
+                `Confirm ${action}`,
+                `Are you sure you want to ${message}?`,
+                `Yes, ${action} it`,
+                'Cancel',
+                () => {
+                    const postId = button.getAttribute('data-id');
+                    pinPost(postId, shouldPin, currentPage);
+                }
+            );
+        }
+
+        function confirmFeature(button, shouldFeature) {
+            const action = shouldFeature ? 'feature' : 'unfeature';
+            const message = shouldFeature ? 'feature this post' : 'unfeature this post';
+            const currentPage = document.getElementById('current-page').value;
+
+            showConfirmAlert(
+                `Confirm ${action}`,
+                `Are you sure you want to ${message}?`,
+                `Yes, ${action} it`,
+                'Cancel',
+                () => {
+                    const postId = button.getAttribute('data-id');
+                    featurePost(postId, shouldFeature, currentPage);
+                }
+            );
+        }
+
+        async function pinPost(postId, shouldPin, currentPage) {
+            try {
+                console.log(`${shouldPin ? 'Pin' : 'Unpin'} post:`, postId);
+                console.log(currentPage);
+                const response = await $.ajax({
+                    url: `/accounts/toggle-pin-status/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        isPinned: shouldPin,
+                        currentPage: currentPage
+                    })
+                });
+
+                if (response.success) {
+                    $('#posts-table-body').html(response.html); // Update table content
+                    showSuccessNotification(`Post ${shouldPin ? 'pinned' : 'unpinned'} successfully.`);
+                } else {
+                    showErrorNotification(`There was a problem ${shouldPin ? 'pinning' : 'unpinning'} your post.`);
+                }
+            } catch (error) {
+                showErrorNotification(`Error ${shouldPin ? 'pinning' : 'unpinning'} post: ${error.responseText || error.message}`);
+            }
+        }
+
+        async function featurePost(postId, shouldFeature, currentPage) {
+            try {
+                console.log(`${shouldFeature ? 'Feature' : 'Unfeature'} post:`, postId);
+                const response = await $.ajax({
+                    url: `/accounts/toggle-featured-status/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        isFeatured: shouldFeature,
+                        currentPage: currentPage
+                    })
+                });
+
+                if (response.success) {
+                    $('#posts-table-body').html(response.html); // Update table content
+                    showSuccessNotification(`Post ${shouldFeature ? 'featured' : 'unfeatured'} successfully.`);
+                } else {
+                    showErrorNotification(`There was a problem ${shouldFeature ? 'featuring' : 'unfeaturing'} your post.`);
+                }
+            } catch (error) {
+                showErrorNotification(`Error ${shouldFeature ? 'featuring' : 'unfeaturing'} post: ${error.responseText || error.message}`);
+            }
+        }
+    
+    
+    
     </script>
 }
 
+<input type="hidden" id="current-page" value="@Model.Posts.MetaData.CurrentPage" />
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
         <h1 class="entry-title mb-20 font-weight-900">
@@ -58,6 +193,22 @@
             </button>
         </div>
     </div>
+
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-2">
+            <select id="status-filter" class="custom-dropdown form-control">
+                <option value="" selected>All</option>
+                <option value="0">Draft</option>
+                <option value="1">Waiting approval</option>
+                <option value="2">Rejected</option>
+                <option value="3">Published</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..." />
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-12">
             <div class="table-wrap">
@@ -65,11 +216,19 @@
                     <thead>
                     <tr>
                         <th>&nbsp;</th>
-                        <th>Category</th>
-                        <th>Title</th>
-                        <th>Created date</th>
-                        <th>Views</th>
-                        <th>Status</th>
+                        @if (isAdmin)
+                        {
+                            <th style="min-width: 50px;">Pinned</th>
+                            <th style="min-width: 50px;">Featured</th>
+                        }
+                        <th style="min-width: 100px;">Status</th>
+                        <th style="min-width: 150px;">Category</th>
+                        <th style="min-width: 300px;">Title</th>
+                        <th style="min-width: 120px;">Created date</th>
+                        <th style="min-width: 80px;">Views</th>
+                        <th style="min-width: 80px;">Comments</th>
+                        <th style="min-width: 80px;">Likes</th>
+                        <th style="min-width: 150px;">Published date</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
@@ -79,7 +238,7 @@
                     <tfoot>
                     <tr>
                         <td colspan="6">
-                            <div class="pagination-area mb-30">
+                            <div class="pagination-area mb-30" id="pagination-area">
                                 @await Component.InvokeAsync("Pager", posts.MetaData)
                             </div>
                         </td>

@@ -1,6 +1,7 @@
 using Infrastructure.Identity;
 using Ocelot.Cache.CacheManager;
 using Ocelot.DependencyInjection;
+using Ocelot.Gw.Aggregators;
 using Ocelot.Provider.Polly;
 using Shared.Configurations;
 
@@ -46,6 +47,7 @@ public static class ServiceExtensions
     private static void AddOcelotConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddOcelot(configuration)
+            .AddSingletonDefinedAggregator<DashboardAggregator>()
             .AddPolly()
             .AddCacheManager(x => x.WithDictionaryHandle());
     }

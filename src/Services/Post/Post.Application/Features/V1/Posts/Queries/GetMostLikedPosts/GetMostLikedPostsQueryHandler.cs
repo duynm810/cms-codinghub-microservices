@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
 
@@ -16,7 +16,7 @@ public class GetMostLikedPostsQueryHandler(
     IPostService postService,
     ILogger logger) : IRequestHandler<GetMostLikedPostsQuery, ApiResult<IEnumerable<PostDto>>>
 {
-    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetMostLikedPostsQuery request,
+    public async Task<ApiResult<IEnumerable<PostDto>>> Handle(GetMostLikedPostsQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<IEnumerable<PostDto>>();
@@ -35,7 +35,7 @@ public class GetMostLikedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetMostLikedPosts(request.Count);
+            var posts = await postRepository.GetMostLikedPosts(query.Count);
 
             var postList = posts.ToList();
 

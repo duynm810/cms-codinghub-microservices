@@ -6,6 +6,7 @@ using Series.Api.Services.Interfaces;
 using Shared.Constants;
 using Shared.Dtos.Series;
 using Shared.Helpers;
+using Shared.Requests.Series;
 using Shared.Responses;
 using Shared.Settings;
 using Shared.Utilities;
@@ -21,7 +22,7 @@ public class SeriesService(
 {
     #region CRUD
 
-    public async Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesDto request)
+    public async Task<ApiResult<SeriesDto>> CreateSeries(CreateSeriesRequest request)
     {
         var result = new ApiResult<SeriesDto>();
         const string methodName = nameof(CreateSeries);
@@ -58,7 +59,7 @@ public class SeriesService(
         return result;
     }
 
-    public async Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesDto request)
+    public async Task<ApiResult<SeriesDto>> UpdateSeries(Guid id, UpdateSeriesRequest request)
     {
         var result = new ApiResult<SeriesDto>();
         const string methodName = nameof(UpdateSeries);
@@ -152,7 +153,7 @@ public class SeriesService(
         return result;
     }
 
-    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries(int count)
+    public async Task<ApiResult<IEnumerable<SeriesDto>>> GetSeries()
     {
         var result = new ApiResult<IEnumerable<SeriesDto>>();
         const string methodName = nameof(GetSeries);
@@ -170,7 +171,7 @@ public class SeriesService(
                 return result;
             }
 
-            var series = await seriesRepository.GetSeries(count);
+            var series = await seriesRepository.GetSeries();
             if (series.IsNotNullOrEmpty())
             {
                 var data = mapper.Map<List<SeriesDto>>(series);
@@ -242,7 +243,7 @@ public class SeriesService(
 
     #region OTHERS
 
-    public async Task<ApiResult<PagedResponse<SeriesDto>>> GetSeriesPaging(int pageNumber, int pageSize)
+    public async Task<ApiResult<PagedResponse<SeriesDto>>> GetSeriesPaging(GetSeriesRequest request)
     {
         var result = new ApiResult<PagedResponse<SeriesDto>>();
         const string methodName = nameof(GetSeriesPaging);
@@ -250,19 +251,19 @@ public class SeriesService(
         try
         {
             logger.Information("BEGIN {MethodName} - Retrieving series for page {PageNumber} with page size {PageSize}",
-                methodName, pageNumber, pageSize);
+                methodName, request.PageNumber, request.PageSize);
 
-            var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(pageNumber, pageSize);
+            var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(request.PageNumber, request.PageSize);
             var cachedSeries = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
             if (cachedSeries != null)
             {
                 result.Success(cachedSeries);
                 logger.Information("END {MethodName} - Successfully retrieved series for page {PageNumber} from cache",
-                    methodName, pageNumber);
+                    methodName, request.PageNumber);
                 return result;
             }
 
-            var series = await seriesRepository.GetSeriesPaging(pageNumber, pageSize);
+            var series = await seriesRepository.GetSeriesPaging(request);
             var data = new PagedResponse<SeriesDto>()
             {
                 Items = mapper.Map<List<SeriesDto>>(series.Items),
@@ -276,7 +277,7 @@ public class SeriesService(
 
             logger.Information(
                 "END {MethodName} - Successfully retrieved {SeriesCount} series for page {PageNumber} with page size {PageSize}",
-                methodName, data.Items.Count, pageNumber, pageSize);
+                methodName, data.Items.Count, request.PageNumber, request.PageSize);
         }
         catch (Exception e)
         {

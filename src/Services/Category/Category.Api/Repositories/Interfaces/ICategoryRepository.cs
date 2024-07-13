@@ -1,5 +1,6 @@
 using Category.Api.Entities;
 using Contracts.Domains.Repositories;
+using Shared.Requests.Category;
 using Shared.Responses;
 
 namespace Category.Api.Repositories.Interfaces;
@@ -22,7 +23,7 @@ public interface ICategoryRepository : IRepositoryCommandBase<CategoryBase, long
 
     #region OTHERS
 
-    Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber = 1, int pageSize = 10);
+    Task<PagedResponse<CategoryBase>> GetCategoriesPaging(GetCategoriesRequest request);
 
     Task<CategoryBase?> GetCategoryBySlug(string slug);
 

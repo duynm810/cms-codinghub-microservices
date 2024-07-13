@@ -1,10 +1,10 @@
 using MediatR;
-using Shared.Dtos.Post.Commands;
+using Shared.Requests.Post.Commands;
 using Shared.Responses;
 
 namespace Post.Application.Features.V1.Posts.Commands.UpdateThumbnail;
 
-public class UpdateThumbnailCommand : UpdateThumbnailDto, IRequest<ApiResult<bool>>
+public class UpdateThumbnailCommand : UpdateThumbnailRequest, IRequest<ApiResult<bool>>
 {
     public Guid Id { get; private set; }
 

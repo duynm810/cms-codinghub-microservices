@@ -6,7 +6,7 @@ using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
 using Shared.Constants;
-using Shared.Dtos.Post.Queries;
+using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
 
@@ -19,7 +19,7 @@ public class GetPostsByTagPagingQueryHandler(
     IPostService postService,
     ILogger logger) : IRequestHandler<GetPostsByTagPagingQuery, ApiResult<PostsByTagDto>>
 {
-    public async Task<ApiResult<PostsByTagDto>> Handle(GetPostsByTagPagingQuery request,
+    public async Task<ApiResult<PostsByTagDto>> Handle(GetPostsByTagPagingQuery query,
         CancellationToken cancellationToken)
     {
         var result = new ApiResult<PostsByTagDto>();
@@ -27,9 +27,9 @@ public class GetPostsByTagPagingQueryHandler(
 
         try
         {
-            logger.Information("BEGIN {MethodName} - Retrieving posts by tag with Slug: {TagSlug} for page {PageNumber} with page size {PageSize}", methodName, request.TagSlug, request.PageNumber, request.PageSize);
+            logger.Information("BEGIN {MethodName} - Retrieving posts by tag with Slug: {TagSlug} for page {PageNumber} with page size {PageSize}", methodName, query.TagSlug, query.Request.PageNumber, query.Request.PageSize);
             
-            var tag = await tagGrpcClient.GetTagBySlug(request.TagSlug);
+            var tag = await tagGrpcClient.GetTagBySlug(query.TagSlug);
             if (tag == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Tag.TagNotFound);
@@ -57,7 +57,7 @@ public class GetPostsByTagPagingQueryHandler(
                 
             var enrichedPosts = await postService.EnrichPostsWithCategories(postList, cancellationToken);
                         
-            var items = PagedList<PostDto>.ToPagedList(enrichedPosts, request.PageNumber, request.PageSize, x => x.Id);
+            var items = PagedList<PostDto>.ToPagedList(enrichedPosts, query.Request.PageNumber, query.Request.PageSize, x => x.Id);
 
             var data = new PostsByTagDto()
             {

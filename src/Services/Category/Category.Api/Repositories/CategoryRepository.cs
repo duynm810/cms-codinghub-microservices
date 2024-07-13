@@ -5,6 +5,7 @@ using Contracts.Domains.Repositories;
 using Infrastructure.Domains.Repositories;
 using Infrastructure.Paged;
 using Microsoft.EntityFrameworkCore;
+using Shared.Requests.Category;
 using Shared.Responses;
 
 namespace Category.Api.Repositories;
@@ -28,11 +29,11 @@ public class CategoryRepository(CategoryContext dbContext, IUnitOfWork<CategoryC
 
     #region OTHERS
 
-    public async Task<PagedResponse<CategoryBase>> GetCategoriesPaging(int pageNumber, int pageSize)
+    public async Task<PagedResponse<CategoryBase>> GetCategoriesPaging(GetCategoriesRequest request)
     {
         var query = FindAll();
 
-        var items = await PagedList<CategoryBase>.ToPagedList(query, pageNumber, pageSize, x => x.SortOrder);
+        var items = await PagedList<CategoryBase>.ToPagedList(query, request.PageNumber, request.PageSize, x => x.SortOrder);
 
         var response = new PagedResponse<CategoryBase>
         {

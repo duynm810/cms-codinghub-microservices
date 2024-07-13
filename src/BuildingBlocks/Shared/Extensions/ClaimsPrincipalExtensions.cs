@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Shared.Constants;
+using Shared.Dtos.Identity.User;
 
 namespace Shared.Extensions;
 
@@ -55,6 +56,18 @@ public static class ClaimsPrincipalExtensions
     {
         return GetClaimValue(user, InternalClaimTypesConsts.Claims.UserName) ?? "UnknownUser";
     }
+    
+    public static CurrentUserDto GetCurrentUser(this ClaimsPrincipal user)
+    {
+        var userId = GetClaimValue(user, InternalClaimTypesConsts.Claims.UserId);
+        var roles = GetClaimValue(user, InternalClaimTypesConsts.Claims.Roles);
+
+        return new CurrentUserDto
+        {
+            UserId = string.IsNullOrEmpty(userId) ? default : Guid.Parse(userId),
+            Roles = string.IsNullOrEmpty(roles) ? new List<string>() : roles.Split(';').ToList()
+        };
+    }
 
     /// <summary>
     /// Get device id from claims.
@@ -95,6 +108,11 @@ public static class ClaimsPrincipalExtensions
     /// <returns>Token.</returns>
     public static string? GetToken(this ClaimsPrincipal user)
         => GetClaimValue(user, InternalClaimTypesConsts.Claims.Token);
+    
+    public static bool IsInRole(this ClaimsPrincipal principal, string role)
+    {
+        return principal?.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == role) ?? false;
+    }
 
     /// <summary>
     /// Gets a flag specifying whether the request is using an api key.

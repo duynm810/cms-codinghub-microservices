@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Series.Api.Services.Interfaces;
 using Shared.Dtos.Series;
+using Shared.Requests.Series;
 using Shared.Responses;
 
 namespace Series.Api.Controllers;
@@ -16,18 +17,18 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<SeriesDto>), (int)HttpStatusCode.Created)]
-    public async Task<IActionResult> CreateSeries([FromBody] CreateSeriesDto seriesDto)
+    public async Task<IActionResult> CreateSeries([FromBody] CreateSeriesRequest request)
     {
-        var result = await seriesService.CreateSeries(seriesDto);
+        var result = await seriesService.CreateSeries(request);
         return Ok(result);
     }
 
     [HttpPut("{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<SeriesDto>), (int)HttpStatusCode.NoContent)]
     public async Task<IActionResult> UpdateSeries([FromRoute, Required] Guid id,
-        [FromBody] UpdateSeriesDto seriesDto)
+        [FromBody] UpdateSeriesRequest request)
     {
-        var result = await seriesService.UpdateSeries(id, seriesDto);
+        var result = await seriesService.UpdateSeries(id, request);
         return Ok(result);
     }
 
@@ -42,9 +43,9 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<SeriesDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetSeries([FromQuery] int count = 4)
+    public async Task<IActionResult> GetSeries()
     {
-        var result = await seriesService.GetSeries(count);
+        var result = await seriesService.GetSeries();
         return Ok(result);
     }
 
@@ -67,11 +68,9 @@ public class SeriesController(ISeriesService seriesService) : ControllerBase
 
     [HttpGet("paging")]
     [ProducesResponseType(typeof(ApiResult<PagedResponse<SeriesDto>>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetSeriesPaging(
-        [FromQuery, Required] int pageNumber = 1,
-        [FromQuery, Required] int pageSize = 10)
+    public async Task<IActionResult> GetSeriesPaging([FromBody] GetSeriesRequest request)
     {
-        var result = await seriesService.GetSeriesPaging(pageNumber, pageSize);
+        var result = await seriesService.GetSeriesPaging(request);
         return Ok(result);
     }
 }
