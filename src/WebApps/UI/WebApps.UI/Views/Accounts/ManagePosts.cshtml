@@ -1,3 +1,4 @@
+@using Shared.Enums
 @model ManagePostsViewModel
 @{
     var posts = Model.Posts;
@@ -145,6 +146,13 @@
             </button>
         </div>
     </div>
+
+    <div class="row mb-3">
+        <div class="col-md-3">
+            @Html.EnumDropDownListFor("statusFilter", PostStatusEnum.Draft, new { @class = "custom-dropdown" })
+        </div>
+    </div>
+    
     <div class="row">
         <div class="col-md-12">
             <div class="table-wrap">
@@ -169,7 +177,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>

@@ -47,6 +47,32 @@
     align-items: center;
 }
 
+.custom-dropdown {
+    width: 100%;
+    max-width: 200px;
+    display: block;
+}
+
+.custom-dropdown option {
+    width: 100%;
+    display: block;
+    white-space: nowrap;
+}
+
+.custom-dropdown select {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.custom-dropdown select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
 /*----------------------- Spinner ----------------------*/
 
 .spinner {
