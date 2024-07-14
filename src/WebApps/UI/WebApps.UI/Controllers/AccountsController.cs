@@ -280,20 +280,32 @@ public class AccountsController(
         }
     }
 
-    [HttpPost]
-    public async Task<IActionResult> ApprovePost([FromRoute] Guid id)
+    [HttpPut]
+    public async Task<IActionResult> ApprovePost([FromRoute] Guid id, [FromBody] ApprovePostRequest request)
     {
         const string methodName = nameof(ApprovePost);
         
         try
         {
-            var response = await postApiClient.ApprovePost(id);
+            var response = await postApiClient.ApprovePost(id, request);
             if (response is { IsSuccess: true })
             {
-                
+                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
+                if (postsResult is { IsSuccess: true, Data: not null })
+                {
+                    var items = new ManagePostsViewModel()
+                    {
+                        Posts = postsResult.Data
+                    };
+            
+                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                    return Json(new { success = true, html });
+                }
+        
+                return Json(new { success = true, html = string.Empty });
             }
             
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+            return Json(new { success = false });
         }
         catch (Exception e)
         {
@@ -301,19 +313,32 @@ public class AccountsController(
         }
     }
     
-    [HttpPost]
-    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id)
+    [HttpPut]
+    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id, [FromBody] SubmitPostForApprovalRequest request)
     {
         const string methodName = nameof(SubmitPostForApproval);
         
         try
         {
-            var response = await postApiClient.SubmitPostForApproval(id);
+            var response = await postApiClient.SubmitPostForApproval(id, request);
             if (response is { IsSuccess: true })
             {
+                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
+                if (postsResult is { IsSuccess: true, Data: not null })
+                {
+                    var items = new ManagePostsViewModel()
+                    {
+                        Posts = postsResult.Data
+                    };
+            
+                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                    return Json(new { success = true, html });
+                }
+        
+                return Json(new { success = true, html = string.Empty });
             }
             
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+            return Json(new { success = false });
         }
         catch (Exception e)
         {
@@ -321,7 +346,7 @@ public class AccountsController(
         }
     }
     
-    [HttpPost]
+    [HttpPut]
     public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id, [FromBody] RejectPostWithReasonRequest request)
     {
         const string methodName = nameof(RejectPostWithReason);
@@ -331,9 +356,22 @@ public class AccountsController(
             var response = await postApiClient.RejectPostWithReason(id, request);
             if (response is { IsSuccess: true })
             {
+                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
+                if (postsResult is { IsSuccess: true, Data: not null })
+                {
+                    var items = new ManagePostsViewModel()
+                    {
+                        Posts = postsResult.Data
+                    };
+            
+                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+                    return Json(new { success = true, html });
+                }
+        
+                return Json(new { success = true, html = string.Empty });
             }
             
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
+            return Json(new { success = false });
         }
         catch (Exception e)
         {

@@ -15,9 +15,9 @@ public interface IPostApiClient
     
     Task<ApiResult<bool>> DeletePost(Guid id);
 
-    Task<ApiResult<bool>> ApprovePost(Guid id);
+    Task<ApiResult<bool>> ApprovePost(Guid id, ApprovePostRequest request);
 
-    Task<ApiResult<bool>> SubmitPostForApproval(Guid id);
+    Task<ApiResult<bool>> SubmitPostForApproval(Guid id, SubmitPostForApprovalRequest request);
 
     Task<ApiResult<bool>> RejectPostWithReason(Guid id, RejectPostWithReasonRequest request);
     

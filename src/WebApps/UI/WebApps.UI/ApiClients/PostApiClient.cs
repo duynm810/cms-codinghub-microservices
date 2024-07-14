@@ -28,14 +28,14 @@ public class PostApiClient(IBaseApiClient baseApiClient) : IPostApiClient
         return await baseApiClient.DeleteAsync<bool>($"/posts/{id}", true);
     }
     
-    public async Task<ApiResult<bool>> ApprovePost(Guid id)
+    public async Task<ApiResult<bool>> ApprovePost(Guid id, ApprovePostRequest request)
     {
-        return await baseApiClient.PostAsync<bool>($"/posts/approve/{id}", true);
+        return await baseApiClient.PostAsync<ApprovePostRequest, bool>($"/posts/approve/{id}", request, true);
     }
 
-    public async Task<ApiResult<bool>> SubmitPostForApproval(Guid id)
+    public async Task<ApiResult<bool>> SubmitPostForApproval(Guid id, SubmitPostForApprovalRequest request)
     {
-        return await baseApiClient.PostAsync<bool>($"/posts/submit-for-approval/{id}", true);
+        return await baseApiClient.PostAsync<SubmitPostForApprovalRequest, bool>($"/posts/submit-for-approval/{id}", request, true);
     }
     
     public async Task<ApiResult<bool>> RejectPostWithReason(Guid id, RejectPostWithReasonRequest request)

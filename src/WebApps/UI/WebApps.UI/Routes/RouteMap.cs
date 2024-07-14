@@ -41,6 +41,21 @@ public static class RouteMap
             "create-new-post",
             "/accounts/create-new-post",
             new { controller = "Accounts", action = "CreatePost" });
+        
+        app.MapControllerRoute(
+            "approve_post",
+            "accounts/approve-post/{id:guid}",
+            new { controller = "Accounts", action = "ApprovePost" });
+        
+        app.MapControllerRoute(
+            "submit_post_for_approval",
+            "accounts/waiting-post/{id:guid}",
+            new { controller = "Accounts", action = "SubmitPostForApproval" });
+        
+        app.MapControllerRoute(
+            "reject_post_with_reason",
+            "accounts/reject-post/{id:guid}",
+            new { controller = "Accounts", action = "RejectPostWithReason" });
 
         app.MapControllerRoute(
             "profile",

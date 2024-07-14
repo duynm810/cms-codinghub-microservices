@@ -125,6 +125,34 @@
             );
         }
 
+        function confirmAction(button, action) {
+            const actionText = {
+                'approve': 'approve this post',
+                'reject': 'reject this post',
+                'waiting': 'set this post to waiting'
+            };
+
+            const actionConfirmText = {
+                'approve': 'Approve',
+                'reject': 'Reject',
+                'waiting': 'Set to Waiting'
+            };
+
+            const postId = button.getAttribute('data-id');
+            const message = actionText[action];
+            const currentPage = document.getElementById('current-page').value;
+            
+            showConfirmAlert(
+                `Confirm ${action}`,
+                `Are you sure you want to ${message}?`,
+                `Yes, ${actionConfirmText[action]} it`,
+                'Cancel',
+                () => {
+                    handlePostAction(postId, action, currentPage);
+                }
+            );
+        }
+
         async function pinPost(postId, shouldPin, currentPage) {
             try {
                 console.log(`${shouldPin ? 'Pin' : 'Unpin'} post:`, postId);
@@ -171,6 +199,30 @@
                 }
             } catch (error) {
                 showErrorNotification(`Error ${shouldFeature ? 'featuring' : 'unfeaturing'} post: ${error.responseText || error.message}`);
+            }
+        }
+
+        async function handlePostAction(postId, action, currentPage) {
+            try {
+                console.log(`Action: ${action} post:`, postId);
+                const response = await $.ajax({
+                    url: `/accounts/${action}-post/${postId}`,
+                    method: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        action: action,
+                        currentPage: currentPage
+                    })
+                });
+
+                if (response.success) {
+                    $('#posts-table-body').html(response.html);
+                    showSuccessNotification(`Post ${action}ed successfully.`);
+                } else {
+                    showErrorNotification(`There was a problem ${action}ing your post.`);
+                }
+            } catch (error) {
+                showErrorNotification(`Error ${action}ing post: ${error.responseText || error.message}`);
             }
         }
     </script>

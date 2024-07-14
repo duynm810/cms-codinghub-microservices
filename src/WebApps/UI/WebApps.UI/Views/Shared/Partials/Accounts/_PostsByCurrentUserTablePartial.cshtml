@@ -1,3 +1,4 @@
+@using Shared.Enums
 @model ManagePostsViewModel
 @{
     var posts = Model.Posts;
@@ -9,6 +10,7 @@
 {
     foreach (var item in posts.Items)
     {
+        var postStatus = item.Status;
         var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
 
         <tr class="alert" role="alert">
@@ -18,15 +20,30 @@
                         <i class="fas fa-cog"></i> Action
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#" >
-                            <i class="fas fa-check"></i> Approve
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fas fa-times"></i> Reject
-                        </a>
-                        <a class="dropdown-item" href="#">
-                            <i class="fas fa-clock"></i> Waiting
-                        </a>
+                        @if (postStatus != PostStatusEnum.Draft)
+                        {
+                            if (postStatus == PostStatusEnum.WaitingForApproval)
+                            {
+                                <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'approve')">
+                                    <i class="fas fa-check"></i> Approve
+                                </a>
+                                <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'reject')">
+                                    <i class="fas fa-times"></i> Reject
+                                </a>
+                            }
+                        }
+                        else
+                        {
+                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'approve')">
+                                <i class="fas fa-check"></i> Approve
+                            </a>
+                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'reject')">
+                                <i class="fas fa-times"></i> Reject
+                            </a>
+                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'waiting')">
+                                <i class="fas fa-clock"></i> Waiting
+                            </a>
+                        }
                     </div>
                 </div>
             </td>

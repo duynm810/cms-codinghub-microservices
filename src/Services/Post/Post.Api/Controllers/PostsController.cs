@@ -246,18 +246,18 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("approve/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ApprovePost(Guid id)
+    public async Task<IActionResult> ApprovePost(Guid id, [FromBody] ApprovePostRequest request)
     {
-        var command = new ApprovePostCommand(id, User.GetUserId());
+        var command = new ApprovePostCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPost("submit-for-approval/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id)
+    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id, [FromBody] SubmitPostForApprovalRequest request)
     {
-        var command = new SubmitPostForApprovalCommand(id, User.GetUserId());
+        var command = new SubmitPostForApprovalCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }
@@ -267,7 +267,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id,
         [FromBody] RejectPostWithReasonRequest request)
     {
-        var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);
+        var command = new RejectPostWithReasonCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }

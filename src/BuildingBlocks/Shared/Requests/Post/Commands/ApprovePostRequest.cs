@@ -1,8 +1,6 @@
 namespace Shared.Requests.Post.Commands;
 
-public class RejectPostWithReasonRequest
+public class ApprovePostRequest
 {
-    public string? Note { get; set; }
-    
     public int CurrentPage { get; set; }
 }
