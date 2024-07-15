@@ -4,5 +4,5 @@ namespace WebApps.UI.Models.Commons;
 
 public class BottomViewModel
 {
-    public IEnumerable<PostsByNonStaticPageCategoryDto> PostsWithCategory { get; set; } = default!;
+    public List<PostsByNonStaticPageCategoryDto> PostsWithCategory { get; set; } = [];
 }

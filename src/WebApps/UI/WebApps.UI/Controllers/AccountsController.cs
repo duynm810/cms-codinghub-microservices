@@ -431,7 +431,7 @@ public class AccountsController(
     
     #region HELPERS
 
-    private async Task<IEnumerable<CategoryDto>> GetCategories()
+    private async Task<List<CategoryDto>> GetCategories()
     {
         const string methodName = nameof(GetCategories);
 

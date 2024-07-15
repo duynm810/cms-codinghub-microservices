@@ -5,7 +5,7 @@ namespace WebApps.UI.Models.Accounts;
 
 public class UpdatePostViewModel
 {
-    public IEnumerable<CategoryDto> Categories { get; set; } = default!;
+    public List<CategoryDto> Categories { get; set; } = [];
     
     public PostDto Post { get; set; } = default!;
 

@@ -8,9 +8,12 @@
 
 @section Scripts {
     <script>
+        let currentPage = 1; // Khởi tạo với trang đầu tiên
+        
         $(document).on('click', '.pagination a', function (e) {
             e.preventDefault();
-            const page = $(this).attr('href').split('page=')[1];
+            const page = $(this).data("page");
+            currentPage = page;
             loadPosts(page);
         });
 
@@ -114,7 +117,6 @@
         function confirmPin(button, shouldPin) {
             const action = shouldPin ? 'pin' : 'unpin';
             const message = shouldPin ? 'pin this post' : 'unpin this post';
-            const currentPage = $(this).attr('href').split('page=')[1];
             
             showConfirmAlert(
                 `Confirm ${action}`,
@@ -131,7 +133,6 @@
         function confirmFeature(button, shouldFeature) {
             const action = shouldFeature ? 'feature' : 'unfeature';
             const message = shouldFeature ? 'feature this post' : 'unfeature this post';
-            const currentPage = $(this).attr('href').split('page=')[1];
 
             showConfirmAlert(
                 `Confirm ${action}`,
@@ -160,10 +161,8 @@
 
             const postId = button.getAttribute('data-id');
             const message = actionText[action];
-            const currentPage = document.getElementById('current-page').value;
-            console.log(currentPage);
 
-            @*if (action === 'reject') {
+            if (action === 'reject') {
                 showConfirmWithInput(
                     `Confirm ${action}`,
                     `Are you sure you want to ${message}? Please provide a reason:`,
@@ -184,13 +183,11 @@
                         handlePostAction(postId, action, currentPage);
                     }
                 );
-            }*@
+            }
         }
 
         async function pinPost(postId, shouldPin, currentPage) {
             try {
-                console.log(`${shouldPin ? 'Pin' : 'Unpin'} post:`, postId);
-                console.log(currentPage);
                 const response = await $.ajax({
                     url: `/accounts/toggle-pin-status/${postId}`,
                     method: 'PUT',
@@ -214,7 +211,6 @@
 
         async function featurePost(postId, shouldFeature, currentPage) {
             try {
-                console.log(`${shouldFeature ? 'Feature' : 'Unfeature'} post:`, postId);
                 const response = await $.ajax({
                     url: `/accounts/toggle-featured-status/${postId}`,
                     method: 'PUT',
@@ -238,8 +234,6 @@
 
         async function handlePostAction(postId, action, currentPage, inputValue = null) {
             try {
-                console.log(`Action: ${action} post:`, postId);
-
                 const requestData = {
                     action: action,
                     currentPage: currentPage

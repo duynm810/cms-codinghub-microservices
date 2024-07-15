@@ -5,7 +5,7 @@ namespace WebApps.UI.Models.Commons;
 
 public class FooterViewModel
 {
-    public IEnumerable<CategoryDto> Categories { get; set; } = default!;
+    public List<CategoryDto> Categories { get; set; } = [];
 
-    public IEnumerable<TagDto> Tags { get; set; } = default!;
+    public List<TagDto> Tags { get; set; } = [];
 }

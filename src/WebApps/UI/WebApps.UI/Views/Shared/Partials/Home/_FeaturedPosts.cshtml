@@ -1,9 +1,10 @@
+@using Shared.Utilities
 @model HomeViewModel
 
 @{
-    var featuredPosts = Model.FeaturedPosts.ToList();
-    var pinnedPosts = Model.PinnedPosts.ToList();
-    var tags = Model.SuggestTags.ToList();
+    var featuredPosts = Model.FeaturedPosts;
+    var pinnedPosts = Model.PinnedPosts;
+    var tags = Model.SuggestTags;
 }
 
 <div class="hot-tags pt-30 pb-30 font-small align-self-center">
@@ -73,7 +74,7 @@
                 </div>
             </div>
         </div>
-        @if (featuredPosts.Count != 0)
+        @if (featuredPosts.IsNotNullOrEmpty() && featuredPosts.Count != 0)
         {
             foreach (var item in featuredPosts)
             {
