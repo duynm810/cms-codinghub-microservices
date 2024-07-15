@@ -16,7 +16,7 @@
         <tr class="alert" role="alert">
             <td>
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @(postStatus == PostStatusEnum.Published || postStatus == PostStatusEnum.Rejected ? "disabled" : "")>
                         <i class="fas fa-cog"></i> Action
                     </button>
                     <div class="dropdown-menu">
@@ -61,7 +61,7 @@
                         }
                         else
                         {
-                            <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" title="Pin this post" onclick="confirmPin(this, true)">
+                            <button type="button" class="btn btn-pin" aria-label="Pin" data-id="@item.Id" title="Pin this post" onclick="confirmPin(this, true)" @(item.IsFeatured ? "disabled" : "")>
                                 <span aria-hidden="true">
                                     <i class="fa fa-thumbtack" style="color: deepskyblue;"></i> <!-- Sử dụng màu xanh lam nhạt -->
                                 </span>
@@ -81,7 +81,7 @@
                         }
                         else
                         {
-                            <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" title="Feature this post" onclick="confirmFeature(this, true)">
+                            <button type="button" class="btn btn-feature" aria-label="Feature" data-id="@item.Id" title="Feature this post" onclick="confirmFeature(this, true)" @(item.IsPinned ? "disabled" : "")>
                                 <span aria-hidden="true">
                                     <i class="fa fa-star" style="color: gray;"></i>
                                 </span>
