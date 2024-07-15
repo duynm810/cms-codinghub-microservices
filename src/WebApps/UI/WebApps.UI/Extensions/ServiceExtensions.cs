@@ -4,6 +4,7 @@ using Contracts.Commons.Interfaces;
 using IdentityModel.Client;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
+using Infrastructure.Policies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.IdentityModel.Logging;
@@ -103,7 +104,12 @@ public static class ServiceExtensions
 
     private static void AddHttpClientServices(this IServiceCollection services)
     {
-        services.AddHttpClient();
+        var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
+                          throw new ArgumentNullException(
+                              $"{nameof(ApiSettings)} is not configured properly");
+
+        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(apiSettings.ServerUrl); })
+            .UseCircuitBreakerPolicy();
     }
 
     private static void AddAuthenticationServices(this IServiceCollection services)
