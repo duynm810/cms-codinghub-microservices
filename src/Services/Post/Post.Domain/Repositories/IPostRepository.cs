@@ -43,9 +43,9 @@ public interface IPostRepository : IRepositoryCommandBase<PostBase, Guid>
 
     Task<IEnumerable<PostBase>> GetRelatedPosts(PostBase post, int count);
 
-    Task<IEnumerable<PostBase>> GetFeaturedPosts(int count);
+    Task<IEnumerable<PostBase>> GetFeaturedPosts();
 
-    Task<IEnumerable<PostBase>> GetPinnedPosts(int count);
+    Task<IEnumerable<PostBase>> GetPinnedPosts();
 
     Task<IEnumerable<PostBase>> GetMostCommentPosts(int count);
 

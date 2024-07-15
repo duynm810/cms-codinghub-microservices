@@ -197,9 +197,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("featured")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetFeaturedPosts([FromQuery] int? count)
+    public async Task<IActionResult> GetFeaturedPosts()
     {
-        var query = new GetFeaturedPostsQuery(count ?? 4);
+        var query = new GetFeaturedPostsQuery();
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -207,9 +207,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("pinned")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPinnedPosts([FromQuery] int? count)
+    public async Task<IActionResult> GetPinnedPosts()
     {
-        var query = new GetPinnedPostsQuery(count ?? 4);
+        var query = new GetPinnedPostsQuery();
         var result = await mediator.Send(query);
         return Ok(result);
     }

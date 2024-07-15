@@ -188,21 +188,19 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
         return finalRelatedPosts;
     }
 
-    public async Task<IEnumerable<PostBase>> GetFeaturedPosts(int count)
+    public async Task<IEnumerable<PostBase>> GetFeaturedPosts()
     {
         var featuredPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsFeatured)
             .OrderByDescending(x => x.ViewCount)
-            .Take(count)
             .ToListAsync();
 
         return featuredPosts;
     }
 
-    public async Task<IEnumerable<PostBase>> GetPinnedPosts(int count)
+    public async Task<IEnumerable<PostBase>> GetPinnedPosts()
     {
         var pinnedPosts = await FindByCondition(x => x.Status == PostStatusEnum.Published && x.IsPinned)
             .OrderByDescending(x => x.ViewCount)
-            .Take(count)
             .ToListAsync();
 
         return pinnedPosts;
