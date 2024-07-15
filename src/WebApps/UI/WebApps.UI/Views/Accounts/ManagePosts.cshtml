@@ -94,7 +94,7 @@
         function confirmPin(button, shouldPin) {
             const action = shouldPin ? 'pin' : 'unpin';
             const message = shouldPin ? 'pin this post' : 'unpin this post';
-            const currentPage = document.getElementById('current-page').value;
+            const currentPage = $(this).attr('href').split('page=')[1];
             
             showConfirmAlert(
                 `Confirm ${action}`,
@@ -111,7 +111,7 @@
         function confirmFeature(button, shouldFeature) {
             const action = shouldFeature ? 'feature' : 'unfeature';
             const message = shouldFeature ? 'feature this post' : 'unfeature this post';
-            const currentPage = document.getElementById('current-page').value;
+            const currentPage = $(this).attr('href').split('page=')[1];
 
             showConfirmAlert(
                 `Confirm ${action}`,
@@ -140,7 +140,7 @@
 
             const postId = button.getAttribute('data-id');
             const message = actionText[action];
-            const currentPage = document.getElementById('current-page').value;
+            const currentPage = $(this).attr('href').split('page=')[1];
 
             if (action === 'reject') {
                 showConfirmWithInput(
@@ -248,7 +248,6 @@
     </script>
 }
 
-<input type="hidden" id="current-page" value="@Model.Posts.MetaData.CurrentPage" />
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
         <h1 class="entry-title mb-20 font-weight-900">
