@@ -577,8 +577,58 @@ a.close.disabled {
 
 /*----------------------- Modal ----------------------*/
 
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table .table {
+    background-color: #fff;
+}
+
+/* Ẩn scrollbar khi màn hình đủ lớn */
 .table-responsive {
-    max-height: 400px;
-    overflow-y: auto;
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: hidden;
+    }
+}
+
+/* Tạo style cho header */
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Tạo style cho hàng */
+.table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Tạo style cho các ô */
+.table td {
+    text-align: left;
 }
