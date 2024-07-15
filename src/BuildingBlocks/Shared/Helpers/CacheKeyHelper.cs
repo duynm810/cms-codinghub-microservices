@@ -19,6 +19,17 @@ public static class CacheKeyHelper
     }
 
     #endregion
+    
+    #region CATEGORY GRPC
+
+    private const string CategoryGrpcPrefix = "grpc:category";
+
+    public static class CategoryGrpc
+    {
+        public static string GetGrpcAllNonStaticPageCategoriesKey() => $"{CategoryGrpcPrefix}:non_static";
+    }
+    
+    #endregion
 
     #region POST
 
