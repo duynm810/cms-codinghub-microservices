@@ -47,6 +47,9 @@ public static class ServiceExtensions
 
         // Register authentication services
         services.AddAuthenticationServices();
+        
+        // Register health checks
+        services.AddHealthCheckServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -245,5 +248,10 @@ public static class ServiceExtensions
                     }
                 };
             });
+    }
+
+    private static void AddHealthCheckServices(this IServiceCollection services)
+    {
+        services.AddHealthChecks();
     }
 }

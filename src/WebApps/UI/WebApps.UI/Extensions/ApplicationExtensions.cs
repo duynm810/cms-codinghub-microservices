@@ -1,3 +1,5 @@
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using WebApps.UI.Routes;
 
 namespace WebApps.UI.Extensions;
@@ -27,6 +29,12 @@ public static class ApplicationExtensions
         app.UseAuthentication();
 
         app.UseAuthorization();
+        
+        app.MapHealthChecks("/hc", new HealthCheckOptions()
+        {
+            Predicate = _ => true,
+            ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+        });
 
         // Register routes
         RouteMap.RegisterRoutes(app);
