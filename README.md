@@ -62,11 +62,11 @@ dotnet ef database update
 - Post Api
 
 ```Powershell
- dotnet ef migrations add "Add_Default_Value" --project Post.Infrastructure --startup-project Post.Api
+dotnet ef migrations add "Initial" --project Post.Infrastructure --startup-project Post.Api
 ```
 
 ```Powershell
- dotnet ef database update --project Post.Infrastructure --startup-project Post.Api
+dotnet ef database update --project Post.Infrastructure --startup-project Post.Api
 ```
 
 - Identity Api
