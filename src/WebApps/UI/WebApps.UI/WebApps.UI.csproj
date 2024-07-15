@@ -86,17 +86,14 @@
       <_ContentIncludedByDefault Remove="wwwroot\js\quill\quill-image-drop-and-paste.js" />
       <_ContentIncludedByDefault Remove="wwwroot\js\notyf\notyf-config.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\notyf\notyf-config.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\packages\notyf\notyf-config.js" />
+      <_ContentIncludedByDefault Remove="wwwroot\js\packages\slugify\slugify-config.js" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\..\..\..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="wwwroot\js\packages\" />
-      <Folder Include="wwwroot\lib\" />
     </ItemGroup>
 
 </Project>
