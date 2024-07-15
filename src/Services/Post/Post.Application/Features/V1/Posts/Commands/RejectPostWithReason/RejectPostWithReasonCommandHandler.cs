@@ -49,7 +49,7 @@ public class RejectPostWithReasonCommandHandler(
                     ToStatus = PostStatusEnum.Rejected,
                     UserId = command.UserId,
                     PostId = command.Id,
-                    Note = command.Request.Note
+                    Note = command.Request.Reason
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 

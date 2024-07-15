@@ -141,16 +141,29 @@
             const postId = button.getAttribute('data-id');
             const message = actionText[action];
             const currentPage = document.getElementById('current-page').value;
-            
-            showConfirmAlert(
-                `Confirm ${action}`,
-                `Are you sure you want to ${message}?`,
-                `Yes, ${actionConfirmText[action]} it`,
-                'Cancel',
-                () => {
-                    handlePostAction(postId, action, currentPage);
-                }
-            );
+
+            if (action === 'reject') {
+                showConfirmWithInput(
+                    `Confirm ${action}`,
+                    `Are you sure you want to ${message}? Please provide a reason:`,
+                    `Yes, ${actionConfirmText[action]} it`,
+                    'Cancel',
+                    'Reason for rejection...',
+                    (inputValue) => {
+                        handlePostAction(postId, action, currentPage, inputValue);
+                    }
+                );
+            } else {
+                showConfirmAlert(
+                    `Confirm ${action}`,
+                    `Are you sure you want to ${message}?`,
+                    `Yes, ${actionConfirmText[action]} it`,
+                    'Cancel',
+                    () => {
+                        handlePostAction(postId, action, currentPage);
+                    }
+                );
+            }
         }
 
         async function pinPost(postId, shouldPin, currentPage) {
@@ -202,17 +215,24 @@
             }
         }
 
-        async function handlePostAction(postId, action, currentPage) {
+        async function handlePostAction(postId, action, currentPage, inputValue = null) {
             try {
                 console.log(`Action: ${action} post:`, postId);
+
+                const requestData = {
+                    action: action,
+                    currentPage: currentPage
+                };
+
+                if (action === 'reject' && inputValue) {
+                    requestData.reason = inputValue;
+                }
+                
                 const response = await $.ajax({
                     url: `/accounts/${action}-post/${postId}`,
                     method: 'PUT',
                     contentType: 'application/json',
-                    data: JSON.stringify({
-                        action: action,
-                        currentPage: currentPage
-                    })
+                    data: JSON.stringify(requestData)
                 });
 
                 if (response.success) {
