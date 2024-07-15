@@ -68,11 +68,6 @@ public static class RouteMap
             new { controller = "Accounts", action = "ManagePosts" });
         
         app.MapControllerRoute(
-            "get_post_activity_logs",
-            "accounts/post-activity-logs/{postId:guid}",
-            new { controller = "Accounts", action = "GetPostActivityLogs" });
-        
-        app.MapControllerRoute(
             "posts-by-current-user",
             "/accounts/posts-by-current-user",
             new { controller = "Accounts", action = "GetPostsByCurrentUser" });
@@ -125,6 +120,15 @@ public static class RouteMap
             "reply-to-comment",
             "/posts/reply-to-comment",
             new { controller = "Posts", action = "ReplyToComment" });
+
+        #endregion
+
+        #region POST ACTIVITY LOGS
+
+        app.MapControllerRoute(
+            "get_post_activity_logs",
+            "posts/activity-logs/{postId:guid}",
+            new { controller = "PostActivityLogs", action = "GetPostActivityLogs" });
 
         #endregion
 

@@ -18,7 +18,6 @@ namespace WebApps.UI.Controllers;
 [Authorize]
 public class AccountsController(
     IPostApiClient postApiClient,
-    IPostActivityLogApiClient postActivityLogApiClient,
     ICategoryApiClient categoryApiClient,
     IRazorRenderViewService razorRenderViewService,
     IErrorService errorService,
@@ -119,28 +118,6 @@ public class AccountsController(
             }
 
             return HandleError((HttpStatusCode)response.StatusCode, methodName);
-        }
-        catch (Exception e)
-        {
-            return HandleException(e, methodName);
-        }
-    }
-    
-    [HttpGet]
-    public async Task<IActionResult> GetPostActivityLogs([FromRoute] Guid postId)
-    {
-        const string methodName = nameof(ManagePosts);
-
-        try
-        {
-            var response = await postActivityLogApiClient.GetActivityLogs(postId);
-            if (response is { IsSuccess: true, Data: not null })
-            {
-                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostActivityLogsPartial.cshtml", response.Data);
-                return Json(new { success = true, html });
-            }
-
-            return Json(new { success = false });
         }
         catch (Exception e)
         {

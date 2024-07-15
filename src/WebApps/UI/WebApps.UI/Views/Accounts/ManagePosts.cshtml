@@ -13,9 +13,10 @@
             const page = $(this).attr('href').split('page=')[1];
             loadPosts(page);
         });
-        
+
+        // Load first page when filter changes
         $(document).on('change', '#status-filter', function () {
-            loadPosts(1); // Load first page when filter changes
+            loadPosts(1); 
         });
 
         $(document).on('input', '#keyword-filter', function () {
@@ -24,6 +25,25 @@
                 $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
             });
         });
+        
+        $(document).on('click', '.btn-history', function () {
+            viewPostActivityLogs(this);
+        });
+
+        function viewPostActivityLogs(button) {
+            const postId = button.getAttribute('data-id');
+            $.ajax({
+                url: '/posts/activity-logs/' + postId,
+                type: 'GET',
+                success: function (response) {
+                    $('#activity-log-modal .modal-body').html(response);
+                    $('#activity-log-modal').modal('show');
+                },
+                error: function (xhr, status, error) {
+
+                }
+            });
+        }
 
         function loadPosts(page) {
             let status = $('#status-filter').val();
@@ -140,9 +160,10 @@
 
             const postId = button.getAttribute('data-id');
             const message = actionText[action];
-            const currentPage = $(this).attr('href').split('page=')[1];
+            const currentPage = document.getElementById('current-page').value;
+            console.log(currentPage);
 
-            if (action === 'reject') {
+            @*if (action === 'reject') {
                 showConfirmWithInput(
                     `Confirm ${action}`,
                     `Are you sure you want to ${message}? Please provide a reason:`,
@@ -163,22 +184,7 @@
                         handlePostAction(postId, action, currentPage);
                     }
                 );
-            }
-        }
-        
-        function viewPostHistory(button) {
-            const postId = button.getAttribute('data-id');
-            $.ajax({
-                url: '/accounts/post-activity-logs/' + postId,
-                type: 'GET',
-                success: function (response) {
-                    $('#modal-container').html(response.html); // Nạp partial vào container
-                    $('#historyModal').modal('show');
-                },
-                error: function (xhr, status, error) {
-                
-                }
-            });
+            }*@
         }
 
         async function pinPost(postId, shouldPin, currentPage) {
@@ -263,6 +269,7 @@
     </script>
 }
 
+<input type="hidden" id="current-page" value="@Model.Posts.MetaData.CurrentPage" />
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
         <h1 class="entry-title mb-20 font-weight-900">
@@ -333,6 +340,20 @@
     </div>
 </div>
 
-<div id="modal-container">
-    <!-- Partial sẽ được nạp vào đây -->
+<!-- Post Activity Logs Modal -->
+<div class="modal fade" id="activity-log-modal" tabindex="-1" aria-labelledby="activity-log-label" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="activity-log-label">Post Activity Logs</h5>
+                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Nội dung modal sẽ được cập nhật qua AJAX -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
