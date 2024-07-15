@@ -574,3 +574,11 @@ a.close.disabled {
     margin-top: 1em;
     padding: .5em;
 }
+
+/*----------------------- Modal ----------------------*/
+
+.table-responsive {
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: auto;
+}

@@ -165,6 +165,21 @@
                 );
             }
         }
+        
+        function viewPostHistory(button) {
+            const postId = button.getAttribute('data-id');
+            $.ajax({
+                url: '/accounts/post-activity-logs/' + postId,
+                type: 'GET',
+                success: function (response) {
+                    $('#modal-container').html(response.html); // Nạp partial vào container
+                    $('#historyModal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                
+                }
+            });
+        }
 
         async function pinPost(postId, shouldPin, currentPage) {
             try {
@@ -301,7 +316,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>
@@ -316,4 +331,8 @@
             </div>
         </div>
     </div>
+</div>
+
+<div id="modal-container">
+    <!-- Partial sẽ được nạp vào đây -->
 </div>

@@ -102,6 +102,11 @@
             <td>@item.PublishedDate?.ToString("dd/MM/yyyy")</td>
             <td>
                 <div class="button-container">
+                    <button type="button" class="btn btn-history" aria-label="View History" data-id="@item.Id" onclick="viewPostHistory(this)">
+                        <span aria-hidden="true">
+                            <i class="fa fa-history"></i>
+                        </span>
+                    </button>
                     <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
                         <span aria-hidden="true">
                             <i class="fa fa-edit"></i>

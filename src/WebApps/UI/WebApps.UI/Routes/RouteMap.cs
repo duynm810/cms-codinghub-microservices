@@ -68,6 +68,11 @@ public static class RouteMap
             new { controller = "Accounts", action = "ManagePosts" });
         
         app.MapControllerRoute(
+            "get_post_activity_logs",
+            "accounts/post-activity-logs/{postId:guid}",
+            new { controller = "Accounts", action = "GetPostActivityLogs" });
+        
+        app.MapControllerRoute(
             "posts-by-current-user",
             "/accounts/posts-by-current-user",
             new { controller = "Accounts", action = "GetPostsByCurrentUser" });
