@@ -34,7 +34,6 @@ public class PostInTagService(
             await postInTagRepository.CreatePostToTag(postInTag);
             result.Success(true);
 
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>
@@ -77,7 +76,6 @@ public class PostInTagService(
             await postInTagRepository.DeletePostToTag(postInTag);
             result.Success(true);
             
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>

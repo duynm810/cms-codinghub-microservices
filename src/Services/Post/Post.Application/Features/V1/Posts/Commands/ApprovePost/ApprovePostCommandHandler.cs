@@ -42,12 +42,14 @@ public class ApprovePostCommandHandler(
                     return result;
                 }
 
+                var oldStatus = post.Status;
+
                 await postRepository.ApprovePost(post);
 
                 var postActivityLog = new PostActivityLog
                 {
                     Id = Guid.NewGuid(),
-                    FromStatus = post.Status,
+                    FromStatus = oldStatus,
                     ToStatus = PostStatusEnum.Published,
                     UserId = command.UserId,
                     PostId = command.Id
@@ -59,7 +61,6 @@ public class ApprovePostCommandHandler(
                 
                 result.Success(true);
                 
-                // Xóa cache liên quan
                 TaskHelper.RunFireAndForget(async () =>
                 {
                     var cacheKeys = new List<string>

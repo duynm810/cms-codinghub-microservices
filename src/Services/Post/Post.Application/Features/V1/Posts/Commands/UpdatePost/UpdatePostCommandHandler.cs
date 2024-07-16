@@ -71,7 +71,6 @@ public class UpdatePostCommandHandler(
             var data = await postRepository.UpdatePost(updatePost);
             result.Success(data);
             
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>

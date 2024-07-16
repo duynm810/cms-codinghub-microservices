@@ -4,10 +4,13 @@ using Contracts.Commons.Interfaces;
 using IdentityModel.Client;
 using Infrastructure.Commons;
 using Infrastructure.Extensions;
+using Infrastructure.Policies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Configurations;
 using Shared.Settings;
 using WebApps.UI.ApiClients;
 using WebApps.UI.ApiClients.Interfaces;
@@ -23,8 +26,9 @@ public static class ServiceExtensions
     /// Registers various infrastructure services including Swagger and other essential services.
     /// </summary>
     /// <param name="services">The IServiceCollection to add services to.</param>
+    /// <param name="environment">Get current environment</param>
     /// <param name="configuration">The configuration to be used by the services.</param>
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
@@ -33,7 +37,7 @@ public static class ServiceExtensions
         services.AddRepositoryAndDomainServices();
 
         // Register http client services
-        services.AddHttpClientServices();
+        services.AddHttpClientServices(environment);
 
         // Register api client services
         services.AddApiClientServices();
@@ -46,6 +50,9 @@ public static class ServiceExtensions
 
         // Register authentication services
         services.AddAuthenticationServices();
+
+        // Register health checks
+        services.AddHealthCheckServices();
     }
 
     private static void AddConfigurationSettings(this IServiceCollection services, IConfiguration configuration)
@@ -62,6 +69,9 @@ public static class ServiceExtensions
                 $"{nameof(IdentityServerSettings)} is not configured properly");
 
         services.AddSingleton(identityServerSettings);
+
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<ApiSettings>(configuration.GetSection(nameof(ApiSettings)));
     }
 
     private static void AddApiClientServices(this IServiceCollection services)
@@ -70,6 +80,7 @@ public static class ServiceExtensions
             .AddScoped<IBaseApiClient, BaseApiClient>()
             .AddScoped<ICategoryApiClient, CategoryApiClient>()
             .AddScoped<IPostApiClient, PostApiClient>()
+            .AddScoped<IPostActivityLogApiClient, PostActivityLogApiClient>()
             .AddScoped<ISeriesApiClient, SeriesApiClient>()
             .AddScoped<ITagApiClient, TagApiClient>()
             .AddScoped<ICommentApiClient, CommentApiClient>()
@@ -100,9 +111,19 @@ public static class ServiceExtensions
         }
     }
 
-    private static void AddHttpClientServices(this IServiceCollection services)
+    private static void AddHttpClientServices(this IServiceCollection services, IHostEnvironment environment)
     {
-        services.AddHttpClient();
+        var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
+                          throw new ArgumentNullException(
+                              $"{nameof(ApiSettings)} is not configured properly");
+        
+        // Configure BaseAddress based on the environment
+        var baseAddress = environment.IsDevelopment() 
+            ? $"{apiSettings.ServerUrl}:{apiSettings.Port}" 
+            : apiSettings.ServerUrl;
+
+        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(baseAddress); })
+            .UseCircuitBreakerPolicy();
     }
 
     private static void AddAuthenticationServices(this IServiceCollection services)
@@ -177,9 +198,10 @@ public static class ServiceExtensions
                 options.Authority = identityServerSettings.AuthorityUrl;
                 options.RequireHttpsMetadata = false;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.MetadataAddress = $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
+                options.MetadataAddress =
+                    $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
                 options.TokenValidationParameters.ValidIssuer = identityServerSettings.AuthorityUrl;
-                
+
                 options.ClientId = identityServerSettings.ClientId;
                 options.ClientSecret = identityServerSettings.ClientSecret;
                 options.ResponseType = "code";
@@ -202,13 +224,15 @@ public static class ServiceExtensions
                     OnRedirectToIdentityProvider = context =>
                     {
                         // Intercept the redirection so the browser navigates to the right URL in your host
-                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/authorize";
+                        context.ProtocolMessage.IssuerAddress =
+                            $"{identityServerSettings.AuthorityUrl}/connect/authorize";
                         return Task.CompletedTask;
                     },
                     OnRedirectToIdentityProviderForSignOut = context =>
                     {
                         // Intercept the redirection so the browser navigates to the right URL in your host
-                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/endsession";
+                        context.ProtocolMessage.IssuerAddress =
+                            $"{identityServerSettings.AuthorityUrl}/connect/endsession";
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = x =>
@@ -238,5 +262,23 @@ public static class ServiceExtensions
                     }
                 };
             });
+    }
+
+    private static void AddHealthCheckServices(this IServiceCollection services)
+    {
+        var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
+                          throw new ArgumentNullException(
+                              $"{nameof(ApiSettings)} is not configured properly");
+
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
+
+        services.AddHealthChecks()
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }

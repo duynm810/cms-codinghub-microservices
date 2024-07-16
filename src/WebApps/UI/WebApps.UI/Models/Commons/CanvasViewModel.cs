@@ -4,5 +4,5 @@ namespace WebApps.UI.Models.Commons;
 
 public class CanvasViewModel
 {
-    public IEnumerable<SeriesDto> Series { get; set; } = default!;
+    public List<SeriesDto> Series { get; set; } = [];
 }

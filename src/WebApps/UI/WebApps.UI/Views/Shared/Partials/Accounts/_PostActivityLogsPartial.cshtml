@@ -1,0 +1,27 @@
+@model PostActivityLogsViewModel
+@{
+    var postActivityLog = Model.PostActivityLogs;
+}
+
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+        <tr>
+            <th style="min-width: 100px;">From Status</th>
+            <th style="min-width: 100px;">To Status</th>
+            <th style="min-width: 150px;">Note</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in postActivityLog)
+        {
+            <tr>
+                <td>@item.FromStatus</td>
+                <td>@item.ToStatus</td>
+                <td>@item.Note</td>
+                <td>@item.UserId</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

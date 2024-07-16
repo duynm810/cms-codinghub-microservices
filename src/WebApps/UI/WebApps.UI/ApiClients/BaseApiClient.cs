@@ -43,6 +43,29 @@ public class BaseApiClient(
         return result;
     }
 
+    public async Task<ApiResult<TResponse>> PostAsync<TResponse>(string url, bool requiredLogin = false)
+    {
+        var client = await CreateClientAsync(requiredLogin);
+        var response = await client.PostAsync(url, null); // Sending null as content
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorContent = await response.Content.ReadAsStringAsync();
+            throw new HttpRequestException(string.Format(ErrorMessagesConsts.Network.RequestFailed, response.StatusCode,
+                errorContent));
+        }
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var result = serializeService.Deserialize<ApiResult<TResponse>>(responseContent);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException(ErrorMessagesConsts.Data.DeserializeFailed);
+        }
+
+        return result;
+    }
+
     public async Task<ApiResult<TResponse>> PutAsync<TRequest, TResponse>(string url, TRequest data,
         bool requiredLogin = false)
     {
@@ -137,13 +160,8 @@ public class BaseApiClient(
 
     public async Task<HttpClient> CreateClientAsync(bool requiredLogin)
     {
-        if (string.IsNullOrEmpty(apiSettings.ServerUrl))
-        {
-            throw new InvalidOperationException(ErrorMessagesConsts.Network.ServerUrlNotConfigured);
-        }
-
-        var client = httpClientFactory.CreateClient();
-        client.BaseAddress = new Uri(apiSettings.ServerUrl);
+        // Use the configured HttpClient with the name "OcelotApiGw"
+        var client = httpClientFactory.CreateClient("OcelotApiGw");
 
         if (!requiredLogin || httpContextAccessor.HttpContext == null)
         {

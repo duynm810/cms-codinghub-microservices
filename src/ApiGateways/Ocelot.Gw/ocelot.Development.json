@@ -406,7 +406,7 @@
       "UpstreamHttpMethod": [
         "GET"
       ],
-      "DownstreamPathTemplate": "/api/postactivitylogs/{postId}",
+      "DownstreamPathTemplate": "/api/posts/activity-logs/{postId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

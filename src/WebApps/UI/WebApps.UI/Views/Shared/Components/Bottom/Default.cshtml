@@ -16,7 +16,7 @@
                         </div>
                         <div class="post-block-list post-module-1">
                             <ul class="list-post">
-                                @if (postItem.Posts != null)
+                                @if (postItem.Posts.Count != 0)
                                 {
                                     foreach (var item in postItem.Posts)
                                     {
@@ -26,7 +26,7 @@
                                             <div class="d-flex hover-up-2 transition-normal">
                                                 <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
                                                     <a class="color-white" href="@postUrl">
-                                                        <img src="~/imgs/news/thumb-1.jpg" alt="">
+                                                        <image-url src="@item.Thumbnail"></image-url>
                                                     </a>
                                                 </div>
                                                 <div class="post-content media-body">

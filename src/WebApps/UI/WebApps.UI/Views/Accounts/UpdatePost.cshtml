@@ -6,10 +6,14 @@
 }
 
 @section scripts {
+    <script type="text/javascript">
+        const serverUrl = '@ViewData["ServerUrl"]';
+    </script>
+    
     <script src="~/js/controllers/accounts.controller.js" asp-append-version="true"></script>
-    <script src="~/js/packages/quill/quill-image-drop-and-paste.js" asp-append-version="true"></script>
-    <script src="~/js/packages/quill/quill-config.js" asp-append-version="true"></script>
-    <script src="~/js/packages/tagify/tagify-config.js" asp-append-version="true"></script>
+    <script src="~/lib/quill/quill-image-drop-and-paste.js" asp-append-version="true"></script>
+    <script src="~/lib/quill/quill-config.js" asp-append-version="true"></script>
+    <script src="~/lib/tagify/tagify-config.js" asp-append-version="true"></script>
 
     <!-- Embed serverUrl from ServerUrlTagHelper -->
     <script server-url></script>

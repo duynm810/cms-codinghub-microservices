@@ -6,6 +6,8 @@ public interface IBaseApiClient
 {
     Task<ApiResult<TResponse>> PostAsync<TRequest, TResponse>(string url, TRequest data, bool requiredLogin = false);
 
+    Task<ApiResult<TResponse>> PostAsync<TResponse>(string url, bool requiredLogin = false);
+
     Task<ApiResult<TResponse>> PutAsync<TRequest, TResponse>(string url, TRequest data, bool requiredLogin = false);
 
     Task<ApiResult<TResponse>> DeleteAsync<TResponse>(string url, bool requiredLogin = false);

@@ -28,6 +28,9 @@ public static class ServiceExtensions
 
         // Register core services
         services.AddCoreInfrastructure();
+        
+        // Register repository services
+        services.AddRepositoryAndDomainServices();
 
         // Register additional services
         services.AddAdditionalServices();
@@ -86,6 +89,13 @@ public static class ServiceExtensions
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+    }
+    
+    private static void AddRepositoryAndDomainServices(this IServiceCollection services)
+    {
+        services.AddScoped<IScheduledJobService, HangfireService>()
+            .AddScoped<IBackgroundJobService, BackgroundJobService>()
+            .AddScoped<ISmtpEmailService, SmtpEmailService>();
     }
 
     private static void AddHealthCheckServices(this IServiceCollection services)

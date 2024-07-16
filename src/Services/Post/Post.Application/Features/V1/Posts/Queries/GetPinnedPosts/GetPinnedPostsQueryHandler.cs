@@ -36,7 +36,7 @@ public class GetPinnedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetPinnedPosts(query.Count);
+            var posts = await postRepository.GetPinnedPosts();
 
             var postList = posts.ToList();
 

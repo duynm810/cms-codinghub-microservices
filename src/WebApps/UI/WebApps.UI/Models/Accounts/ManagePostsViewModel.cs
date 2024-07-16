@@ -1,4 +1,5 @@
 using Shared.Dtos.Post;
+using Shared.Dtos.PostActivity;
 using Shared.Responses;
 
 namespace WebApps.UI.Models.Accounts;

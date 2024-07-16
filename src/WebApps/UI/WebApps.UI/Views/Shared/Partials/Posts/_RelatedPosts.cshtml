@@ -3,64 +3,62 @@
     var posts = Model.Posts.RelatedPosts.ToList();
 }
 
-<div class="related-posts">
-    <div class="post-module-3">
-        <div class="widget-header-2 position-relative mb-30">
-            <h5 class="mt-5 mb-30">Related posts</h5>
-        </div>
-        <div class="loop-list loop-list-style-1">
-            @if (posts.Count != 0)
+<div class="post-module-3">
+    <div class="widget-header-2 position-relative mb-30">
+        <h5 class="mt-5 mb-30">Related posts</h5>
+    </div>
+    <div class="loop-list loop-list-style-1">
+        @if (posts.Count != 0)
+        {
+            @foreach (var item in posts)
             {
-                @foreach (var item in posts)
-                {
-                    var categoryUrl = "/category/" + item.Category.Slug;
-                    var postUrl = "/post/" + item.Slug;
+                var categoryUrl = "/category/" + item.Category.Slug;
+                var postUrl = "/post/" + item.Slug;
 
-                    <article class="hover-up-2 transition-normal">
-                        <div class="row mb-40 list-style-2">
-                            <div class="col-md-4">
-                                <div class="post-thumb position-relative border-radius-5">
-                                    <div class="img-hover-slide border-radius-5 position-relative" thumbnail="@item.Thumbnail">
-                                        <a class="img-link" href="@postUrl"></a>
-                                    </div>
-                                    <ul class="social-share">
-                                        <li>
-                                            <a href="#">
-                                                <i class="elegant-icon social_share"></i>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="fb" href="#" title="Share on Facebook" target="_blank">
-                                                <i class="elegant-icon social_facebook"></i>
-                                            </a>
-                                        </li>
-                                    </ul>
+                <article class="hover-up-2 transition-normal">
+                    <div class="row mb-40 list-style-2">
+                        <div class="col-md-4">
+                            <div class="post-thumb position-relative border-radius-5">
+                                <div class="img-hover-slide border-radius-5 position-relative" thumbnail="@item.Thumbnail">
+                                    <a class="img-link" href="@postUrl"></a>
                                 </div>
-                            </div>
-                            <div class="col-md-8 align-self-center">
-                                <div class="post-content">
-                                    <div class="entry-meta meta-0 font-small mb-10">
-                                        <a href="@categoryUrl">
-                                            <span class="post-cat @item.Category.Color">@item.Category.Name</span>
+                                <ul class="social-share">
+                                    <li>
+                                        <a href="#">
+                                            <i class="elegant-icon social_share"></i>
                                         </a>
-                                    </div>
-                                    <h5 class="post-title font-weight-900 mb-20">
-                                        <a href="@postUrl">@item.Title</a>
-                                        <span class="post-format-icon">
-                                            <i class="elegant-icon icon_star_alt"></i>
-                                        </span>
-                                    </h5>
-                                    <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
-                                        <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
-                                        <span class="time-reading has-dot">11 mins read</span>
-                                        <span class="post-by has-dot">@item.ViewCount views</span>
-                                    </div>
+                                    </li>
+                                    <li>
+                                        <a class="fb" href="#" title="Share on Facebook" target="_blank">
+                                            <i class="elegant-icon social_facebook"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-md-8 align-self-center">
+                            <div class="post-content">
+                                <div class="entry-meta meta-0 font-small mb-10">
+                                    <a href="@categoryUrl">
+                                        <span class="post-cat @item.Category.Color">@item.Category.Name</span>
+                                    </a>
+                                </div>
+                                <h5 class="post-title font-weight-900 mb-20">
+                                    <a href="@postUrl">@item.Title</a>
+                                    <span class="post-format-icon">
+                                        <i class="elegant-icon icon_star_alt"></i>
+                                    </span>
+                                </h5>
+                                <div class="entry-meta meta-1 float-start font-x-small text-uppercase">
+                                    <span class="post-on">@(item.PublishedDate.HasValue ? item.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
+                                    <span class="time-reading has-dot">11 mins read</span>
+                                    <span class="post-by has-dot">@item.ViewCount views</span>
                                 </div>
                             </div>
                         </div>
-                    </article>
-                }
+                    </div>
+                </article>
             }
-        </div>
+        }
     </div>
 </div>

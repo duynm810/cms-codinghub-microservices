@@ -87,8 +87,7 @@ namespace Post.Infrastructure.Migrations
                         .HasColumnName("comment_count");
 
                     b.Property<string>("Content")
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
+                        .HasColumnType("text")
                         .HasColumnName("content");
 
                     b.Property<DateTimeOffset>("CreatedDate")

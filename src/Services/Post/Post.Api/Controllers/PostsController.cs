@@ -107,7 +107,7 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
         return Ok(result);
     }
 
-    [HttpPost("slug/{slug}")]
+    [HttpGet("slug/{slug}")]
     [ProducesResponseType(typeof(ApiResult<PostDto>), (int)HttpStatusCode.OK)]
     public async Task<ActionResult<PostDto>> GetPostBySlug([FromRoute, Required] string slug)
     {
@@ -197,9 +197,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("featured")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetFeaturedPosts([FromQuery] int? count)
+    public async Task<IActionResult> GetFeaturedPosts()
     {
-        var query = new GetFeaturedPostsQuery(count ?? 4);
+        var query = new GetFeaturedPostsQuery();
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -207,9 +207,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("pinned")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetPinnedPosts([FromQuery] int? count)
+    public async Task<IActionResult> GetPinnedPosts()
     {
-        var query = new GetPinnedPostsQuery(count ?? 4);
+        var query = new GetPinnedPostsQuery();
         var result = await mediator.Send(query);
         return Ok(result);
     }
@@ -246,28 +246,28 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
 
     [HttpPost("approve/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> ApprovePost(Guid id)
+    public async Task<IActionResult> ApprovePost(Guid id, [FromBody] ApprovePostRequest request)
     {
-        var command = new ApprovePostCommand(id, User.GetUserId());
+        var command = new ApprovePostCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPost("submit-for-approval/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id)
+    public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id, [FromBody] SubmitPostForApprovalRequest request)
     {
-        var command = new SubmitPostForApprovalCommand(id, User.GetUserId());
+        var command = new SubmitPostForApprovalCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }
 
     [HttpPost("reject/{id:guid}")]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> RejectPostWithReasonCommand([FromRoute] Guid id,
+    public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id,
         [FromBody] RejectPostWithReasonRequest request)
     {
-        var command = new RejectPostWithReasonCommand(id, User.GetUserId(), request);
+        var command = new RejectPostWithReasonCommand(request, id, User.GetUserId());
         var result = await mediator.Send(command);
         return Ok(result);
     }

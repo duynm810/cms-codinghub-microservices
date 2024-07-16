@@ -4,5 +4,5 @@ namespace WebApps.UI.Models.Commons;
 
 public class HeaderViewModel
 {
-    public IEnumerable<CategoryDto> Categories { get; set; } = default!;
+    public List<CategoryDto> Categories { get; set; }  = [];
 }

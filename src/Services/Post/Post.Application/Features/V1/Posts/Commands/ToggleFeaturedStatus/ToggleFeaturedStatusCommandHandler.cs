@@ -34,7 +34,6 @@ public class ToggleFeaturedStatusCommandHandler(IPostRepository postRepository, 
             var data = await postRepository.ToggleFeaturedStatus(post, command.ToggleFeaturedStatus.IsFeatured);
             result.Success(data);
             
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>

@@ -78,6 +78,51 @@
     width: 100%;
     vertical-align: middle;
 }
+
+.btn-group .dropdown-toggle {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    font-size: 13px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.btn-group .dropdown-toggle svg {
+    margin-right: 5px;
+}
+
+.btn-group .dropdown-toggle:hover,
+.btn-group .dropdown-toggle:focus {
+    background-color: #0056b3;
+}
+
+.dropdown-menu {
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: none;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.dropdown-menu .dropdown-item {
+    color: #343a40;
+    padding: 5px 15px;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-menu .dropdown-item svg {
+    margin-right: 10px; /* Tạo khoảng cách giữa icon và text */
+}
+
+.dropdown-menu .dropdown-item:hover,
+.dropdown-menu .dropdown-item:focus {
+    background-color: #e9ecef;
+    color: #343a40;
+}
+
 /*----------------------- Spinner ----------------------*/
 
 .spinner {
@@ -528,4 +573,62 @@ a.close.disabled {
     width: 90%;
     margin-top: 1em;
     padding: .5em;
+}
+
+/*----------------------- Modal ----------------------*/
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.75rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.table tbody + tbody {
+    border-top: 2px solid #dee2e6;
+}
+
+.table .table {
+    background-color: #fff;
+}
+
+/* Ẩn scrollbar khi màn hình đủ lớn */
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+@media (min-width: 768px) {
+    .table-responsive {
+        overflow: hidden;
+    }
+}
+
+/* Tạo style cho header */
+.table thead th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Tạo style cho hàng */
+.table tbody tr:nth-child(odd) {
+    background-color: #f2f2f2;
+}
+
+/* Tạo style cho các ô */
+.table td {
+    text-align: left;
 }

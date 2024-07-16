@@ -41,16 +41,15 @@ public class SubmitPostForApprovalCommandHandler(
                     result.Failure(StatusCodes.Status404NotFound, result.Messages);
                     return result;
                 }
-
-                // TODO: Implement check current user id
-                var currentUserId = command.UserId;
+                
+                var oldStatus = post.Status;
 
                 await postRepository.SubmitPostForApproval(post);
 
                 var postActivityLog = new PostActivityLog
                 {
                     Id = Guid.NewGuid(),
-                    FromStatus = post.Status,
+                    FromStatus = oldStatus,
                     ToStatus = PostStatusEnum.WaitingForApproval,
                     UserId = command.UserId,
                     PostId = command.Id

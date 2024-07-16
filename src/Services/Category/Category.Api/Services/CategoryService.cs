@@ -43,9 +43,20 @@ using AutoMapper;
  
              var data = mapper.Map<CategoryDto>(category);
              result.Success(data);
- 
-             // Clear category list cache when a new category is created (Xóa cache danh sách category khi tạo mới)
-             await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
+             
+             TaskHelper.RunFireAndForget(async () =>
+             {
+                 var cacheKeys = new List<string>
+                 {
+                     CacheKeyHelper.Category.GetAllCategoriesKey(),
+                     CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey()
+                 };
+
+                 await cacheService.RemoveMultipleAsync(cacheKeys);
+             }, e =>
+             {
+                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+             });
  
              logger.Information("END {MethodName} - Category created successfully with ID {CategoryId}", methodName,
                  data.Id);
@@ -83,13 +94,22 @@ using AutoMapper;
              var data = mapper.Map<CategoryDto>(updateCategory);
              result.Success(data);
  
-             // Delete category caches when updating (Xóa cache danh sách category khi cập nhật)
-             await Task.WhenAll(
-                 cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey()),
-                 cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id)),
-                 cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug))
-             );
- 
+             TaskHelper.RunFireAndForget(async () =>
+             {
+                 var cacheKeys = new List<string>
+                 {
+                     CacheKeyHelper.Category.GetAllCategoriesKey(),
+                     CacheKeyHelper.Category.GetCategoryByIdKey(id),
+                     CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug),
+                     CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey()
+                 };
+
+                 await cacheService.RemoveMultipleAsync(cacheKeys);
+             }, e =>
+             {
+                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+             });
+             
              logger.Information("END {MethodName} - Category with ID {CategoryId} updated successfully", methodName, id);
          }
          catch (Exception e)
@@ -134,18 +154,27 @@ using AutoMapper;
  
                  tasks.Add(categoryRepository.DeleteCategory(category));
  
-                 // Add cache removal tasks to the list (Thêm tác vụ xóa bộ nhớ cache vào danh sách)
                  tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryByIdKey(id)));
                  tasks.Add(cacheService.RemoveAsync(CacheKeyHelper.Category.GetCategoryBySlugKey(category.Slug)));
              }
              
-             // Execute all tasks in parallel (Thực hiện tất cả các nhiệm vụ song song)
              await Task.WhenAll(tasks);
-
-             // Delete category list cache when deleting (Xóa cache danh sách category khi xóa dữ liệu)
-             await cacheService.RemoveAsync(CacheKeyHelper.Category.GetAllCategoriesKey());
  
              result.Success(true);
+             
+             TaskHelper.RunFireAndForget(async () =>
+             {
+                 var cacheKeys = new List<string>
+                 {
+                     CacheKeyHelper.Category.GetAllCategoriesKey(),
+                     CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey()
+                 };
+
+                 await cacheService.RemoveMultipleAsync(cacheKeys);
+             }, e =>
+             {
+                 logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+             });
  
              logger.Information("END {MethodName} - Categories with IDs {CategoryIds} deleted successfully",
                  methodName, string.Join(", ", ids));

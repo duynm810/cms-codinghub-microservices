@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using Shared.Dtos.Comment;
 using Shared.Dtos.Post;

@@ -28,7 +28,6 @@ public class PostBase : EntityAuditBase<Guid>
     /// <summary>
     /// Nội dung chính bài viết
     /// </summary>
-    [MaxLength(1000)]
     public string? Content { get; set; }
 
     /// <summary>

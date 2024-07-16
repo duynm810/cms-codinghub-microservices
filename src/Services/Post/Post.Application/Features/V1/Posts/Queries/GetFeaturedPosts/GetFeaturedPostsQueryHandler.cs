@@ -36,7 +36,7 @@ public class GetFeaturedPostsQueryHandler(
                 return result;
             }
 
-            var posts = await postRepository.GetFeaturedPosts(query.Count);
+            var posts = await postRepository.GetFeaturedPosts();
             
             var postList = posts.ToList();
             if (postList.IsNotNullOrEmpty())

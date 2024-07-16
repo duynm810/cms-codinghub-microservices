@@ -13,6 +13,7 @@ namespace Post.Infrastructure.GrpcClients;
 
 public class CategoryGrpcClient(
     CategoryProtoService.CategoryProtoServiceClient categoryProtoServiceClient,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ICategoryGrpcClient
 {
@@ -122,6 +123,14 @@ public class CategoryGrpcClient(
 
         try
         {
+            var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
+
+            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cachedCategories != null)
+            {
+                return cachedCategories;
+            }
+            
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());
             if (result == null || result.Categories.Count == 0)
             {
@@ -131,6 +140,9 @@ public class CategoryGrpcClient(
 
             var allNonStaticPageCategories = mapper.Map<IEnumerable<CategoryDto>>(result);
             var data = allNonStaticPageCategories.ToList();
+
+            await cacheService.SetAsync(cacheKey, data);
+
             return data;
         }
         catch (RpcException rpcEx)

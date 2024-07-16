@@ -40,16 +40,18 @@ public class RejectPostWithReasonCommandHandler(
                     return result;
                 }
 
+                var oldStatus = post.Status;
+
                 await postRepository.RejectPostWithReason(post);
 
                 var postActivityLog = new PostActivityLog
                 {
                     Id = Guid.NewGuid(),
-                    FromStatus = post.Status,
+                    FromStatus = oldStatus,
                     ToStatus = PostStatusEnum.Rejected,
                     UserId = command.UserId,
                     PostId = command.Id,
-                    Note = command.Reason
+                    Note = command.Request.Reason
                 };
                 await postActivityLogRepository.CreatePostActivityLogs(postActivityLog);
 
