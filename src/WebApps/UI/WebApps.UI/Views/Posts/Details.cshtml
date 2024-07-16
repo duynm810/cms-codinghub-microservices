@@ -135,7 +135,9 @@
         }
     </div>
     <!--related posts-->
-    @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
+    <div class="related-posts">
+        @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
+    </div>
 
     <!--More posts-->
     @await Html.PartialAsync("Partials/Posts/_MorePosts")
