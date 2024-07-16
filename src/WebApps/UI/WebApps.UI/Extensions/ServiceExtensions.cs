@@ -7,8 +7,10 @@ using Infrastructure.Extensions;
 using Infrastructure.Policies;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Shared.Configurations;
 using Shared.Settings;
 using WebApps.UI.ApiClients;
 using WebApps.UI.ApiClients.Interfaces;
@@ -47,7 +49,7 @@ public static class ServiceExtensions
 
         // Register authentication services
         services.AddAuthenticationServices();
-        
+
         // Register health checks
         services.AddHealthCheckServices();
     }
@@ -66,6 +68,9 @@ public static class ServiceExtensions
                 $"{nameof(IdentityServerSettings)} is not configured properly");
 
         services.AddSingleton(identityServerSettings);
+
+        // Using IOptions for EventBusSettings (Sử dụng IOptions cho EventBusSettings)
+        services.Configure<ApiSettings>(configuration.GetSection(nameof(ApiSettings)));
     }
 
     private static void AddApiClientServices(this IServiceCollection services)
@@ -187,9 +192,10 @@ public static class ServiceExtensions
                 options.Authority = identityServerSettings.AuthorityUrl;
                 options.RequireHttpsMetadata = false;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                options.MetadataAddress = $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
+                options.MetadataAddress =
+                    $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
                 options.TokenValidationParameters.ValidIssuer = identityServerSettings.AuthorityUrl;
-                
+
                 options.ClientId = identityServerSettings.ClientId;
                 options.ClientSecret = identityServerSettings.ClientSecret;
                 options.ResponseType = "code";
@@ -212,13 +218,15 @@ public static class ServiceExtensions
                     OnRedirectToIdentityProvider = context =>
                     {
                         // Intercept the redirection so the browser navigates to the right URL in your host
-                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/authorize";
+                        context.ProtocolMessage.IssuerAddress =
+                            $"{identityServerSettings.AuthorityUrl}/connect/authorize";
                         return Task.CompletedTask;
                     },
                     OnRedirectToIdentityProviderForSignOut = context =>
                     {
                         // Intercept the redirection so the browser navigates to the right URL in your host
-                        context.ProtocolMessage.IssuerAddress = $"{identityServerSettings.AuthorityUrl}/connect/endsession";
+                        context.ProtocolMessage.IssuerAddress =
+                            $"{identityServerSettings.AuthorityUrl}/connect/endsession";
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = x =>
@@ -252,6 +260,15 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-        services.AddHealthChecks();
+        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
+                                          throw new ArgumentNullException(
+                                              $"{nameof(ElasticConfigurations)} is not configured properly");
+
+        services.AddHealthChecks().AddElasticsearch(
+            elasticsearchConfigurations.Uri,
+            name: "Elasticsearch Health",
+            failureStatus: HealthStatus.Degraded,
+            tags: new[] { "search", "elasticsearch" });
+        ;
     }
 }
