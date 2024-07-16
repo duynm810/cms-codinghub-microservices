@@ -13,8 +13,7 @@ public class BackgroundImageTagHelper(IOptions<ApiSettings> apiSettings) : TagHe
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var ocelotGatewayUrl = _apiSettings.ServerUrl;
-        var fullUrl = $"{ocelotGatewayUrl}/{Thumbnail}";
+        var fullUrl = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Thumbnail}";
 
         if (output.Attributes.TryGetAttribute("style", out var styleAttribute))
         {

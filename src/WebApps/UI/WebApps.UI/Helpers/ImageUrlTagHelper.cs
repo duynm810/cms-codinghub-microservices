@@ -12,8 +12,7 @@ public class ImageUrlTagHelper(IOptions<ApiSettings> apiSettings) : TagHelper
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var ocelotGatewayUrl = _apiSettings.ServerUrl;
-        var fullUrl = $"{ocelotGatewayUrl}/{Src}";
+        var fullUrl = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Src}";
 
         output.TagName = "img"; // Replace <image-url> with <img> tag
         output.Attributes.SetAttribute("src", fullUrl);
