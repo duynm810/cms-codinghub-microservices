@@ -1,7 +1,7 @@
 @model FooterViewModel
 @{
-    var categories = Model.Categories.ToList();
-    var tags = Model.Tags.ToList();
+    var categories = Model.Categories;
+    var tags = Model.Tags;
 }
 
 <div class="container">
@@ -13,8 +13,8 @@
                 </div>
                 <div class="textwidget">
                     <p>
-                        Coding Hub was created using microservices and deployed with .NET C#.
-                        Our platform provides scalable and efficient software development solutions.
+                        At Coding Hub, we leverage microservices architecture with .NET C# to bring you a blog filled with insightful articles, tutorials, and hacks. 
+                        Dive into our content to master .NET, explore Angular, and stay updated with the latest tech trends. Join our community and fuel your coding journey!
                     </p>
                 </div>
             </div>
@@ -73,9 +73,9 @@
         </div>
     </div>
     <div class="footer-copy-right pt-30 mt-20">
-        <p class="float-md-start font-small text-muted">© 2024, Coding Hub - Personal Blog </p>
+        <p class="float-md-start font-small text-muted">© 2024, Coding Hub - Personal Blog</p>
         <p class="float-md-end font-small text-muted">
-            Development by <a href="/" target="_blank"> Duy Nguyen</a> | All rights reserved
+            Developed by<a href="/" target="_blank">&nbsp;Duy Nguyen</a>&nbsp;| All rights reserved
         </p>
     </div>
 </div>
