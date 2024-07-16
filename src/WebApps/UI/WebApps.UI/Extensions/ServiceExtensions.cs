@@ -260,15 +260,24 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
+        var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
+                          throw new ArgumentNullException(
+                              $"{nameof(ApiSettings)} is not configured properly");
+
         var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
                                           throw new ArgumentNullException(
                                               $"{nameof(ElasticConfigurations)} is not configured properly");
 
-        services.AddHealthChecks().AddElasticsearch(
-            elasticsearchConfigurations.Uri,
-            name: "Elasticsearch Health",
-            failureStatus: HealthStatus.Degraded,
-            tags: new[] { "search", "elasticsearch" });
-        ;
+        services.AddHealthChecks()
+            .AddUrlGroup(
+                uri: new Uri(apiSettings.ServerUrl),
+                name: "Ocelot ApiGw Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new [] {"apigw" })
+            .AddElasticsearch(
+                elasticsearchConfigurations.Uri,
+                name: "Elasticsearch Health",
+                failureStatus: HealthStatus.Degraded,
+                tags: new[] { "search", "elasticsearch" });
     }
 }
