@@ -27,6 +27,7 @@
         <Content Include="..\..\..\..\.dockerignore">
             <Link>.dockerignore</Link>
         </Content>
+        <Content Remove="wwwroot\media\images\image\062024\wallpaperflare.com_wallpaper.jpg" />
     </ItemGroup>
 
 </Project>
