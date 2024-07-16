@@ -116,9 +116,7 @@ public static class ServiceExtensions
                           throw new ArgumentNullException(
                               $"{nameof(ApiSettings)} is not configured properly");
 
-        var baseAddress = $"{apiSettings.ServerUrl}:{apiSettings.Port}";
-        
-        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(baseAddress); })
+        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(apiSettings.ServerUrl); })
             .UseCircuitBreakerPolicy();
     }
 
