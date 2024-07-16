@@ -160,11 +160,6 @@ public class BaseApiClient(
 
     public async Task<HttpClient> CreateClientAsync(bool requiredLogin)
     {
-        if (string.IsNullOrEmpty(apiSettings.ServerUrl))
-        {
-            throw new InvalidOperationException(ErrorMessagesConsts.Network.ServerUrlNotConfigured);
-        }
-
         // Use the configured HttpClient with the name "OcelotApiGw"
         var client = httpClientFactory.CreateClient("OcelotApiGw");
 

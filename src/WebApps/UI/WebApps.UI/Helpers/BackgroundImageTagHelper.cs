@@ -13,12 +13,12 @@ public class BackgroundImageTagHelper(IOptions<ApiSettings> apiSettings) : TagHe
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var fullUrl = $"{_apiSettings.ServerUrl}/{Thumbnail}";
+        var fullUrl = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Thumbnail}";
 
         if (output.Attributes.TryGetAttribute("style", out var styleAttribute))
         {
             var styleValue = styleAttribute.Value.ToString();
-            var newStyleValue = $"background-image: url({fullUrl}); {styleValue}";
+            var newStyleValue = $"background-image: url({fullUrl});{styleValue}";
             output.Attributes.SetAttribute("style", newStyleValue);
         }
         else

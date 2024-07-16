@@ -20,7 +20,7 @@ try
     builder.AddAppConfiguration();
 
     // Register application infrastructure services
-    builder.Services.AddInfrastructureServices(configuration);
+    builder.Services.AddInfrastructureServices(configuration, builder.Environment);
 
     var app = builder.Build();
 

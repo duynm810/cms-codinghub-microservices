@@ -143,7 +143,7 @@ public class AccountsController(
                 Categories = categories
             };
 
-            ViewData["ServerUrl"] = _apiSettings.ServerUrl;
+            ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
             
             return View(items);
         }
@@ -206,7 +206,7 @@ public class AccountsController(
                     Categories = categories
                 };
 
-                ViewData["ServerUrl"] = _apiSettings.ServerUrl;
+                ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
                 
                 return View(items);
             }

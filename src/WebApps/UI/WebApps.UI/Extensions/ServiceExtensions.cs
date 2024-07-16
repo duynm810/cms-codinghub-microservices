@@ -26,8 +26,9 @@ public static class ServiceExtensions
     /// Registers various infrastructure services including Swagger and other essential services.
     /// </summary>
     /// <param name="services">The IServiceCollection to add services to.</param>
+    /// <param name="environment">Get current environment</param>
     /// <param name="configuration">The configuration to be used by the services.</param>
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
@@ -36,7 +37,7 @@ public static class ServiceExtensions
         services.AddRepositoryAndDomainServices();
 
         // Register http client services
-        services.AddHttpClientServices();
+        services.AddHttpClientServices(environment);
 
         // Register api client services
         services.AddApiClientServices();
@@ -110,13 +111,18 @@ public static class ServiceExtensions
         }
     }
 
-    private static void AddHttpClientServices(this IServiceCollection services)
+    private static void AddHttpClientServices(this IServiceCollection services, IHostEnvironment environment)
     {
         var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
                           throw new ArgumentNullException(
                               $"{nameof(ApiSettings)} is not configured properly");
+        
+        // Configure BaseAddress based on the environment
+        var baseAddress = environment.IsDevelopment() 
+            ? $"{apiSettings.ServerUrl}:{apiSettings.Port}" 
+            : apiSettings.ServerUrl;
 
-        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(apiSettings.ServerUrl); })
+        services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(baseAddress); })
             .UseCircuitBreakerPolicy();
     }
 

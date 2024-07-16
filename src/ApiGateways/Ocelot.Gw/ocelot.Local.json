@@ -1,6 +1,6 @@
 {
   "GlobalConfiguration": {
-    "BaseUrl": "http://apigw.ocelot:6001"
+    "BaseUrl": "http://apigw.ocelot"
   },
   "Routes": [
     {
