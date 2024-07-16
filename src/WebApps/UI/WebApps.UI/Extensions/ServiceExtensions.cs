@@ -269,11 +269,6 @@ public static class ServiceExtensions
                                               $"{nameof(ElasticConfigurations)} is not configured properly");
 
         services.AddHealthChecks()
-            .AddUrlGroup(
-                uri: new Uri(apiSettings.ServerUrl),
-                name: "Ocelot ApiGw Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new [] {"apigw" })
             .AddElasticsearch(
                 elasticsearchConfigurations.Uri,
                 name: "Elasticsearch Health",
