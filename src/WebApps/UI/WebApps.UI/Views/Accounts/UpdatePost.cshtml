@@ -1,5 +1,6 @@
 @model UpdatePostViewModel
 @{
+    ViewData["ShowBottom"] = false;
     ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
     var post = Model.Post;
     var categories = Model.Categories;

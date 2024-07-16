@@ -66,15 +66,15 @@
 <!-- End Main content -->
 
 <!--site-bottom-->
-<div class="site-bottom pt-50 pb-50">
-    @{
-        var showBottom = ViewData["ShowBottom"] as bool? ?? true;
-        if (showBottom)
-        {
+@{
+    var showBottom = ViewData["ShowBottom"] as bool? ?? true;
+    if (showBottom)
+    {
+        <div class="site-bottom pt-50 pb-50">
             @await Component.InvokeAsync("Bottom", "Default")
-        }
+        </div>
     }
-</div>
+}
 <!--end site-bottom-->
 
 <!-- Footer Start-->
