@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', function () {
         
         let currentImages = new Set();
         
-        const serverUrl = 'http://localhost:6001';
-        
         $('select').not('.ql-header').niceSelect();
         $('.ql-toolbar .nice-select').removeClass('nice-select').removeAttr('style').find('.current, .list').remove();
         

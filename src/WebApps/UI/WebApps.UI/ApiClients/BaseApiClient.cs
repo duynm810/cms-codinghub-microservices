@@ -167,7 +167,6 @@ public class BaseApiClient(
 
         // Use the configured HttpClient with the name "OcelotApiGw"
         var client = httpClientFactory.CreateClient("OcelotApiGw");
-        client.BaseAddress = new Uri(apiSettings.ServerUrl);
 
         if (!requiredLogin || httpContextAccessor.HttpContext == null)
         {

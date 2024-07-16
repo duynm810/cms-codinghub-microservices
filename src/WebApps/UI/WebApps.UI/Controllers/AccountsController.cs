@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Shared.Dtos.Category;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
+using Shared.Settings;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Accounts;
 using WebApps.UI.Services.Interfaces;
@@ -20,9 +22,12 @@ public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
     IRazorRenderViewService razorRenderViewService,
+    IOptions<ApiSettings> apiSettings,
     IErrorService errorService,
     ILogger logger) : BaseController(errorService, logger)
 {
+    private readonly ApiSettings _apiSettings = apiSettings.Value;
+    
     public IActionResult Login(string returnUrl = "/")
     {
         var redirectUrl = Url.Action(nameof(LoginCallback), "Accounts", new { returnUrl });
@@ -138,6 +143,8 @@ public class AccountsController(
                 Categories = categories
             };
 
+            ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
+            
             return View(items);
         }
         catch (Exception e)
@@ -199,6 +206,8 @@ public class AccountsController(
                     Categories = categories
                 };
 
+                ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
+                
                 return View(items);
             }
 
