@@ -39,20 +39,26 @@ public class DeletePostCommandHandler(
             await postRepository.DeletePost(post);
             result.Success(true);
 
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>
                 {
                     CacheKeyHelper.Post.GetAllPostsKey(),
-                    CacheKeyHelper.Post.GetPostByIdKey(command.Id),
                     CacheKeyHelper.Post.GetPinnedPostsKey(),
                     CacheKeyHelper.Post.GetFeaturedPostsKey(),
-                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug)
+                    CacheKeyHelper.Post.GetMostLikedPostsKey(),
+                    CacheKeyHelper.Post.GetMostCommentPostsKey(),
+                    CacheKeyHelper.Post.GetPostByIdKey(command.Id),
+                    CacheKeyHelper.Post.GetPostBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetDetailBySlugKey(post.Slug),
+                    CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey()
                 };
 
                 await cacheService.RemoveMultipleAsync(cacheKeys, cancellationToken);
-            }, e => { logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e); });
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             TaskHelper.RunFireAndForget(() => postEventService.HandlePostDeletedEvent(command.Id), e =>
             {

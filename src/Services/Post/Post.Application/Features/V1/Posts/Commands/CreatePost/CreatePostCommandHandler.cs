@@ -64,7 +64,6 @@ public class CreatePostCommandHandler(
             await postRepository.SaveChangesAsync();
             result.Success(id);
 
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>

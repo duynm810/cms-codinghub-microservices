@@ -34,7 +34,6 @@ public class TogglePinStatusCommandHandler(IPostRepository postRepository, ICach
             var data = await postRepository.TogglePinStatus(post, command.TogglePinStatus.IsPinned);
             result.Success(data);
             
-            // Xóa cache liên quan
             TaskHelper.RunFireAndForget(async () =>
             {
                 var cacheKeys = new List<string>
