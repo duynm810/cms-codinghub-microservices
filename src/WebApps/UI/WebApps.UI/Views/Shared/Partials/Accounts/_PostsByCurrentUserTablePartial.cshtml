@@ -14,15 +14,27 @@
         var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
 
         <tr class="alert" role="alert">
-            <td>
-                <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @(postStatus == PostStatusEnum.Published || postStatus == PostStatusEnum.Rejected ? "disabled" : "")>
-                        <i class="fas fa-cog"></i> Action
-                    </button>
-                    <div class="dropdown-menu">
-                        @if (postStatus != PostStatusEnum.Draft)
-                        {
-                            if (postStatus == PostStatusEnum.WaitingForApproval)
+            @if (isAdmin)
+            {
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @(postStatus == PostStatusEnum.Published || postStatus == PostStatusEnum.Rejected ? "disabled" : "")>
+                            <i class="fas fa-cog"></i> Action
+                        </button>
+                        <div class="dropdown-menu">
+                            @if (postStatus != PostStatusEnum.Draft)
+                            {
+                                if (postStatus == PostStatusEnum.WaitingForApproval)
+                                {
+                                    <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'approve')">
+                                        <i class="fas fa-check"></i> Approve
+                                    </a>
+                                    <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'reject')">
+                                        <i class="fas fa-times"></i> Reject
+                                    </a>
+                                }
+                            }
+                            else
                             {
                                 <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'approve')">
                                     <i class="fas fa-check"></i> Approve
@@ -30,25 +42,14 @@
                                 <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'reject')">
                                     <i class="fas fa-times"></i> Reject
                                 </a>
+                                <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'waiting')">
+                                    <i class="fas fa-clock"></i> Waiting
+                                </a>
                             }
-                        }
-                        else
-                        {
-                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'approve')">
-                                <i class="fas fa-check"></i> Approve
-                            </a>
-                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'reject')">
-                                <i class="fas fa-times"></i> Reject
-                            </a>
-                            <a class="dropdown-item" href="#" data-id="@item.Id" onclick="confirmAction(this, 'waiting')">
-                                <i class="fas fa-clock"></i> Waiting
-                            </a>
-                        }
+                        </div>
                     </div>
-                </div>
-            </td>
-            @if (isAdmin)
-            {
+                </td>
+
                 <td class="pin-column">
                     <div class="icon-container">
                         @if (item.IsPinned)
