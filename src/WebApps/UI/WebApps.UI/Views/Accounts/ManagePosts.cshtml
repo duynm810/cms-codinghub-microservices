@@ -9,43 +9,71 @@
 @section Scripts {
     <script>
         let currentPage = 1; // Khởi tạo với trang đầu tiên
+
+        document.addEventListener('DOMContentLoaded', function () {
         
-        $(document).on('click', '.pagination a', function (e) {
-            e.preventDefault();
-            const page = $(this).data("page");
-            currentPage = page;
-            loadPosts(page);
-        });
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                currentPage = page;
+                loadPosts(page);
+            });
 
-        // Load first page when filter changes
-        $(document).on('change', '#status-filter', function () {
-            loadPosts(1); 
-        });
+            // Load first page when filter changes
+            $(document).on('change', '#status-filter', function () {
+                loadPosts(1);
+            });
 
-        $(document).on('input', '#keyword-filter', function () {
-            let keyword = $(this).val().toLowerCase();
-            $('#posts-table-body tr').filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            $(document).on('input', '#keyword-filter', function () {
+                let keyword = $(this).val().toLowerCase();
+                $('#posts-table-body tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+                });
+            });
+
+            $(document).on('click', '.btn-history', function () {
+                viewPostActivityLogs(this);
+            });
+
+            const checkboxes = document.querySelectorAll('.post-checkbox');
+            const addToSeriesBtn = document.getElementById('add-to-series-btn');
+
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function () {
+                    const checkedCheckboxes = document.querySelectorAll('.post-checkbox:checked');
+                    if (checkedCheckboxes.length > 0) {
+                        addToSeriesBtn.style.display = 'block';
+                    } else {
+                        addToSeriesBtn.style.display = 'none';
+                    }
+                });
+            });
+
+            addToSeriesBtn.addEventListener('click', function () {
+                $('#series-modal').modal('show');
             });
         });
-        
-        $(document).on('click', '.btn-history', function () {
-            viewPostActivityLogs(this);
-        });
+
+        function openModal(url, title) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    $('#shared-modal .modal-title').text(title);
+                    $('#shared-modal .modal-body').html(response);
+                    $('#shared-modal').modal('show');
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors here
+                }
+            });
+        }
 
         function viewPostActivityLogs(button) {
             const postId = button.getAttribute('data-id');
-            $.ajax({
-                url: '/posts/activity-logs/' + postId,
-                type: 'GET',
-                success: function (response) {
-                    $('#activity-log-modal .modal-body').html(response);
-                    $('#activity-log-modal').modal('show');
-                },
-                error: function (xhr, status, error) {
-
-                }
-            });
+            const url = '/posts/activity-logs/' + postId;
+            const title = 'Activity logs';
+            openModal(url, title);
         }
 
         function loadPosts(page) {
@@ -270,8 +298,11 @@
         </h1>
     </div>
     <div class="row mb-3">
-        <div class="col-md-12 text-right-custom">
-            <button class="btn btn-primary btn-block" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
+        <div class="col-md-12 text-right-custom custom-btn-group">
+            <button id="add-to-series-btn" class="btn btn-success" style="display: none;">
+                <i class="fas fa-plus-circle"></i> Add to series
+            </button>
+            <button class="btn btn-primary" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
                 <i class="fa fa-edit"></i> Create new post
             </button>
         </div>
@@ -288,7 +319,7 @@
             </select>
         </div>
         <div class="col-md-3">
-            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..." />
+            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..."/>
         </div>
     </div>
 
@@ -298,6 +329,7 @@
                 <table class="table table-responsive-xl">
                     <thead>
                     <tr>
+                        <th>&nbsp;</th>
                         @if (isAdmin)
                         {
                             <th>&nbsp;</th>
@@ -333,20 +365,4 @@
     </div>
 </div>
 
-<!-- Post Activity Logs Modal -->
-<div class="modal fade" id="activity-log-modal" tabindex="-1" aria-labelledby="activity-log-label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="activity-log-label">Post Activity Logs</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Nội dung modal sẽ được cập nhật qua AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_SharedModal")
