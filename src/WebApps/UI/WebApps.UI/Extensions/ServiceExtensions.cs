@@ -82,6 +82,7 @@ public static class ServiceExtensions
             .AddScoped<IPostApiClient, PostApiClient>()
             .AddScoped<IPostActivityLogApiClient, PostActivityLogApiClient>()
             .AddScoped<ISeriesApiClient, SeriesApiClient>()
+            .AddScoped<IPostInSeriesApiClient, PostInSeriesApiClient>()
             .AddScoped<ITagApiClient, TagApiClient>()
             .AddScoped<ICommentApiClient, CommentApiClient>()
             .AddScoped<IMediaApiClient, MediaApiClient>()

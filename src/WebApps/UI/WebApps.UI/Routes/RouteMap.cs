@@ -108,15 +108,6 @@ public static class RouteMap
 
         #endregion
         
-        #region POST IN SERIES
-
-        app.MapControllerRoute(
-            "add_posts_to_series",
-            "/post-in-series/add_posts_to_series",
-            new { controller = "PostInSeries", action = "AddPostsToSeries" });
-
-        #endregion
-
         #region COMMENTS
 
         app.MapControllerRoute(
@@ -146,14 +137,14 @@ public static class RouteMap
         #endregion
 
         #region SERIES
-
+        
         app.MapControllerRoute(
             "get-all-series",
             "/series",
             new { controller = "Series", action = "GetSeries" });
 
         #endregion
-
+        
         #region POST ACTIVITY LOGS
 
         app.MapControllerRoute(

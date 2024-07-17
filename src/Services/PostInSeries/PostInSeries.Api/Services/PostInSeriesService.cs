@@ -19,10 +19,10 @@ public class PostInSeriesService(
 {
     #region CRUD
 
-    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request)
+    public async Task<ApiResult<bool>> CreatePostsToSeries(CreatePostInSeriesRequest request)
     {
         var result = new ApiResult<bool>();
-        const string methodName = nameof(CreatePostToSeries);
+        const string methodName = nameof(CreatePostsToSeries);
 
         try
         {

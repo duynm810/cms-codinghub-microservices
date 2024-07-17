@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Shared.Requests.PostInSeries;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Series;
 
@@ -27,6 +28,17 @@ public class SeriesController(ISeriesApiClient seriesApiClient) : BaseController
             // ignored
         }
 
+        return Json(new { success = false });
+    }
+    
+    [HttpPost]
+    public async Task<IActionResult> AddPostsToSeries([FromBody] CreatePostInSeriesRequest request)
+    {
+        if (!request.PostIds.Any())
+        {
+            return Json(new { success = false, message = "No posts selected" });
+        }
+        
         return Json(new { success = false });
     }
 }

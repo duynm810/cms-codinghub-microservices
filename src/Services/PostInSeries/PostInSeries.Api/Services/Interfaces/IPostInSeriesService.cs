@@ -5,7 +5,7 @@ namespace PostInSeries.Api.Services.Interfaces;
 
 public interface IPostInSeriesService
 {
-    Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request);
+    Task<ApiResult<bool>> CreatePostsToSeries(CreatePostInSeriesRequest request);
 
     Task<ApiResult<bool>> DeletePostToSeries(DeletePostInSeriesRequest request);
 }
