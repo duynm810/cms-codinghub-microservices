@@ -8,7 +8,7 @@
 
 @section Scripts {
     <script>
-        let currentPage = 1; // Khởi tạo với trang đầu tiên
+        let currentPage = 1;
 
         document.addEventListener('DOMContentLoaded', function () {
         
@@ -42,7 +42,7 @@
                 checkbox.addEventListener('change', function () {
                     const checkedCheckboxes = document.querySelectorAll('.post-checkbox:checked');
                     if (checkedCheckboxes.length > 0) {
-                        addToSeriesBtn.style.display = 'block';
+                        addToSeriesBtn.style.display = 'inline-block';
                     } else {
                         addToSeriesBtn.style.display = 'none';
                     }
@@ -50,20 +50,36 @@
             });
 
             addToSeriesBtn.addEventListener('click', function () {
-                const selectedPostIds = Array.from(document.querySelectorAll('.post-checkbox:checked')).map(checkbox => checkbox.getAttribute('data-id'));
                 const url = '/series/';
                 const title = 'Add to series';
-                openModal(url, title);
+                openModal(url, title, 'add-to-series');
+            });
+
+            $('#shared-modal-confirm').on('click', function () {
+                const context = $(this).attr('data-context');
+                if (context === 'add-to-series') {
+                    const selectedSeriesId = $('#series-select').val();
+                    const selectedPostIds = Array.from(document.querySelectorAll('.post-checkbox:checked')).map(checkbox => checkbox.getAttribute('data-id'));
+                    console.log(selectedSeriesId);
+                    console.log(selectedPostIds);
+                }
             });
         });
 
-        function openModal(url, title) {
+        function openModal(url, title, context = '') {
             $.ajax({
                 url: url,
                 type: 'GET',
                 success: function (response) {
                     $('#shared-modal .modal-title').text(title);
                     $('#shared-modal .modal-body').html(response);
+                    
+                    if (context) {
+                        $('#shared-modal-confirm').show().attr('data-context', context);
+                    } else {
+                        $('#shared-modal-confirm').hide().attr('data-context', '');
+                    }
+                    
                     $('#shared-modal').modal('show');
                 },
                 error: function (xhr, status, error) {
