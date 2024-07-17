@@ -13,6 +13,7 @@ namespace PostInSeries.Api.GrpcClients;
 
 public class SeriesGrpcClient(
     SeriesProtoService.SeriesProtoServiceClient seriesProtoServiceClient,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ISeriesGrpcClient
 {
@@ -84,9 +85,20 @@ public class SeriesGrpcClient(
         
         try
         {
-            var request = new Empty();
-            var data = await seriesProtoServiceClient.GetAllSeriesAsync(request);
-            return mapper.Map<List<SeriesDto>>(data.Series);
+            var cacheKey = CacheKeyHelper.SeriesGrpc.GetAllSeriesKey();
+
+            var cached = await cacheService.GetAsync<List<SeriesDto>>(cacheKey);
+            if (cached != null)
+            {
+                return cached;
+            }
+            
+            var result = await seriesProtoServiceClient.GetAllSeriesAsync(new Empty());
+            var data = mapper.Map<List<SeriesDto>>(result.Series);
+            
+            await cacheService.SetAsync(cacheKey, data);
+            
+            return data;
         }
         catch (RpcException rpcEx)
         {

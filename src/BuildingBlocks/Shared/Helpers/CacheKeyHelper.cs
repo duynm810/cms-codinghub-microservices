@@ -81,6 +81,17 @@ public static class CacheKeyHelper
 
     #endregion
 
+    #region SERIES GRPC
+
+    private const string SeriesGrpcPrefix = "grpc:series";
+
+    public static class SeriesGrpc
+    {
+        public static string GetAllSeriesKey() => $"{SeriesGrpcPrefix}:all";
+    }
+
+    #endregion
+
     #region POST IN SERIES
 
     private const string PostInSeriesServicePrefix = "service:post-in-series";

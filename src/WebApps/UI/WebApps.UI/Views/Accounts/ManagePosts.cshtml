@@ -56,24 +56,54 @@
 
             manageSeriesBtn.addEventListener('click', function () {
                 const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
-                console.log(selectedPostId);
+                const url = `/post-in-series/${selectedPostId}/manage-series`;
+                const title = 'Manage Series';
+                openSeriesModal(url, title);
             });
         });
 
-        function openModal(url, title, context = '') {
+        function setupSeriesSelect() {
+            const seriesSelect = document.getElementById('series-select');
+            const modalFooter = document.querySelector('#shared-modal .modal-footer');
+
+            seriesSelect.addEventListener('change', function () {
+                const selectedSeriesId = this.value;
+                const seriesInTable = document.querySelector(`#series-table-body tr[data-series-id="${selectedSeriesId}"]`);
+
+                if (selectedSeriesId && !seriesInTable) {
+                    if (!document.getElementById('save-series-btn')) {
+                        const saveButton = document.createElement('button');
+                        saveButton.id = 'save-series-btn';
+                        saveButton.type = 'button';
+                        saveButton.className = 'btn btn-primary';
+                        saveButton.textContent = 'Save';
+                        modalFooter.appendChild(saveButton);
+
+                        saveButton.addEventListener('click', function () {
+                            const selectedSeriesId = seriesSelect.value;
+                            const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
+
+                            if (selectedSeriesId) {
+                                
+                            }
+                        });
+                    }
+                } else {
+                    const saveButton = document.getElementById('save-series-btn');
+                    if (saveButton) {
+                        saveButton.remove();
+                    }
+                }
+            });
+        }
+
+        function openPostActivityLogsModal(url, title) {
             $.ajax({
                 url: url,
                 type: 'GET',
                 success: function (response) {
                     $('#shared-modal .modal-title').text(title);
                     $('#shared-modal .modal-body').html(response);
-                    
-                    if (context) {
-                        $('#shared-modal-confirm').show().attr('data-context', context);
-                    } else {
-                        $('#shared-modal-confirm').hide().attr('data-context', '');
-                    }
-                    
                     $('#shared-modal').modal('show');
                 },
                 error: function (xhr, status, error) {
@@ -82,11 +112,28 @@
             });
         }
 
+        function openSeriesModal(url, title) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    $('#shared-modal .modal-title').text(title);
+                    $('#shared-modal .modal-body').html(response);
+                    $('#shared-modal').modal('show');
+                    
+                    setupSeriesSelect();
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to load modal content:', error);
+                }
+            });
+        }
+
         function viewPostActivityLogs(button) {
             const postId = button.getAttribute('data-id');
             const url = '/posts/activity-logs/' + postId;
             const title = 'Activity logs';
-            openModal(url, title);
+            openPostActivityLogsModal(url, title);
         }
 
         function loadPosts(page) {

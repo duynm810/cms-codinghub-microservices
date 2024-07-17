@@ -42,9 +42,20 @@ public class SeriesService(
 
             var data = mapper.Map<SeriesDto>(series);
             result.Success(data);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
 
-            // Clear series list cache when a new series is created (Xóa cache danh sách series khi tạo mới)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series created successfully with ID {SeriesId}", methodName,
                 data.Id);
@@ -82,13 +93,22 @@ public class SeriesService(
 
             var data = mapper.Map<SeriesDto>(updateSeries);
             result.Success(data);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.Series.GetSeriesByIdKey(id),
+                    CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
 
-            // Delete series list cache when updating (Xóa cache danh sách series khi cập nhật)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)),
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug))
-            );
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series with ID {SeriesId} updated successfully", methodName, id);
         }
@@ -135,10 +155,21 @@ public class SeriesService(
             // Execute all tasks in parallel
             await Task.WhenAll(tasks);
             
-            // Delete series list cache when deleting (Xóa cache danh sách series khi xóa dữ liệu)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
-
             result.Success(true);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
+
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series with IDs {SeriesIds} deleted successfully", methodName,
                 string.Join(", ", ids));

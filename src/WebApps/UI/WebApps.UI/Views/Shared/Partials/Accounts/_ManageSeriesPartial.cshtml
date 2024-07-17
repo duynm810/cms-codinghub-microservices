@@ -1,0 +1,41 @@
+@model ManageSeriesViewModel
+@{
+    var series = Model.Series;
+    var currentSeries = Model.CurrentSeries;
+}
+<div class="form-group">
+    <label for="series-select">Select Series:</label>
+    <select id="series-select" class="form-control">
+        <option value="">-- Select Series --</option>
+        @foreach (var item in series)
+        {
+            <option value="@item.Id">@item.Title</option>
+        }
+    </select>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="table-wrap">
+            <table class="table table-responsive">
+                <thead>
+                <tr>
+                    <th>Series Title</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody id="series-table-body">
+                @if (currentSeries != null)
+                {
+                    <tr data-series-id="@currentSeries.Id">
+                        <td>@currentSeries.Title</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm remove-series" data-series-id="@currentSeries.Id">Remove</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
