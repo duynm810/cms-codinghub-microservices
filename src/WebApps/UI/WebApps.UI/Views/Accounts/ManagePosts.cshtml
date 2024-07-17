@@ -50,7 +50,10 @@
             });
 
             addToSeriesBtn.addEventListener('click', function () {
-                $('#series-modal').modal('show');
+                const selectedPostIds = Array.from(document.querySelectorAll('.post-checkbox:checked')).map(checkbox => checkbox.getAttribute('data-id'));
+                const url = '/series/';
+                const title = 'Add to series';
+                openModal(url, title);
             });
         });
 

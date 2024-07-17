@@ -1,0 +1,11 @@
+@model SeriesViewModel
+
+<div class="form-group">
+    <label for="series-select">Select Series:</label>
+    <select id="series-select" class="form-control">
+        @foreach (var series in Model.Series)
+        {
+            <option value="@series.Id">@series.Title</option>
+        }
+    </select>
+</div>
