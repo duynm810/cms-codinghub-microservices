@@ -62,6 +62,27 @@
                     const selectedPostIds = Array.from(document.querySelectorAll('.post-checkbox:checked')).map(checkbox => checkbox.getAttribute('data-id'));
                     console.log(selectedSeriesId);
                     console.log(selectedPostIds);
+
+                    $.ajax({
+                        url: '/post-in-series/add-post-in-series',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            seriesId: selectedSeriesId,
+                            postIds: selectedPostIds
+                        }),
+                        success: function (response) {
+                            if (response.success) {
+                                $('#shared-modal').modal('hide');
+                                // Xử lý thành công (ví dụ: hiển thị thông báo, cập nhật UI, ...)
+                            } else {
+                                showErrorNotification(response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Failed to add posts to series:', error);
+                        }
+                    });
                 }
             });
         });

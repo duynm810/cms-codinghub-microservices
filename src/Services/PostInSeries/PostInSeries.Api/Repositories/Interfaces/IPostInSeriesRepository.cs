@@ -8,6 +8,8 @@ public interface IPostInSeriesRepository : IRepositoryCommandBase<PostInSeriesBa
     #region CRUD
 
     Task CreatePostToSeries(PostInSeriesBase postInSeriesBase);
+    
+    Task CreatePostsToSeries(IEnumerable<PostInSeriesBase> postInSeriesList);
 
     Task DeletePostToSeries(PostInSeriesBase postInSeriesBase);
 

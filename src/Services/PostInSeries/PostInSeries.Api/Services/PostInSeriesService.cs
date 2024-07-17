@@ -3,7 +3,6 @@ using Contracts.Commons.Interfaces;
 using PostInSeries.Api.Entities;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
-using Shared.Dtos.PostInSeries;
 using Shared.Helpers;
 using Shared.Requests.PostInSeries;
 using Shared.Responses;
@@ -28,12 +27,17 @@ public class PostInSeriesService(
         try
         {
             logger.Information(
-                "BEGIN {MethodName} - Creating post with ID: {PostId} to series with ID: {SeriesId} with sort order: {SortOrder}",
-                methodName, request.PostId, request.SeriesId, request.SortOrder);
+                "BEGIN {MethodName} - Creating posts with IDs: {PostIds} to series with ID: {SeriesId}",
+                methodName, string.Join(", ", request.PostIds), request.SeriesId);
 
-            var postInSeries = mapper.Map<PostInSeriesBase>(request);
+            var postInSeriesList = request.PostIds.Select(postId => new PostInSeriesBase
+            {
+                Id = Guid.NewGuid(),
+                SeriesId = request.SeriesId,
+                PostId = postId
+            }).ToList();
 
-            await postInSeriesRepository.CreatePostToSeries(postInSeries);
+            await postInSeriesRepository.CreatePostsToSeries(postInSeriesList);
             result.Success(true);
 
             // Xoá cache
@@ -41,7 +45,7 @@ public class PostInSeriesService(
 
             logger.Information(
                 "END {MethodName} - Successfully created post with ID: {PostId} to series with ID: {SeriesId}",
-                methodName, request.PostId, request.SeriesId);
+                methodName, request.PostIds, request.SeriesId);
         }
         catch (Exception e)
         {

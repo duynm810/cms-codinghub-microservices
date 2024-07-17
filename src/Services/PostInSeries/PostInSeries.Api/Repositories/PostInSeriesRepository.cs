@@ -12,6 +12,11 @@ public class PostInSeriesRepository(PostInSeriesContext dbContext, IUnitOfWork<P
 {
     public async Task CreatePostToSeries(PostInSeriesBase postInSeriesBase) => await CreateAsync(postInSeriesBase);
 
+    public async Task CreatePostsToSeries(IEnumerable<PostInSeriesBase> postInSeriesList)
+    {
+        await CreateListAsync(postInSeriesList);
+    }
+
     public async Task DeletePostToSeries(PostInSeriesBase postInSeriesBase) => await DeleteAsync(postInSeriesBase);
 
     public async Task<IEnumerable<Guid>?> GetPostIdsInSeries(Guid seriesId) =>
