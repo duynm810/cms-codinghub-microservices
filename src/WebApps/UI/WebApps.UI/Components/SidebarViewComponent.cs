@@ -13,7 +13,7 @@ public class SidebarViewComponent(IPostApiClient postApiClient, ICommentApiClien
     {
         try
         {
-            var posts = await postApiClient.GetMostCommentedPosts(6);
+            var posts = await postApiClient.GetMostCommentedPosts(4);
             var latestComments = await commentApiClient.GetLatestComments(4);
             var items = new SidebarViewModel
             {

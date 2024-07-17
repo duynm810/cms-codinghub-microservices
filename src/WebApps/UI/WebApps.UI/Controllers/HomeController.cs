@@ -43,7 +43,7 @@ public class HomeController(
                 viewModel.SuggestTags = suggestTags;
             }
 
-            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page });
+            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page, PageSize = 4 });
             if (latestPosts is { IsSuccess: true, Data: not null })
             {
                 viewModel.LatestPosts = latestPosts.Data;
@@ -65,7 +65,7 @@ public class HomeController(
 
         try
         {
-            var request = new GetLatestPostsRequest { PageNumber = page };
+            var request = new GetLatestPostsRequest { PageNumber = page, PageSize = 4 };
             var response = await postApiClient.GetLatestPostsPaging(request);
             if (response is { IsSuccess: true, Data: not null })
             {
