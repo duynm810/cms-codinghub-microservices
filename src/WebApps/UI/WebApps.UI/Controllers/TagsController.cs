@@ -5,7 +5,7 @@ namespace WebApps.UI.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class TagsController(ITagApiClient tagApiClient) :  ControllerBase
+public class TagsController(ITagApiClient tagApiClient) : BaseController
 {
     [HttpGet("suggest")]
     public async Task<IActionResult> GetSuggestedTags([FromQuery] int count = 5)

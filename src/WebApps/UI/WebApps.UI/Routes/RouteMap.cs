@@ -105,21 +105,25 @@ public static class RouteMap
             "post-search",
             "/search",
             new { controller = "Posts", action = "Search" });
-        
+
+        #endregion
+
+        #region COMMENTS
+
         app.MapControllerRoute(
             "get-comments-by-post-id",
-            "/posts/get-comments-by-post-id",
-            new { controller = "Posts", action = "GetCommentsByPostId" });
+            "/comments/get-comments-by-post-id",
+            new { controller = "Comments", action = "GetCommentsByPostId" });
         
         app.MapControllerRoute(
             "add-new-comment",
-            "/posts/add-new-comment",
-            new { controller = "Posts", action = "AddNewComment" });
+            "/comments/add-new-comment",
+            new { controller = "Comments", action = "AddNewComment" });
         
         app.MapControllerRoute(
             "reply-to-comment",
-            "/posts/reply-to-comment",
-            new { controller = "Posts", action = "ReplyToComment" });
+            "/comments/reply-to-comment",
+            new { controller = "Comments", action = "ReplyToComment" });
 
         #endregion
 
