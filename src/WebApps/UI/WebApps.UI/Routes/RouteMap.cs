@@ -8,69 +8,69 @@ public static class RouteMap
         #region ACCOUNTS
 
         app.MapControllerRoute(
+            "update_post",
+            "accounts/update-post/{id:guid}",
+            new { controller = "Accounts", action = "UpdatePost" });
+
+        app.MapControllerRoute(
             "update_post_view",
             "accounts/update-post",
             new { controller = "Accounts", action = "UpdatePost" });
 
         app.MapControllerRoute(
-            "update_post",
-            "accounts/update-post/{id:guid}",
-            new { controller = "Accounts", action = "UpdatePost" });
-        
-        app.MapControllerRoute(
             "update-thumbnail",
             "/accounts/update-thumbnail/{id:guid}",
             new { controller = "Accounts", action = "UpdateThumbnail" });
-        
+
         app.MapControllerRoute(
             "toggle-pin-status",
             "/accounts/toggle-pin-status/{id:guid}",
             new { controller = "Accounts", action = "TogglePinStatus" });
-        
+
         app.MapControllerRoute(
             "toggle-featured-status",
             "/accounts/toggle-featured-status/{id:guid}",
             new { controller = "Accounts", action = "ToggleFeaturedStatus" });
-        
+
         app.MapControllerRoute(
             "delete_post",
             "accounts/delete-post/{id:guid}",
             new { controller = "Accounts", action = "DeletePost" });
 
         app.MapControllerRoute(
-            "create-new-post",
-            "/accounts/create-new-post",
-            new { controller = "Accounts", action = "CreatePost" });
-        
-        app.MapControllerRoute(
             "approve_post",
             "accounts/approve-post/{id:guid}",
             new { controller = "Accounts", action = "ApprovePost" });
-        
+
         app.MapControllerRoute(
             "submit_post_for_approval",
             "accounts/waiting-post/{id:guid}",
             new { controller = "Accounts", action = "SubmitPostForApproval" });
-        
+
         app.MapControllerRoute(
             "reject_post_with_reason",
             "accounts/reject-post/{id:guid}",
             new { controller = "Accounts", action = "RejectPostWithReason" });
 
         app.MapControllerRoute(
-            "profile",
-            "/accounts/profile",
-            new { controller = "Accounts", action = "Profile" });
-        
+            "posts-by-current-user",
+            "/accounts/posts-by-current-user",
+            new { controller = "Accounts", action = "GetPostsByCurrentUser" });
+
         app.MapControllerRoute(
             "manage-posts",
             "/accounts/manage-posts",
             new { controller = "Accounts", action = "ManagePosts" });
-        
+
         app.MapControllerRoute(
-            "posts-by-current-user",
-            "/accounts/posts-by-current-user",
-            new { controller = "Accounts", action = "GetPostsByCurrentUser" });
+            "create-new-post",
+            "/accounts/create-new-post",
+            new { controller = "Accounts", action = "CreatePost" });
+
+        app.MapControllerRoute(
+            "profile",
+            "/accounts/profile",
+            new { controller = "Accounts", action = "Profile" });
 
         #endregion
 
@@ -85,7 +85,7 @@ public static class RouteMap
             "posts-by-category",
             "/category/{categorySlug}",
             new { controller = "Posts", action = "PostsByCategory" });
-        
+
         app.MapControllerRoute(
             "posts-in-series",
             "series/{seriesSlug}",
@@ -95,7 +95,7 @@ public static class RouteMap
             "posts-in-tag",
             "tag/{tagSlug}",
             new { controller = "Posts", action = "PostsByTag" });
-        
+
         app.MapControllerRoute(
             "posts-by-author",
             "/author/{userName}",
@@ -107,6 +107,15 @@ public static class RouteMap
             new { controller = "Posts", action = "Search" });
 
         #endregion
+        
+        #region POST IN SERIES
+
+        app.MapControllerRoute(
+            "add_posts_to_series",
+            "/post-in-series/add_posts_to_series",
+            new { controller = "PostInSeries", action = "AddPostsToSeries" });
+
+        #endregion
 
         #region COMMENTS
 
@@ -114,12 +123,12 @@ public static class RouteMap
             "get-comments-by-post-id",
             "/comments/get-comments-by-post-id",
             new { controller = "Comments", action = "GetCommentsByPostId" });
-        
+
         app.MapControllerRoute(
             "add-new-comment",
             "/comments/add-new-comment",
             new { controller = "Comments", action = "AddNewComment" });
-        
+
         app.MapControllerRoute(
             "reply-to-comment",
             "/comments/reply-to-comment",
@@ -127,11 +136,29 @@ public static class RouteMap
 
         #endregion
 
+        #region TAGS
+
+        app.MapControllerRoute(
+            "get-suggested-tags",
+            "/tags/suggest",
+            new { controller = "Tags", action = "GetSuggestedTags" });
+
+        #endregion
+
+        #region SERIES
+
+        app.MapControllerRoute(
+            "get-all-series",
+            "/series",
+            new { controller = "Series", action = "GetSeries" });
+
+        #endregion
+
         #region POST ACTIVITY LOGS
 
         app.MapControllerRoute(
             "get_post_activity_logs",
-            "posts/activity-logs/{postId:guid}",
+            "/posts/activity-logs/{postId:guid}",
             new { controller = "PostActivityLogs", action = "GetPostActivityLogs" });
 
         #endregion

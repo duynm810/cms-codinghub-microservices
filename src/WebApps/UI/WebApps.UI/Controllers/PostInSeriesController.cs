@@ -3,11 +3,10 @@ using Shared.Requests.PostInSeries;
 
 namespace WebApps.UI.Controllers;
 
-[ApiController]
 [Route("post-in-series")]
-public class PostInSeriesController : Controller
+public class PostInSeriesController : BaseController
 {
-    [HttpPost("add-post-in-series")]
+    [HttpPost]
     public async Task<IActionResult> AddPostsToSeries([FromBody] CreatePostInSeriesRequest request)
     {
         if (!request.PostIds.Any())

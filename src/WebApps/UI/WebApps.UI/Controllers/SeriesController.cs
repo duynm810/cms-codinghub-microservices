@@ -4,9 +4,7 @@ using WebApps.UI.Models.Series;
 
 namespace WebApps.UI.Controllers;
 
-[ApiController]
-[Route("[controller]")]
-public class SeriesController(ISeriesApiClient seriesApiClient) : Controller
+public class SeriesController(ISeriesApiClient seriesApiClient) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetSeries()
