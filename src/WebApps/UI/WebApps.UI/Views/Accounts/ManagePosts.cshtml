@@ -74,7 +74,15 @@
                         success: function (response) {
                             if (response.success) {
                                 $('#shared-modal').modal('hide');
-                                // Xử lý thành công (ví dụ: hiển thị thông báo, cập nhật UI, ...)
+                                showSuccessNotification('Posts have been successfully added to the series.');
+
+                                // Uncheck all checkboxes
+                                document.querySelectorAll('.post-checkbox:checked').forEach(checkbox => {
+                                    checkbox.checked = false;
+                                });
+
+                                // Hide the "Add to series" button
+                                document.getElementById('add-to-series-btn').style.display = 'none';
                             } else {
                                 showErrorNotification(response.message);
                             }
