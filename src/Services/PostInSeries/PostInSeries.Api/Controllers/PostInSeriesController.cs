@@ -15,6 +15,7 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    [AllowAnonymous]
     public async Task<IActionResult> CreatePostsToSeries(CreatePostInSeriesRequest request)
     {
         var result = await postInSeriesService.CreatePostsToSeries(request);

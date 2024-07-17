@@ -40,7 +40,6 @@ public class PostInSeriesService(
             await postInSeriesRepository.CreatePostsToSeries(postInSeriesList);
             result.Success(true);
 
-            // Xoá cache
             await cacheService.RemoveAsync(CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(request.SeriesId));
 
             logger.Information(
