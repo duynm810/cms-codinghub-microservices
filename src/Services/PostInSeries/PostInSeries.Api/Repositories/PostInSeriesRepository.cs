@@ -26,4 +26,11 @@ public class PostInSeriesRepository(PostInSeriesContext dbContext, IUnitOfWork<P
 
     public async Task<IEnumerable<Guid>?> GetPostIdsInSeries(Guid seriesId) =>
         await FindByCondition(x => x.SeriesId == seriesId).Select(x => x.PostId).ToListAsync();
+
+    public async Task<Guid?> GetSeriesForPost(Guid postId)
+    {
+        return await FindByCondition(x => x.PostId == postId)
+            .Select(x => x.SeriesId)
+            .FirstOrDefaultAsync();
+    }
 }

@@ -1,10 +1,13 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 option csharp_namespace = "Series.Grpc.Protos";
 
 service SeriesProtoService {
   rpc GetSeriesById(GetSeriesByIdRequest) returns (SeriesModel);
   rpc GetSeriesBySlug(GetSeriesBySlugRequest) returns (SeriesModel);
+  rpc GetAllSeries(google.protobuf.Empty) returns (GetAllSeriesResponse);
 }
 
 message GetSeriesByIdRequest {
@@ -19,4 +22,8 @@ message SeriesModel {
   string id = 1;
   string title = 2;
   string slug = 3;
+}
+
+message GetAllSeriesResponse {
+  repeated SeriesModel series = 1;
 }

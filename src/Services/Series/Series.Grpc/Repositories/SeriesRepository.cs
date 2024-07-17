@@ -16,6 +16,8 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
     public async Task<SeriesBase?> GetSeriesById(Guid id) => await GetByIdAsync(id) ?? null;
 
+    public async Task<IEnumerable<SeriesBase>> GetAllSeries() => await FindAll().ToListAsync();
+
     #endregion
 
     #region OTHERS

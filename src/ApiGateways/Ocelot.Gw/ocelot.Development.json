@@ -651,6 +651,25 @@
       "SwaggerKey": "post-in-series-service"
     },
     {
+      "UpstreamPathTemplate": "/post-in-series/{postId}/manage-series",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/{postId}/manage-series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5009
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
       "UpstreamPathTemplate": "/tags",
       "UpstreamHttpMethod": [
         "GET"

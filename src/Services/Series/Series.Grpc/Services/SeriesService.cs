@@ -1,4 +1,5 @@
 using AutoMapper;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Series.Grpc.Protos;
 using Series.Grpc.Repositories.Interfaces;
@@ -59,6 +60,30 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             logger.Information(
                 "END {MethodName} - Success: Retrieved Series {SeriesId} - Title: {SeriesName}",
                 methodName, data.Id, data.Title);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            throw;
+        }
+    }
+
+    public override async Task<GetAllSeriesResponse> GetAllSeries(Empty request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetAllSeries);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Getting all series", methodName);
+        
+            var seriesList = await seriesRepository.GetAllSeries();
+            
+            var data = new GetAllSeriesResponse();
+            data.Series.AddRange(seriesList.Select(mapper.Map<SeriesModel>));
+
+            logger.Information("END {MethodName} - Success: Retrieved all series", methodName);
 
             return data;
         }

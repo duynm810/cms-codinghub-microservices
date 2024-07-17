@@ -7,4 +7,6 @@ public interface ISeriesGrpcClient
     Task<SeriesDto?> GetSeriesById(Guid id);
 
     Task<SeriesDto?> GetSeriesBySlug(string slug);
+
+    Task<List<SeriesDto>> GetAllSeries();
 }

@@ -36,62 +36,27 @@
             });
 
             const checkboxes = document.querySelectorAll('.post-checkbox');
-            const addToSeriesBtn = document.getElementById('add-to-series-btn');
+            const manageSeriesBtn = document.getElementById('manage-series-btn');
 
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function () {
+                    checkboxes.forEach(cb => {
+                        if (cb !== checkbox) {
+                            cb.checked = false;
+                        }
+                    });
                     const checkedCheckboxes = document.querySelectorAll('.post-checkbox:checked');
-                    if (checkedCheckboxes.length > 0) {
-                        addToSeriesBtn.style.display = 'inline-block';
+                    if (checkedCheckboxes.length === 1) {
+                        manageSeriesBtn.style.display = 'inline-block';
                     } else {
-                        addToSeriesBtn.style.display = 'none';
+                        manageSeriesBtn.style.display = 'none';
                     }
                 });
             });
 
-            addToSeriesBtn.addEventListener('click', function () {
-                const url = '/series/';
-                const title = 'Add to series';
-                openModal(url, title, 'add-to-series');
-            });
-
-            $('#shared-modal-confirm').on('click', function () {
-                const context = $(this).attr('data-context');
-                if (context === 'add-to-series') {
-                    const selectedSeriesId = $('#series-select').val();
-                    const selectedPostIds = Array.from(document.querySelectorAll('.post-checkbox:checked')).map(checkbox => checkbox.getAttribute('data-id'));
-                    console.log(selectedSeriesId);
-                    console.log(selectedPostIds);
-
-                    $.ajax({
-                        url: '/post-in-series/add-posts-to-series',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify({
-                            seriesId: selectedSeriesId,
-                            postIds: selectedPostIds
-                        }),
-                        success: function (response) {
-                            if (response.success) {
-                                $('#shared-modal').modal('hide');
-                                showSuccessNotification('Posts have been successfully added to the series.');
-
-                                // Uncheck all checkboxes
-                                document.querySelectorAll('.post-checkbox:checked').forEach(checkbox => {
-                                    checkbox.checked = false;
-                                });
-
-                                // Hide the "Add to series" button
-                                document.getElementById('add-to-series-btn').style.display = 'none';
-                            } else {
-                                showErrorNotification(response.message);
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            console.error('Failed to add posts to series:', error);
-                        }
-                    });
-                }
+            manageSeriesBtn.addEventListener('click', function () {
+                const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
+                console.log(selectedPostId);
             });
         });
 
@@ -347,8 +312,8 @@
     </div>
     <div class="row mb-3">
         <div class="col-md-12 text-right-custom custom-btn-group">
-            <button id="add-to-series-btn" class="btn btn-success" style="display: none;">
-                <i class="fas fa-plus-circle"></i> Add to series
+            <button id="manage-series-btn" class="btn btn-success" style="display: none;">
+                <i class="fas fa-cogs"></i> Manage Series
             </button>
             <button class="btn btn-primary" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
                 <i class="fa fa-edit"></i> Create new post

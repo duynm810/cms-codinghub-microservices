@@ -1,5 +1,6 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using PostInSeries.Api.GrpcClients.Interfaces;
 using Series.Grpc.Protos;
@@ -49,7 +50,7 @@ public class SeriesGrpcClient(
     public async Task<SeriesDto?> GetSeriesBySlug(string slug)
     {
         const string methodName = nameof(GetSeriesBySlug);
-
+        
         try
         {
             var request = new GetSeriesBySlugRequest { Slug = slug };
@@ -76,5 +77,26 @@ public class SeriesGrpcClient(
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
-
+    
+    public async Task<List<SeriesDto>> GetAllSeries()
+    {
+        const string methodName = nameof(GetAllSeries);
+        
+        try
+        {
+            var request = new Empty();
+            var data = await seriesProtoServiceClient.GetAllSeriesAsync(request);
+            return mapper.Map<List<SeriesDto>>(data.Series);
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting all series. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            return [];
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting all series. Message: {ErrorMessage}", methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+        }
+    }
 }

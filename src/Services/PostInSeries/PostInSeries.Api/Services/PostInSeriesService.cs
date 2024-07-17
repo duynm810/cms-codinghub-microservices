@@ -1,8 +1,11 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
 using PostInSeries.Api.Entities;
+using PostInSeries.Api.GrpcClients.Interfaces;
 using PostInSeries.Api.Repositories.Interfaces;
 using PostInSeries.Api.Services.Interfaces;
+using Shared.Dtos.PostInSeries;
+using Shared.Dtos.Series;
 using Shared.Helpers;
 using Shared.Requests.PostInSeries;
 using Shared.Responses;
@@ -13,6 +16,7 @@ namespace PostInSeries.Api.Services;
 
 public class PostInSeriesService(
     IPostInSeriesRepository postInSeriesRepository,
+    ISeriesGrpcClient seriesGrpcClient,
     ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : IPostInSeriesService
@@ -85,6 +89,53 @@ public class PostInSeriesService(
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }
 
+        return result;
+    }
+
+    #endregion
+
+    #region OTHERS
+
+    public async Task<ApiResult<ManagePostInSeriesDto>> GetSeriesForPost(Guid postId)
+    {
+        var result = new ApiResult<ManagePostInSeriesDto>();
+        const string methodName = nameof(GetSeriesForPost);
+
+        try
+        {
+            logger.Information(
+                "BEGIN {MethodName} - Retrieved manage series for post with ID: {PostId}",
+                methodName, postId);
+            
+            var seriesId = await postInSeriesRepository.GetSeriesForPost(postId);
+            SeriesDto? currentSeries = null;
+            
+            if (seriesId != null)
+            {
+                currentSeries = await seriesGrpcClient.GetSeriesById(seriesId.Value);
+            }
+            
+            var allSeries = await seriesGrpcClient.GetAllSeries();
+
+            var data = new ManagePostInSeriesDto()
+            {
+                Series = allSeries,
+                CurrentSeries = currentSeries
+            };
+
+            result.Success(data);
+            
+            logger.Information(
+                "END {MethodName} - Successfully retrieved manage series for post with ID: {PostId}",
+                methodName, postId);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+        
         return result;
     }
 

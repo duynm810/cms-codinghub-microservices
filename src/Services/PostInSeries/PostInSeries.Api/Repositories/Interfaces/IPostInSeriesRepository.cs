@@ -21,5 +21,7 @@ public interface IPostInSeriesRepository : IRepositoryCommandBase<PostInSeriesBa
 
     Task<IEnumerable<Guid>?> GetPostIdsInSeries(Guid seriesId);
 
+    Task<Guid?> GetSeriesForPost(Guid postId);
+
     #endregion
 }

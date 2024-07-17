@@ -9,6 +9,8 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task<SeriesBase?> GetSeriesById(Guid id);
 
+    Task<IEnumerable<SeriesBase>> GetAllSeries();
+
     #endregion
 
     #region OTHERS
