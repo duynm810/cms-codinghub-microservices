@@ -57,8 +57,8 @@
                     modal.find('.modal-body').html(response);
                     modal.modal('show');
 
-                    setupSeriesSelect(postId);
-                    setupRemoveSeriesEvent(postId);
+                    handleSeriesSelect(postId);
+                    handleRemovePostFromSeries(postId);
 
                     modal.on('hidden.bs.modal', function () {
                         resetModalState();
@@ -70,7 +70,7 @@
             });
         }
 
-        function setupSeriesSelect(postId) {
+        function handleSeriesSelect(postId) {
             const seriesSelect = document.getElementById('series-select');
             const modalFooter = modal.find('.modal-footer')[0];
 
@@ -106,7 +106,7 @@
                                                 </tr>
                                             `;
                                             document.querySelector('#series-table-body').insertAdjacentHTML('beforeend', newRow);
-                                            setupRemoveSeriesEvent(postId);
+                                            handleRemovePostFromSeries(postId);
                                             saveButton.remove();
                                         } else {
                                             showErrorNotification(response.message);
@@ -129,7 +129,7 @@
             });
         }
 
-        function setupRemoveSeriesEvent(postId) {
+        function handleRemovePostFromSeries(postId) {
             document.querySelectorAll('.remove-series').forEach(button => {
                 button.addEventListener('click', function () {
                     const seriesId = this.getAttribute('data-series-id');
@@ -170,9 +170,9 @@
                 url: url,
                 type: 'GET',
                 success: function (response) {
-                    $('#shared-modal .modal-title').text(title);
-                    $('#shared-modal .modal-body').html(response);
-                    $('#shared-modal').modal('show');
+                    modal.find('.modal-title').text(title);
+                    modal.find('.modal-body').html(response);
+                    modal.modal('show');
                 },
                 error: function (xhr, status, error) {
                     // Handle errors here
@@ -458,7 +458,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>
