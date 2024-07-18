@@ -14,12 +14,6 @@
         var updatePostUrl = Url.RouteUrl("update_post_view") + "?slug=__slug__";
 
         <tr class="alert" role="alert">
-            <td>
-                <label class="checkbox-wrap checkbox-primary">
-                    <input type="checkbox" class="post-checkbox" data-id="@item.Id">
-                    <span class="checkmark"></span>
-                </label>
-            </td>
             @if (isAdmin)
             {
                 <td>
@@ -109,6 +103,11 @@
             <td>@item.PublishedDate?.ToString("dd/MM/yyyy")</td>
             <td>
                 <div class="button-container">
+                    <button type="button" class="btn btn-manage-series" aria-label="Manage Series" data-id="@item.Id">
+                        <span aria-hidden="true">
+                            <i class="fa fa-bars"></i>
+                        </span>
+                    </button>
                     <button type="button" class="btn btn-history" aria-label="View History" data-id="@item.Id">
                         <span aria-hidden="true">
                             <i class="fa fa-history"></i>

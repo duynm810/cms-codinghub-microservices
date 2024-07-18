@@ -9,6 +9,7 @@
 @section Scripts {
     <script>
         let currentPage = 1;
+        const modal = $('#shared-modal');
 
         document.addEventListener('DOMContentLoaded', function () {
         
@@ -35,36 +36,43 @@
                 viewPostActivityLogs(this);
             });
 
-            const checkboxes = document.querySelectorAll('.post-checkbox');
-            const manageSeriesBtn = document.getElementById('manage-series-btn');
+            const manageSeriesButtons = document.querySelectorAll('.btn-manage-series');
 
-            checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function () {
-                    checkboxes.forEach(cb => {
-                        if (cb !== checkbox) {
-                            cb.checked = false;
-                        }
-                    });
-                    const checkedCheckboxes = document.querySelectorAll('.post-checkbox:checked');
-                    if (checkedCheckboxes.length === 1) {
-                        manageSeriesBtn.style.display = 'inline-block';
-                    } else {
-                        manageSeriesBtn.style.display = 'none';
-                    }
+            manageSeriesButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const postId = button.getAttribute('data-id');
+                    const url = `/post-in-series/${postId}/manage-series`;
+                    const title = 'Manage Series';
+                    openSeriesModal(url, title, postId);
                 });
-            });
-
-            manageSeriesBtn.addEventListener('click', function () {
-                const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
-                const url = `/post-in-series/${selectedPostId}/manage-series`;
-                const title = 'Manage Series';
-                openSeriesModal(url, title);
             });
         });
 
-        function setupSeriesSelect() {
+        function openSeriesModal(url, title, postId) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    modal.find('.modal-title').text(title);
+                    modal.find('.modal-body').html(response);
+                    modal.modal('show');
+
+                    setupSeriesSelect(postId);
+                    setupRemoveSeriesEvent(postId);
+
+                    modal.on('hidden.bs.modal', function () {
+                        resetModalState();
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to load modal content:', error);
+                }
+            });
+        }
+
+        function setupSeriesSelect(postId) {
             const seriesSelect = document.getElementById('series-select');
-            const modalFooter = document.querySelector('#shared-modal .modal-footer');
+            const modalFooter = modal.find('.modal-footer')[0];
 
             seriesSelect.addEventListener('change', function () {
                 const selectedSeriesId = this.value;
@@ -80,18 +88,15 @@
                         modalFooter.appendChild(saveButton);
 
                         saveButton.addEventListener('click', function () {
-                            const selectedSeriesId = seriesSelect.value;
-                            const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
                             if (selectedSeriesId) {
                                 $.ajax({
                                     url: '/post-in-series/add-post-to-series',
                                     type: 'POST',
                                     contentType: 'application/json',
-                                    data: JSON.stringify({ postId: selectedPostId, seriesId: selectedSeriesId }),
+                                    data: JSON.stringify({ postId: postId, seriesId: selectedSeriesId }),
                                     success: function (response) {
                                         if (response.success) {
                                             showSuccessNotification('Post series has been successfully updated.');
-                                            // Thêm dòng mới vào bảng
                                             const newRow = `
                                                 <tr data-series-id="${selectedSeriesId}">
                                                     <td>${seriesSelect.options[seriesSelect.selectedIndex].text}</td>
@@ -101,7 +106,8 @@
                                                 </tr>
                                             `;
                                             document.querySelector('#series-table-body').insertAdjacentHTML('beforeend', newRow);
-                                            setupRemoveSeriesEvent();
+                                            setupRemoveSeriesEvent(postId);
+                                            saveButton.remove();
                                         } else {
                                             showErrorNotification(response.message);
                                         }
@@ -113,8 +119,6 @@
                                 });
                             }
                         });
-
-                        setupRemoveSeriesEvent();
                     }
                 } else {
                     const saveButton = document.getElementById('save-series-btn');
@@ -125,19 +129,22 @@
             });
         }
 
-        function setupRemoveSeriesEvent() {
+        function setupRemoveSeriesEvent(postId) {
             document.querySelectorAll('.remove-series').forEach(button => {
                 button.addEventListener('click', function () {
                     const seriesId = this.getAttribute('data-series-id');
-                    const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
 
                     $.ajax({
-                        url: `/post-in-series/delete-post-from-series?postId=${selectedPostId}&seriesId=${seriesId}`,
+                        url: `/post-in-series/delete-post-from-series?postId=${postId}&seriesId=${seriesId}`,
                         type: 'DELETE',
                         success: function (response) {
                             if (response.success) {
                                 document.querySelector(`#series-table-body tr[data-series-id="${seriesId}"]`).remove();
                                 showSuccessNotification('Post has been successfully removed from the series.');
+                                const saveButton = document.getElementById('save-series-btn');
+                                if (saveButton) {
+                                    saveButton.remove();
+                                }
                             } else {
                                 showErrorNotification(response.message);
                             }
@@ -151,6 +158,13 @@
             });
         }
 
+        function resetModalState() {
+            const manageSeriesButtons = document.querySelectorAll('.btn-manage-series');
+            manageSeriesButtons.forEach(button => {
+                button.checked = false;
+            });
+        }
+        
         function openPostActivityLogsModal(url, title) {
             $.ajax({
                 url: url,
@@ -162,24 +176,6 @@
                 },
                 error: function (xhr, status, error) {
                     // Handle errors here
-                }
-            });
-        }
-
-        function openSeriesModal(url, title) {
-            $.ajax({
-                url: url,
-                type: 'GET',
-                success: function (response) {
-                    $('#shared-modal .modal-title').text(title);
-                    $('#shared-modal .modal-body').html(response);
-                    $('#shared-modal').modal('show');
-                    
-                    setupSeriesSelect();
-                    setupRemoveSeriesEvent();
-                },
-                error: function (xhr, status, error) {
-                    console.error('Failed to load modal content:', error);
                 }
             });
         }
@@ -342,7 +338,7 @@
                 });
 
                 if (response.success) {
-                    $('#posts-table-body').html(response.html); // Update table content
+                    $('#posts-table-body').html(response.html);
                     showSuccessNotification(`Post ${shouldPin ? 'pinned' : 'unpinned'} successfully.`);
                 } else {
                     showErrorNotification(`There was a problem ${shouldPin ? 'pinning' : 'unpinning'} your post.`);
@@ -444,7 +440,6 @@
                 <table class="table table-responsive-xl">
                     <thead>
                     <tr>
-                        <th>&nbsp;</th>
                         @if (isAdmin)
                         {
                             <th>&nbsp;</th>

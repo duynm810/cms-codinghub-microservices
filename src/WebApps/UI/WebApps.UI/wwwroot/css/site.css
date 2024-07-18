@@ -114,7 +114,7 @@
 }
 
 .dropdown-menu .dropdown-item svg {
-    margin-right: 10px; /* Tạo khoảng cách giữa icon và text */
+    margin-right: 10px;
 }
 
 .dropdown-menu .dropdown-item:hover,
@@ -426,17 +426,6 @@
     }
 }
 
-.button-container .btn-pin, .button-container .btn-feature {
-    background: none;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.button-container .btn-pin i, .button-container .btn-feature i {
-    font-size: 18px;
-}
-
 td i.fa {
     vertical-align: middle; /* Ensure icons are vertically aligned */
 }
@@ -625,7 +614,6 @@ a.close.disabled {
     background-color: #fff;
 }
 
-/* Ẩn scrollbar khi màn hình đủ lớn */
 .table-responsive {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -637,19 +625,37 @@ a.close.disabled {
     }
 }
 
-/* Tạo style cho header */
 .table thead th {
     background-color: #f8f9fa;
     font-weight: bold;
     text-align: left;
 }
 
-/* Tạo style cho hàng */
 .table tbody tr:nth-child(odd) {
     background-color: #f2f2f2;
 }
 
-/* Tạo style cho các ô */
 .table td {
     text-align: left;
+}
+
+/*----------------------- Action Button Manage Posts ----------------------*/
+
+.button-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.button-container button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    margin: 0 5px; /* Adjust margin as needed */
+}
+
+.button-container i {
+    font-size: 18px;
+    color: #000; /* Adjust color as needed */
 }
