@@ -23,32 +23,28 @@ public class PostInSeriesService(
 {
     #region CRUD
 
-    public async Task<ApiResult<bool>> CreatePostsToSeries(CreatePostInSeriesRequest request)
+    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request)
     {
         var result = new ApiResult<bool>();
-        const string methodName = nameof(CreatePostsToSeries);
+        const string methodName = nameof(CreatePostToSeries);
 
         try
         {
             logger.Information(
-                "BEGIN {MethodName} - Creating posts with IDs: {PostIds} to series with ID: {SeriesId}",
-                methodName, string.Join(", ", request.PostIds), request.SeriesId);
+                "BEGIN {MethodName} - Creating post with ID: {PostId} to series with ID: {SeriesId} with sort order: {SortOrder}",
+                methodName, request.PostId, request.SeriesId, request.SortOrder);
 
-            var postInSeriesList = request.PostIds.Select(postId => new PostInSeriesBase
-            {
-                Id = Guid.NewGuid(),
-                SeriesId = request.SeriesId,
-                PostId = postId
-            }).ToList();
+            var postInSeries = mapper.Map<PostInSeriesBase>(request);
 
-            await postInSeriesRepository.CreatePostsToSeries(postInSeriesList);
+            await postInSeriesRepository.CreatePostToSeries(postInSeries);
             result.Success(true);
 
+            // Xoá cache
             await cacheService.RemoveAsync(CacheKeyHelper.PostInSeries.GetAllPostInSeriesByIdKey(request.SeriesId));
 
             logger.Information(
                 "END {MethodName} - Successfully created post with ID: {PostId} to series with ID: {SeriesId}",
-                methodName, request.PostIds, request.SeriesId);
+                methodName, request.PostId, request.SeriesId);
         }
         catch (Exception e)
         {
@@ -107,12 +103,13 @@ public class PostInSeriesService(
                 "BEGIN {MethodName} - Retrieved manage series for post with ID: {PostId}",
                 methodName, postId);
             
-            var seriesId = await postInSeriesRepository.GetSeriesForPost(postId);
-            SeriesDto? currentSeries = null;
-            
-            if (seriesId != null)
+            var seriesIds = await postInSeriesRepository.GetSeriesIdsByPostId(postId);
+            var currentSeries = new List<SeriesDto>();
+
+            var seriesIdList = seriesIds.ToList();
+            if (seriesIdList.Count != 0)
             {
-                currentSeries = await seriesGrpcClient.GetSeriesById(seriesId.Value);
+                currentSeries = await seriesGrpcClient.GetSeriesByIds(seriesIdList);
             }
             
             var allSeries = await seriesGrpcClient.GetAllSeries();

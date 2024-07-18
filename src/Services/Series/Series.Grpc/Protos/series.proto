@@ -8,6 +8,7 @@ service SeriesProtoService {
   rpc GetSeriesById(GetSeriesByIdRequest) returns (SeriesModel);
   rpc GetSeriesBySlug(GetSeriesBySlugRequest) returns (SeriesModel);
   rpc GetAllSeries(google.protobuf.Empty) returns (GetAllSeriesResponse);
+  rpc GetSeriesByIds(GetSeriesByIdsRequest) returns (GetSeriesByIdsResponse);
 }
 
 message GetSeriesByIdRequest {
@@ -18,6 +19,10 @@ message GetSeriesBySlugRequest {
   string slug = 1;
 }
 
+message GetSeriesByIdsRequest {
+  repeated string ids = 1;
+}
+
 message SeriesModel {
   string id = 1;
   string title = 2;
@@ -25,5 +30,9 @@ message SeriesModel {
 }
 
 message GetAllSeriesResponse {
+  repeated SeriesModel series = 1;
+}
+
+message GetSeriesByIdsResponse {
   repeated SeriesModel series = 1;
 }

@@ -17,5 +17,7 @@ public interface ISeriesRepository : IRepositoryCommandBase<SeriesBase, Guid>
 
     Task<SeriesBase?> GetSeriesBySlug(string slug);
 
+    Task<IEnumerable<SeriesBase>> GetSeriesByIds(Guid[] ids);
+
     #endregion
 }

@@ -111,4 +111,28 @@ public class SeriesGrpcClient(
             throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
         }
     }
+
+    public async Task<List<SeriesDto>> GetSeriesByIds(IEnumerable<Guid> ids)
+    {
+        const string methodName = nameof(GetSeriesByIds);
+        
+        try
+        {
+            var request = new GetSeriesByIdsRequest();
+            request.Ids.AddRange(ids.Select(id => id.ToString()));
+
+            var response = await seriesProtoServiceClient.GetSeriesByIdsAsync(request);
+            return mapper.Map<List<SeriesDto>>(response.Series);
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            return [];
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting series ids. Message: {ErrorMessage}", methodName, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+        }
+    }
 }

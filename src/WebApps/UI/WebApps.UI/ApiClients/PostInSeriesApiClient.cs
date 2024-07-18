@@ -7,7 +7,7 @@ namespace WebApps.UI.ApiClients;
 
 public class PostInSeriesApiClient(IBaseApiClient baseApiClient) : IPostInSeriesApiClient
 {
-    public async Task<ApiResult<bool>> CreatePostsToSeries(CreatePostInSeriesRequest request)
+    public async Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request)
     {
         return await baseApiClient.PostAsync<CreatePostInSeriesRequest, bool>($"/post-in-series", request, true);
     }

@@ -93,4 +93,34 @@ public class SeriesService(ISeriesRepository seriesRepository, IMapper mapper, I
             throw;
         }
     }
+
+    public override async Task<GetSeriesByIdsResponse> GetSeriesByIds(GetSeriesByIdsRequest request, ServerCallContext context)
+    {
+        const string methodName = nameof(GetSeriesByIds);
+
+        try
+        {
+            var seriesIds = request.Ids.Select(Guid.Parse).ToArray();
+
+            logger.Information("{MethodName} - Beginning to retrieve series for IDs: {SeriesIds}", methodName,
+                seriesIds);
+
+            var series = await seriesRepository.GetSeriesByIds(seriesIds);
+
+            var data = mapper.Map<GetSeriesByIdsResponse>(series);
+
+            logger.Information("{MethodName} - Successfully retrieved {Count} series.", methodName,
+                data.Series.Count);
+
+            return data;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e,
+                "{MethodName}. Error occurred while getting series by IDs: {SeriesIds}. Message: {ErrorMessage}",
+                methodName, request.Ids, e.Message);
+            throw new RpcException(new Status(StatusCode.Internal,
+                "An error occurred while getting series by IDs"));
+        }
+    }
 }

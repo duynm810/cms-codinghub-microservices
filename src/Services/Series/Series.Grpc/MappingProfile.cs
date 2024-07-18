@@ -13,5 +13,9 @@ public class MappingProfile : Profile
         CreateMap<IEnumerable<SeriesBase>, GetAllSeriesResponse>()
             .ForMember(dest => dest.Series,
                 opt => opt.MapFrom(src => src));
+        
+        CreateMap<IEnumerable<SeriesBase>, GetSeriesByIdsResponse>()
+            .ForMember(dest => dest.Series,
+                opt => opt.MapFrom(src => src));
     }
 }

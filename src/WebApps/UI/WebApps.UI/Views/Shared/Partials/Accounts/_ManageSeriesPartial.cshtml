@@ -25,12 +25,12 @@
                 </tr>
                 </thead>
                 <tbody id="series-table-body">
-                @if (currentSeries != null)
+                @foreach (var item in currentSeries)
                 {
-                    <tr data-series-id="@currentSeries.Id">
-                        <td>@currentSeries.Title</td>
+                    <tr data-series-id="@item.Id">
+                        <td>@item.Title</td>
                         <td>
-                            <button class="btn btn-danger btn-sm remove-series" data-series-id="@currentSeries.Id">Remove</button>
+                            <button class="btn btn-danger btn-sm remove-series" data-series-id="@item.Id">Remove</button>
                         </td>
                     </tr>
                 }

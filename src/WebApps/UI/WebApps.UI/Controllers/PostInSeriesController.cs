@@ -9,15 +9,10 @@ namespace WebApps.UI.Controllers;
 [Route("post-in-series")]
 public class PostInSeriesController(IPostInSeriesApiClient postInSeriesApiClient) : BaseController
 {
-    [HttpPost("add-posts-to-series")]
-    public async Task<IActionResult> AddPostsToSeries([FromBody] CreatePostInSeriesRequest request)
+    [HttpPost("add-post-to-series")]
+    public async Task<IActionResult> AddPostToSeries([FromBody] CreatePostInSeriesRequest request)
     {
-        if (request.PostIds.Count == 0)
-        {
-            return Json(new { success = false, message = "No posts selected" });
-        }
-
-        var response = await postInSeriesApiClient.CreatePostsToSeries(request);
+        var response = await postInSeriesApiClient.CreatePostToSeries(request);
         return Json(response.IsSuccess ? new { success = true } : new { success = false });
     }
 

@@ -6,7 +6,7 @@ namespace WebApps.UI.ApiClients.Interfaces;
 
 public interface IPostInSeriesApiClient
 {
-    Task<ApiResult<bool>> CreatePostsToSeries(CreatePostInSeriesRequest request);
+    Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request);
 
     Task<ApiResult<ManagePostInSeriesDto>> GetSeriesForPost(Guid postId);
 }
