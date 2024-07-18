@@ -83,9 +83,39 @@
                             const selectedSeriesId = seriesSelect.value;
                             const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
                             if (selectedSeriesId) {
-                                
+                                $.ajax({
+                                    url: '/api/posts/add-post-to-series',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({ postId: selectedPostId, seriesId: selectedSeriesId }),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            $('#manage-series-modal').modal('hide');
+                                            showSuccessNotification('Post series has been successfully updated.');
+                                            // Thêm dòng mới vào bảng
+                                            const newRow = `
+                                            <tr data-series-id="${selectedSeriesId}">
+                                                <td>${seriesSelect.options[seriesSelect.selectedIndex].text}</td>
+                                                <td>
+                                                    <button class="btn btn-danger btn-sm remove-series" data-series-id="${selectedSeriesId}">Remove</button>
+                                                </td>
+                                            </tr>
+                                        `;
+                                            document.querySelector('#series-table-body').insertAdjacentHTML('beforeend', newRow);
+                                            setupRemoveSeriesButtons();
+                                        } else {
+                                            showErrorNotification(response.message);
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Failed to update post series:', error);
+                                        showErrorNotification('An error occurred while updating the post series.');
+                                    }
+                                });
                             }
                         });
+
+                        setupRemoveSeriesButtons();
                     }
                 } else {
                     const saveButton = document.getElementById('save-series-btn');
@@ -93,6 +123,35 @@
                         saveButton.remove();
                     }
                 }
+            });
+        }
+
+        function setupRemoveSeriesButtons() {
+            const removeButtons = document.querySelectorAll('.remove-series');
+            removeButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const seriesId = this.getAttribute('data-series-id');
+                    const selectedPostId = document.querySelector('.post-checkbox:checked').getAttribute('data-id');
+                    if (seriesId && selectedPostId) {
+                        $.ajax({
+                            url: `/api/post-in-series/delete-post-from-series?postId=${selectedPostId}&seriesId=${seriesId}`,
+                            type: 'DELETE',
+                            success: function (response) {
+                                if (response.success) {
+                                    showSuccessNotification('Post series has been successfully removed.');
+                                    // Xóa dòng khỏi bảng
+                                    document.querySelector(`#series-table-body tr[data-series-id="${seriesId}"]`).remove();
+                                } else {
+                                    showErrorNotification(response.message);
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('Failed to remove post series:', error);
+                                showErrorNotification('An error occurred while removing the post series.');
+                            }
+                        });
+                    }
+                });
             });
         }
 

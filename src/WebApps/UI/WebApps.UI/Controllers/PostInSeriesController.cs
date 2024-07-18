@@ -15,6 +15,14 @@ public class PostInSeriesController(IPostInSeriesApiClient postInSeriesApiClient
         var response = await postInSeriesApiClient.CreatePostToSeries(request);
         return Json(response.IsSuccess ? new { success = true } : new { success = false });
     }
+    
+    [HttpDelete("delete-post-from-series")]
+    public async Task<IActionResult> DeletePostFromSeries([FromQuery] Guid postId, [FromQuery] Guid seriesId)
+    {
+        var request = new DeletePostInSeriesRequest { PostId = postId, SeriesId = seriesId };
+        var result = await postInSeriesApiClient.DeletePostToSeries(postId, seriesId);
+        return Ok(result);
+    }
 
     [HttpGet("{postId:guid}/manage-series")]
     public async Task<IActionResult> GetSeriesForPost([FromRoute] Guid postId)
