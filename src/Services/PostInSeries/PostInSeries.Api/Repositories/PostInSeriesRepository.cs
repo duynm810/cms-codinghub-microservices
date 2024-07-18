@@ -24,6 +24,10 @@ public class PostInSeriesRepository(PostInSeriesContext dbContext, IUnitOfWork<P
         await FindByCondition(x => x.PostId == postId).ExecuteDeleteAsync();
     }
 
+    public async Task<PostInSeriesBase?> GetPostInSeries(Guid postId, Guid seriesId) =>
+        await FindByCondition(x => x.PostId == postId && x.SeriesId == seriesId)
+            .FirstOrDefaultAsync();
+    
     public async Task<IEnumerable<Guid>?> GetPostIdsBySeriesId(Guid seriesId) =>
         await FindByCondition(x => x.SeriesId == seriesId)
             .Select(x => x.PostId)

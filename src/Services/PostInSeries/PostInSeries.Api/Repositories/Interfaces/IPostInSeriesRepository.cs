@@ -15,6 +15,8 @@ public interface IPostInSeriesRepository : IRepositoryCommandBase<PostInSeriesBa
     
     Task DeletePostToSeries(Guid postId);
 
+    Task<PostInSeriesBase?> GetPostInSeries(Guid postId, Guid seriesId);
+
     #endregion
 
     #region OTHERS

@@ -8,7 +8,7 @@ public interface IPostInSeriesService
 {
     Task<ApiResult<bool>> CreatePostToSeries(CreatePostInSeriesRequest request);
 
-    Task<ApiResult<bool>> DeletePostToSeries(DeletePostInSeriesRequest request);
+    Task<ApiResult<bool>> DeletePostToSeries(Guid postId, Guid seriesId);
 
     Task<ApiResult<ManagePostInSeriesDto>> GetSeriesForPost(Guid postId);
 }

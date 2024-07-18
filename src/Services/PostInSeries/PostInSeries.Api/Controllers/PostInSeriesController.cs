@@ -24,9 +24,9 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
 
     [HttpDelete]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> DeletePostToSeries(DeletePostInSeriesRequest request)
+    public async Task<IActionResult> DeletePostToSeries([FromQuery] Guid postId, [FromQuery] Guid seriesId)
     {
-        var result = await postInSeriesService.DeletePostToSeries(request);
+        var result = await postInSeriesService.DeletePostToSeries(postId, seriesId);
         return Ok(result);
     }
     
