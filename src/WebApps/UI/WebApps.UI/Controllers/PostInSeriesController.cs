@@ -19,9 +19,8 @@ public class PostInSeriesController(IPostInSeriesApiClient postInSeriesApiClient
     [HttpDelete("delete-post-from-series")]
     public async Task<IActionResult> DeletePostFromSeries([FromQuery] Guid postId, [FromQuery] Guid seriesId)
     {
-        var request = new DeletePostInSeriesRequest { PostId = postId, SeriesId = seriesId };
-        var result = await postInSeriesApiClient.DeletePostToSeries(postId, seriesId);
-        return Ok(result);
+        var response = await postInSeriesApiClient.DeletePostToSeries(postId, seriesId);
+        return Json(response.IsSuccess ? new { success = true } : new { success = false });
     }
 
     [HttpGet("{postId:guid}/manage-series")]

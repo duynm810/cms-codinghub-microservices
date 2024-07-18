@@ -14,7 +14,7 @@ public class PostInSeriesApiClient(IBaseApiClient baseApiClient) : IPostInSeries
 
     public async Task<ApiResult<bool>> DeletePostToSeries(Guid postId, Guid seriesId)
     {
-        return await baseApiClient.DeleteAsync<bool>($"/post-in-series?postId=${postId}&seriesId=${seriesId}", true);
+        return await baseApiClient.DeleteAsync<bool>($"/post-in-series?postId={postId}&seriesId={seriesId}", true);
     }
     
     public async Task<ApiResult<ManagePostInSeriesDto>> GetSeriesForPost(Guid postId)
