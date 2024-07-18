@@ -17,8 +17,10 @@
                 {
                     foreach (var item in series)
                     {
+                        var seriesUrl = "/series/" + item.Slug;
+                        
                         <li class="cat-item @($"cat-item-{item.Id}")">
-                            <a href="#">@item.Title</a> <span class="post-count">50</span>
+                            <a href="@seriesUrl">@item.Title</a> <span class="post-count">50</span>
                         </li>
                     }
                 }
