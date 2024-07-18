@@ -16,7 +16,6 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
 {
     [HttpPost]
     [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
-    [AllowAnonymous]
     public async Task<IActionResult> CreatePostToSeries(CreatePostInSeriesRequest request)
     {
         var result = await postInSeriesService.CreatePostToSeries(request);
@@ -33,7 +32,6 @@ public class PostInSeriesController(IPostInSeriesService postInSeriesService) : 
     
     [HttpGet("{postId:guid}/manage-series")]
     [ProducesResponseType(typeof(ApiResult<ManagePostInSeriesDto>), (int)HttpStatusCode.OK)]
-    [AllowAnonymous]
     public async Task<IActionResult> GetSeriesForPost(Guid postId)
     {
         var result = await postInSeriesService.GetSeriesForPost(postId);
