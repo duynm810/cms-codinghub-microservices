@@ -943,7 +943,11 @@
         "suggest-tags"
       ],
       "UpstreamPathTemplate": "/dashboard",
-      "Aggregator": "DashboardAggregator"
+      "Aggregator": "DashboardAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
     }
   ],
   "SwaggerEndPoints": [
