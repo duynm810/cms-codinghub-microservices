@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "PostInSeries.Grpc.Protos";
+
+service PostInSeriesService {
+  rpc GetPostIdsInSeries(GetPostIdsInSeriesRequest) returns (GetPostIdsInSeriesResponse);
+}
+
+message GetPostIdsInSeriesRequest {
+  string series_id = 1;
+}
+
+message GetPostIdsInSeriesResponse {
+  repeated string post_ids = 1;
+}

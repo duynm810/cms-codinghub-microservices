@@ -14,10 +14,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Protobuf Include="Protos\greet.proto" GrpcServices="Server"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" Version="8.0.3"/>
         <PackageReference Include="AspNetCore.HealthChecks.Elasticsearch" Version="8.0.1"/>
         <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.1"/>
@@ -29,6 +25,19 @@
         <PackageReference Include="Grpc.HealthCheck" Version="2.63.0"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NodaTime" Version="8.0.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="Protos\post-in-series.proto">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <GrpcServices>Server</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <ProtoRoot />
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug/net8.0/</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
 </Project>
