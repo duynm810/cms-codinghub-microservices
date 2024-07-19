@@ -6,31 +6,30 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class PostActivityLogsController(IPostActivityLogApiClient postActivityLogApiClient) : BaseController
+public class PostActivityLogsController(IPostActivityLogApiClient postActivityLogApiClient, ILogger logger)
+    : BaseController(logger)
 {
     [HttpGet]
     public async Task<IActionResult> GetPostActivityLogs([FromRoute] Guid postId)
     {
-        const string methodName = nameof(GetPostActivityLogs);
-
         try
         {
             var response = await postActivityLogApiClient.GetActivityLogs(postId);
-            if (response is { IsSuccess: true, Data: not null })
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var items = new PostActivityLogsViewModel()
-                {
-                    PostActivityLogs = response.Data
-                };
-                
-                return PartialView("Partials/Accounts/_PostActivityLogsPartial", items);
+                return Json(new { success = false });
             }
+
+            var items = new PostActivityLogsViewModel()
+            {
+                PostActivityLogs = response.Data
+            };
+
+            return PartialView("Partials/Accounts/_PostActivityLogsPartial", items);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(GetPostActivityLogs), e);
         }
-
-        return Json(new { success = false });
     }
 }

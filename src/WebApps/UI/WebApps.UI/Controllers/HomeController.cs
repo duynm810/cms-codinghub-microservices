@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
-using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
@@ -11,12 +10,10 @@ namespace WebApps.UI.Controllers;
 public class HomeController(
     IDashboardApiClient dashboardApiClient,
     IPostApiClient postApiClient,
-    IRazorRenderViewService razorRenderViewService) : BaseController
+    IRazorRenderViewService razorRenderViewService, ILogger logger) : BaseController(logger)
 {
     public async Task<IActionResult> Index(int page = 1)
     {
-        const string methodName = nameof(Index);
-        
         try
         {
             var response = await dashboardApiClient.GetDashboard();
@@ -53,33 +50,28 @@ public class HomeController(
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(Index), e);
         }
-
-        return View();
     }
     
     public async Task<IActionResult> LatestPosts(int page = 1)
     {
-        const string methodName = nameof(LatestPosts);
-
         try
         {
             var request = new GetLatestPostsRequest { PageNumber = page, PageSize = 4 };
             var response = await postApiClient.GetLatestPostsPaging(request);
-            if (response is { IsSuccess: true, Data: not null })
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var viewModel = new HomeViewModel { LatestPosts = response.Data };
-                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Home/_LatestPosts.cshtml", viewModel);
-                return Json(new { success = true, html });
+                return Json(new { success = false });
             }
+            
+            var viewModel = new HomeViewModel { LatestPosts = response.Data };
+            var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Home/_LatestPosts.cshtml", viewModel);
+            return Json(new { success = true, html });
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(LatestPosts), e);
         }
-
-        return Json(new { success = false });
     }
-
 }

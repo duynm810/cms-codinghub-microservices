@@ -135,15 +135,6 @@ public static class RouteMap
             new { controller = "Tags", action = "GetSuggestedTags" });
 
         #endregion
-
-        #region SERIES
-        
-        app.MapControllerRoute(
-            "get-all-series",
-            "/series",
-            new { controller = "Series", action = "GetSeries" });
-
-        #endregion
         
         #region POST ACTIVITY LOGS
 
