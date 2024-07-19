@@ -1,15 +1,16 @@
+
 using Grpc.HealthCheck;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using PostInTag.Grpc.Persistence;
-using PostInTag.Grpc.Repositories;
-using PostInTag.Grpc.Repositories.Interfaces;
-using PostInTag.Grpc.Services.BackgroundServices;
+using PostInSeries.Grpc.Persistence;
+using PostInSeries.Grpc.Repositories;
+using PostInSeries.Grpc.Repositories.Interfaces;
+using PostInSeries.Grpc.Services.BackgroundServices;
 using Shared.Configurations;
 using Shared.Settings;
 
-namespace PostInTag.Grpc.Extensions;
+namespace PostInSeries.Grpc.Extensions;
 
 public static class ServiceExtensions
 {
@@ -48,13 +49,13 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
-
-        services.AddDbContextPool<PostInTagContext>(opts =>
+        
+        services.AddDbContextPool<PostInSeriesContext>(opts =>
         {
             opts.UseNpgsql(databaseSettings.ConnectionString, optionsBuilder =>
             {
                 optionsBuilder.UseNodaTime();
-                optionsBuilder.MigrationsAssembly(typeof(PostInTagContext).Assembly.FullName);
+                optionsBuilder.MigrationsAssembly(typeof(PostInSeriesContext).Assembly.FullName);
                 optionsBuilder.EnableRetryOnFailure();
                 optionsBuilder.UseQuerySplittingBehavior(QuerySplittingBehavior
                     .SplitQuery); // If query have multiple include entities, using split query separate SQL query
@@ -71,7 +72,7 @@ public static class ServiceExtensions
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
-        services.AddScoped<IPostInTagRepository, PostInTagRepository>();
+        services.AddScoped<IPostInSeriesRepository, PostInSeriesRepository>();
     }
 
     private static void AddHealthCheckServices(this IServiceCollection services)
