@@ -142,18 +142,18 @@ services:
       context: .
       dockerfile: Services/Series/Series.Grpc/Dockerfile
   
-  tag.grpc:
-    image: ${DOCKER_REGISTRY-}tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Tag/Tag.Grpc/Dockerfile
-  
   post-in-series.grpc:
     image: ${DOCKER_REGISTRY-}post-in-series-grpc:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Grpc/Dockerfile
-
+  
+  tag.grpc:
+    image: ${DOCKER_REGISTRY-}tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tag/Tag.Grpc/Dockerfile
+      
   post-in-tag.grpc:
     image: ${DOCKER_REGISTRY-}post-in-tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
     build:
@@ -166,7 +166,6 @@ services:
     build:
       context: .
       dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
-      
   
   ui:
     image: ${DOCKER_REGISTRY-}ui:${PLATFORM:-linux}-${TAG:-latest}
