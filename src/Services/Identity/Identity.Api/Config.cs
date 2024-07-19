@@ -61,70 +61,15 @@ public static class Config
                 AccessTokenLifetime = 60 * 60 * 2,
                 RedirectUris = new List<string>()
                 {
-                    "http://localhost:5001/swagger/oauth2-redirect.html",
-                    "http://localhost:5002/swagger/oauth2-redirect.html",
-                    "http://localhost:5003/swagger/oauth2-redirect.html",
-                    "http://localhost:5005/swagger/oauth2-redirect.html",
-                    "http://localhost:5007/swagger/oauth2-redirect.html",
-                    "http://localhost:5009/swagger/oauth2-redirect.html",
-                    "http://localhost:5010/swagger/oauth2-redirect.html",
-                    "http://localhost:5012/swagger/oauth2-redirect.html",
-                    "http://localhost:5014/swagger/oauth2-redirect.html",
-                    "http://localhost:5019/swagger/oauth2-redirect.html",
-                    "http://localhost:6001/swagger/oauth2-redirect.html",
-                    "http://localhost:6002/swagger/oauth2-redirect.html",
-                    "http://localhost:6003/swagger/oauth2-redirect.html",
-                    "http://localhost:6005/swagger/oauth2-redirect.html",
-                    "http://localhost:6007/swagger/oauth2-redirect.html",
-                    "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6010/swagger/oauth2-redirect.html",
-                    "http://localhost:6012/swagger/oauth2-redirect.html",
-                    "http://localhost:6014/swagger/oauth2-redirect.html",
-                    "http://localhost:6019/swagger/oauth2-redirect.html",
+                    
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
-                    "http://localhost:5001/swagger/oauth2-redirect.html",
-                    "http://localhost:5002/swagger/oauth2-redirect.html",
-                    "http://localhost:5003/swagger/oauth2-redirect.html",
-                    "http://localhost:5005/swagger/oauth2-redirect.html",
-                    "http://localhost:5007/swagger/oauth2-redirect.html",
-                    "http://localhost:5009/swagger/oauth2-redirect.html",
-                    "http://localhost:5010/swagger/oauth2-redirect.html",
-                    "http://localhost:5012/swagger/oauth2-redirect.html",
-                    "http://localhost:5014/swagger/oauth2-redirect.html",
-                    "http://localhost:5019/swagger/oauth2-redirect.html",
-                    "http://localhost:6001/swagger/oauth2-redirect.html",
-                    "http://localhost:6002/swagger/oauth2-redirect.html",
-                    "http://localhost:6003/swagger/oauth2-redirect.html",
-                    "http://localhost:6005/swagger/oauth2-redirect.html",
-                    "http://localhost:6007/swagger/oauth2-redirect.html",
-                    "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6010/swagger/oauth2-redirect.html",
-                    "http://localhost:6012/swagger/oauth2-redirect.html",
-                    "http://localhost:6014/swagger/oauth2-redirect.html",
-                    "http://localhost:6019/swagger/oauth2-redirect.html",
+                    
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
-                    "http://localhost:5001",
-                    "http://localhost:5002",
-                    "http://localhost:5003",
-                    "http://localhost:5005",
-                    "http://localhost:5007",
-                    "http://localhost:5009",
-                    "http://localhost:5012",
-                    "http://localhost:5014",
-                    "http://localhost:5019",
-                    "http://localhost:6001",
-                    "http://localhost:6002",
-                    "http://localhost:6003",
-                    "http://localhost:6005",
-                    "http://localhost:6007",
-                    "http://localhost:6009",
-                    "http://localhost:6012",
-                    "http://localhost:6014",
-                    "http://localhost:6019",
+                    
                 },
                 AllowedScopes =
                 {
@@ -187,13 +132,13 @@ public static class Config
                 },
                 RedirectUris = new List<string>
                 {
-                    "http://localhost:5100/signin-oidc",
-                    "http://localhost:6100/signin-oidc"
+                    "http://localhost:5300/signin-oidc",
+                    "http://localhost:6300/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "http://localhost:5100/signout-callback-oidc",
-                    "http://localhost:6100/signout-callback-oidc"
+                    "http://localhost:5300/signout-callback-oidc",
+                    "http://localhost:6300/signout-callback-oidc"
                 },
                 AllowedScopes = new List<string>
                 {
