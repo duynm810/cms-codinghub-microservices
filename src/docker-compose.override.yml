@@ -311,6 +311,8 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "6011:80"
+    profiles:
+      - api
     restart: always
     volumes:
       - ./Services/Media/Media.Api/wwwroot:/app/wwwroot

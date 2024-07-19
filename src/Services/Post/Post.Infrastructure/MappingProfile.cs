@@ -3,10 +3,12 @@ using Category.Grpc.Protos;
 using Google.Protobuf.Collections;
 using Identity.Grpc.Protos;
 using Post.Domain.Entities;
+using Series.Grpc.Protos;
 using Shared.Dtos.Category;
 using Shared.Dtos.Identity.User;
 using Shared.Dtos.Post;
 using Shared.Dtos.PostActivity;
+using Shared.Dtos.Series;
 using Shared.Dtos.Tag;
 using Tag.Grpc.Protos;
 
@@ -18,6 +20,7 @@ public class MappingProfile : Profile
     {
         ConfigureCategoryGrpcMappings();
         ConfigureTagGrpcMappings();
+        ConfigureSeriesGrpcMappings();
         ConfigureIdentityGrpcMappings();
     }
     
@@ -90,6 +93,14 @@ public class MappingProfile : Profile
                 Name = t.Name,
                 Slug = t.Slug
             }).ToList());
+    }
+    
+    private void ConfigureSeriesGrpcMappings()
+    {
+        CreateMap<SeriesModel, SeriesDto>()
+            .ForMember(dest => dest.Id, opt => 
+                opt.MapFrom(src => Guid.Parse(src.Id)))
+            .ReverseMap();
     }
 
     private void ConfigureIdentityGrpcMappings()
