@@ -82,35 +82,30 @@ services:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
       
-  
   tag.api:
     image: ${DOCKER_REGISTRY-}tag-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Tag/Tag.Api/Dockerfile
       
-  
   post-in-tag.api:
     image: ${DOCKER_REGISTRY-}post-in-tag-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/PostInTag/PostInTag.Api/Dockerfile
-      
-  
+    
   comment.api:
     image: ${DOCKER_REGISTRY-}comment-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Comment/Comment.Api/Dockerfile
       
-  
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/BackgroundJobs/Hangfire.Api/Dockerfile
       
-  
   media.api:
     image: ${DOCKER_REGISTRY-}media-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
