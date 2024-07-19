@@ -45,11 +45,18 @@ services:
     image: redis:alpine
   
   ##microservices api section
+  #api services
   apigw.ocelot:
     image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: ApiGateways/Ocelot.Gw/Dockerfile
+  
+  identity.api:
+    image: ${DOCKER_REGISTRY-}identity-api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Api/Dockerfile
   
   category.api:
     image: ${DOCKER_REGISTRY-}category-api:${PLATFORM:-linux}-${TAG:-latest}
@@ -57,102 +64,110 @@ services:
       context: .
       dockerfile: Services/Category/Category.Api/Dockerfile
   
-  category.grpc:
-    image: ${DOCKER_REGISTRY-}category-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Category/Category.Grpc/Dockerfile
-  
   post.api:
     image: ${DOCKER_REGISTRY-}post-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Post/Post.Api/Dockerfile
   
-  post.grpc:
-    image: ${DOCKER_REGISTRY-}post-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Post/Post.Grpc/Dockerfile
-  
   series.api:
     image: ${DOCKER_REGISTRY-}series-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Series/Series.Api/Dockerfile
-      
-  series.grpc:
-    image: ${DOCKER_REGISTRY-}series-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Series/Series.Grpc/Dockerfile
-      
+  
   post-in-series.api:
     image: ${DOCKER_REGISTRY-}post-in-series-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/PostInSeries/PostInSeries.Api/Dockerfile
       
+  
   tag.api:
     image: ${DOCKER_REGISTRY-}tag-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Tag/Tag.Api/Dockerfile
       
-  tag.grpc:
-    image: ${DOCKER_REGISTRY-}tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Tag/Tag.Grpc/Dockerfile
-      
+  
   post-in-tag.api:
     image: ${DOCKER_REGISTRY-}post-in-tag-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/PostInTag/PostInTag.Api/Dockerfile
       
-  post-in-tag.grpc:
-    image: ${DOCKER_REGISTRY-}post-in-tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/PostInTag/PostInTag.Grpc/Dockerfile
-      
+  
   comment.api:
     image: ${DOCKER_REGISTRY-}comment-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Comment/Comment.Api/Dockerfile
       
+  
   hangfire.api:
     image: ${DOCKER_REGISTRY-}hangfire-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/BackgroundJobs/Hangfire.Api/Dockerfile
       
-  identity.api:
-    image: ${DOCKER_REGISTRY-}identity-api:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Identity/Identity.Api/Dockerfile
-      
-  identity.grpc:
-    image: ${DOCKER_REGISTRY-}identity-grpc:${PLATFORM:-linux}-${TAG:-latest}
-    build:
-      context: .
-      dockerfile: Services/Identity/Identity.Grpc/Dockerfile
-                
+  
   media.api:
     image: ${DOCKER_REGISTRY-}media-api:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: Services/Media/Media.Api/Dockerfile
   
+  #grpc services
+  identity.grpc:
+    image: ${DOCKER_REGISTRY-}identity-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Identity/Identity.Grpc/Dockerfile
+  
+  category.grpc:
+    image: ${DOCKER_REGISTRY-}category-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Category/Category.Grpc/Dockerfile
+  
+  post.grpc:
+    image: ${DOCKER_REGISTRY-}post-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Post/Post.Grpc/Dockerfile
+
+  series.grpc:
+    image: ${DOCKER_REGISTRY-}series-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Series/Series.Grpc/Dockerfile
+  
+  tag.grpc:
+    image: ${DOCKER_REGISTRY-}tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Tag/Tag.Grpc/Dockerfile
+  
+  post-in-series.grpc:
+    image: ${DOCKER_REGISTRY-}post-in-series-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PostInSeries/PostInSeries.Grpc/Dockerfile
+
+  post-in-tag.grpc:
+    image: ${DOCKER_REGISTRY-}post-in-tag-grpc:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/PostInTag/PostInTag.Grpc/Dockerfile
+      
+  #other services
   healthcheck:
     image: ${DOCKER_REGISTRY-}healthcheck:${PLATFORM:-linux}-${TAG:-latest}
     build:
       context: .
       dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
       
+  
   ui:
     image: ${DOCKER_REGISTRY-}ui:${PLATFORM:-linux}-${TAG:-latest}
     build:

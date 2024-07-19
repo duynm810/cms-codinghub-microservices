@@ -205,7 +205,6 @@ services:
     ports:
       - "6003:80"
     restart: always
-    
   
   post.api:
     container_name: post.api
@@ -241,7 +240,7 @@ services:
     ports:
       - "6006:80"
     restart: always
-
+  
   tag.api:
     container_name: tag.api
     environment:
@@ -252,7 +251,7 @@ services:
     ports:
       - "6007:80"
     restart: always
-
+  
   post-in-tag.api:
     container_name: post-in-tag.api
     environment:
@@ -264,6 +263,7 @@ services:
       - "6008:80"
     restart: always
     
+  
   comment.api:
     container_name: comment.api
     environment:
@@ -274,7 +274,7 @@ services:
     ports:
       - "6009:80"
     restart: always
-
+  
   hangfire.api:
     container_name: hangfire.api
     environment:
@@ -286,7 +286,7 @@ services:
     ports:
       - "6010:80"
     restart: always
-
+  
   media.api:
     container_name: media.api
     environment:
@@ -342,7 +342,7 @@ services:
     ports:
       - "6104:80"
     restart: always
-    
+  
   post-in-series.grpc:
     container_name: post-in-series.grpc
     environment:
