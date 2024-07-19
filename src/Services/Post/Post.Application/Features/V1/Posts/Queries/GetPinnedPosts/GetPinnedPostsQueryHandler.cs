@@ -28,11 +28,11 @@ public class GetPinnedPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving pinned posts", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetPinnedPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved pinned posts from cache", methodName);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 

@@ -124,11 +124,10 @@ public class CategoryGrpcClient(
         try
         {
             var cacheKey = CacheKeyHelper.CategoryGrpc.GetGrpcAllNonStaticPageCategoriesKey();
-
-            var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-            if (cachedCategories != null)
+            var cached = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+            if (cached != null)
             {
-                return cachedCategories;
+                return cached;
             }
             
             var result = await categoryProtoServiceClient.GetAllNonStaticPageCategoriesAsync(new Empty());

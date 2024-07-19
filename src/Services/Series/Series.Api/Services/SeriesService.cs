@@ -194,10 +194,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
             var cacheKey = CacheKeyHelper.Series.GetAllSeriesKey();
-            var cachedSeries = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series from cache", methodName);
                 return result;
             }
@@ -235,10 +235,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series with ID: {SeriesId}", methodName, id);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesByIdKey(id);
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<SeriesDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series with ID {SeriesId} from cache",
                     methodName, id);
                 return result;
@@ -285,10 +285,10 @@ public class SeriesService(
                 methodName, request.PageNumber, request.PageSize);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(request.PageNumber, request.PageSize);
-            var cachedSeries = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series for page {PageNumber} from cache",
                     methodName, request.PageNumber);
                 return result;
@@ -330,10 +330,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series with Slug: {SeriesSlug}", methodName, slug);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesBySlugKey(slug);
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<SeriesDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series with slug {SeriesSlug} from cache",
                     methodName, slug);
                 return result;

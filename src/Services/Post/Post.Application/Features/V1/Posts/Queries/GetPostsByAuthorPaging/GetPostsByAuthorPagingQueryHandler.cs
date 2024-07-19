@@ -29,11 +29,11 @@ public class GetPostsByAuthorPagingQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving posts for author {UserName} on page {PageNumber} with page size {PageSize}", methodName, query.UserName, query.Request.PageNumber, query.Request.PageSize);
             
             var cacheKey = CacheKeyHelper.Post.GetPostsByAuthorPagingKey(query.UserName, query.Request.PageNumber, query.Request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PostsByAuthorDto>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<PostsByAuthorDto>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved posts from cache for author {UserName} on page {PageNumber} with page size {PageSize}", methodName, query.UserName, query.Request.PageNumber, query.Request.PageSize);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
             

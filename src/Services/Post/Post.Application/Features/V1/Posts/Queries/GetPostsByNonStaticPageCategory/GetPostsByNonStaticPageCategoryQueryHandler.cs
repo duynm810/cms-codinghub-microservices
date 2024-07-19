@@ -26,11 +26,11 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving posts by non-static page categories", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetPostsByNonStaticPageCategoryKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostsByNonStaticPageCategoryDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostsByNonStaticPageCategoryDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved posts by non-static page categories from cache", methodName);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 

@@ -86,7 +86,6 @@ public class SeriesGrpcClient(
         try
         {
             var cacheKey = CacheKeyHelper.SeriesGrpc.GetAllSeriesKey();
-
             var cached = await cacheService.GetAsync<List<SeriesDto>>(cacheKey);
             if (cached != null)
             {

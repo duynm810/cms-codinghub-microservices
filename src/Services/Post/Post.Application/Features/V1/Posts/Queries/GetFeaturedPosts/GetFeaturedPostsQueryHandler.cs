@@ -28,11 +28,11 @@ public class GetFeaturedPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving featured posts", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetFeaturedPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved featured posts from cache", methodName);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 
