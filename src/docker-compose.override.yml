@@ -180,6 +180,8 @@ services:
       - media.api
     ports:
       - "6001:80"
+    profiles:
+      - api
     restart: always
   
   #api services
@@ -192,9 +194,10 @@ services:
       - identitydb
     ports:
       - "6002:80"
+    profiles:
+      - api
     restart: always
     
-
   category.api:
     container_name: category.api
     environment:
