@@ -39,12 +39,12 @@ public class CategoryGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting category by id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, id, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting category by id {Id}. Message: {ErrorMessage}", methodName, id, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -73,14 +73,14 @@ public class CategoryGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting categories by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<CategoryDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting categories by ids. Message: {ErrorMessage}",
                 methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -106,14 +106,14 @@ public class CategoryGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting category by slug {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, slug, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting category by slug {Slug}. Message: {ErrorMessage}",
                 methodName, slug, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -149,14 +149,14 @@ public class CategoryGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting all non-static page categories. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<CategoryDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting all non-static page categories. Message: {ErrorMessage}",
                 methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

@@ -34,12 +34,12 @@ public class IdentityGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error("{MethodName}: gRPC error occurred while getting user info by ID: {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, userId, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting user info by ID: {Id}. Message: {ErrorMessage}", methodName, userId, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 

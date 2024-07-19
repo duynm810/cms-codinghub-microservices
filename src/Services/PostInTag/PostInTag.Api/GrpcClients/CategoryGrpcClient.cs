@@ -36,12 +36,12 @@ public class CategoryGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting categories by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<CategoryDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting categories by ids. Message: {ErrorMessage}", methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

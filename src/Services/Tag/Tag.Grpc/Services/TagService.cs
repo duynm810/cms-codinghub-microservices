@@ -37,7 +37,7 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -64,7 +64,7 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -101,7 +101,7 @@ public class TagService(ITagRepository tagRepository, IMapper mapper, ILogger lo
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

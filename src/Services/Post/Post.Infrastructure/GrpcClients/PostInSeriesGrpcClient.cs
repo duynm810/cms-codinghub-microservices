@@ -37,14 +37,14 @@ public class PostInSeriesGrpcClient(PostInSeriesService.PostInSeriesServiceClien
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting posts by series id {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, seriesId, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<Guid>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting posts by series id {Id}. Message: {ErrorMessage}",
                 methodName, seriesId, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

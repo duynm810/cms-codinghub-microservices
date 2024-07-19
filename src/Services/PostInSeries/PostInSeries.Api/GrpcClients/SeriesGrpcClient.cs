@@ -39,12 +39,12 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by ID: {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, id, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting series by ID: {Id}. Message: {ErrorMessage}", methodName, id, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
     
@@ -70,12 +70,12 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by slug: {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, slug, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting series by slug: {Slug}. Message: {ErrorMessage}", methodName, slug, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
     
@@ -102,12 +102,12 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting all series. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
-            return [];
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting all series. Message: {ErrorMessage}", methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -126,12 +126,12 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
-            return [];
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting series ids. Message: {ErrorMessage}", methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

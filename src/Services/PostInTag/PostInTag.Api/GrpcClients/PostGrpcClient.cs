@@ -42,12 +42,12 @@ public class PostGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting posts by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<PostInTagDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting posts by ids. Message: {ErrorMessage}", methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -73,12 +73,12 @@ public class PostGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting top 10 posts. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<PostDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting top 10 posts. Message: {ErrorMessage}", methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }
