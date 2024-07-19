@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Shared.Requests.Comment;
 using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiClients.Interfaces;
+using WebApps.UI.Models.Commons;
 using WebApps.UI.Models.Posts;
 
 namespace WebApps.UI.Controllers;
@@ -18,7 +19,7 @@ public class PostsController(
         try
         {
             var request = new GetPostsByCategoryRequest { PageNumber = page };
-            var response =await postApiClient.GetPostsByCategoryPaging(categorySlug, request);
+            var response = await postApiClient.GetPostsByCategoryPaging(categorySlug, request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByCategoryViewModel
@@ -45,7 +46,7 @@ public class PostsController(
         try
         {
             var request = new GetPostsBySeriesRequest { PageNumber = page };
-            var response =await postApiClient.GetPostsBySeriesPaging(seriesSlug, request);
+            var response = await postApiClient.GetPostsBySeriesPaging(seriesSlug, request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInSeriesViewModel
@@ -55,13 +56,13 @@ public class PostsController(
 
                 return View(items);
             }
+
+            return View("Error", new ErrorViewModel() { StatusCode = response.StatusCode });
         }
         catch (Exception e)
         {
-            // ignored
+            return View("Error", new ErrorViewModel() { StatusCode = 500, StatusMessage = e.Message });
         }
-
-        return View();
     }
 
     [HttpGet("tag/{tagSlug}")]
@@ -72,7 +73,7 @@ public class PostsController(
         try
         {
             var request = new GetPostsByTagRequest { PageNumber = page };
-            var response =await postApiClient.GetPostsByTagPaging(tagSlug, request);
+            var response = await postApiClient.GetPostsByTagPaging(tagSlug, request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsInTagViewModel
@@ -87,7 +88,7 @@ public class PostsController(
         {
             // ignored
         }
-        
+
         return View();
     }
 
@@ -99,7 +100,7 @@ public class PostsController(
         try
         {
             var request = new GetPostsByAuthorRequest { PageNumber = page };
-            var response =await postApiClient.GetPostsByAuthorPaging(userName, request);
+            var response = await postApiClient.GetPostsByAuthorPaging(userName, request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostsByAuthorViewModel
@@ -125,7 +126,7 @@ public class PostsController(
 
         try
         {
-            var response =await postApiClient.GetDetailBySlug(slug, 2);
+            var response = await postApiClient.GetDetailBySlug(slug, 2);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostDetailViewModel()
@@ -151,7 +152,7 @@ public class PostsController(
         try
         {
             var request = new GetPostsRequest { PageNumber = page };
-            var response =await postApiClient.SearchPostsPaging(request);
+            var response = await postApiClient.SearchPostsPaging(request);
             if (response is { IsSuccess: true, Data: not null })
             {
                 var items = new PostSearchViewModel()
@@ -167,7 +168,7 @@ public class PostsController(
         {
             // ignored
         }
-        
+
         return View();
     }
 }
