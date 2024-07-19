@@ -29,7 +29,7 @@ try
         // Config development environment (Cấu hình môi trường phát triển)
         if (builder.Environment.IsDevelopment())
         {
-            options.ListenAnyIP(5011, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+            options.ListenAnyIP(5106, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         }
 
         // Config local(docker) environment (Cấu hình môi trường docker)
@@ -39,7 +39,7 @@ try
             options.ListenAnyIP(80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);
             
             // Configure http client to use with HTTP/2 (Cấu hình HttpClient để gửi yêu cầu gRPC sử dụng HTTP/2.)
-            options.ListenAnyIP(6011, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
+            options.ListenAnyIP(6106, listenOptions => listenOptions.Protocols = HttpProtocols.Http2);
         }
     });
 

@@ -37,14 +37,14 @@ public class TagGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting tag by slug {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, slug, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e,
                 "{MethodName}: Unexpected error occurred while getting tag by slug {Slug}. Message: {ErrorMessage}",
                 methodName, slug, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 
@@ -72,13 +72,13 @@ public class TagGrpcClient(
             logger.Error(rpcEx,
                 "{MethodName}: gRPC error occurred while getting all tags. StatusCode: {StatusCode}. Message: {ErrorMessage}",
                 methodName, rpcEx.StatusCode, rpcEx.Message);
-            return Enumerable.Empty<TagDto>();
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting all tags. Message: {ErrorMessage}",
                 methodName, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

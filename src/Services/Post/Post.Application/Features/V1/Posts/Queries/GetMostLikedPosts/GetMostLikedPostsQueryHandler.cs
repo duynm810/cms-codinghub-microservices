@@ -27,11 +27,11 @@ public class GetMostLikedPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving most liked posts", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetMostLikedPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved most liked posts from cache", methodName);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 

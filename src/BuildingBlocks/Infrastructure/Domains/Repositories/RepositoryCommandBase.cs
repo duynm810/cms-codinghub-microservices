@@ -34,6 +34,7 @@ public class RepositoryCommandBase<T, TK, TContext>(TContext dbContext, IUnitOfW
     {
         var entityBases = entities.ToList();
         await _dbContext.Set<T>().AddRangeAsync(entityBases);
+        await _dbContext.SaveChangesAsync();
         return entityBases.Select(x => x.Id).ToList();
     }
 

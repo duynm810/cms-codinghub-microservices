@@ -58,6 +58,9 @@ public static class CacheKeyHelper
         public static string GetPostsByCategoryPagingKey(string categorySlug, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:category:slug:{categorySlug}:page:{pageNumber}:size:{pageSize}";
         
+        public static string GetPostsBySeriesPagingKey(string seriesSlug, int pageNumber, int pageSize) =>
+            $"{PostServicePrefix}:series:slug:{seriesSlug}:page:{pageNumber}:size:{pageSize}";
+        
         public static string GetPostsByAuthorPagingKey(string userName, int pageNumber, int pageSize) =>
             $"{PostServicePrefix}:author:{userName}:page:{pageNumber}:size:{pageSize}";
     }
@@ -77,6 +80,17 @@ public static class CacheKeyHelper
         public static string GetSeriesBySlugKey(string slug) => $"{SeriesServicePrefix}:slug:{slug}";
 
         public static string GetSeriesPagingKey(int pageNumber, int pageSize) => $"{SeriesServicePrefix}:page:{pageNumber}:size:{pageSize}";
+    }
+
+    #endregion
+
+    #region SERIES GRPC
+
+    private const string SeriesGrpcPrefix = "grpc:series";
+
+    public static class SeriesGrpc
+    {
+        public static string GetAllSeriesKey() => $"{SeriesGrpcPrefix}:all";
     }
 
     #endregion

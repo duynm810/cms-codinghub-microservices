@@ -34,11 +34,11 @@ public class GetPostBySlugQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving post with Slug: {PostSlug}", methodName, query.Slug);
 
             var cacheKey = CacheKeyHelper.Post.GetPostBySlugKey(query.Slug);
-            var cachedPost = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
-            if (cachedPost != null)
+            var cached = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved post from cache with Slug: {PostSlug}", methodName, query.Slug);
-                result.Success(cachedPost);
+                result.Success(cached);
                 return result;
             }
 

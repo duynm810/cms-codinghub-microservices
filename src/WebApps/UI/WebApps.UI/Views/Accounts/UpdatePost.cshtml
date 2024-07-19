@@ -1,5 +1,6 @@
 @model UpdatePostViewModel
 @{
+    ViewData["ShowBottom"] = false;
     ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
     var post = Model.Post;
     var categories = Model.Categories;
@@ -15,8 +16,6 @@
     <script src="~/lib/quill/quill-config.js" asp-append-version="true"></script>
     <script src="~/lib/tagify/tagify-config.js" asp-append-version="true"></script>
 
-    <!-- Embed serverUrl from ServerUrlTagHelper -->
-    <script server-url></script>
     <script>
         // Initialize the accountsController
         const controller = new accountsController('frm-update-post');

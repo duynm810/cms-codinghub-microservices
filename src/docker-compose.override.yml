@@ -164,28 +164,6 @@ services:
       - "5601:5601"
   
   ##microservices api sections
-  identity.api:
-    container_name: identity.api
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - identitydb
-    ports:
-      - "6002:80"
-    restart: always
-
-  identity.grpc:
-    container_name: identity.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - identitydb
-    ports:
-      - "6015:80"
-    restart: always
-  
   apigw.ocelot:
     container_name: apigw.ocelot
     environment:
@@ -202,8 +180,24 @@ services:
       - media.api
     ports:
       - "6001:80"
+    profiles:
+      - api
     restart: always
   
+  #api services
+  identity.api:
+    container_name: identity.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6002:80"
+    profiles:
+      - api
+    restart: always
+    
   category.api:
     container_name: category.api
     environment:
@@ -213,17 +207,8 @@ services:
       - categorydb
     ports:
       - "6003:80"
-    restart: always
-  
-  category.grpc:
-    container_name: category.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - categorydb
-    ports:
-      - "6004:80"
+    profiles:
+      - api
     restart: always
   
   post.api:
@@ -235,18 +220,9 @@ services:
       - postdb
       - rabbitmq
     ports:
-      - "6005:80"
-    restart: always
-  
-  post.grpc:
-    container_name: post.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - postdb
-    ports:
-      - "6006:80"
+      - "6004:80"
+    profiles:
+      - api
     restart: always
   
   series.api:
@@ -257,20 +233,11 @@ services:
     depends_on:
       - seriesdb
     ports:
-      - "6007:80"
+      - "6005:80"
+    profiles:
+      - api
     restart: always
-  
-  series.grpc:
-    container_name: series.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - seriesdb
-    ports:
-      - "6008:80"
-    restart: always
-  
+    
   post-in-series.api:
     container_name: post-in-series.api
     environment:
@@ -279,7 +246,9 @@ services:
     depends_on:
       - post-in-series-db
     ports:
-      - "6009:80"
+      - "6006:80"
+    profiles:
+      - api
     restart: always
   
   tag.api:
@@ -290,18 +259,9 @@ services:
     depends_on:
       - tagdb
     ports:
-      - "6010:80"
-    restart: always
-  
-  tag.grpc:
-    container_name: tag.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - tagdb
-    ports:
-      - "6011:80"
+      - "6007:80"
+    profiles:
+      - api
     restart: always
   
   post-in-tag.api:
@@ -312,18 +272,9 @@ services:
     depends_on:
       - post-in-tag-db
     ports:
-      - "6012:80"
-    restart: always
-  
-  post-in-tag.grpc:
-    container_name: post-in-tag.grpc
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
-    depends_on:
-      - post-in-tag-db
-    ports:
-      - "6013:80"
+      - "6008:80"
+    profiles:
+      - api
     restart: always
   
   comment.api:
@@ -334,7 +285,9 @@ services:
     depends_on:
       - commentdb
     ports:
-      - "6014:80"
+      - "6009:80"
+    profiles:
+      - api
     restart: always
   
   hangfire.api:
@@ -346,7 +299,9 @@ services:
       - hangfiredb
       - rabbitmq
     ports:
-      - "6018:80"
+      - "6010:80"
+    profiles:
+      - api
     restart: always
   
   media.api:
@@ -355,18 +310,113 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6019:80"
+      - "6011:80"
+    profiles:
+      - api
     restart: always
     volumes:
       - ./Services/Media/Media.Api/wwwroot:/app/wwwroot
   
+  #grpc services
+  identity.grpc:
+    container_name: identity.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - identitydb
+    ports:
+      - "6101:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  category.grpc:
+    container_name: category.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - categorydb
+    ports:
+      - "6102:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  post.grpc:
+    container_name: post.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - postdb
+    ports:
+      - "6013:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  series.grpc:
+    container_name: series.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - seriesdb
+    ports:
+      - "6104:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  post-in-series.grpc:
+    container_name: post-in-series.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - post-in-series-db
+    ports:
+      - "6105:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  tag.grpc:
+    container_name: tag.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - tagdb
+    ports:
+      - "6106:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  post-in-tag.grpc:
+    container_name: post-in-tag.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_URLS=http://+:80
+    depends_on:
+      - post-in-tag-db
+    ports:
+      - "6107:80"
+    profiles:
+      - grpc
+    restart: always
+  
+  #other services
   healthcheck:
     container_name: healthcheck
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6020:80"
+      - "6200:80"
   
   ui:
     container_name: ui
@@ -374,4 +424,4 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - ASPNETCORE_URLS=http://+:80
     ports:
-      - "6100:80"
+      - "6300:80"

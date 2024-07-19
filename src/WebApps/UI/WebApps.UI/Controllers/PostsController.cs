@@ -1,20 +1,14 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Requests.Comment;
 using Shared.Requests.Post.Queries;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Posts;
-using WebApps.UI.Services.Interfaces;
-using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
 public class PostsController(
-    IPostApiClient postApiClient,
-    ICommentApiClient commentApiClient,
-    IErrorService errorService,
-    ILogger logger)
-    : BaseController(errorService, logger)
+    IPostApiClient postApiClient)
+    : BaseController
 {
     [HttpGet("category/{categorySlug}")]
     public async Task<IActionResult> PostsByCategory([FromRoute] string categorySlug, [FromQuery] int page = 1)
@@ -34,13 +28,13 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpGet("series/{seriesSlug}")]
@@ -61,13 +55,13 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpGet("tag/{tagSlug}")]
@@ -88,13 +82,13 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+        
+        return View();
     }
 
     [HttpGet("author/{userName}")]
@@ -115,13 +109,13 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpGet("post/{slug}")]
@@ -141,13 +135,13 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     public async Task<IActionResult> Search(string keyword, int page = 1)
@@ -168,32 +162,12 @@ public class PostsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
-    }
-
-    public async Task<IActionResult> GetCommentsByPostId([FromQuery] Guid postId)
-    {
-        var comments = await commentApiClient.GetCommentsByPostId(postId);
-        return Ok(new { data = comments.Data });
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> AddNewComment([FromBody] CreateCommentRequest comment)
-    {
-        var newComment = await commentApiClient.CreateComment(comment);
-        return Ok(new { data = newComment.Data });
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> ReplyToComment([FromQuery] string parentId, [FromBody] CreateCommentRequest comment)
-    {
-        var replyToComment = await commentApiClient.ReplyToComment(parentId, comment);
-        return Ok(new { data = replyToComment.Data });
+        
+        return View();
     }
 }

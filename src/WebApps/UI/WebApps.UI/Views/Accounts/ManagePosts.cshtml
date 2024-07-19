@@ -8,44 +8,183 @@
 
 @section Scripts {
     <script>
-        let currentPage = 1; // Khởi tạo với trang đầu tiên
+        let currentPage = 1;
+        const modal = $('#shared-modal');
+
+        document.addEventListener('DOMContentLoaded', function () {
         
-        $(document).on('click', '.pagination a', function (e) {
-            e.preventDefault();
-            const page = $(this).data("page");
-            currentPage = page;
-            loadPosts(page);
-        });
+            $(document).on('click', '.pagination a', function (e) {
+                e.preventDefault();
+                const page = $(this).data("page");
+                currentPage = page;
+                loadPosts(page);
+            });
 
-        // Load first page when filter changes
-        $(document).on('change', '#status-filter', function () {
-            loadPosts(1); 
-        });
+            // Load first page when filter changes
+            $(document).on('change', '#status-filter', function () {
+                loadPosts(1);
+            });
 
-        $(document).on('input', '#keyword-filter', function () {
-            let keyword = $(this).val().toLowerCase();
-            $('#posts-table-body tr').filter(function() {
-                $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+            $(document).on('input', '#keyword-filter', function () {
+                let keyword = $(this).val().toLowerCase();
+                $('#posts-table-body tr').filter(function() {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(keyword) > -1);
+                });
+            });
+
+            $(document).on('click', '.btn-history', function () {
+                viewPostActivityLogs(this);
+            });
+
+            const manageSeriesButtons = document.querySelectorAll('.btn-manage-series');
+
+            manageSeriesButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const postId = button.getAttribute('data-id');
+                    const url = `/post-in-series/${postId}/manage-series`;
+                    const title = 'Manage Series';
+                    openSeriesModal(url, title, postId);
+                });
             });
         });
+
+        function openSeriesModal(url, title, postId) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    modal.find('.modal-title').text(title);
+                    modal.find('.modal-body').html(response);
+                    modal.modal('show');
+
+                    handleSeriesSelect(postId);
+                    handleRemovePostFromSeries(postId);
+
+                    modal.on('hidden.bs.modal', function () {
+                        resetModalState();
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('Failed to load modal content:', error);
+                }
+            });
+        }
+
+        function handleSeriesSelect(postId) {
+            const seriesSelect = document.getElementById('series-select');
+            const modalFooter = modal.find('.modal-footer')[0];
+
+            seriesSelect.addEventListener('change', function () {
+                const selectedSeriesId = this.value;
+                const seriesInTable = document.querySelector(`#series-table-body tr[data-series-id="${selectedSeriesId}"]`);
+
+                if (selectedSeriesId && !seriesInTable) {
+                    if (!document.getElementById('save-series-btn')) {
+                        const saveButton = document.createElement('button');
+                        saveButton.id = 'save-series-btn';
+                        saveButton.type = 'button';
+                        saveButton.className = 'btn btn-primary';
+                        saveButton.textContent = 'Save';
+                        modalFooter.appendChild(saveButton);
+
+                        saveButton.addEventListener('click', function () {
+                            if (selectedSeriesId) {
+                                $.ajax({
+                                    url: '/post-in-series/add-post-to-series',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({ postId: postId, seriesId: selectedSeriesId }),
+                                    success: function (response) {
+                                        if (response.success) {
+                                            showSuccessNotification('Post series has been successfully updated.');
+                                            const newRow = `
+                                                <tr data-series-id="${selectedSeriesId}">
+                                                    <td>${seriesSelect.options[seriesSelect.selectedIndex].text}</td>
+                                                    <td>
+                                                        <button class="btn btn-danger btn-sm remove-series" data-series-id="${selectedSeriesId}">Remove</button>
+                                                    </td>
+                                                </tr>
+                                            `;
+                                            document.querySelector('#series-table-body').insertAdjacentHTML('beforeend', newRow);
+                                            handleRemovePostFromSeries(postId);
+                                            saveButton.remove();
+                                        } else {
+                                            showErrorNotification(response.message);
+                                        }
+                                    },
+                                    error: function (xhr, status, error) {
+                                        console.error('Failed to update post series:', error);
+                                        showErrorNotification('An error occurred while updating the post series.');
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                    const saveButton = document.getElementById('save-series-btn');
+                    if (saveButton) {
+                        saveButton.remove();
+                    }
+                }
+            });
+        }
+
+        function handleRemovePostFromSeries(postId) {
+            document.querySelectorAll('.remove-series').forEach(button => {
+                button.addEventListener('click', function () {
+                    const seriesId = this.getAttribute('data-series-id');
+
+                    $.ajax({
+                        url: `/post-in-series/delete-post-from-series?postId=${postId}&seriesId=${seriesId}`,
+                        type: 'DELETE',
+                        success: function (response) {
+                            if (response.success) {
+                                document.querySelector(`#series-table-body tr[data-series-id="${seriesId}"]`).remove();
+                                showSuccessNotification('Post has been successfully removed from the series.');
+                                const saveButton = document.getElementById('save-series-btn');
+                                if (saveButton) {
+                                    saveButton.remove();
+                                }
+                            } else {
+                                showErrorNotification(response.message);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Failed to remove post from series:', error);
+                            showErrorNotification('An error occurred while removing the post from the series.');
+                        }
+                    });
+                });
+            });
+        }
+
+        function resetModalState() {
+            const manageSeriesButtons = document.querySelectorAll('.btn-manage-series');
+            manageSeriesButtons.forEach(button => {
+                button.checked = false;
+            });
+        }
         
-        $(document).on('click', '.btn-history', function () {
-            viewPostActivityLogs(this);
-        });
+        function openPostActivityLogsModal(url, title) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                success: function (response) {
+                    modal.find('.modal-title').text(title);
+                    modal.find('.modal-body').html(response);
+                    modal.modal('show');
+                },
+                error: function (xhr, status, error) {
+                    // Handle errors here
+                }
+            });
+        }
 
         function viewPostActivityLogs(button) {
             const postId = button.getAttribute('data-id');
-            $.ajax({
-                url: '/posts/activity-logs/' + postId,
-                type: 'GET',
-                success: function (response) {
-                    $('#activity-log-modal .modal-body').html(response);
-                    $('#activity-log-modal').modal('show');
-                },
-                error: function (xhr, status, error) {
-
-                }
-            });
+            const url = '/posts/activity-logs/' + postId;
+            const title = 'Activity logs';
+            openPostActivityLogsModal(url, title);
         }
 
         function loadPosts(page) {
@@ -199,7 +338,7 @@
                 });
 
                 if (response.success) {
-                    $('#posts-table-body').html(response.html); // Update table content
+                    $('#posts-table-body').html(response.html);
                     showSuccessNotification(`Post ${shouldPin ? 'pinned' : 'unpinned'} successfully.`);
                 } else {
                     showErrorNotification(`There was a problem ${shouldPin ? 'pinning' : 'unpinning'} your post.`);
@@ -270,8 +409,11 @@
         </h1>
     </div>
     <div class="row mb-3">
-        <div class="col-md-12 text-right-custom">
-            <button class="btn btn-primary btn-block" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
+        <div class="col-md-12 text-right-custom custom-btn-group">
+            <button id="manage-series-btn" class="btn btn-success" style="display: none;">
+                <i class="fas fa-cogs"></i> Manage Series
+            </button>
+            <button class="btn btn-primary" onclick="location.href='@Url.Action("CreatePost", "Accounts")'">
                 <i class="fa fa-edit"></i> Create new post
             </button>
         </div>
@@ -288,7 +430,7 @@
             </select>
         </div>
         <div class="col-md-3">
-            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..." />
+            <input type="text" class="form-control search-input" id="keyword-filter" placeholder="Search..."/>
         </div>
     </div>
 
@@ -298,9 +440,9 @@
                 <table class="table table-responsive-xl">
                     <thead>
                     <tr>
-                        <th>&nbsp;</th>
                         @if (isAdmin)
                         {
+                            <th>&nbsp;</th>
                             <th style="min-width: 50px;">Pinned</th>
                             <th style="min-width: 50px;">Featured</th>
                         }
@@ -311,12 +453,12 @@
                         <th style="min-width: 80px;">Views</th>
                         <th style="min-width: 80px;">Comments</th>
                         <th style="min-width: 80px;">Likes</th>
-                        <th style="min-width: 150px;">Published date</th>
+                        <th style="min-width: 140px;">Published date</th>
                         <th>&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>
@@ -333,20 +475,4 @@
     </div>
 </div>
 
-<!-- Post Activity Logs Modal -->
-<div class="modal fade" id="activity-log-modal" tabindex="-1" aria-labelledby="activity-log-label" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="activity-log-label">Post Activity Logs</h5>
-                <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Nội dung modal sẽ được cập nhật qua AJAX -->
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_SharedModal")

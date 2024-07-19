@@ -34,13 +34,13 @@ public class GetPostsByCategoryPagingQueryHandler(
                 methodName, query.CategorySlug, query.Request.PageNumber, query.Request.PageSize);
 
             var cacheKey = CacheKeyHelper.Post.GetPostsByCategoryPagingKey(query.CategorySlug, query.Request.PageNumber, query.Request.PageSize);
-            var cachedPosts = await cacheService.GetAsync<PostsByCategoryDto>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<PostsByCategoryDto>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information(
                     "END {MethodName} - Successfully retrieved posts from cache for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
                     methodName, query.CategorySlug, query.Request.PageNumber, query.Request.PageSize);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 
@@ -76,7 +76,6 @@ public class GetPostsByCategoryPagingQueryHandler(
 
             result.Success(data);
 
-            // Save cache (Lưu cache)
             await cacheService.SetAsync(cacheKey, data, cancellationToken: cancellationToken);
 
             logger.Information(

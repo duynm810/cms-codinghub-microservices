@@ -16,12 +16,17 @@ public class SeriesRepository(SeriesContext dbContext, IUnitOfWork<SeriesContext
 
     public async Task<SeriesBase?> GetSeriesById(Guid id) => await GetByIdAsync(id) ?? null;
 
+    public async Task<IEnumerable<SeriesBase>> GetAllSeries() => await FindAll().ToListAsync();
+
     #endregion
 
     #region OTHERS
 
     public async Task<SeriesBase?> GetSeriesBySlug(string slug) =>
         await FindByCondition(x => x.Slug == slug).FirstOrDefaultAsync();
+
+    public async Task<IEnumerable<SeriesBase>> GetSeriesByIds(Guid[] ids) =>
+        await FindByCondition(c => ids.Contains(c.Id)).ToListAsync();
 
     #endregion
 }

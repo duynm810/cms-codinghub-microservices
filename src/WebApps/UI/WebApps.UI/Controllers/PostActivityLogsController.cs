@@ -6,7 +6,7 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
-public class PostActivityLogsController(IPostActivityLogApiClient postActivityLogApiClient, IErrorService errorService, ILogger logger) : BaseController(errorService, logger)
+public class PostActivityLogsController(IPostActivityLogApiClient postActivityLogApiClient) : BaseController
 {
     [HttpGet]
     public async Task<IActionResult> GetPostActivityLogs([FromRoute] Guid postId)
@@ -25,12 +25,12 @@ public class PostActivityLogsController(IPostActivityLogApiClient postActivityLo
                 
                 return PartialView("Partials/Accounts/_PostActivityLogsPartial", items);
             }
-
-            return Json(new { success = false });
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return Json(new { success = false });
     }
 }

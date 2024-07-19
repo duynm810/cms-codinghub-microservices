@@ -199,10 +199,10 @@ using AutoMapper;
              logger.Information("BEGIN {MethodName} - Retrieving all categories", methodName);
  
              var cacheKey = CacheKeyHelper.Category.GetAllCategoriesKey();
-             var cachedCategories = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
-             if (cachedCategories != null)
+             var cached = await cacheService.GetAsync<IEnumerable<CategoryDto>>(cacheKey);
+             if (cached != null)
              {
-                 result.Success(cachedCategories);
+                 result.Success(cached);
                  logger.Information("END {MethodName} - Successfully retrieved categories from cache", methodName);
                  return result;
              }
@@ -240,10 +240,10 @@ using AutoMapper;
              logger.Information("BEGIN {MethodName} - Retrieving category with ID: {CategoryId}", methodName, id);
  
              var cacheKey = CacheKeyHelper.Category.GetCategoryByIdKey(id);
-             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
-             if (cachedCategory != null)
+             var cached = await cacheService.GetAsync<CategoryDto>(cacheKey);
+             if (cached != null)
              {
-                 result.Success(cachedCategory);
+                 result.Success(cached);
                  logger.Information("END {MethodName} - Successfully retrieved category with ID {CategoryId} from cache",
                      methodName, id);
                  return result;
@@ -292,10 +292,10 @@ using AutoMapper;
                  methodName, request.PageNumber, request.PageSize);
  
              var cacheKey = CacheKeyHelper.Category.GetCategoriesPagingKey(request.PageNumber, request.PageSize);
-             var cachedCategories = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
-             if (cachedCategories != null)
+             var cached = await cacheService.GetAsync<PagedResponse<CategoryDto>>(cacheKey);
+             if (cached != null)
              {
-                 result.Success(cachedCategories);
+                 result.Success(cached);
                  logger.Information(
                      "END {MethodName} - Successfully retrieved categories for page {PageNumber} from cache", methodName,
                      request.PageNumber);
@@ -338,10 +338,10 @@ using AutoMapper;
              logger.Information("BEGIN {MethodName} - Retrieving category with slug: {CategorySlug}", methodName, slug);
  
              var cacheKey = CacheKeyHelper.Category.GetCategoryBySlugKey(slug);
-             var cachedCategory = await cacheService.GetAsync<CategoryDto>(cacheKey);
-             if (cachedCategory != null)
+             var cached = await cacheService.GetAsync<CategoryDto>(cacheKey);
+             if (cached != null)
              {
-                 result.Success(cachedCategory);
+                 result.Success(cached);
                  logger.Information(
                      "END {MethodName} - Successfully retrieved category with slug {CategorySlug} from cache",
                      methodName, slug);

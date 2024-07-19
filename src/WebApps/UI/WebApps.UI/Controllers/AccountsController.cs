@@ -1,4 +1,3 @@
-using System.Net;
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -12,8 +11,6 @@ using Shared.Requests.Post.Queries;
 using Shared.Settings;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Accounts;
-using WebApps.UI.Services.Interfaces;
-using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
@@ -22,9 +19,7 @@ public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
     IRazorRenderViewService razorRenderViewService,
-    IOptions<ApiSettings> apiSettings,
-    IErrorService errorService,
-    ILogger logger) : BaseController(errorService, logger)
+    IOptions<ApiSettings> apiSettings) : BaseController
 {
     private readonly ApiSettings _apiSettings = apiSettings.Value;
     
@@ -69,8 +64,10 @@ public class AccountsController(
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     #endregion
@@ -97,12 +94,13 @@ public class AccountsController(
                 return Json(new { success = true, html, paginationHtml });
             }
 
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return Json(new { success = false });
     }
 
     public async Task<IActionResult> ManagePosts([FromQuery] int page = 1)
@@ -121,13 +119,13 @@ public class AccountsController(
 
                 return View(items);
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpGet]
@@ -149,8 +147,10 @@ public class AccountsController(
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpPost]
@@ -184,8 +184,10 @@ public class AccountsController(
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpGet]
@@ -211,12 +213,13 @@ public class AccountsController(
                 return View(items);
             }
 
-            return HandleError((HttpStatusCode)post.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
 
     [HttpPut]
@@ -238,12 +241,13 @@ public class AccountsController(
                 return Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
             }
 
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return Json(new { success = false });
     }
 
     [HttpPut]
@@ -277,16 +281,14 @@ public class AccountsController(
                     var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
                     return Json(new { success = true, html, paginationHtml });
                 }
-                
-                return Json(new { success = true, html = string.Empty });
             }
-
-            return HandleError((HttpStatusCode)response.StatusCode, methodName);
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return Json(new { success = false });
     }
 
     [HttpPut]
@@ -313,13 +315,13 @@ public class AccountsController(
         
                 return Json(new { success = true, html = string.Empty });
             }
-            
-            return Json(new { success = false });
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+        
+        return Json(new { success = false });
     }
     
     [HttpPut]
@@ -346,13 +348,12 @@ public class AccountsController(
         
                 return Json(new { success = true, html = string.Empty });
             }
-            
-            return Json(new { success = false });
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
         }
+        
+        return Json(new { success = false });
     }
     
     [HttpPut]
@@ -379,13 +380,13 @@ public class AccountsController(
         
                 return Json(new { success = true, html = string.Empty });
             }
-            
-            return Json(new { success = false });
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return Json(new { success = false });
     }
 
     [HttpPut]

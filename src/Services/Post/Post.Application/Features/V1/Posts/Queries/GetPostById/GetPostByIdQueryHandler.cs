@@ -32,11 +32,11 @@ public class GetPostByIdQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving post with ID: {PostId}", methodName, query.Id);
 
             var cacheKey = CacheKeyHelper.Post.GetPostByIdKey(query.Id);
-            var cachedPost = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
-            if (cachedPost != null)
+            var cached = await cacheService.GetAsync<PostDto>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved post from cache with ID: {PostId}", methodName, query.Id);
-                result.Success(cachedPost);
+                result.Success(cached);
                 return result;
             }
 

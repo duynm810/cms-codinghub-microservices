@@ -1,5 +1,6 @@
 using AutoMapper;
 using Contracts.Commons.Interfaces;
+using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using PostInSeries.Api.GrpcClients.Interfaces;
 using Series.Grpc.Protos;
@@ -12,6 +13,7 @@ namespace PostInSeries.Api.GrpcClients;
 
 public class SeriesGrpcClient(
     SeriesProtoService.SeriesProtoServiceClient seriesProtoServiceClient,
+    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ISeriesGrpcClient
 {
@@ -37,19 +39,19 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by ID: {Id}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, id, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting series by ID: {Id}. Message: {ErrorMessage}", methodName, id, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
     
     public async Task<SeriesDto?> GetSeriesBySlug(string slug)
     {
         const string methodName = nameof(GetSeriesBySlug);
-
+        
         try
         {
             var request = new GetSeriesBySlugRequest { Slug = slug };
@@ -68,13 +70,68 @@ public class SeriesGrpcClient(
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by slug: {Slug}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, slug, rpcEx.StatusCode, rpcEx.Message);
-            return null;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while getting series by slug: {Slug}. Message: {ErrorMessage}", methodName, slug, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
+        }
+    }
+    
+    public async Task<List<SeriesDto>> GetAllSeries()
+    {
+        const string methodName = nameof(GetAllSeries);
+        
+        try
+        {
+            var cacheKey = CacheKeyHelper.SeriesGrpc.GetAllSeriesKey();
+            var cached = await cacheService.GetAsync<List<SeriesDto>>(cacheKey);
+            if (cached != null)
+            {
+                return cached;
+            }
+            
+            var result = await seriesProtoServiceClient.GetAllSeriesAsync(new Empty());
+            var data = mapper.Map<List<SeriesDto>>(result.Series);
+            
+            await cacheService.SetAsync(cacheKey, data);
+            
+            return data;
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting all series. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            throw;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting all series. Message: {ErrorMessage}", methodName, e.Message);
+            throw;
         }
     }
 
+    public async Task<List<SeriesDto>> GetSeriesByIds(IEnumerable<Guid> ids)
+    {
+        const string methodName = nameof(GetSeriesByIds);
+        
+        try
+        {
+            var request = new GetSeriesByIdsRequest();
+            request.Ids.AddRange(ids.Select(id => id.ToString()));
+
+            var response = await seriesProtoServiceClient.GetSeriesByIdsAsync(request);
+            return mapper.Map<List<SeriesDto>>(response.Series);
+        }
+        catch (RpcException rpcEx)
+        {
+            logger.Error(rpcEx, "{MethodName}: gRPC error occurred while getting series by ids. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, rpcEx.StatusCode, rpcEx.Message);
+            throw;
+        }
+        catch (Exception e)
+        {
+            logger.Error(e, "{MethodName}: Unexpected error occurred while getting series ids. Message: {ErrorMessage}", methodName, e.Message);
+            throw;
+        }
+    }
 }

@@ -22,12 +22,12 @@ public class PostGrpcClient(PostProtoService.PostProtoServiceClient postProtoSer
         catch (RpcException rpcEx)
         {
             logger.Error(rpcEx, "{MethodName}: gRPC error occurred while checking posts in category {CategoryId}. StatusCode: {StatusCode}. Message: {ErrorMessage}", methodName, categoryId, rpcEx.StatusCode, rpcEx.Message);
-            return false;
+            throw;
         }
         catch (Exception e)
         {
             logger.Error(e, "{MethodName}: Unexpected error occurred while checking posts in category {CategoryId}. Message: {ErrorMessage}", methodName, categoryId, e.Message);
-            throw new RpcException(new Status(StatusCode.Internal, ErrorMessagesConsts.Common.UnhandledException));
+            throw;
         }
     }
 }

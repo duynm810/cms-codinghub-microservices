@@ -26,8 +26,14 @@ try
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
+    
+    // Migrate database with initial data only in Development or Local environment
+    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment(EnvironmentConsts.Local))
+    {
+        app.MigrateDatabase();
+    }
 
-    app.Run();
+    await app.RunAsync();
 }
 catch (Exception e)
 {

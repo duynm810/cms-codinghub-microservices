@@ -172,10 +172,10 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             logger.Information("BEGIN {MethodName} - Retrieving tag with ID: {TagId}", methodName, id);
 
             var cacheKey = CacheKeyHelper.Tag.GetTagByIdKey(id);
-            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
-            if (cachedTag != null)
+            var cached = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedTag);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved tag with ID {TagId} from cache",
                     methodName, id);
                 return result;
@@ -222,10 +222,10 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             logger.Information("BEGIN {MethodName} - Retrieving tag with slug: {TagSlug}", methodName, slug);
 
             var cacheKey = CacheKeyHelper.Tag.GetTagBySlugKey(slug);
-            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
-            if (cachedTag != null)
+            var cached = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedTag);
+                result.Success(cached);
                 logger.Information(
                     "END {MethodName} - Successfully retrieved tag with slug {TagSlug} from cache",
                     methodName, slug);
@@ -270,11 +270,11 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             logger.Information("BEGIN {MethodName} - Retrieving tag with name: {TagName}", methodName, name);
 
             var cacheKey = CacheKeyHelper.Tag.GetTagByNameKey(name);
-            var cachedTag = await cacheService.GetAsync<TagDto>(cacheKey);
-            if (cachedTag != null)
+            var cached = await cacheService.GetAsync<TagDto>(cacheKey);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved tag with name {TagName} from cache", methodName, name);
-                result.Success(cachedTag);
+                result.Success(cached);
                 return result;
             }
 
@@ -314,10 +314,10 @@ public class TagService(ITagRepository tagRepository, ICacheService cacheService
             logger.Information("BEGIN {MethodName} - Retrieving suggested tags with keyword {Keyword}", methodName, keyword);
 
             var cacheKey = CacheKeyHelper.Tag.GetSuggestedTagsKey(keyword, count);
-            var cachedTags = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
-            if (cachedTags != null)
+            var cached = await cacheService.GetAsync<IEnumerable<TagDto>>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedTags);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved suggested tags from cache", methodName);
                 return result;
             }

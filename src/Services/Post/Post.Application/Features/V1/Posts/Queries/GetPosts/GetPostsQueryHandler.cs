@@ -29,10 +29,10 @@ public class GetPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving all posts", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetAllPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
-                result.Success(cachedPosts);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved all posts from cache", methodName);
                 return result;
             }

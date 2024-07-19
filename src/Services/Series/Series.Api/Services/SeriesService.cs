@@ -42,9 +42,20 @@ public class SeriesService(
 
             var data = mapper.Map<SeriesDto>(series);
             result.Success(data);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
 
-            // Clear series list cache when a new series is created (Xóa cache danh sách series khi tạo mới)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series created successfully with ID {SeriesId}", methodName,
                 data.Id);
@@ -82,13 +93,22 @@ public class SeriesService(
 
             var data = mapper.Map<SeriesDto>(updateSeries);
             result.Success(data);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.Series.GetSeriesByIdKey(id),
+                    CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
 
-            // Delete series list cache when updating (Xóa cache danh sách series khi cập nhật)
-            await Task.WhenAll(
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey()),
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesByIdKey(id)),
-                cacheService.RemoveAsync(CacheKeyHelper.Series.GetSeriesBySlugKey(series.Slug))
-            );
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series with ID {SeriesId} updated successfully", methodName, id);
         }
@@ -135,10 +155,21 @@ public class SeriesService(
             // Execute all tasks in parallel
             await Task.WhenAll(tasks);
             
-            // Delete series list cache when deleting (Xóa cache danh sách series khi xóa dữ liệu)
-            await cacheService.RemoveAsync(CacheKeyHelper.Series.GetAllSeriesKey());
-
             result.Success(true);
+            
+            TaskHelper.RunFireAndForget(async () =>
+            {
+                var cacheKeys = new List<string>
+                {
+                    CacheKeyHelper.Series.GetAllSeriesKey(),
+                    CacheKeyHelper.SeriesGrpc.GetAllSeriesKey()
+                };
+
+                await cacheService.RemoveMultipleAsync(cacheKeys);
+            }, e =>
+            {
+                logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            });
 
             logger.Information("END {MethodName} - Series with IDs {SeriesIds} deleted successfully", methodName,
                 string.Join(", ", ids));
@@ -163,10 +194,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving all series", methodName);
 
             var cacheKey = CacheKeyHelper.Series.GetAllSeriesKey();
-            var cachedSeries = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<IEnumerable<SeriesDto>>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series from cache", methodName);
                 return result;
             }
@@ -204,10 +235,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series with ID: {SeriesId}", methodName, id);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesByIdKey(id);
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<SeriesDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series with ID {SeriesId} from cache",
                     methodName, id);
                 return result;
@@ -254,10 +285,10 @@ public class SeriesService(
                 methodName, request.PageNumber, request.PageSize);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesPagingKey(request.PageNumber, request.PageSize);
-            var cachedSeries = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<PagedResponse<SeriesDto>>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series for page {PageNumber} from cache",
                     methodName, request.PageNumber);
                 return result;
@@ -299,10 +330,10 @@ public class SeriesService(
             logger.Information("BEGIN {MethodName} - Retrieving series with Slug: {SeriesSlug}", methodName, slug);
 
             var cacheKey = CacheKeyHelper.Series.GetSeriesBySlugKey(slug);
-            var cachedSeries = await cacheService.GetAsync<SeriesDto>(cacheKey);
-            if (cachedSeries != null)
+            var cached = await cacheService.GetAsync<SeriesDto>(cacheKey);
+            if (cached != null)
             {
-                result.Success(cachedSeries);
+                result.Success(cached);
                 logger.Information("END {MethodName} - Successfully retrieved series with slug {SeriesSlug} from cache",
                     methodName, slug);
                 return result;

@@ -11,9 +11,7 @@ namespace WebApps.UI.Controllers;
 public class HomeController(
     IDashboardApiClient dashboardApiClient,
     IPostApiClient postApiClient,
-    IRazorRenderViewService razorRenderViewService,
-    IErrorService errorService,
-    ILogger logger) : BaseController(errorService, logger)
+    IRazorRenderViewService razorRenderViewService) : BaseController
 {
     public async Task<IActionResult> Index(int page = 1)
     {
@@ -45,7 +43,7 @@ public class HomeController(
                 viewModel.SuggestTags = suggestTags;
             }
 
-            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page });
+            var latestPosts = await postApiClient.GetLatestPostsPaging(new GetLatestPostsRequest { PageNumber = page, PageSize = 4 });
             if (latestPosts is { IsSuccess: true, Data: not null })
             {
                 viewModel.LatestPosts = latestPosts.Data;
@@ -55,8 +53,10 @@ public class HomeController(
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
+
+        return View();
     }
     
     public async Task<IActionResult> LatestPosts(int page = 1)
@@ -65,7 +65,7 @@ public class HomeController(
 
         try
         {
-            var request = new GetLatestPostsRequest { PageNumber = page };
+            var request = new GetLatestPostsRequest { PageNumber = page, PageSize = 4 };
             var response = await postApiClient.GetLatestPostsPaging(request);
             if (response is { IsSuccess: true, Data: not null })
             {
@@ -76,7 +76,7 @@ public class HomeController(
         }
         catch (Exception e)
         {
-            return HandleException(e, methodName);
+            // ignored
         }
 
         return Json(new { success = false });

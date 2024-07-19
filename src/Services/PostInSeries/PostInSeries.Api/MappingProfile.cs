@@ -28,7 +28,10 @@ public class MappingProfile : Profile
 
     private void ConfigureSeriesMappings()
     {
-        CreateMap<SeriesModel, SeriesDto>().ReverseMap();
+        CreateMap<SeriesModel, SeriesDto>()
+            .ForMember(dest => dest.Id, opt => 
+                opt.MapFrom(src => Guid.Parse(src.Id)))
+            .ReverseMap();
     }
 
     private void ConfigurePostInSeriesMappings()

@@ -1,7 +1,4 @@
-using Contracts.Domains.Repositories;
 using Grpc.HealthCheck;
-using Infrastructure.Domains;
-using Infrastructure.Domains.Repositories;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -26,15 +23,12 @@ public static class ServiceExtensions
 
         // Register gRPC services
         services.AddGrpcServices();
-        
+
         // Register core services
         services.AddCoreInfrastructure();
 
         // Register repository services
         services.AddRepositoryAndDomainServices();
-
-        // Register AutoMapper
-        services.AddAutoMapperConfiguration();
 
         // Register health checks
         services.AddHealthCheckServices();
@@ -74,15 +68,10 @@ public static class ServiceExtensions
         services.AddGrpc();
         services.AddGrpcReflection();
     }
-    
+
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
         services.AddScoped<IPostInTagRepository, PostInTagRepository>();
-    }
-
-    private static void AddAutoMapperConfiguration(this IServiceCollection services)
-    {
-        services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
     }
 
     private static void AddHealthCheckServices(this IServiceCollection services)
@@ -90,7 +79,7 @@ public static class ServiceExtensions
         var databaseSettings = services.GetOptions<DatabaseSettings>(nameof(DatabaseSettings)) ??
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
-        
+
         var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
                                           throw new ArgumentNullException(
                                               $"{nameof(ElasticConfigurations)} is not configured properly");

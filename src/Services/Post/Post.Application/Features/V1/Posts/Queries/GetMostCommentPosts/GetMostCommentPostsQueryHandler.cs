@@ -27,11 +27,11 @@ public class GetMostCommentPostsQueryHandler(
             logger.Information("BEGIN {MethodName} - Retrieving most commented posts", methodName);
 
             var cacheKey = CacheKeyHelper.Post.GetMostCommentPostsKey();
-            var cachedPosts = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
-            if (cachedPosts != null)
+            var cached = await cacheService.GetAsync<IEnumerable<PostDto>>(cacheKey, cancellationToken);
+            if (cached != null)
             {
                 logger.Information("END {MethodName} - Successfully retrieved most commented posts from cache", methodName);
-                result.Success(cachedPosts);
+                result.Success(cached);
                 return result;
             }
 

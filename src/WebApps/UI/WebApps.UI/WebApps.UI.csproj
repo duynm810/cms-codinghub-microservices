@@ -30,4 +30,41 @@
         </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-1.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-10.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-11.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-12.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-13.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-14.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-15.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-16.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-17.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-18.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-19.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-2.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-3.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-4.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-5.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-6.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-7.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-8.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\news-9.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-1.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-10.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-11.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-16.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-17.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-18.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-19.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-2.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-3.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-4.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-5.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-6.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-7.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-8.jpg" />
+      <_ContentIncludedByDefault Remove="wwwroot\imgs\news\thumb-9.jpg" />
+    </ItemGroup>
+
 </Project>
