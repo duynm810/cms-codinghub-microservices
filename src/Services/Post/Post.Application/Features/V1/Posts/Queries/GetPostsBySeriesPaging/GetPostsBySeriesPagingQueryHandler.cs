@@ -1,8 +1,10 @@
 using Contracts.Commons.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Post.Domain.GrpcClients;
 using Post.Domain.Repositories;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Post;
 using Shared.Helpers;
 using Shared.Responses;
@@ -10,7 +12,7 @@ using Shared.Utilities;
 
 namespace Post.Application.Features.V1.Posts.Queries.GetPostsBySeriesPaging;
 
-public class GetPostsBySeriesPagingQueryHandler(IPostRepository postRepository, ICacheService cacheService, ILogger logger) : IRequestHandler<GetPostsBySeriesPagingQuery, ApiResult<PostsBySeriesDto>>
+public class GetPostsBySeriesPagingQueryHandler(IPostRepository postRepository, ISeriesGrpcClient seriesGrpcClient, ICacheService cacheService, ILogger logger) : IRequestHandler<GetPostsBySeriesPagingQuery, ApiResult<PostsBySeriesDto>>
 {
     public async Task<ApiResult<PostsBySeriesDto>> Handle(GetPostsBySeriesPagingQuery query, CancellationToken cancellationToken)
     {
@@ -20,7 +22,7 @@ public class GetPostsBySeriesPagingQueryHandler(IPostRepository postRepository, 
         try
         {
             logger.Information(
-                "BEGIN {MethodName} - Retrieving posts by series {CategorySlug} on page {PageNumber} with page size {PageSize}",
+                "BEGIN {MethodName} - Retrieving posts by series {SeriesSlug} on page {PageNumber} with page size {PageSize}",
                 methodName, query.SeriesSlug, query.Request.PageNumber, query.Request.PageSize);
             
             var cacheKey = CacheKeyHelper.Post.GetPostsBySeriesPagingKey(query.SeriesSlug, query.Request.PageNumber, query.Request.PageSize);
@@ -28,9 +30,20 @@ public class GetPostsBySeriesPagingQueryHandler(IPostRepository postRepository, 
             if (cached != null)
             {
                 logger.Information(
-                    "END {MethodName} - Successfully retrieved posts from cache for category slug {CategorySlug} on page {PageNumber} with page size {PageSize}",
+                    "END {MethodName} - Successfully retrieved posts from cache for category slug {SeriesSlug} on page {PageNumber} with page size {PageSize}",
                     methodName, query.SeriesSlug, query.Request.PageNumber, query.Request.PageSize);
                 result.Success(cached);
+                return result;
+            }
+            
+            var series = await seriesGrpcClient.GetSeriesBySlug(query.SeriesSlug);
+            if (series == null)
+            {
+                logger.Warning("{MethodName} - Series not found with slug: {SeriesSlug}", methodName,
+                    query.SeriesSlug);
+                
+                result.Messages.Add(ErrorMessagesConsts.Category.CategoryNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
                 return result;
             }
         }

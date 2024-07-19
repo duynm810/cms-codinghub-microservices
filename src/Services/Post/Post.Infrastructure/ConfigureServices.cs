@@ -18,6 +18,7 @@ using Post.Infrastructure.Persistence;
 using Post.Infrastructure.Repositories;
 using Post.Infrastructure.Services;
 using PostInTag.Grpc.Protos;
+using Series.Grpc.Protos;
 using Shared.Settings;
 using Tag.Grpc.Protos;
 
@@ -94,6 +95,7 @@ public static class ConfigureServices
         services.AddScoped<IPostRepository, PostRepository>()
             .AddScoped<IPostActivityLogRepository, PostActivityLogRepository>()
             .AddScoped<ICategoryGrpcClient, CategoryGrpcClient>()
+            .AddScoped<ISeriesGrpcClient, SeriesGrpcClient>()
             .AddScoped<ITagGrpcClient, TagGrpcClient>()
             .AddScoped<IPostInTagGrpcClient, PostInTagGrpcClient>()
             .AddScoped<IIdentityGrpcClient, IdentityGrpcClient>()
@@ -112,7 +114,10 @@ public static class ConfigureServices
 
         services.AddGrpcClient<CategoryProtoService.CategoryProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.CategoryUrl));
-
+        
+        services.AddGrpcClient<SeriesProtoService.SeriesProtoServiceClient>(x =>
+            x.Address = new Uri(grpcSettings.SeriesUrl));
+        
         services.AddGrpcClient<TagProtoService.TagProtoServiceClient>(x =>
             x.Address = new Uri(grpcSettings.TagUrl));
         
