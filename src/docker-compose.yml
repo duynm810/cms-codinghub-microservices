@@ -166,7 +166,6 @@ services:
     build:
       context: .
       dockerfile: WebApps/HealthCheck/WebApps.HealthCheck/Dockerfile
-      
   
   ui:
     image: ${DOCKER_REGISTRY-}ui:${PLATFORM:-linux}-${TAG:-latest}
