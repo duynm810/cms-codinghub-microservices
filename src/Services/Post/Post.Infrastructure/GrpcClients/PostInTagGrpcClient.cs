@@ -30,7 +30,6 @@ public class PostInTagGrpcClient(PostInTagService.PostInTagServiceClient postInT
             var tagIds = result.TagIds.Select(Guid.Parse);
 
             var tagIdList = tagIds as Guid[] ?? tagIds.ToArray();
-
             return tagIdList;
         }
         catch (RpcException rpcEx)

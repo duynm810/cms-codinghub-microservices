@@ -88,4 +88,17 @@
         </Protobuf>
     </ItemGroup>
 
+    <ItemGroup>
+        <Protobuf Include="..\..\PostInSeries\PostInSeries.Grpc\Protos\post-in-series.proto">
+            <GrpcServices>Client</GrpcServices>
+            <Access>Public</Access>
+            <ProtoCompile>True</ProtoCompile>
+            <CompileOutputs>True</CompileOutputs>
+            <OutputDir>obj\Debug\net8.0\</OutputDir>
+            <Generator>MSBuild:Compile</Generator>
+            <Link>Protos\post-in-series.proto</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Protobuf>
+    </ItemGroup>
+
 </Project>
