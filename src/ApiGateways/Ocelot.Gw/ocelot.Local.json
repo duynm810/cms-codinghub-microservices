@@ -4,9 +4,9 @@
   },
   "Routes": [
     {
-      "UpstreamPathTemplate": "/identity",
+      "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "POST" ],
-      "DownstreamPathTemplate": "/api/identity",
+      "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -21,9 +21,9 @@
       "SwaggerKey": "identity-service"
     },
     {
-      "UpstreamPathTemplate": "/identity/{userId}",
+      "UpstreamPathTemplate": "/users/{userId}",
       "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
-      "DownstreamPathTemplate": "/api/identity/{userId}",
+      "DownstreamPathTemplate": "/api/users/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -38,9 +38,9 @@
       "SwaggerKey": "identity-service"
     },
     {
-      "UpstreamPathTemplate": "/identity",
+      "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/identity",
+      "DownstreamPathTemplate": "/api/users",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -55,9 +55,9 @@
       "SwaggerKey": "identity-service"
     },
     {
-      "UpstreamPathTemplate": "/identity/{userId}",
+      "UpstreamPathTemplate": "/users/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/identity/{userId}",
+      "DownstreamPathTemplate": "/api/users/{userId}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -72,9 +72,9 @@
       "SwaggerKey": "identity-service"
     },
     {
-      "UpstreamPathTemplate": "/identity/me",
+      "UpstreamPathTemplate": "/users/me",
       "UpstreamHttpMethod": [ "GET" ],
-      "DownstreamPathTemplate": "/api/identity/me",
+      "DownstreamPathTemplate": "/api/users/me",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
@@ -89,9 +89,9 @@
       "SwaggerKey": "identity-service"
     },
     {
-      "UpstreamPathTemplate": "/identity/{userId}/change-password",
+      "UpstreamPathTemplate": "/users/{userId}/change-password",
       "UpstreamHttpMethod": [ "POST" ],
-      "DownstreamPathTemplate": "/api/identity/{userId}/change-password",
+      "DownstreamPathTemplate": "/api/users/{userId}/change-password",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {

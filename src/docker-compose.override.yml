@@ -178,6 +178,7 @@ services:
       - post-in-series.api
       - comment.api
       - media.api
+      - identity.api
     ports:
       - "6001:80"
     profiles:
