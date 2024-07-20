@@ -125,6 +125,17 @@ public static class ClaimsPrincipalExtensions
         return bool.TryParse(claimValue, out var parsedClaimValue)
                && parsedClaimValue;
     }
+    
+    /// <summary>
+    /// Retrieves the value of the NameIdentifier claim from the specified ClaimsPrincipal.
+    /// </summary>
+    /// <param name="user">The ClaimsPrincipal from which to retrieve the NameIdentifier claim.</param>
+    /// <returns>The value of the NameIdentifier claim if it exists; otherwise, an empty string.</returns>
+    public static string GetUserClaimId(this ClaimsPrincipal user)
+    {
+        var claim = user.FindFirst(ClaimTypes.NameIdentifier);
+        return claim?.Value ?? string.Empty;
+    }
 
     private static string? GetClaimValue(in ClaimsPrincipal user, string name)
         => user.Claims.FirstOrDefault(claim => claim.Type.Equals(name, StringComparison.OrdinalIgnoreCase))?.Value;

@@ -149,7 +149,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
         return result;
     }
 
-    public async Task<ApiResult<UserDto>> GetUserById(Guid userId)
+    public async Task<ApiResult<UserDto>> GetUserById(string userId)
     {
         var result = new ApiResult<UserDto>();
         const string methodName = nameof(GetUserById);
@@ -158,7 +158,7 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
         {
             logger.Information("BEGIN {MethodName} - Retrieving user with ID: {UserId}", methodName, userId);
 
-            var user = await repositoryManager.Users.GetUserById(userId);
+            var user = await repositoryManager.Users.GetUserById(Guid.Parse(userId));
             if (user == null)
             {
                 result.Messages.Add(ErrorMessagesConsts.Identity.User.UserNotFound);
@@ -184,6 +184,45 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
     #endregion
 
     #region OTHERS
+
+    public async Task<ApiResult<UserDto>> GetUserByName(string? name)
+    {
+        var result = new ApiResult<UserDto>();
+        const string methodName = nameof(GetUserByName);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Retrieving user with name: {UserName}", methodName, name);
+
+            if (string.IsNullOrEmpty(name))
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserNotAuthenticated);
+                result.Failure(StatusCodes.Status401Unauthorized, result.Messages);
+                return result;
+            }
+            
+            var user = await repositoryManager.Users.GetUserByUserName(name);
+            if (user == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            var data = mapper.Map<UserDto>(user);
+            result.Success(data);
+                
+            logger.Information("END {MethodName} - Successfully retrieved user with name {UserName}", methodName, name);
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
 
     public async Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserRequest request)
     {

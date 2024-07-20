@@ -16,7 +16,9 @@ public interface IUserService
 
     Task<ApiResult<IEnumerable<UserDto>>> GetUsers();
 
-    Task<ApiResult<UserDto>> GetUserById(Guid userId);
+    Task<ApiResult<UserDto>> GetUserById(string userId);
+    
+    Task<ApiResult<UserDto>> GetUserByName(string? name);
 
     #endregion
 

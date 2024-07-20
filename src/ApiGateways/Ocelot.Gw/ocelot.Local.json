@@ -4,6 +4,108 @@
   },
   "Routes": [
     {
+      "UpstreamPathTemplate": "/identity",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/identity/{userId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
+      "DownstreamPathTemplate": "/api/identity/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/identity",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/identity",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/identity/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/identity/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/identity/me",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/identity/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/identity/{userId}/change-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/identity/{userId}/change-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET"
@@ -961,6 +1063,17 @@
           "Name": "Ocelot.Gw",
           "Version": "1.0",
           "Url": "http://apigw.ocelot/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Identity.Api",
+          "Version": "1.0",
+          "Url": "http://identity.api/swagger/v1/swagger.json"
         }
       ]
     },
