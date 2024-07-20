@@ -11,6 +11,8 @@ public class UserDto
     public string UserName { get; set; } = default!;
     
     public string FullName => $"{FirstName} {LastName}".Trim();
+    
+    public string Email { get; set; } = default!;
 
     public string Address { get; set; } = default!;
 }

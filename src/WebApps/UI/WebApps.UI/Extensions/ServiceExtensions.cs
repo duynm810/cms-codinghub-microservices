@@ -78,6 +78,7 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<IBaseApiClient, BaseApiClient>()
+            .AddScoped<IIdentityApiClient, IdentityApiClient>()
             .AddScoped<ICategoryApiClient, CategoryApiClient>()
             .AddScoped<IPostApiClient, PostApiClient>()
             .AddScoped<IPostActivityLogApiClient, PostActivityLogApiClient>()

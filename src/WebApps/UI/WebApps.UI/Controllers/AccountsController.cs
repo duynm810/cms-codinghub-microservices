@@ -19,6 +19,7 @@ namespace WebApps.UI.Controllers;
 public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
+    IIdentityApiClient identityApiClient,
     IRazorRenderViewService razorRenderViewService,
     IOptions<ApiSettings> apiSettings,
     ILogger logger) : BaseController(logger)
@@ -52,13 +53,24 @@ public class AccountsController(
 
     #region PROFILE
 
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile()
     {
         const string methodName = nameof(Profile);
 
         try
         {
-            return View();
+            var response = await identityApiClient.GetMe();
+            if (response is not { IsSuccess: true, Data: not null })
+            {
+                return HandleError(methodName, response.StatusCode);
+            }
+            
+            var items = new ProfileViewModel()
+            {
+                User = response.Data
+            };
+
+            return View(items);
         }
         catch (Exception e)
         {

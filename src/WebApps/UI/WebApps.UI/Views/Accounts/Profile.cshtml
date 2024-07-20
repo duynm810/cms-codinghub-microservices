@@ -3,6 +3,9 @@
     ViewData["ShowBottom"] = false;
     ViewData["MainClass"] = "bg-grey pb-30";
 }
+@{
+    var user = Model.User;
+}
 
 <div class="container">
     <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
@@ -19,7 +22,7 @@
                             <div class="user-avatar">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
                             </div>
-                            <h5 class="user-name">Yuki Hayashi</h5>
+                            <h5 class="user-name">@user.FullName</h5>
                             <h6 class="user-email">
                                 <a href="/cdn-cgi/l/email-protection" class="__cf_email__"
                                    data-cfemail="f089859b99b0bd918887959c9cde939f9d">
@@ -48,13 +51,13 @@
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="fullName">Full Name</label>
-                                <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+                                <input type="text" class="form-control" id="fullName" placeholder="Enter full name" value="@user.FullName">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                             <div class="form-group">
                                 <label for="eMail">Email</label>
-                                <input type="email" class="form-control" id="eMail" placeholder="Enter email ID">
+                                <input type="email" class="form-control" id="eMail" placeholder="Enter email ID" value="@user.Email">
                             </div>
                         </div>
                         <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">

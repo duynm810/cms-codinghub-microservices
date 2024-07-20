@@ -59,8 +59,7 @@ public class UsersController(IUserService userService) : ControllerBase
     [ProducesResponseType(typeof(ApiResult<UserDto>), (int)HttpStatusCode.OK)]
     public async Task<IActionResult> GetMe()
     {
-        var userId = User.GetUserClaimId();
-        var result = await userService.GetUserById(userId);
+        var result = await userService.GetUserById(User.GetUserClaimId());
         return Ok(result);
     }
 
