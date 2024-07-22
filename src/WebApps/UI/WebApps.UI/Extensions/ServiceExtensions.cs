@@ -78,6 +78,7 @@ public static class ServiceExtensions
     {
         services
             .AddScoped<IBaseApiClient, BaseApiClient>()
+            .AddScoped<IAggregatorApiClient, AggregatorApiClient>()
             .AddScoped<IIdentityApiClient, IdentityApiClient>()
             .AddScoped<ICategoryApiClient, CategoryApiClient>()
             .AddScoped<IPostApiClient, PostApiClient>()
@@ -86,8 +87,7 @@ public static class ServiceExtensions
             .AddScoped<IPostInSeriesApiClient, PostInSeriesApiClient>()
             .AddScoped<ITagApiClient, TagApiClient>()
             .AddScoped<ICommentApiClient, CommentApiClient>()
-            .AddScoped<IMediaApiClient, MediaApiClient>()
-            .AddScoped<IDashboardApiClient, DashboardApiClient>();
+            .AddScoped<IMediaApiClient, MediaApiClient>();
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)

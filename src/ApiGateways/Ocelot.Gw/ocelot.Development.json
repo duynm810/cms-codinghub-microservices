@@ -118,7 +118,8 @@
           "Port": 5003
         }
       ],
-      "SwaggerKey": "category-service"
+      "SwaggerKey": "category-service",
+      "Key": "categories"
     },
     {
       "UpstreamPathTemplate": "/categories",
@@ -273,7 +274,8 @@
           "Port": 5004
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "most-commented-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/most-liked",
@@ -784,7 +786,8 @@
           "Port": 5007
         }
       ],
-      "SwaggerKey": "tag-service"
+      "SwaggerKey": "tag-service",
+      "Key": "tags"
     },
     {
       "UpstreamPathTemplate": "/tags",
@@ -983,7 +986,8 @@
           "Port": 5009
         }
       ],
-      "SwaggerKey": "comment-service"
+      "SwaggerKey": "comment-service",
+      "Key": "latest-comments"
     },
     {
       "UpstreamPathTemplate": "/media/upload-image",
@@ -1046,6 +1050,30 @@
       ],
       "UpstreamPathTemplate": "/dashboard",
       "Aggregator": "DashboardAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "categories",
+        "tags"
+      ],
+      "UpstreamPathTemplate": "/footer",
+      "Aggregator": "FooterAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "most-commented-posts",
+        "latest-comments"
+      ],
+      "UpstreamPathTemplate": "/side-bar",
+      "Aggregator": "SidebarAggregator",
       "FileCacheOptions": {
         "TtlSeconds": 30,
         "Region": "Aggregators"

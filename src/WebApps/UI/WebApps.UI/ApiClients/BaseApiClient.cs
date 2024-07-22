@@ -154,6 +154,22 @@ public class BaseApiClient(
         return result;
     }
 
+    public async Task<T> GetAsyncWithoutApiResult<T>(string url, bool requiredLogin = false)
+    {
+        var client = await CreateClientAsync(requiredLogin);
+        var response = await client.GetAsync(url);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var result = serializeService.Deserialize<T>(responseContent);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException(ErrorMessagesConsts.Data.DeserializeFailed);
+        }
+
+        return result;
+    }
+
     #endregion
 
     #region HELPERS

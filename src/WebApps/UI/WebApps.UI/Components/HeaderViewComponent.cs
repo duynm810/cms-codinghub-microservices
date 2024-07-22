@@ -1,38 +1,35 @@
-using System.Net;
-using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
-using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class HeaderViewComponent(ICategoryApiClient categoryApiClient, IErrorService errorService, ILogger logger)
-    : BaseViewComponent(errorService, logger)
+public class HeaderViewComponent(ICategoryApiClient categoryApiClient, ILogger logger)
+    : BaseViewComponent(logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        const string methodName = nameof(InvokeAsync);
+
         try
         {
-            var categories = await categoryApiClient.GetCategories();
-            if (categories is { IsSuccess: true, Data: not null })
+            var response = await categoryApiClient.GetCategories();
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var viewModel = new HeaderViewModel
-                {
-                    Categories = categories.Data
-                };
-
-                return View(viewModel);
+                return HandleError(methodName, response.StatusCode);
             }
             
-            var user = User as ClaimsPrincipal;
-            
-            return HandleError((HttpStatusCode)categories.StatusCode, nameof(InvokeAsync));
+            var items = new HeaderViewModel
+            {
+                Categories = response.Data
+            };
+
+            return View(items);
         }
         catch (Exception e)
         {
-            return HandleException(e, nameof(InvokeAsync));
+            return HandleException(methodName, e);
         }
     }
 }

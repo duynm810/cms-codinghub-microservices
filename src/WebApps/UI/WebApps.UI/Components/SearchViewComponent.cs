@@ -1,14 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.Models.Commons;
-using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class SearchViewComponent(IErrorService errorService, ILogger logger) : BaseViewComponent(errorService, logger)
+public class SearchViewComponent(ILogger logger) : BaseViewComponent(logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        const string methodName = nameof(InvokeAsync);
+
         try
         {
             var items = new SearchViewModel
@@ -19,7 +20,7 @@ public class SearchViewComponent(IErrorService errorService, ILogger logger) : B
         }
         catch (Exception e)
         {
-            return HandleException(e, nameof(InvokeAsync));
+            return HandleException(methodName, e);
         }
     }
 }

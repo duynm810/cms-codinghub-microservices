@@ -8,7 +8,7 @@ using ILogger = Serilog.ILogger;
 namespace WebApps.UI.Controllers;
 
 public class HomeController(
-    IDashboardApiClient dashboardApiClient,
+    IAggregatorApiClient aggregatorApiClient,
     IPostApiClient postApiClient,
     IRazorRenderViewService razorRenderViewService, ILogger logger) : BaseController(logger)
 {
@@ -16,7 +16,7 @@ public class HomeController(
     {
         try
         {
-            var response = await dashboardApiClient.GetDashboard();
+            var response = await aggregatorApiClient.GetDashboard();
     
             var viewModel = new HomeViewModel();
 

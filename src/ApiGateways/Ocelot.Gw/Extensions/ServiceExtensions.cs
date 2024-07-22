@@ -48,6 +48,8 @@ public static class ServiceExtensions
     {
         services.AddOcelot(configuration)
             .AddSingletonDefinedAggregator<DashboardAggregator>()
+            .AddSingletonDefinedAggregator<FooterAggregator>()
+            .AddSingletonDefinedAggregator<SidebarAggregator>()
             .AddPolly()
             .AddCacheManager(x => x.WithDictionaryHandle());
     }

@@ -11,7 +11,6 @@ namespace Post.Infrastructure.GrpcClients;
 
 public class SeriesGrpcClient(
     SeriesProtoService.SeriesProtoServiceClient seriesProtoServiceClient,
-    ICacheService cacheService,
     IMapper mapper,
     ILogger logger) : ISeriesGrpcClient
 {
