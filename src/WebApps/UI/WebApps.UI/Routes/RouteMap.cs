@@ -66,6 +66,11 @@ public static class RouteMap
             "create-new-post",
             "/accounts/create-new-post",
             new { controller = "Accounts", action = "CreatePost" });
+        
+        app.MapControllerRoute(
+            "update-profile",
+            "/accounts/update-profile/{userId:guid}",
+            new { controller = "Accounts", action = "UpdateProfile" });
 
         app.MapControllerRoute(
             "profile",
@@ -133,15 +138,6 @@ public static class RouteMap
             "get-suggested-tags",
             "/tags/suggest",
             new { controller = "Tags", action = "GetSuggestedTags" });
-
-        #endregion
-
-        #region SERIES
-        
-        app.MapControllerRoute(
-            "get-all-series",
-            "/series",
-            new { controller = "Series", action = "GetSeries" });
 
         #endregion
         

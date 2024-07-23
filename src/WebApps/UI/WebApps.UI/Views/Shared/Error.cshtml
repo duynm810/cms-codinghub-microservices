@@ -1,0 +1,56 @@
+@model ErrorViewModel
+@{
+    ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
+    ViewData["ShowBottom"] = false;
+}
+@{
+    var statusCode = Model.StatusCode;
+    string statusMessage;
+
+    switch (statusCode)
+    {
+        case 400:
+            statusMessage = "The request cannot be fulfilled due to bad syntax.";
+            break;
+        case 403:
+            statusMessage = "You don't have permission to access this resource.";
+            break;
+        case 404:
+            statusMessage = "The requested page could not be found.";
+            break;
+        case 408:
+            statusMessage = "The server timed out waiting for the request.";
+            break;
+        case 500:
+            statusMessage = "The server was unable to finish processing the request.";
+            break;
+        default:
+            statusMessage = "An unexpected error occurred.";
+            break;
+    }
+
+    ViewData["Title"] = statusMessage;
+}
+
+<div class="container">
+    <div class="row pt-80">
+        <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50">
+            <img src="~/imgs/theme/page-not-found.png" alt="">
+        </div>
+        <div class="col-lg-6 col-md-12 pl-50 text-md-center text-lg-left">
+            <h1 class="mb-30 font-weight-900 page-404">@statusCode</h1>
+            <form action="/search" id="search-form" class="search-form d-lg-flex open-search mb-30">
+                <i class="icon-search"></i>
+                <input class="form-control" type="text" placeholder="Search..." aria-label="Search" name="keyword">
+            </form>
+            <p class="">
+                @statusMessage <br> visit the <a href="/">Homepage</a> or <a href="/about">Contact us</a> about the problem
+            </p>
+            <div class="form-group">
+                <button type="button" class="button button-contactForm mt-30">
+                    <a class="text-white" href="/">Home page</a>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -4,6 +4,108 @@
   },
   "Routes": [
     {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/me",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}/change-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/change-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET"
@@ -16,7 +118,8 @@
           "Port": 6003
         }
       ],
-      "SwaggerKey": "category-service"
+      "SwaggerKey": "category-service",
+      "Key": "categories"
     },
     {
       "UpstreamPathTemplate": "/categories",
@@ -171,7 +274,8 @@
           "Port": 6004
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "most-commented-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/most-liked",
@@ -682,7 +786,8 @@
           "Port": 6007
         }
       ],
-      "SwaggerKey": "tag-service"
+      "SwaggerKey": "tag-service",
+      "Key": "tags"
     },
     {
       "UpstreamPathTemplate": "/tags",
@@ -881,7 +986,8 @@
           "Port": 6009
         }
       ],
-      "SwaggerKey": "comment-service"
+      "SwaggerKey": "comment-service",
+      "Key": "latest-comments"
     },
     {
       "UpstreamPathTemplate": "/media/upload-image",
@@ -950,6 +1056,30 @@
         "TtlSeconds": 30,
         "Region": "Aggregators"
       }
+    },
+    {
+      "RouteKeys": [
+        "categories",
+        "tags"
+      ],
+      "UpstreamPathTemplate": "/footer",
+      "Aggregator": "FooterAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "most-commented-posts",
+        "latest-comments"
+      ],
+      "UpstreamPathTemplate": "/side-bar",
+      "Aggregator": "SidebarAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
     }
   ],
   "SwaggerEndPoints": [
@@ -961,6 +1091,17 @@
           "Name": "Ocelot.Gw",
           "Version": "1.0",
           "Url": "http://apigw.ocelot/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Identity.Api",
+          "Version": "1.0",
+          "Url": "http://identity.api/swagger/v1/swagger.json"
         }
       ]
     },

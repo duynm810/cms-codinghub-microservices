@@ -12,8 +12,7 @@ namespace WebApps.UI.ApiClients;
 public class BaseApiClient(
     ISerializeService serializeService,
     IHttpClientFactory httpClientFactory,
-    IHttpContextAccessor httpContextAccessor,
-    ApiSettings apiSettings) : IBaseApiClient
+    IHttpContextAccessor httpContextAccessor) : IBaseApiClient
 {
     #region CRUD
 
@@ -145,6 +144,22 @@ public class BaseApiClient(
 
         var responseContent = await response.Content.ReadAsStringAsync();
         var result = serializeService.Deserialize<ApiResult<T>>(responseContent);
+
+        if (result == null)
+        {
+            throw new InvalidOperationException(ErrorMessagesConsts.Data.DeserializeFailed);
+        }
+
+        return result;
+    }
+
+    public async Task<T> GetAsyncWithoutApiResult<T>(string url, bool requiredLogin = false)
+    {
+        var client = await CreateClientAsync(requiredLogin);
+        var response = await client.GetAsync(url);
+
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var result = serializeService.Deserialize<T>(responseContent);
 
         if (result == null)
         {

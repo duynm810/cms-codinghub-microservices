@@ -7,31 +7,33 @@ using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class FooterViewComponent(ICategoryApiClient categoryApiClient, ITagApiClient tagApiClient, IErrorService errorService, ILogger logger)
-    : BaseViewComponent(errorService, logger)
+public class FooterViewComponent(IAggregatorApiClient aggregatorApiClient, ILogger logger) : BaseViewComponent(logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        const string methodName = nameof(InvokeAsync);
+
         try
         {
-            var categories = await categoryApiClient.GetCategories();
-            var tags = await tagApiClient.GetTags(5);
-            if (categories is { IsSuccess: true, Data: not null } && tags is { IsSuccess: true, Data: not null })
-            {
-                var viewModel = new FooterViewModel
-                {
-                    Categories = categories.Data,
-                    Tags = tags.Data
-                };
+            var items = new FooterViewModel();
 
-                return View(viewModel);
+            var response = await aggregatorApiClient.GetFooter();
+            
+            if (response.Categories.Data is { Count: > 0 } categories)
+            {
+                items.Categories = categories;
             }
 
-            return HandleError((HttpStatusCode)categories.StatusCode, nameof(InvokeAsync));
+            if (response.Tags.Data is { Count: > 0 } tags)
+            {
+                items.Tags = tags;
+            }
+
+            return View(items);
         }
         catch (Exception e)
         {
-            return HandleException(e, nameof(InvokeAsync));
+            return HandleException(methodName, e);
         }
     }
 }

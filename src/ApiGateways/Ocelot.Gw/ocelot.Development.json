@@ -4,6 +4,108 @@
   },
   "Routes": [
     {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/me",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}/change-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/change-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET"
@@ -16,7 +118,8 @@
           "Port": 5003
         }
       ],
-      "SwaggerKey": "category-service"
+      "SwaggerKey": "category-service",
+      "Key": "categories"
     },
     {
       "UpstreamPathTemplate": "/categories",
@@ -171,7 +274,8 @@
           "Port": 5004
         }
       ],
-      "SwaggerKey": "post-service"
+      "SwaggerKey": "post-service",
+      "Key": "most-commented-posts"
     },
     {
       "UpstreamPathTemplate": "/posts/most-liked",
@@ -682,7 +786,8 @@
           "Port": 5007
         }
       ],
-      "SwaggerKey": "tag-service"
+      "SwaggerKey": "tag-service",
+      "Key": "tags"
     },
     {
       "UpstreamPathTemplate": "/tags",
@@ -881,7 +986,8 @@
           "Port": 5009
         }
       ],
-      "SwaggerKey": "comment-service"
+      "SwaggerKey": "comment-service",
+      "Key": "latest-comments"
     },
     {
       "UpstreamPathTemplate": "/media/upload-image",
@@ -948,6 +1054,30 @@
         "TtlSeconds": 30,
         "Region": "Aggregators"
       }
+    },
+    {
+      "RouteKeys": [
+        "categories",
+        "tags"
+      ],
+      "UpstreamPathTemplate": "/footer",
+      "Aggregator": "FooterAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "most-commented-posts",
+        "latest-comments"
+      ],
+      "UpstreamPathTemplate": "/side-bar",
+      "Aggregator": "SidebarAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
     }
   ],
   "SwaggerEndPoints": [
@@ -959,6 +1089,17 @@
           "Name": "Ocelot.Gw",
           "Version": "1.0",
           "Url": "http://localhost:5001/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Identity.Api",
+          "Version": "1.0",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
         }
       ]
     },

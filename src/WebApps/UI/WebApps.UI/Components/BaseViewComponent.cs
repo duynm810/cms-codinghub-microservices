@@ -1,28 +1,33 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
-using WebApps.UI.Services.Interfaces;
+using WebApps.UI.Models.Commons;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public abstract class BaseViewComponent(IErrorService errorService, ILogger logger) : ViewComponent
+public abstract class BaseViewComponent(ILogger logger) : ViewComponent
 {
-    protected IViewComponentResult HandleError(HttpStatusCode statusCode, string methodName)
+    protected IViewComponentResult HandleError(string methodName, int statusCode)
     {
         logger.Error("{MethodName} failed with status code {StatusCode}", methodName, statusCode);
 
-        var errorMessage = errorService.GetErrorMessage((int)statusCode);
-        ViewData["ErrorMessage"] = errorMessage;
-        var viewName = errorService.GetViewName((int)statusCode);
-        return View(viewName);
+        var items = new ErrorViewModel()
+        {
+            StatusCode = statusCode
+        };
+
+        return View("Error", items);
     }
 
-    protected IViewComponentResult HandleException(Exception e, string methodName)
+    protected IViewComponentResult HandleException(string methodName, Exception e)
     {
         logger.Error(e, "{MethodName} encountered an exception", methodName);
 
-        var errorMessage = errorService.GetErrorMessage((int)HttpStatusCode.InternalServerError);
-        ViewData["ErrorMessage"] = errorMessage;
-        return View(errorService.GetViewName((int)HttpStatusCode.InternalServerError));
+        var items = new ErrorViewModel()
+        {
+            StatusCode = StatusCodes.Status500InternalServerError,
+            StatusMessage = e.Message
+        };
+
+        return View("Error", items);
     }
 }

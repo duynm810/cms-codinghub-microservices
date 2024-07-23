@@ -99,40 +99,49 @@ public static class ModelBuilderExtensions
             .IsRequired()
             .HasColumnType("varchar(255)")
             .HasMaxLength(255)
-            .ValueGeneratedNever()
-            ;
+            .ValueGeneratedNever();
 
         entity.Property(x => x.NormalizedEmail)
             .HasColumnType("varchar(255)")
-            .HasMaxLength(255)
-            ;
+            .HasMaxLength(255);
 
         entity.Property(x => x.UserName)
             .IsRequired()
             .HasColumnType("varchar(255)")
-            .HasMaxLength(255)
-            ;
+            .HasMaxLength(255);
 
         entity.Property(x => x.NormalizedUserName)
             .HasColumnType("varchar(255)")
-            .HasMaxLength(255)
-            ;
+            .HasMaxLength(255);
 
         entity.Property(x => x.PhoneNumber)
             .IsUnicode(false)
-            .HasColumnType("varchar(20)")
-            .HasMaxLength(20);
+            .HasColumnType("varchar(15)")
+            .HasMaxLength(15);
 
         entity.Property(x => x.FirstName)
             .IsRequired()
-            .HasColumnType("varchar(50)")
-            .HasMaxLength(50)
-            ;
+            .HasColumnType("nvarchar(50)")
+            .HasMaxLength(50);
+
         entity.Property(x => x.LastName)
             .IsRequired()
-            .HasColumnType("varchar(150)")
-            .HasMaxLength(150)
-            ;
+            .HasColumnType("nvarchar(50)")
+            .HasMaxLength(150);
+
+        entity.Property(u => u.Address)
+            .IsRequired(false)
+            .HasColumnType("nvarchar(255)")
+            .HasMaxLength(250);
+
+        entity.Property(u => u.AvatarUrl)
+            .IsRequired(false)
+            .HasColumnType("varchar(500)")
+            .HasMaxLength(500);
+
+        entity.Property(u => u.About)
+            .IsRequired(false)
+            .HasColumnType("nvarchar(max)");
     }
 
     private static void ConfigureRoleClaim(EntityTypeBuilder<IdentityRoleClaim<string>> entity)

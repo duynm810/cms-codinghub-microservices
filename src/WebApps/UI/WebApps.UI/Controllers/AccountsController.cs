@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Shared.Dtos.Category;
+using Shared.Requests.Identity.User;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
 using Shared.Settings;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Accounts;
+using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Controllers;
 
@@ -18,11 +20,15 @@ namespace WebApps.UI.Controllers;
 public class AccountsController(
     IPostApiClient postApiClient,
     ICategoryApiClient categoryApiClient,
+    IIdentityApiClient identityApiClient,
     IRazorRenderViewService razorRenderViewService,
-    IOptions<ApiSettings> apiSettings) : BaseController
+    IOptions<ApiSettings> apiSettings,
+    ILogger logger) : BaseController(logger)
 {
     private readonly ApiSettings _apiSettings = apiSettings.Value;
-    
+
+    #region AUTHENTICATION
+
     public IActionResult Login(string returnUrl = "/")
     {
         var redirectUrl = Url.Action(nameof(LoginCallback), "Accounts", new { returnUrl });
@@ -48,26 +54,67 @@ public class AccountsController(
         return RedirectToAction("Index", "Home");
     }
 
+    #endregion
+    
     #region PROFILE
 
-    public IActionResult Profile()
+    public async Task<IActionResult> Profile()
     {
         const string methodName = nameof(Profile);
 
         try
         {
-            var item = new ProfileViewModel()
+            var response = await identityApiClient.GetMe();
+            if (response is not { IsSuccess: true, Data: not null })
             {
+                return HandleError(methodName, response.StatusCode);
+            }
+            
+            var items = new ProfileViewModel()
+            {
+                User = response.Data
             };
 
-            return View(item);
+            return View(items);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
+    }
 
-        return View();
+    [HttpPut]
+    public async Task<IActionResult> UpdateProfile([FromRoute] Guid userId, [FromBody] UpdateUserRequest request)
+    {
+        const string methodName = nameof(UpdateProfile);
+
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Failed to update profile.";
+                return BadRequest(ModelState);
+            }
+
+            var updateResponse = await identityApiClient.UpdateUser(userId, request);
+
+            if (updateResponse is not { IsSuccess: true })
+            {
+                return Json(new { success = false });
+            }
+
+            var getUserResponse = await identityApiClient.GetUserById(userId);
+            if (getUserResponse is not { IsSuccess: true, Data: not null })
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new { success = true, user = getUserResponse.Data });
+        }
+        catch (Exception e)
+        {
+            return HandleException(methodName, e);
+        }
     }
 
     #endregion
@@ -77,55 +124,52 @@ public class AccountsController(
     [HttpPost]
     public async Task<IActionResult> GetPostsByCurrentUser([FromBody] GetPostsByCurrentUserRequest request)
     {
-        const string methodName = nameof(GetPostsByCurrentUser);
-
         try
         {
             var response = await postApiClient.GetPostsByCurrentUserPaging(request);
-            if (response is { IsSuccess: true, Data: not null })
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var items = new ManagePostsViewModel()
-                {
-                    Posts = response.Data
-                };
-
-                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
-                return Json(new { success = true, html, paginationHtml });
+                return Json(new { success = false });
             }
+            
+            var items = new ManagePostsViewModel()
+            {
+                Posts = response.Data
+            };
 
+            var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+            var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
+            return Json(new { success = true, html, paginationHtml });
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(GetPostsByCurrentUser), e);
         }
-
-        return Json(new { success = false });
     }
 
     public async Task<IActionResult> ManagePosts([FromQuery] int page = 1)
     {
         const string methodName = nameof(ManagePosts);
-
+        
         try
         {
             var response = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = page });
-            if (response is { IsSuccess: true, Data: not null })
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var items = new ManagePostsViewModel()
-                {
-                    Posts = response.Data
-                };
-
-                return View(items);
+                return HandleError(methodName, response.StatusCode);
             }
+            
+            var items = new ManagePostsViewModel()
+            {
+                Posts = response.Data
+            };
+
+            return View(items);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
-
-        return View();
     }
 
     [HttpGet]
@@ -147,10 +191,8 @@ public class AccountsController(
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
-
-        return View();
     }
 
     [HttpPost]
@@ -184,10 +226,8 @@ public class AccountsController(
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
-
-        return View();
     }
 
     [HttpGet]
@@ -199,27 +239,26 @@ public class AccountsController(
         {
             var categories = await GetCategories();
 
-            var post = await postApiClient.GetPostBySlug(slug);
-            if (post is { IsSuccess: true, Data: not null })
+            var response = await postApiClient.GetPostBySlug(slug);
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var items = new UpdatePostViewModel()
-                {
-                    Post = post.Data,
-                    Categories = categories
-                };
-
-                ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
-                
-                return View(items);
+                return HandleError(methodName, response.StatusCode);
             }
+            
+            var items = new UpdatePostViewModel()
+            {
+                Post = response.Data,
+                Categories = categories
+            };
 
+            ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
+                
+            return View(items);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
-
-        return View();
     }
 
     [HttpPut]
@@ -236,205 +275,143 @@ public class AccountsController(
             }
 
             var response = await postApiClient.UpdatePost(id, request);
-            if (response is { IsSuccess: true })
-            {
-                return Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
-            }
-
+            
+            return response is not { IsSuccess: true }
+                ? Json(new { success = false })
+                : Json(new { success = true, redirectUrl = Url.Action("ManagePosts", "Accounts") });
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(methodName, e);
         }
-
-        return Json(new { success = false });
     }
 
     [HttpPut]
     public async Task<IActionResult> UpdateThumbnail([FromRoute] Guid id, [FromBody] UpdateThumbnailRequest request)
     {
-        var response = await postApiClient.UpdateThumbnail(id, request);
-        return Ok(new { data = response });
+        try
+        {
+            var response = await postApiClient.UpdateThumbnail(id, request);
+            return Ok(new { data = response });
+        }
+        catch (Exception e)
+        {
+            return HandleException(nameof(UpdateThumbnail), e);
+        }
     }
 
     [HttpDelete]
     public async Task<IActionResult> DeletePost([FromRoute] Guid id, [FromQuery] int page = 1)
     {
-        const string methodName = nameof(DeletePost);
-        
         try
         {
             var response = await postApiClient.DeletePost(id);
-            if (response is { IsSuccess: true })
+            if (response is not { IsSuccess: true })
             {
-                // Lấy lại danh sách bài viết sau khi xóa
-                var request = new GetPostsByCurrentUserRequest { PageNumber = page };
-                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(request);
-                if (postsResult is { IsSuccess: true, Data: not null })
-                {
-                    var items = new ManagePostsViewModel()
-                    {
-                        Posts = postsResult.Data
-                    };
-                    
-                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                    var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
-                    return Json(new { success = true, html, paginationHtml });
-                }
+                return Json(new { success = false });
             }
+            
+            return await GetPostsByCurrentUserAndRenderHtml(page);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(DeletePost), e);
         }
-
-        return Json(new { success = false });
     }
 
     [HttpPut]
     public async Task<IActionResult> ApprovePost([FromRoute] Guid id, [FromBody] ApprovePostRequest request)
     {
-        const string methodName = nameof(ApprovePost);
-        
         try
         {
             var response = await postApiClient.ApprovePost(id, request);
-            if (response is { IsSuccess: true })
+            if (response is not { IsSuccess: true })
             {
-                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
-                if (postsResult is { IsSuccess: true, Data: not null })
-                {
-                    var items = new ManagePostsViewModel()
-                    {
-                        Posts = postsResult.Data
-                    };
-            
-                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                    return Json(new { success = true, html });
-                }
-        
-                return Json(new { success = true, html = string.Empty });
+                return Json(new { success = false });
             }
+            
+            return await GetPostsByCurrentUserAndRenderHtml(request.CurrentPage);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(ApprovePost), e);
         }
-        
-        return Json(new { success = false });
     }
     
     [HttpPut]
     public async Task<IActionResult> SubmitPostForApproval([FromRoute] Guid id, [FromBody] SubmitPostForApprovalRequest request)
     {
-        const string methodName = nameof(SubmitPostForApproval);
-        
         try
         {
             var response = await postApiClient.SubmitPostForApproval(id, request);
-            if (response is { IsSuccess: true })
+            if (response is not { IsSuccess: true })
             {
-                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
-                if (postsResult is { IsSuccess: true, Data: not null })
-                {
-                    var items = new ManagePostsViewModel()
-                    {
-                        Posts = postsResult.Data
-                    };
-            
-                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                    return Json(new { success = true, html });
-                }
-        
-                return Json(new { success = true, html = string.Empty });
+                return Json(new { success = false } );
             }
+            
+            return await GetPostsByCurrentUserAndRenderHtml(request.CurrentPage);
         }
         catch (Exception e)
         {
+            return HandleException(nameof(SubmitPostForApproval), e);
         }
-        
-        return Json(new { success = false });
     }
     
     [HttpPut]
     public async Task<IActionResult> RejectPostWithReason([FromRoute] Guid id, [FromBody] RejectPostWithReasonRequest request)
     {
-        const string methodName = nameof(RejectPostWithReason);
-        
         try
         {
             var response = await postApiClient.RejectPostWithReason(id, request);
-            if (response is { IsSuccess: true })
+            if (response is not { IsSuccess: true })
             {
-                var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
-                if (postsResult is { IsSuccess: true, Data: not null })
-                {
-                    var items = new ManagePostsViewModel()
-                    {
-                        Posts = postsResult.Data
-                    };
-            
-                    var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                    return Json(new { success = true, html });
-                }
-        
-                return Json(new { success = true, html = string.Empty });
+                return Json(new { success = false } );
             }
+            
+            return await GetPostsByCurrentUserAndRenderHtml(request.CurrentPage);
         }
         catch (Exception e)
         {
-            // ignored
+            return HandleException(nameof(RejectPostWithReason), e);
         }
-
-        return Json(new { success = false });
     }
 
     [HttpPut]
     public async Task<IActionResult> TogglePinStatus([FromRoute] Guid id, [FromBody] TogglePinStatusRequest request)
     {
-        var response = await postApiClient.TogglePinStatus(id, request);
-        if (response is { IsSuccess: true })
+        try
         {
-            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
-            if (postsResult is { IsSuccess: true, Data: not null })
+            var response = await postApiClient.TogglePinStatus(id, request);
+            if (response is not { IsSuccess: true })
             {
-                var items = new ManagePostsViewModel()
-                {
-                    Posts = postsResult.Data,
-                };
-            
-                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                return Json(new { success = true, html });
+                return Json(new { success = false } );
             }
         
-            return Json(new { success = true, html = string.Empty });
+            return await GetPostsByCurrentUserAndRenderHtml(request.CurrentPage);
         }
-
-        return Json(new { success = false });
+        catch (Exception e)
+        {
+            return HandleException(nameof(TogglePinStatus), e);
+        }
     }
     
     [HttpPut]
     public async Task<IActionResult> ToggleFeaturedStatus([FromRoute] Guid id, [FromBody] ToggleFeaturedStatusRequest request)
     {
-        var response = await postApiClient.ToggleFeaturedStatus(id, request);
-        if (response is { IsSuccess: true })
+        try
         {
-            var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = request.CurrentPage });
-            if (postsResult is { IsSuccess: true, Data: not null })
+            var response = await postApiClient.ToggleFeaturedStatus(id, request);
+            if (response is not { IsSuccess: true })
             {
-                var items = new ManagePostsViewModel()
-                {
-                    Posts = postsResult.Data
-                };
-            
-                var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
-                return Json(new { success = true, html });
+                return Json(new { success = false });
             }
-        
-            return Json(new { success = true, html = string.Empty });
-        }
 
-        return Json(new { success = false });
+            return await GetPostsByCurrentUserAndRenderHtml(request.CurrentPage);
+        }
+        catch (Exception e)
+        {
+            return HandleException(nameof(TogglePinStatus), e);
+        }
     }
 
     #endregion
@@ -459,6 +436,24 @@ public class AccountsController(
         {
             throw new Exception($"Exception in {methodName}: {e.Message}", e);
         }
+    }
+    
+    private async Task<IActionResult> GetPostsByCurrentUserAndRenderHtml(int currentPage)
+    {
+        var postsResult = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = currentPage });
+        if (postsResult is not { IsSuccess: true, Data: not null })
+        {
+            return Json(new { success = false });
+        }
+
+        var items = new ManagePostsViewModel
+        {
+            Posts = postsResult.Data
+        };
+
+        var html = await razorRenderViewService.RenderPartialViewToStringAsync("~/Views/Shared/Partials/Accounts/_PostsByCurrentUserTablePartial.cshtml", items);
+        var paginationHtml = await razorRenderViewService.RenderViewComponentAsync("Pager", new { metaData = items.Posts.MetaData });
+        return Json(new { success = true, html, paginationHtml });
     }
 
     #endregion

@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Identity.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(IdentityContext))]
-    [Migration("20240622070839_Initial_AspNet_Identity")]
+    [Migration("20240723133855_Initial_AspNet_Identity")]
     partial class Initial_AspNet_Identity
     {
         /// <inheritdoc />
@@ -60,11 +60,19 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("About")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(255)");
+
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("varchar(500)");
 
                     b.Property<string>("ConcurrencyStamp")
                         .HasColumnType("nvarchar(max)");
@@ -80,12 +88,12 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -105,9 +113,9 @@ namespace Identity.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .HasMaxLength(20)
+                        .HasMaxLength(15)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                        .HasColumnType("varchar(15)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
@@ -154,25 +162,25 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e0723160-46ec-42c9-ac13-c2ffe58fb2bc",
+                            Id = "bf617801-d14b-4c60-8de7-887a6cb5bb65",
                             Name = "Administrator",
                             NormalizedName = "Administrator"
                         },
                         new
                         {
-                            Id = "8a65fd85-b18a-4d7b-b10b-ae1c54cc6d93",
+                            Id = "ff0a0d67-28f0-42b0-8996-bd103a30605f",
                             Name = "Author",
                             NormalizedName = "Author"
                         },
                         new
                         {
-                            Id = "dfddf5cc-41d4-43bd-8168-fbc0359c6f2f",
+                            Id = "53bb921a-6159-48ef-b62f-a9959222f18e",
                             Name = "Reader",
                             NormalizedName = "Reader"
                         },
                         new
                         {
-                            Id = "e831886b-4325-472f-9d13-3d9285f31e5e",
+                            Id = "3b7d5c24-816f-46b7-8d60-30deea8c5c62",
                             Name = "Subscriber ",
                             NormalizedName = "Subscriber "
                         });

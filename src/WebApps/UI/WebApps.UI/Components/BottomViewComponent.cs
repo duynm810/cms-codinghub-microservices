@@ -1,35 +1,35 @@
-using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
-using WebApps.UI.Services.Interfaces;
 using ILogger = Serilog.ILogger;
 
 namespace WebApps.UI.Components;
 
-public class BottomViewComponent(IPostApiClient postApiClient, IErrorService errorService, ILogger logger)
-    : BaseViewComponent(errorService, logger)
+public class BottomViewComponent(IPostApiClient postApiClient, ILogger logger)
+    : BaseViewComponent(logger)
 {
     public async Task<IViewComponentResult> InvokeAsync()
     {
+        const string methodName = nameof(InvokeAsync);
+        
         try
         {
-            var postsByNonStaticPageCategory = await postApiClient.GetPostsByNonStaticPageCategory(3);
-            if (postsByNonStaticPageCategory is { IsSuccess: true, Data: not null })
+            var response = await postApiClient.GetPostsByNonStaticPageCategory(3);
+            if (response is not { IsSuccess: true, Data: not null })
             {
-                var viewModel = new BottomViewModel
-                {
-                    PostsWithCategory = postsByNonStaticPageCategory.Data
-                };
-
-                return View(viewModel);
+                return HandleError(methodName, response.StatusCode);
             }
+            
+            var items = new BottomViewModel
+            {
+                PostsWithCategory = response.Data
+            };
 
-            return HandleError((HttpStatusCode)postsByNonStaticPageCategory.StatusCode, nameof(InvokeAsync));
+            return View(items);
         }
         catch (Exception e)
         {
-            return HandleException(e, nameof(InvokeAsync));
+            return HandleException(methodName, e);
         }
     }
 }

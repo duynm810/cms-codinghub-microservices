@@ -4,6 +4,7 @@ using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Dtos.Identity.User;
+using Shared.Extensions;
 using Shared.Requests.Identity.User;
 using Shared.Responses;
 
@@ -46,11 +47,19 @@ public class UsersController(IUserService userService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{userId:guid}")]
+    [HttpGet("{userId}")]
     [ProducesResponseType(typeof(ApiResult<UserDto>), (int)HttpStatusCode.OK)]
-    public async Task<IActionResult> GetUserById(Guid userId)
+    public async Task<IActionResult> GetUserById(string userId)
     {
         var result = await userService.GetUserById(userId);
+        return Ok(result);
+    }
+    
+    [HttpGet("me")]
+    [ProducesResponseType(typeof(ApiResult<UserDto>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> GetMe()
+    {
+        var result = await userService.GetUserById(User.GetUserClaimId());
         return Ok(result);
     }
 

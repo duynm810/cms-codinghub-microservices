@@ -1,4 +1,143 @@
 @model ProfileViewModel
 @{
     ViewData["ShowBottom"] = false;
+    ViewData["MainClass"] = "bg-grey pb-30";
 }
+@{
+    var user = Model.User;
+    var authorUrl = "/author/" + user.UserName;
+}
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function() {
+            $('#submit').click(async function() {
+                const userId = '@user.Id';
+
+                const firstName = $('#firstName').val();
+                const lastName = $('#lastName').val();
+                const address = $('#address').val();
+
+                if (!firstName || !lastName) {
+                    showErrorNotification('First name and Last name cannot be empty or null.');
+                    return;
+                }
+
+                const updateUserRequest = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    address: address
+                };
+
+                try {
+                    const response = await $.ajax({
+                        url: `/accounts/update-profile/${userId}`,
+                        method: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(updateUserRequest)
+                    });
+
+                    if (response.success && response.user) {
+                        showSuccessNotification('Profile updated successfully!');
+                        updateUserUI(response.user);
+                    } else {
+                        showErrorNotification('Failed to update profile.');
+                    }
+                } catch (error) {
+                    showErrorNotification('An error occurred while updating the profile.');
+                }
+            });
+        });
+
+        function updateUserUI(user) {
+            $('#fullName').text(user.fullName);
+            $('#firstName').val(user.firstName);
+            $('#lastName').val(user.lastName);
+            $('#address').val(user.address);
+            // cập nhật các trường khác nếu cần
+        }
+        
+    </script>
+}
+
+<div class="container">
+    <div class="entry-header entry-header-style-1 mb-50 pt-50 text-center">
+        <h1 class="entry-title mb-20 font-weight-900">
+            Profile
+        </h1>
+    </div>
+    <div class="row gutters">
+        <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="account-settings">
+                        <div class="user-profile">
+                            <div class="user-avatar">
+                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
+                            </div>
+                            <h5 class="full-name" id="fullName">@user.FullName</h5>
+                            <h6 class="user-email">
+                                <a href="@authorUrl">
+                                    @user.UserName
+                                </a>
+                            </h6>
+                        </div>
+                        <div class="about">
+                            <h5>About</h5>
+                            <p>
+                                I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human
+                                experiences.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+            <div class="card h-100">
+                <div class="card-body">
+                    <div class="row gutters">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <h6 class="mb-3 text-primary">Personal Details</h6>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="username">User Name</label>
+                                <input type="email" class="form-control" id="username" placeholder="Enter email ID" value="@user.UserName" disabled>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="eMail">Email</label>
+                                <input type="email" class="form-control" id="eMail" placeholder="Enter email ID" value="@user.Email" disabled>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" class="form-control" id="firstName" placeholder="Enter first name" value="@user.FirstName">
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" placeholder="Enter first name" value="@user.LastName">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row gutters">
+                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                            <div class="text-right">
+                                <button type="button" id="submit" name="submit"
+                                        class="btn btn-primary">
+                                    Update
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

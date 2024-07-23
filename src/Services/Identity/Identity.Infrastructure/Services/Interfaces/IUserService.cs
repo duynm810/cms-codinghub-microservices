@@ -8,7 +8,7 @@ public interface IUserService
 {
     #region CRUD
 
-    Task<ApiResult<UserDto?>> CreateUser(CreateUserRequest request);
+    Task<ApiResult<UserDto>> CreateUser(CreateUserRequest request);
 
     Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserRequest request);
 
@@ -16,7 +16,9 @@ public interface IUserService
 
     Task<ApiResult<IEnumerable<UserDto>>> GetUsers();
 
-    Task<ApiResult<UserDto>> GetUserById(Guid userId);
+    Task<ApiResult<UserDto>> GetUserById(string userId);
+    
+    Task<ApiResult<UserDto>> GetUserByName(string? name);
 
     #endregion
 
