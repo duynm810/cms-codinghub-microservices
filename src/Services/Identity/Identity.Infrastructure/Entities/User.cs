@@ -11,4 +11,6 @@ public class User : IdentityUser
     public string? Address { get; set; }
 
     public string? AvatarUrl { get; set; }
+
+    public string? About { get; set; }
 }

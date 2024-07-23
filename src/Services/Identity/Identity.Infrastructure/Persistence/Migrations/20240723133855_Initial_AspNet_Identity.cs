@@ -96,9 +96,11 @@ namespace Identity.Infrastructure.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "varchar(50)", nullable: false),
-                    FirstName = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 150, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(255)", maxLength: 250, nullable: true),
+                    AvatarUrl = table.Column<string>(type: "varchar(500)", maxLength: 500, nullable: true),
+                    About = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
                     NormalizedUserName = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: true),
                     Email = table.Column<string>(type: "varchar(255)", maxLength: 255, nullable: false),
@@ -107,7 +109,7 @@ namespace Identity.Infrastructure.Persistence.Migrations
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "varchar(20)", unicode: false, maxLength: 20, nullable: true),
+                    PhoneNumber = table.Column<string>(type: "varchar(15)", unicode: false, maxLength: 15, nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
@@ -163,10 +165,10 @@ namespace Identity.Infrastructure.Persistence.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "8a65fd85-b18a-4d7b-b10b-ae1c54cc6d93", null, "Author", "Author" },
-                    { "dfddf5cc-41d4-43bd-8168-fbc0359c6f2f", null, "Reader", "Reader" },
-                    { "e0723160-46ec-42c9-ac13-c2ffe58fb2bc", null, "Administrator", "Administrator" },
-                    { "e831886b-4325-472f-9d13-3d9285f31e5e", null, "Subscriber ", "Subscriber " }
+                    { "3b7d5c24-816f-46b7-8d60-30deea8c5c62", null, "Subscriber ", "Subscriber " },
+                    { "53bb921a-6159-48ef-b62f-a9959222f18e", null, "Reader", "Reader" },
+                    { "bf617801-d14b-4c60-8de7-887a6cb5bb65", null, "Administrator", "Administrator" },
+                    { "ff0a0d67-28f0-42b0-8996-bd103a30605f", null, "Author", "Author" }
                 });
 
             migrationBuilder.CreateIndex(
