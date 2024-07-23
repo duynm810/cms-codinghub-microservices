@@ -12,8 +12,7 @@ namespace WebApps.UI.ApiClients;
 public class BaseApiClient(
     ISerializeService serializeService,
     IHttpClientFactory httpClientFactory,
-    IHttpContextAccessor httpContextAccessor,
-    ApiSettings apiSettings) : IBaseApiClient
+    IHttpContextAccessor httpContextAccessor) : IBaseApiClient
 {
     #region CRUD
 

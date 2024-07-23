@@ -6,7 +6,8 @@
     var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);
 }
 
-@section Scripts {
+@section Scripts
+{
     <script>
         let currentPage = 1;
         const modal = $('#shared-modal');
@@ -458,7 +459,7 @@
                     </tr>
                     </thead>
                     <tbody id="posts-table-body">
-                        @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
+                    @await Html.PartialAsync("Partials/Accounts/_PostsByCurrentUserTablePartial", Model)
                     </tbody>
                     <tfoot>
                     <tr>
