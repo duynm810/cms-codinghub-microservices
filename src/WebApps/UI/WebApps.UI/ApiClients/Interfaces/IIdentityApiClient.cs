@@ -7,10 +7,12 @@ namespace WebApps.UI.ApiClients.Interfaces;
 public interface IIdentityApiClient
 {
     #region Users
-
-    Task<ApiResult<UserDto>> GetMe();
-
+    
     Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserRequest request);
+
+    Task<ApiResult<UserDto>?> GetUserById(Guid userId);
+    
+    Task<ApiResult<UserDto>> GetMe();
 
     #endregion
 }

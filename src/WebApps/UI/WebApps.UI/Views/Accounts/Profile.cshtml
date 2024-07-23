@@ -38,12 +38,21 @@
                 });
 
                 if (response.success) {
-                    showSuccessNotification(`Profile updated successfully!`);
+                    showSuccessNotification('Profile updated successfully!');
+                    updateUserUI(response.user);
                 } else {
-                    showErrorNotification(`Failed to update profile.`);
+                    showErrorNotification('Failed to update profile.');
                 }
             });
         });
+
+        function updateUserUI(user) {
+            $('#firstName').val(user.firstName);
+            $('#lastName').val(user.lastName);
+            $('#address').val(user.address);
+            // cập nhật các trường khác nếu cần
+        }
+        
     </script>
 }
 

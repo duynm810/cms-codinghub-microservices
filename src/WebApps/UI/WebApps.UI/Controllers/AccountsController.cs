@@ -96,11 +96,20 @@ public class AccountsController(
                 return BadRequest(ModelState);
             }
 
-            var response = await identityApiClient.UpdateUser(userId, request);
-            
-            return response is not { IsSuccess: true }
-                ? Json(new { success = false })
-                : Json(new { success = true });
+            var updateResponse = await identityApiClient.UpdateUser(userId, request);
+
+            if (updateResponse is not { IsSuccess: true })
+            {
+                return Json(new { success = false });
+            }
+
+            var getUserResponse = await identityApiClient.GetUserById(userId);
+            if (getUserResponse is not { IsSuccess: true, Data: not null })
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new { success = true, user = getUserResponse.Data });
         }
         catch (Exception e)
         {
