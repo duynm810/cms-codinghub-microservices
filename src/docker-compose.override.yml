@@ -181,8 +181,6 @@ services:
       - identity.api
     ports:
       - "6001:80"
-    profiles:
-      - api
     restart: always
   
   #api services
@@ -195,8 +193,6 @@ services:
       - identitydb
     ports:
       - "6002:80"
-    profiles:
-      - api
     restart: always
     
   category.api:
@@ -208,8 +204,6 @@ services:
       - categorydb
     ports:
       - "6003:80"
-    profiles:
-      - api
     restart: always
   
   post.api:
@@ -222,8 +216,6 @@ services:
       - rabbitmq
     ports:
       - "6004:80"
-    profiles:
-      - api
     restart: always
   
   series.api:
@@ -235,8 +227,6 @@ services:
       - seriesdb
     ports:
       - "6005:80"
-    profiles:
-      - api
     restart: always
     
   post-in-series.api:
@@ -248,8 +238,6 @@ services:
       - post-in-series-db
     ports:
       - "6006:80"
-    profiles:
-      - api
     restart: always
   
   tag.api:
@@ -261,8 +249,6 @@ services:
       - tagdb
     ports:
       - "6007:80"
-    profiles:
-      - api
     restart: always
   
   post-in-tag.api:
@@ -274,8 +260,6 @@ services:
       - post-in-tag-db
     ports:
       - "6008:80"
-    profiles:
-      - api
     restart: always
   
   comment.api:
@@ -287,8 +271,6 @@ services:
       - commentdb
     ports:
       - "6009:80"
-    profiles:
-      - api
     restart: always
   
   hangfire.api:
@@ -301,8 +283,6 @@ services:
       - rabbitmq
     ports:
       - "6010:80"
-    profiles:
-      - api
     restart: always
   
   media.api:
@@ -312,8 +292,6 @@ services:
       - ASPNETCORE_URLS=http://+:80
     ports:
       - "6011:80"
-    profiles:
-      - api
     restart: always
     volumes:
       - ./Services/Media/Media.Api/wwwroot:/app/wwwroot
@@ -328,8 +306,6 @@ services:
       - identitydb
     ports:
       - "6101:80"
-    profiles:
-      - grpc
     restart: always
   
   category.grpc:
@@ -341,8 +317,6 @@ services:
       - categorydb
     ports:
       - "6102:80"
-    profiles:
-      - grpc
     restart: always
   
   post.grpc:
@@ -354,8 +328,6 @@ services:
       - postdb
     ports:
       - "6013:80"
-    profiles:
-      - grpc
     restart: always
   
   series.grpc:
@@ -367,8 +339,6 @@ services:
       - seriesdb
     ports:
       - "6104:80"
-    profiles:
-      - grpc
     restart: always
   
   post-in-series.grpc:
@@ -380,8 +350,6 @@ services:
       - post-in-series-db
     ports:
       - "6105:80"
-    profiles:
-      - grpc
     restart: always
   
   tag.grpc:
@@ -393,8 +361,6 @@ services:
       - tagdb
     ports:
       - "6106:80"
-    profiles:
-      - grpc
     restart: always
   
   post-in-tag.grpc:
@@ -406,8 +372,6 @@ services:
       - post-in-tag-db
     ports:
       - "6107:80"
-    profiles:
-      - grpc
     restart: always
   
   #other services
