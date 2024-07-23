@@ -8,7 +8,7 @@ public interface IUserService
 {
     #region CRUD
 
-    Task<ApiResult<UserDto?>> CreateUser(CreateUserRequest request);
+    Task<ApiResult<UserDto>> CreateUser(CreateUserRequest request);
 
     Task<ApiResult<bool>> UpdateUser(Guid userId, UpdateUserRequest request);
 

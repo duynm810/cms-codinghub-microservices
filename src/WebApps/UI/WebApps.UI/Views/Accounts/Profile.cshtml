@@ -12,7 +12,7 @@
 {
     <script>
         $(document).ready(function() {
-            $('#submit').click(function() {
+            $('#submit').click(async function() {
                 const userId = '@user.Id';
 
                 const firstName = $('#firstName').val();
@@ -30,23 +30,28 @@
                     address: address
                 };
 
-                const response = $.ajax({
-                    url: `/accounts/update-profile/${userId}`,
-                    method: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify(updateUserRequest)
-                });
+                try {
+                    const response = await $.ajax({
+                        url: `/accounts/update-profile/${userId}`,
+                        method: 'PUT',
+                        contentType: 'application/json',
+                        data: JSON.stringify(updateUserRequest)
+                    });
 
-                if (response.success) {
-                    showSuccessNotification('Profile updated successfully!');
-                    updateUserUI(response.user);
-                } else {
-                    showErrorNotification('Failed to update profile.');
+                    if (response.success && response.user) {
+                        showSuccessNotification('Profile updated successfully!');
+                        updateUserUI(response.user);
+                    } else {
+                        showErrorNotification('Failed to update profile.');
+                    }
+                } catch (error) {
+                    showErrorNotification('An error occurred while updating the profile.');
                 }
             });
         });
 
         function updateUserUI(user) {
+            $('#fullName').text(user.fullName);
             $('#firstName').val(user.firstName);
             $('#lastName').val(user.lastName);
             $('#address').val(user.address);
@@ -71,7 +76,7 @@
                             <div class="user-avatar">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
                             </div>
-                            <h5 class="user-name">@user.FullName</h5>
+                            <h5 class="full-name" id="fullName">@user.FullName</h5>
                             <h6 class="user-email">
                                 <a href="@authorUrl">
                                     @user.UserName

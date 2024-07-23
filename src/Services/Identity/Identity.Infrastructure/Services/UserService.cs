@@ -16,9 +16,9 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
 {
     #region CRUD
 
-    public async Task<ApiResult<UserDto?>> CreateUser(CreateUserRequest request)
+    public async Task<ApiResult<UserDto>> CreateUser(CreateUserRequest request)
     {
-        var result = new ApiResult<UserDto?>();
+        var result = new ApiResult<UserDto>();
         const string methodName = nameof(CreateUser);
 
         try
