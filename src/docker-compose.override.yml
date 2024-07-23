@@ -1,19 +1,14 @@
-#services:
 services:
-  ##database section
-  #categorydb: mysql
   categorydb:
     container_name: categorydb
     environment:
-      MYSQL_ROOT_PASSWORD: "Passw0rd!"
-      MYSQL_DATABASE: "category_service_db"
+      MYSQL_ROOT_PASSWORD: Passw0rd!
+      MYSQL_DATABASE: category_service_db
     restart: always
     volumes:
-      - mysql_data:/var/lib/mysql
+      - 'mysql_data:/var/lib/mysql'
     ports:
-      - "3307:3306"
-  
-  #postdb: postgresql
+      - '3307:3306'
   postdb:
     container_name: postdb
     environment:
@@ -22,23 +17,19 @@ services:
       - POSTGRES_DB=post_service_db
     restart: always
     ports:
-      - "5433:5432"
+      - '5433:5432'
     volumes:
-      - post_postgres_data:/var/lib/postgresql/data
-  
-  #seriesdb: sqlserver
+      - 'post_postgres_data:/var/lib/postgresql/data'
   seriesdb:
     container_name: seriesdb
     environment:
-      SA_PASSWORD: "Passw0rd!"
-      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Passw0rd!
+      ACCEPT_EULA: 'Y'
     volumes:
-      - series_sqlserver_data:/var/opt/mssql
+      - 'series_sqlserver_data:/var/opt/mssql'
     restart: always
     ports:
-      - "1435:1433"
-  
-  #postinseriesdb: postgresql
+      - '1435:1433'
   post-in-series-db:
     container_name: post-in-series-db
     environment:
@@ -47,23 +38,19 @@ services:
       - POSTGRES_DB=post_in_series_service_db
     restart: always
     ports:
-      - "5434:5432"
+      - '5434:5432'
     volumes:
-      - post_in_series_postgres_data:/var/lib/postgresql/data
-  
-  #tagdb: mysql
+      - 'post_in_series_postgres_data:/var/lib/postgresql/data'
   tagdb:
     container_name: tagdb
     environment:
-      MYSQL_ROOT_PASSWORD: "Passw0rd!"
-      MYSQL_DATABASE: "tag_service_db"
+      MYSQL_ROOT_PASSWORD: Passw0rd!
+      MYSQL_DATABASE: tag_service_db
     restart: always
     volumes:
-      - tag_mysql_data:/var/lib/mysql
+      - 'tag_mysql_data:/var/lib/mysql'
     ports:
-      - "3308:3306"
-  
-  #post-in-tag-db: postgresql
+      - '3308:3306'
   post-in-tag-db:
     container_name: post-in-tag-db
     environment:
@@ -72,67 +59,57 @@ services:
       - POSTGRES_DB=post_in_tag_service_db
     restart: always
     ports:
-      - "5435:5432"
+      - '5435:5432'
     volumes:
-      - post_in_tag_postgres_data:/var/lib/postgresql/data
-  
-  #commentdb: mongo
+      - 'post_in_tag_postgres_data:/var/lib/postgresql/data'
   commentdb:
     container_name: commentdb
     ports:
-      - "27019:27017"
+      - '27019:27017'
     volumes:
-      - comment_mongo_data:/data/db
+      - 'comment_mongo_data:/data/db'
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: 'admin'
-      MONGO_INITDB_ROOT_PASSWORD: 'admin'
-  
-  #hangfiredb: mongo
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
   hangfiredb:
     container_name: hangfiredb
     ports:
-      - "27018:27017"
+      - '27018:27017'
     volumes:
-      - hangfire_mongo_data:/data/db
+      - 'hangfire_mongo_data:/data/db'
     restart: always
     environment:
-      MONGO_INITDB_ROOT_USERNAME: 'admin'
-      MONGO_INITDB_ROOT_PASSWORD: 'admin'
-  
-  #identitydb: sqlserver
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
   identitydb:
     container_name: identitydb
     environment:
-      SA_PASSWORD: "Passw0rd!"
-      ACCEPT_EULA: "Y"
+      SA_PASSWORD: Passw0rd!
+      ACCEPT_EULA: 'Y'
     volumes:
-      - identity_sqlserver_data:/var/opt/mssql
+      - 'identity_sqlserver_data:/var/opt/mssql'
     restart: always
     ports:
-      - "1436:1433"
-  
-  ##infrastructure section
+      - '1436:1433'
   rabbitmq:
     container_name: rabbitmq
     restart: always
     ports:
-      - "5672:5672"
-      - "15672:15672"
+      - '5672:5672'
+      - '15672:15672'
     volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - 'rabbitmq_data:/var/lib/rabbitmq'
     hostname: rabbitmq
-  
   portainer:
     container_name: portainer
     restart: always
     ports:
-      - "8082:8000"
-      - "9002:9000"
+      - '8082:8000'
+      - '9002:9000'
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - portainer_data:/data
-  
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'portainer_data:/data'
   elasticsearch:
     container_name: elasticsearch
     environment:
@@ -141,34 +118,31 @@ services:
       - node.name=es01
       - cluster.name=docker-cluster
       - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
     ports:
-      - "9200:9200"
+      - '9200:9200'
     volumes:
-      - elasticsearch_data:/usr/share/elasticsearch/data
-  
+      - 'elasticsearch_data:/usr/share/elasticsearch/data'
   redis:
     container_name: redis
     restart: always
     ports:
-      - "6379:6379"
-
+      - '6379:6379'
   kibana:
     container_name: kibana
     environment:
-      - ELASTICSEARCH_URL=http://elasticsearch:9200
-      - ELASTICSEARCH_SERVICE_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYV90b2tlbjpXZFF0Wm5tM1JyQ1hoYUNRb1ZTdXlB
+      - 'ELASTICSEARCH_URL=http://elasticsearch:9200'
+      - >-
+        ELASTICSEARCH_SERVICE_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYV90b2tlbjpXZFF0Wm5tM1JyQ1hoYUNRb1ZTdXlB
     depends_on:
       - elasticsearch
     ports:
-      - "5601:5601"
-  
-  ##microservices api sections
+      - '5601:5601'
   apigw.ocelot:
     container_name: apigw.ocelot
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - category.api
       - tag.api
@@ -180,213 +154,191 @@ services:
       - media.api
       - identity.api
     ports:
-      - "6001:80"
+      - '6001:80'
     restart: always
-  
-  #api services
   identity.api:
     container_name: identity.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - identitydb
     ports:
-      - "6002:80"
+      - '6002:80'
     restart: always
-    
   category.api:
     container_name: category.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - categorydb
     ports:
-      - "6003:80"
+      - '6003:80'
     restart: always
-  
   post.api:
     container_name: post.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - postdb
       - rabbitmq
     ports:
-      - "6004:80"
+      - '6004:80'
     restart: always
-  
   series.api:
     container_name: series.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - seriesdb
     ports:
-      - "6005:80"
+      - '6005:80'
     restart: always
-    
   post-in-series.api:
     container_name: post-in-series.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - post-in-series-db
     ports:
-      - "6006:80"
+      - '6006:80'
     restart: always
-  
   tag.api:
     container_name: tag.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - tagdb
     ports:
-      - "6007:80"
+      - '6007:80'
     restart: always
-  
   post-in-tag.api:
     container_name: post-in-tag.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - post-in-tag-db
     ports:
-      - "6008:80"
+      - '6008:80'
     restart: always
-  
   comment.api:
     container_name: comment.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - commentdb
     ports:
-      - "6009:80"
+      - '6009:80'
     restart: always
-  
   hangfire.api:
     container_name: hangfire.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - hangfiredb
       - rabbitmq
     ports:
-      - "6010:80"
+      - '6010:80'
     restart: always
-  
   media.api:
     container_name: media.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     ports:
-      - "6011:80"
+      - '6011:80'
     restart: always
     volumes:
-      - ./Services/Media/Media.Api/wwwroot:/app/wwwroot
-  
-  #grpc services
+      - './Services/Media/Media.Api/wwwroot:/app/wwwroot'
   identity.grpc:
     container_name: identity.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - identitydb
     ports:
-      - "6101:80"
+      - '6101:80'
     restart: always
-  
   category.grpc:
     container_name: category.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - categorydb
     ports:
-      - "6102:80"
+      - '6102:80'
     restart: always
-  
   post.grpc:
     container_name: post.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - postdb
     ports:
-      - "6013:80"
+      - '6013:80'
     restart: always
-  
   series.grpc:
     container_name: series.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - seriesdb
     ports:
-      - "6104:80"
+      - '6104:80'
     restart: always
-  
   post-in-series.grpc:
     container_name: post-in-series.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - post-in-series-db
     ports:
-      - "6105:80"
+      - '6105:80'
     restart: always
-  
   tag.grpc:
     container_name: tag.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - tagdb
     ports:
-      - "6106:80"
+      - '6106:80'
     restart: always
-  
   post-in-tag.grpc:
     container_name: post-in-tag.grpc
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     depends_on:
       - post-in-tag-db
     ports:
-      - "6107:80"
+      - '6107:80'
     restart: always
-  
-  #other services
   healthcheck:
     container_name: healthcheck
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     ports:
-      - "6200:80"
-  
+      - '6200:80'
   ui:
     container_name: ui
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_URLS=http://+:80
+      - 'ASPNETCORE_URLS=http://+:80'
     ports:
-      - "6300:80"
+      - '6300:80'
