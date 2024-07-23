@@ -35,7 +35,7 @@ public class CommentsController(ICommentService commentService) : ControllerBase
     [Route("latest")]
     [HttpGet]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<LatestCommentDto>>), (int)HttpStatusCode.OK)]
-    public async Task<ActionResult<IEnumerable<LatestCommentDto>>> GetLatestComments([FromQuery] int count)
+    public async Task<ActionResult<IEnumerable<LatestCommentDto>>> GetLatestComments([FromQuery] int count = 4)
     {
         var result = await commentService.GetLatestComments(count);
         return Ok(result);

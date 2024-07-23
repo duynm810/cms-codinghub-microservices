@@ -217,9 +217,9 @@ public class PostsController(IMediator mediator, IMapper mapper) : ControllerBas
     [HttpGet("most-commented")]
     [ProducesResponseType(typeof(ApiResult<IEnumerable<PostDto>>), (int)HttpStatusCode.OK)]
     [AllowAnonymous]
-    public async Task<IActionResult> GetMostCommentedPosts([FromQuery] int? count)
+    public async Task<IActionResult> GetMostCommentedPosts([FromQuery] int count = 4)
     {
-        var query = new GetMostCommentPostsQuery(count ?? 6);
+        var query = new GetMostCommentPostsQuery(count);
         var result = await mediator.Send(query);
         return Ok(result);
     }
