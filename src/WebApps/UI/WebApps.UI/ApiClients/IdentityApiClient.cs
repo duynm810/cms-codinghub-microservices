@@ -8,6 +8,6 @@ public class IdentityApiClient(IBaseApiClient baseApiClient) : IIdentityApiClien
 {
     public async Task<ApiResult<UserDto>> GetMe()
     {
-        return await baseApiClient.GetAsync<UserDto>($"/users/me");
+        return await baseApiClient.GetAsync<UserDto>($"/users/me", true);
     }
 }
