@@ -159,7 +159,7 @@
         </div>
         @if (User.Identity is { IsAuthenticated: true })
         {
-            <form class="form-contact comment_form" id="commentForm" asp-controller="Posts" asp-action="AddNewComment">
+            <form class="form-contact comment_form" id="commentForm" asp-controller="Comments" asp-action="AddNewComment">
                 <input type="hidden" name="postId" value="@detail.Id"/>
                 <input type="hidden" id="hid_current_login_name" value="@User.GetFullName()" />
                 <div class="row">
