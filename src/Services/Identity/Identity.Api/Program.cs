@@ -3,6 +3,7 @@ using Identity.Api.Seeds;
 using Infrastructure.Extensions;
 using Logging;
 using Serilog;
+using Serilog.Core;
 using Shared.Constants;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,11 +28,23 @@ try
 
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
-
-    // Seed user sample data
-    UserSeedData.EnsureSeedData(configuration);
-
-    app.MigrateDatabase().Run();
+    
+    try
+    {
+        // Ensure the database is migrated and seeded before running the application
+        await app.MigrateDatabaseAsync(builder.Configuration, Log.Logger);
+         
+        // Seed user sample data
+        UserSeedData.EnsureSeedData(configuration);
+    }
+    catch (Exception ex)
+    {
+        Log.Error(ex, "An error occurred during migration or seeding");
+        throw;
+    }
+   
+    // Run the application
+    await app.RunAsync();
 }
 catch (Exception e)
 {
