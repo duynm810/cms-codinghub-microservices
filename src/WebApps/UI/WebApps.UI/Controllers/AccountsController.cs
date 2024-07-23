@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Shared.Dtos.Category;
+using Shared.Requests.Identity.User;
 using Shared.Requests.Post.Commands;
 using Shared.Requests.Post.Queries;
 using Shared.Settings;
@@ -25,7 +26,9 @@ public class AccountsController(
     ILogger logger) : BaseController(logger)
 {
     private readonly ApiSettings _apiSettings = apiSettings.Value;
-    
+
+    #region AUTHENTICATION
+
     public IActionResult Login(string returnUrl = "/")
     {
         var redirectUrl = Url.Action(nameof(LoginCallback), "Accounts", new { returnUrl });
@@ -51,6 +54,8 @@ public class AccountsController(
         return RedirectToAction("Index", "Home");
     }
 
+    #endregion
+    
     #region PROFILE
 
     public async Task<IActionResult> Profile()
@@ -71,6 +76,31 @@ public class AccountsController(
             };
 
             return View(items);
+        }
+        catch (Exception e)
+        {
+            return HandleException(methodName, e);
+        }
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateProfile([FromRoute] Guid userId, [FromBody] UpdateUserRequest request)
+    {
+        const string methodName = nameof(UpdateProfile);
+
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Failed to update profile.";
+                return BadRequest(ModelState);
+            }
+
+            var response = await identityApiClient.UpdateUser(userId, request);
+            
+            return response is not { IsSuccess: true }
+                ? Json(new { success = false })
+                : Json(new { success = true });
         }
         catch (Exception e)
         {
