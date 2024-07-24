@@ -18,7 +18,8 @@
                 const firstName = $('#firstName').val();
                 const lastName = $('#lastName').val();
                 const address = $('#address').val();
-
+                const about = $('#about').val();
+                
                 if (!firstName || !lastName) {
                     showErrorNotification('First name and Last name cannot be empty or null.');
                     return;
@@ -27,7 +28,8 @@
                 const updateUserRequest = {
                     firstName: firstName,
                     lastName: lastName,
-                    address: address
+                    address: address,
+                    about: about
                 };
 
                 try {
@@ -55,7 +57,7 @@
             $('#firstName').val(user.firstName);
             $('#lastName').val(user.lastName);
             $('#address').val(user.address);
-            // cập nhật các trường khác nếu cần
+            $('#about-text').text(user.about);
         }
         
     </script>
@@ -85,9 +87,8 @@
                         </div>
                         <div class="about">
                             <h5>About</h5>
-                            <p>
-                                I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human
-                                experiences.
+                            <p id="about-text">
+                                @user.About
                             </p>
                         </div>
                     </div>
@@ -125,18 +126,24 @@
                                 <input type="text" class="form-control" id="lastName" placeholder="Enter first name" value="@user.LastName">
                             </div>
                         </div>
-                    </div>
-                    <div class="row gutters">
-                        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                            <div class="text-right">
-                                <button type="button" id="submit" name="submit"
-                                        class="btn btn-primary">
-                                    Update
-                                </button>
+                        <div class="col-xl-12 col-lg-6 col-md-6 col-sm-6 col-12">
+                            <div class="form-group">
+                                <label for="about">About</label>
+                                <textarea class="form-control" id="about" placeholder="Enter some about yourself">@user.About</textarea>
                             </div>
                         </div>
                     </div>
-                </div>
+                    <div class="row gutters">
+                            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                                <div class="text-right">
+                                    <button type="button" id="submit" name="submit"
+                                            class="btn btn-primary">
+                                        Update
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
     </div>

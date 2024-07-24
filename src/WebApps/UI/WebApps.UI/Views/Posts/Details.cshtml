@@ -19,166 +19,165 @@
 <input type="hidden" id="hid_post_id" value="@detail.Id"/>
 
 <div class="container single-content">
-<div class="entry-header pt-80 pb-30 mb-20">
-    <div class="row">
-        <div class="col-md-6 mb-md-0 mb-sm-3">
-            <figure class="mb-0 mt-lg-0 mt-3 border-radius-5">
-                <image-url src="@detail.Thumbnail"></image-url>
-            </figure>
-        </div>
-        <div class="col-md-6 align-self-center">
-            <div class="post-content">
-                <div class="entry-meta meta-0 mb-15 font-small">
-                    <a href="@categoryUrl">
-                        <span class="post-cat position-relative @detail.Category.Color">@detail.Category.Name</span>
-                    </a>
-                </div>
-                <h1 class="entry-title mb-30 font-weight-900">
-                    @detail.Title
-                </h1>
-                <p class="excerpt mb-30">
-                    @detail.Summary
-                </p>
-                <div class="entry-meta align-items-center meta-2 font-small color-muted">
-                    @{
-                        
-                        <p class="mb-5">
-                            <a class="author-avatar" href="#">
-                                <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
-                            </a>
-                            By
-                            <a href="@authorUrl">
-                                <span class="author-name font-weight-bold">@detail.User.FullName</span>
-                            </a>
-                        </p>
-                    }
-                    <span class="mr-10">@(detail.PublishedDate.HasValue ? detail.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
-                    <span class="has-dot"> 8 mins read</span>
-                </div>
+    <div class="entry-header pt-80 pb-30 mb-20">
+        <div class="row">
+            <div class="col-md-6 mb-md-0 mb-sm-3">
+                <figure class="mb-0 mt-lg-0 mt-3 border-radius-5">
+                    <image-url src="@detail.Thumbnail"></image-url>
+                </figure>
             </div>
-        </div>
-    </div>
-</div>
-<!--end single header-->
-<!--figure-->
-
-<article class="entry-wraper mb-50">
-    <div class="entry-main-content dropcap wow fadeIn animated">
-        @Html.Raw(detail.Content)
-    </div>
-    <!-- Tags -->
-    <div class="entry-bottom mt-50 mb-30">
-        <div class="tags">
-            <span>Tags: </span>
-            @if (detail.Tags != null && detail.Tags.Count != 0)
-            {
-                @foreach (var item in detail.Tags)
-                {
-                    var tagUrl = "/tag/" + item.Slug;
-                    var tagDisplayName = "#" + item.Name;
-                    <a href="@tagUrl" rel="tag">@tagDisplayName</a>
-                }
-            }
-        </div>
-    </div>
-    <div class="single-social-share clearfix">
-        <div class="entry-meta meta-1 font-small color-grey float-start mt-10">
-            <span class="hit-count mr-15"><i class="elegant-icon icon_comment_alt mr-5"></i>182 comments</span>
-            <span class="hit-count mr-15"><i class="elegant-icon icon_like mr-5"></i>268 likes</span>
-            <span class="hit-count"><i class="elegant-icon icon_star-half_alt mr-5"></i>Rate: 9/10</span>
-        </div>
-    </div>
-    <!--author box-->
-    <div class="author-bio p-30 mt-50 border-radius-10 bg-white">
-        @{
-            <div class="author-image mb-30">
-                <a href="@authorUrl">
-                    <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
-                </a>
-            </div>
-            <div class="author-info">
-                <h4 class="font-weight-bold mb-20">
-                    <span class="vcard author">
-                        <span class="fn">
-                            <a href="@authorUrl" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
-                        </span>
-                    </span>
-                </h4>
-                <h5 class="text-muted">About author</h5>
-                <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
-                <a href="@authorUrl" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
-                <div class="author-social">
-                    <ul class="author-social-icons">
-                        <li class="author-social-link-facebook">
-                            <a href="#" target="_blank">
-                                <i class="ti-facebook"></i>
-                            </a>
-                        </li>
-                        <li class="author-social-link-twitter">
-                            <a href="#" target="_blank">
-                                <i class="ti-twitter-alt"></i>
-                            </a>
-                        </li>
-                        <li class="author-social-link-pinterest">
-                            <a href="#" target="_blank">
-                                <i class="ti-pinterest"></i>
-                            </a>
-                        </li>
-                        <li class="author-social-link-instagram">
-                            <a href="#" target="_blank">
-                                <i class="ti-instagram"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        }
-    </div>
-    <!--related posts-->
-    <div class="related-posts">
-        @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
-    </div>
-
-    <!--More posts-->
-    @await Html.PartialAsync("Partials/Posts/_MorePosts")
-
-    <!--Comments-->
-    <div class="comments-area">
-        <div class="widget-header-2 position-relative mb-30">
-            <h5 class="mt-5 mb-30">Comments</h5>
-        </div>
-        <ul class="comments" id="comment_list">
-            <!-- comment item sẽ được render bởi JavaScript -->
-        </ul>
-    </div>
-
-    <!--comment form-->
-    <div class="comment-form">
-        <div class="widget-header-2 position-relative mb-30">
-            <h5 class="mt-5 mb-30">Leave a Reply</h5>
-        </div>
-        @if (User.Identity is { IsAuthenticated: true })
-        {
-            <form class="form-contact comment_form" id="commentForm" asp-controller="Comments" asp-action="AddNewComment">
-                <input type="hidden" name="postId" value="@detail.Id"/>
-                <input type="hidden" id="hid_current_login_name" value="@User.GetFullName()" />
-                <div class="row">
-                    <div class="col-12">
-                        <div class="form-group">
-                            <textarea class="form-control w-100" name="comment" id="txt_new_comment_content" cols="30" rows="9" placeholder="Write Comment"></textarea>
-                        </div>
+            <div class="col-md-6 align-self-center">
+                <div class="post-content">
+                    <div class="entry-meta meta-0 mb-15 font-small">
+                        <a href="@categoryUrl">
+                            <span class="post-cat position-relative @detail.Category.Color">@detail.Category.Name</span>
+                        </a>
+                    </div>
+                    <h1 class="entry-title mb-30 font-weight-900">
+                        @detail.Title
+                    </h1>
+                    <p class="excerpt mb-30">
+                        @detail.Summary
+                    </p>
+                    <div class="entry-meta align-items-center meta-2 font-small color-muted">
+                        @{
+                            <p class="mb-5">
+                                <a class="author-avatar" href="#">
+                                    <img class="img-circle" src="~/imgs/authors/author-3.jpg" alt="">
+                                </a>
+                                By
+                                <a href="@authorUrl">
+                                    <span class="author-name font-weight-bold">@detail.User.FullName</span>
+                                </a>
+                            </p>
+                        }
+                        <span class="mr-10">@(detail.PublishedDate.HasValue ? detail.PublishedDate.Value.ToString("dd MMMM", CultureInfo.InvariantCulture) : "--")</span>
+                        <span class="has-dot"> 8 mins read</span>
                     </div>
                 </div>
-                <div class="text-center">
-                    <button type="button" name="submit" id="btn_send_comment" class="button button-contactForm">Post Comment</button>
-                </div>
-            </form>
-        }
-        else
-        {
-            <h4 class="section-title">Please <a asp-action="Login" asp-controller="Accounts">log in </a>to comment</h4>
-        }
+            </div>
+        </div>
     </div>
-</article>
+    <!--end single header-->
+    <!--figure-->
+
+    <article class="entry-wraper mb-50">
+        <div class="entry-main-content dropcap wow fadeIn animated">
+            @Html.Raw(detail.Content)
+        </div>
+        <!-- Tags -->
+        <div class="entry-bottom mt-50 mb-30">
+            <div class="tags">
+                <span>Tags: </span>
+                @if (detail.Tags != null && detail.Tags.Count != 0)
+                {
+                    @foreach (var item in detail.Tags)
+                    {
+                        var tagUrl = "/tag/" + item.Slug;
+                        var tagDisplayName = "#" + item.Name;
+                        <a href="@tagUrl" rel="tag">@tagDisplayName</a>
+                    }
+                }
+            </div>
+        </div>
+        <div class="single-social-share clearfix">
+            <div class="entry-meta meta-1 font-small color-grey float-start mt-10">
+                <span class="hit-count mr-15"><i class="elegant-icon icon_comment_alt mr-5"></i>182 comments</span>
+                <span class="hit-count mr-15"><i class="elegant-icon icon_like mr-5"></i>268 likes</span>
+                <span class="hit-count"><i class="elegant-icon icon_star-half_alt mr-5"></i>Rate: 9/10</span>
+            </div>
+        </div>
+        <!--author box-->
+        <div class="author-bio p-30 mt-50 border-radius-10 bg-white">
+            @{
+                <div class="author-image mb-30">
+                    <a href="@authorUrl">
+                        <img src="~/imgs/authors/author-3.jpg" alt="" class="avatar">
+                    </a>
+                </div>
+                <div class="author-info">
+                    <h4 class="font-weight-bold mb-20">
+                        <span class="vcard author">
+                            <span class="fn">
+                                <a href="@authorUrl" title="Posted by @detail.User.FullName" rel="author">@detail.User.FullName</a>
+                            </span>
+                        </span>
+                    </h4>
+                    <h5 class="text-muted">About author</h5>
+                    <div class="author-description text-muted">@detail.User.About</div>
+                    <a href="@authorUrl" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
+                    <div class="author-social">
+                        <ul class="author-social-icons">
+                            <li class="author-social-link-facebook">
+                                <a href="#" target="_blank">
+                                    <i class="ti-facebook"></i>
+                                </a>
+                            </li>
+                            <li class="author-social-link-twitter">
+                                <a href="#" target="_blank">
+                                    <i class="ti-twitter-alt"></i>
+                                </a>
+                            </li>
+                            <li class="author-social-link-pinterest">
+                                <a href="#" target="_blank">
+                                    <i class="ti-pinterest"></i>
+                                </a>
+                            </li>
+                            <li class="author-social-link-instagram">
+                                <a href="#" target="_blank">
+                                    <i class="ti-instagram"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+        </div>
+        <!--related posts-->
+        <div class="related-posts">
+            @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
+        </div>
+
+        <!--More posts-->
+        @await Html.PartialAsync("Partials/Posts/_MorePosts")
+
+        <!--Comments-->
+        <div class="comments-area">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Comments</h5>
+            </div>
+            <ul class="comments" id="comment_list">
+                <!-- Comment item will be rendered by JavaScript -->
+            </ul>
+        </div>
+
+        <!--comment form-->
+        <div class="comment-form">
+            <div class="widget-header-2 position-relative mb-30">
+                <h5 class="mt-5 mb-30">Leave a Reply</h5>
+            </div>
+            @if (User.Identity is { IsAuthenticated: true })
+            {
+                <form class="form-contact comment_form" id="commentForm" asp-controller="Comments" asp-action="AddNewComment">
+                    <input type="hidden" name="postId" value="@detail.Id"/>
+                    <input type="hidden" id="hid_current_login_name" value="@User.GetFullName()"/>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <textarea class="form-control w-100" name="comment" id="txt_new_comment_content" cols="30" rows="9" placeholder="Write Comment"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" name="submit" id="btn_send_comment" class="button button-contactForm">Post Comment</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <h4 class="section-title">Please <a asp-action="Login" asp-controller="Accounts">log in </a>to comment</h4>
+            }
+        </div>
+    </article>
 </div>
 <!--container-->

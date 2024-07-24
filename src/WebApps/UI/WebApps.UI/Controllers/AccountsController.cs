@@ -154,10 +154,6 @@ public class AccountsController(
         try
         {
             var response = await postApiClient.GetPostsByCurrentUserPaging(new GetPostsByCurrentUserRequest { PageNumber = page });
-            if (response is not { IsSuccess: true, Data: not null })
-            {
-                return HandleError(methodName, response.StatusCode);
-            }
             
             var items = new ManagePostsViewModel()
             {
