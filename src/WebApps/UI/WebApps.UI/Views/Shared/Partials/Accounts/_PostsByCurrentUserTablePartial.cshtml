@@ -6,7 +6,7 @@
     var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);
 }
 
-@if (posts.Items != null && posts.Items.Count != 0)
+@if (posts is { Items: not null } && posts.Items.Count != 0)
 {
     foreach (var item in posts.Items)
     {

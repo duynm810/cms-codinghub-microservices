@@ -463,11 +463,14 @@
                     </tbody>
                     <tfoot>
                     <tr>
-                        <td colspan="6">
-                            <div class="pagination-area mb-30" id="pagination-area">
-                                @await Component.InvokeAsync("Pager", posts.MetaData)
-                            </div>
-                        </td>
+                        @if (posts is { Items: not null } && posts.Items.Count != 0)
+                        {
+                            <td colspan="6">
+                                <div class="pagination-area mb-30" id="pagination-area">
+                                    @await Component.InvokeAsync("Pager", posts.MetaData)
+                                </div>
+                            </td>
+                        }
                     </tr>
                     </tfoot>
                 </table>
