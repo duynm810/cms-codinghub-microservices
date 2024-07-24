@@ -1,8 +1,10 @@
+using Infrastructure.Paged;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Post.Domain.Repositories;
 using Post.Domain.Services;
 using Serilog;
+using Shared.Constants;
 using Shared.Dtos.Post;
 using Shared.Responses;
 using Shared.Utilities;
@@ -27,18 +29,20 @@ public class GetPostsByCurrentUserPagingQueryHandler(
                 methodName, query.CurrentUser.UserId, query.Request.PageNumber, query.Request.PageSize);
 
             var posts = await postRepository.GetPostsByCurrentUserPaging(query.CurrentUser.UserId, query.CurrentUser.Roles, query.Request);
-            
-            if (posts.Items != null && posts.Items.IsNotNullOrEmpty())
+            if (posts.Items == null || posts.Items.Count == 0)
             {
-                var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
-
-                result.Success(data);
-
-                logger.Information(
-                    "END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}",
-                    methodName, data.MetaData.TotalItems, query.CurrentUser.UserId, query.Request.PageNumber,
-                    query.Request.PageSize);
+                logger.Warning("{MethodName} - No posts found for current user {CurrentUserId}", methodName, query.CurrentUser.UserId);
+                return result;
             }
+            
+            var data = await postService.EnrichPagedPostsWithCategories(posts, cancellationToken);
+
+            result.Success(data);
+
+            logger.Information(
+                "END {MethodName} - Successfully retrieved {PostCount} posts for current user {CurrentUserId} for page {PageNumber} with page size {PageSize}",
+                methodName, data.MetaData.TotalItems, query.CurrentUser.UserId, query.Request.PageNumber,
+                query.Request.PageSize);
         }
         catch (Exception e)
         {
