@@ -26,7 +26,8 @@ message UserResponse {
   string lastName = 3;
   string userName = 4;
   string email = 5;
-  string avatar_url = 6;
+  string avatarUrl = 6;
+  string about = 7;
 }
 
 message UsersResponse {
