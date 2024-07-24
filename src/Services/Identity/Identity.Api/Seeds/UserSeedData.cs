@@ -36,13 +36,13 @@ public static class UserSeedData
 
         using var scope = serviceProvider.GetRequiredService<IServiceScopeFactory>().CreateScope();
 
-        CreateUser(scope, "Duy", "Nguyen", "Thu Duc city",
-            Guid.NewGuid().ToString(), "admin123","admin",
-            UserRolesConsts.Administrator,  "admin@example.com");
+        CreateUser(scope, "Coding", "Hub", "82 Vo Van Ngan, Binh Tho ward, Thu Duc city",
+            Guid.NewGuid().ToString(), "codinghub123@","codinghub",
+            UserRolesConsts.Administrator,  "codinghub@example.com");
         
-        CreateUser(scope, "An", "Huynh", "Di An city",
-            Guid.NewGuid().ToString(), "author123","author",
-            UserRolesConsts.Author,  "author@example.com");
+        CreateUser(scope, "Duy", "Nguyen", "82 Vo Van Ngan, Binh Tho ward, Thu Duc city",
+            Guid.NewGuid().ToString(), "duynguyen123@","duynguyen810",
+            UserRolesConsts.Author,  "nguyenminhduy8101996@gmail.com");
     }
 
     private static void CreateUser(IServiceScope scope, string firstName, string lastName,
