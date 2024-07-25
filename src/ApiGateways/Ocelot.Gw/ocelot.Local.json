@@ -106,6 +106,23 @@
       "SwaggerKey": "identity-service"
     },
     {
+      "UpstreamPathTemplate": "/users/{userId}/update-avatar",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/update-avatar",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "host.docker.internal",
+          "Port": 6002
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
       "UpstreamPathTemplate": "/categories",
       "UpstreamHttpMethod": [
         "GET"

@@ -14,5 +14,7 @@ public interface IIdentityApiClient
     
     Task<ApiResult<UserDto>> GetMe();
 
+    Task<ApiResult<bool>> UpdateAvatar(Guid userId, UpdateAvatarRequest request);
+
     #endregion
 }

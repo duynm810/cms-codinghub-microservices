@@ -264,5 +264,46 @@ public class UserService(IIdentityReposityManager repositoryManager, IMapper map
         return result;
     }
 
+    public async Task<ApiResult<bool>> UpdateAvatar(Guid userId, UpdateAvatarRequest request)
+    {
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(UpdateAvatar);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Updating avatar for user with ID: {UserId}", methodName, userId);
+
+            var user = await repositoryManager.Users.GetUserById(userId);
+            if (user == null)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserNotFound);
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+                return result;
+            }
+
+            mapper.Map(request, user);
+            
+            var updateResult = await repositoryManager.Users.UpdateAvatar(user);
+            if (!updateResult)
+            {
+                result.Messages.Add(ErrorMessagesConsts.Identity.User.UserUpdateAvatarFailed);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            result.Success(updateResult);
+
+            logger.Information("END {MethodName} - User avatar updated successfully with ID {UserId}", methodName, userId);    
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     #endregion
 }

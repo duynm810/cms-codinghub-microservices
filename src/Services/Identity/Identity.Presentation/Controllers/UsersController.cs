@@ -70,4 +70,12 @@ public class UsersController(IUserService userService) : ControllerBase
         var result = await userService.ChangePassword(userId, request);
         return Ok(result);
     }
+    
+    [HttpPut("{userId:guid}/update-avatar")]
+    [ProducesResponseType(typeof(ApiResult<bool>), (int)HttpStatusCode.OK)]
+    public async Task<IActionResult> UpdateAvatar(Guid userId, [FromBody] UpdateAvatarRequest request)
+    {
+        var result = await userService.UpdateAvatar(userId, request);
+        return Ok(result);
+    }
 }

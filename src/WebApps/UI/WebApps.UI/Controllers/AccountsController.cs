@@ -116,6 +116,40 @@ public class AccountsController(
             return HandleException(methodName, e);
         }
     }
+    
+    [HttpPut]
+    public async Task<IActionResult> UpdateAvatar([FromRoute] Guid userId, [FromBody] UpdateAvatarRequest request)
+    {
+        const string methodName = nameof(UpdateAvatar);
+
+        try
+        {
+            if (!ModelState.IsValid)
+            {
+                TempData["ErrorMessage"] = "Failed to update profile.";
+                return BadRequest(ModelState);
+            }
+
+            var updateResponse = await identityApiClient.UpdateAvatar(userId, request);
+            
+            if (updateResponse is not { IsSuccess: true })
+            {
+                return Json(new { success = false });
+            }
+
+            var getUserResponse = await identityApiClient.GetUserById(userId);
+            if (getUserResponse is not { IsSuccess: true, Data: not null })
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new { success = true, user = getUserResponse.Data });
+        }
+        catch (Exception e)
+        {
+            return HandleException(methodName, e);
+        }
+    }
 
     #endregion
 

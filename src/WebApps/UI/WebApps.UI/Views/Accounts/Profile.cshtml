@@ -86,10 +86,6 @@
 
                     const result = JSON.parse(responseBody);
                     console.log(result);
-
-                    // Update the hidden input with the URL of the uploaded file
-                    document.getElementById('avatarUrl').value = result.data;
-                    document.querySelector('.user-avatar img').src = result.data;
                 } catch (error) {
                     showErrorNotification(`Error uploading file: ${error.message}`);
                 }

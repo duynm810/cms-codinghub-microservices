@@ -71,6 +71,11 @@ public static class RouteMap
             "update-profile",
             "/accounts/update-profile/{userId:guid}",
             new { controller = "Accounts", action = "UpdateProfile" });
+        
+        app.MapControllerRoute(
+            "update-avatar",
+            "/accounts/update-avatar/{userId:guid}",
+            new { controller = "Accounts", action = "UpdateAvatar" });
 
         app.MapControllerRoute(
             "profile",
