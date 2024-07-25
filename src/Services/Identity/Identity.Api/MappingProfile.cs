@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Shared.Dtos.Identity.Permission;
 using Shared.Dtos.Identity.Role;
 using Shared.Dtos.Identity.User;
+using Shared.Extensions;
 using Shared.Requests.Identity.Permission;
 using Shared.Requests.Identity.Role;
 using Shared.Requests.Identity.User;
@@ -32,6 +33,7 @@ public class MappingProfile : Profile
 
         CreateMap<CreateUserRequest, User>();
         CreateMap<UpdateUserRequest, User>();
+        CreateMap<UpdateAvatarRequest, User>().IgnoreAllNonExisting();
         CreateMap<User, UserDto>();
 
         #endregion

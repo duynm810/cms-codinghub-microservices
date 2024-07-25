@@ -8,6 +8,10 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<User, UserResponse>();
+        CreateMap<User, UserResponse>()
+            .ForMember(dest => dest.AvatarUrl,
+                opt => opt.MapFrom(src => src.AvatarUrl ?? string.Empty))
+            .ForMember(dest => dest.About,
+                opt => opt.MapFrom(src => src.About ?? string.Empty));
     }
 }

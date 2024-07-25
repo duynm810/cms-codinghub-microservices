@@ -21,11 +21,6 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
     public async Task<bool> UpdateUser(User user)
     {
         var result = await userManager.UpdateAsync(user);
-        if (!result.Succeeded)
-        {
-            throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
-        }
-
         return result.Succeeded;
     }
 
@@ -53,6 +48,12 @@ public class UserRepository(UserManager<User> userManager) : IUserRepository
             throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
         }
 
+        return result.Succeeded;
+    }
+
+    public async Task<bool> UpdateAvatar(User user)
+    {
+        var result = await userManager.UpdateAsync(user);
         return result.Succeeded;
     }
 

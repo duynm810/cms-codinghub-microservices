@@ -23,6 +23,11 @@ public class IdentityApiClient(IBaseApiClient baseApiClient) : IIdentityApiClien
     {
         return await baseApiClient.GetAsync<UserDto>($"/users/me", true);
     }
+    
+    public async Task<ApiResult<bool>> UpdateAvatar(Guid userId, UpdateAvatarRequest request)
+    {
+        return await baseApiClient.PutAsync<UpdateAvatarRequest, bool>($"/users/{userId}/update-avatar", request, true);
+    }
 
     #endregion
 }

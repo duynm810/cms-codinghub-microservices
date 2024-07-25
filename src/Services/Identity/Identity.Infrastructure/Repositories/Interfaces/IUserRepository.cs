@@ -23,6 +23,8 @@ public interface IUserRepository
     Task<User?> GetUserByUserName(string userName);
 
     Task<bool> ChangePassword(User user, string currentPassword, string newPassword);
+    
+    Task<bool> UpdateAvatar(User user);
 
     #endregion
 }

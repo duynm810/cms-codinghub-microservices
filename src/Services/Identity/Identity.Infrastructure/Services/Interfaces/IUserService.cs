@@ -23,8 +23,10 @@ public interface IUserService
     #endregion
 
     #region OTHERS
-
+    
     Task<ApiResult<bool>> ChangePassword(Guid userId, ChangePasswordUserRequest request);
+    
+    Task<ApiResult<bool>> UpdateAvatar(Guid userId, UpdateAvatarRequest request);
 
     #endregion
 }

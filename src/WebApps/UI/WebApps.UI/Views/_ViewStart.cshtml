@@ -1,3 +1,10 @@
-﻿@{
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+@{
     Layout = "_Layout";
+}
+
+@{
+    var serverUrl = $"{Configuration["ApiSettings:ServerUrl"]}:{Configuration["ApiSettings:Port"]}";
+    ViewBag.ServerUrl = serverUrl;
 }

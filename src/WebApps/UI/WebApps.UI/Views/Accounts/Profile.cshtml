@@ -59,7 +59,52 @@
             $('#address').val(user.address);
             $('#about-text').text(user.about);
         }
-        
+
+        async function uploadAvatar(username, userId) {
+            const fileInput = document.getElementById('avatarUpload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                const extension = file.name.split('.').pop(); // Lấy phần mở rộng của file
+                const filename = `${username}_${userId}_avatar.${extension}`;
+                formData.append('file', file, filename);
+                formData.append('type', 'avatar');
+
+                try {
+                    const uploadResult = await $.ajax({
+                        url: '/media/upload-image',
+                        type: 'POST',
+                        data: formData,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    const imageUrl = uploadResult.data;
+                    if (imageUrl) {
+                        const updateResult = await $.ajax({
+                            url: `/accounts/update-avatar/${userId}`,
+                            type: 'PUT',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ avatarUrl: imageUrl })
+                        });
+
+                        const avatarUrl = `${serverUrl}/${updateResult.user.avatarUrl}`;
+                        let avatarElement = document.getElementById('userAvatar');
+                        if (avatarElement) {
+                            avatarElement.src = avatarUrl;
+                            showSuccessNotification('Update avatar successfully!');
+                        }
+                    }
+                } catch (error) {
+                    if (error.responseJSON && error.responseJSON.message) {
+                        showErrorNotification(`Error: ${error.responseJSON.message}`);
+                    } else {
+                        showErrorNotification(`Error: ${error.statusText}`);
+                    }
+                }
+            }
+        }
     </script>
 }
 
@@ -76,7 +121,12 @@
                     <div class="account-settings">
                         <div class="user-profile">
                             <div class="user-avatar">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
+                                <image-url src="@user.AvatarUrl" id="userAvatar" alt="avatar"></image-url>
+                                <div class="upload-icon" onclick="document.getElementById('avatarUpload').click();">
+                                    <i class="fa fa-upload"></i>
+                                </div>
+                                <input type="file" id="avatarUpload" accept="image/*" onchange="uploadAvatar('@user.UserName', '@user.Id')">
+                                <input type="hidden" id="avatarUrl" name="avatarUrl">
                             </div>
                             <h5 class="full-name" id="fullName">@user.FullName</h5>
                             <h6 class="user-email">

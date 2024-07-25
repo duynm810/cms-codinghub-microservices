@@ -195,7 +195,7 @@ const postsController = function () {
         `;
     }
 
-    function generateReplyHtml(id, content, createdDate, fullName, userName) {
+    function generateReplyHtml(id, content, createdDate, fullName) {
         const authorUrl = "/author/" + '';
         return `
             <li class="comment-item">
