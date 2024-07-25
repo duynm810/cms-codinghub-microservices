@@ -56,15 +56,11 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    // Seed database with initial data only in Development or Local environment
-    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment(EnvironmentConsts.Local))
-    {
-        // Seed database with initial data and start the application
-        using var scope = app.Services.CreateScope();
-        var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
-        await seeder.InitialiseAsync();
-        await seeder.SeedAsync();
-    }
+    // Seed database with initial data and start the application
+    using var scope = app.Services.CreateScope();
+    var seeder = scope.ServiceProvider.GetRequiredService<IDatabaseSeeder>();
+    await seeder.InitialiseAsync();
+    await seeder.SeedAsync();
     
     await app.RunAsync();
 }
