@@ -1,3 +1,4 @@
+@using Shared.Utilities
 @model ProfileViewModel
 @{
     ViewData["ShowBottom"] = false;
@@ -59,6 +60,40 @@
             $('#address').val(user.address);
             $('#about-text').text(user.about);
         }
+
+        async function uploadAvatar(username, userId) {
+            const fileInput = document.getElementById('avatarUpload');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const formData = new FormData();
+                const filename = `${username}_${userId}_avatar`;
+                formData.append('file', file, filename);
+                formData.append('type', 'avatar');
+
+                try {
+                    const response = await fetch('/media/upload-image', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const responseBody = await response.text();
+                    if (!response.ok) {
+                        showErrorNotification(`Upload failed with status: ${response.status}, error: ${responseBody}`);
+                        return;
+                    }
+
+                    const result = JSON.parse(responseBody);
+                    console.log(result);
+
+                    // Update the hidden input with the URL of the uploaded file
+                    document.getElementById('avatarUrl').value = result.data;
+                    document.querySelector('.user-avatar img').src = result.data;
+                } catch (error) {
+                    showErrorNotification(`Error uploading file: ${error.message}`);
+                }
+            }
+        }
         
     </script>
 }
@@ -76,7 +111,12 @@
                     <div class="account-settings">
                         <div class="user-profile">
                             <div class="user-avatar">
-                                <img src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Maxwell Admin">
+                                <img src="~/imgs/profile/default_avatar.png" class="Avatar" alt="Avatar">
+                                <div class="upload-icon" onclick="document.getElementById('avatarUpload').click();">
+                                    <i class="fa fa-upload"></i>
+                                </div>
+                                <input type="file" id="avatarUpload" accept="image/*" onchange="uploadAvatar('@user.UserName', '@user.Id')">
+                                <input type="hidden" id="avatarUrl" name="avatarUrl">
                             </div>
                             <h5 class="full-name" id="fullName">@user.FullName</h5>
                             <h6 class="user-email">
