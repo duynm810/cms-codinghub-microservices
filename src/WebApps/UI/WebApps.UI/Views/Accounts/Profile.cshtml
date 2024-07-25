@@ -67,7 +67,8 @@
 
             if (file) {
                 const formData = new FormData();
-                const filename = `${username}_${userId}_avatar`;
+                const extension = file.name.split('.').pop(); // Lấy phần mở rộng của file
+                const filename = `${username}_${userId}_avatar.${extension}`;
                 formData.append('file', file, filename);
                 formData.append('type', 'avatar');
 
