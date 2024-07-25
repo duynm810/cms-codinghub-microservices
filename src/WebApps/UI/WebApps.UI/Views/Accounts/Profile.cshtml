@@ -72,40 +72,36 @@
                 formData.append('type', 'avatar');
 
                 try {
-                    $.ajax({
+                    const uploadResult = await $.ajax({
                         url: '/media/upload-image',
                         type: 'POST',
                         data: formData,
                         contentType: false,
-                        processData: false,
-                        success: function (result) {
-                            const imageUrl = result.data;
-                            if (imageUrl) {
-                                $.ajax({
-                                    url: `/accounts/update-avatar/${userId}`,
-                                    type: 'PUT',
-                                    contentType: 'application/json',
-                                    data: JSON.stringify({ avatarUrl: imageUrl }),
-                                    success: function (updateResult) {
-                                        const avatarUrl = `${serverUrl}/${updateResult.user.avatarUrl}`;
-                                        let avatarElement = document.getElementById('userAvatar');
-                                        if (avatarElement) {
-                                            avatarElement.src = avatarUrl;
-                                            showSuccessNotification('Update avatar successfully!');
-                                        }
-                                    },
-                                    error: function (xhr, status, error) {
-                                        showErrorNotification(`Update avatar failed with status: ${xhr.status}, error: ${xhr.responseText}`);
-                                    }
-                                });
-                            }
-                        },
-                        error: function (xhr, status, error) {
-                            showErrorNotification(`Error uploading image: ${error}`);
-                        }
+                        processData: false
                     });
+
+                    const imageUrl = uploadResult.data;
+                    if (imageUrl) {
+                        const updateResult = await $.ajax({
+                            url: `/accounts/update-avatar/${userId}`,
+                            type: 'PUT',
+                            contentType: 'application/json',
+                            data: JSON.stringify({ avatarUrl: imageUrl })
+                        });
+
+                        const avatarUrl = `${serverUrl}/${updateResult.user.avatarUrl}`;
+                        let avatarElement = document.getElementById('userAvatar');
+                        if (avatarElement) {
+                            avatarElement.src = avatarUrl;
+                            showSuccessNotification('Update avatar successfully!');
+                        }
+                    }
                 } catch (error) {
-                    showErrorNotification(`Error uploading file: ${error.message}`);
+                    if (error.responseJSON && error.responseJSON.message) {
+                        showErrorNotification(`Error: ${error.responseJSON.message}`);
+                    } else {
+                        showErrorNotification(`Error: ${error.statusText}`);
+                    }
                 }
             }
         }
