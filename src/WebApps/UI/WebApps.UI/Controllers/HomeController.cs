@@ -1,6 +1,8 @@
 using Contracts.Commons.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Shared.Requests.Post.Queries;
+using Shared.Settings;
 using WebApps.UI.ApiClients.Interfaces;
 using WebApps.UI.Models.Commons;
 using ILogger = Serilog.ILogger;
@@ -10,8 +12,11 @@ namespace WebApps.UI.Controllers;
 public class HomeController(
     IAggregatorApiClient aggregatorApiClient,
     IPostApiClient postApiClient,
+    IOptions<ApiSettings> apiSettings,
     IRazorRenderViewService razorRenderViewService, ILogger logger) : BaseController(logger)
 {
+    private readonly ApiSettings _apiSettings = apiSettings.Value;
+    
     public async Task<IActionResult> Index(int page = 1)
     {
         try
@@ -45,7 +50,7 @@ public class HomeController(
             {
                 viewModel.LatestPosts = latestPosts.Data;
             }
-
+            
             return View(viewModel);
         }
         catch (Exception e)

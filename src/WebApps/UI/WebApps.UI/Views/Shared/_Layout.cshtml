@@ -128,6 +128,13 @@
 <!-- Tagify -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tagify/4.27.0/tagify.min.js"></script>
 
+<script src="~/js/site.js"></script>
+
+<!-- Set server url -->
+<script type="text/javascript">
+    serverUrl = '@ViewBag.ServerUrl';
+</script>
+
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
