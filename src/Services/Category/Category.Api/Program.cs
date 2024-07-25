@@ -28,14 +28,10 @@ try
     // Set up middleware and request handling pipeline
     app.ConfigurePipeline();
 
-    // Seed database with initial data only in Development or Local environment
-    if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment(EnvironmentConsts.Local))
+    app.MigrateDatabase<CategoryContext>((context, _) =>
     {
-        app.MigrateDatabase<CategoryContext>((context, _) =>
-        {
-            CategorySeedData.CategorySeedAsync(context, Log.Logger).Wait();
-        });
-    }
+        CategorySeedData.CategorySeedAsync(context, Log.Logger).Wait();
+    });
     
     // Start the application
     await app.RunAsync();
