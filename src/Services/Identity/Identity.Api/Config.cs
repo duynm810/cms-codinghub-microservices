@@ -81,6 +81,8 @@ public static class Config
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html"
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
@@ -104,6 +106,8 @@ public static class Config
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html"
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
@@ -127,6 +131,8 @@ public static class Config
                     "http://localhost:6008",
                     "http://localhost:6009",
                     "http://localhost:6011",
+                    "https://identity-coding-hub.azurewebsites.net",
+                    "https://category-coding-hub.azurewebsites.net"
                 },
                 AllowedScopes =
                 {
