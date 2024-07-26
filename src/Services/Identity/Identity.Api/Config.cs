@@ -82,7 +82,12 @@ public static class Config
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
                     "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
-                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html"
+                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://series-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-in-series-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://tag-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-in-tag-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
@@ -107,7 +112,12 @@ public static class Config
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
                     "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
-                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html"
+                    "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://series-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-in-series-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://tag-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
+                    "https://post-in-tag-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
@@ -132,7 +142,12 @@ public static class Config
                     "http://localhost:6009",
                     "http://localhost:6011",
                     "https://identity-coding-hub.azurewebsites.net",
-                    "https://category-coding-hub.azurewebsites.net"
+                    "https://category-coding-hub.azurewebsites.net",
+                    "https://post-coding-hub.azurewebsites.net",
+                    "https://series-coding-hub.azurewebsites.net",
+                    "https://post-in-series-coding-hub.azurewebsites.net",
+                    "https://tag-coding-hub.azurewebsites.net",
+                    "https://post-in-tag-coding-hub.azurewebsites.net",
                 },
                 AllowedScopes =
                 {
