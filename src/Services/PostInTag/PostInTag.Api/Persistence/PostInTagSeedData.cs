@@ -21,8 +21,8 @@ public static class PostInTagSeedData
         
         postInTagContext.Database.MigrateAsync().GetAwaiter().GetResult();
 
-        var seedData = new Seeder(postInTagContext, tagGrpcService, postGrpcService, logger);
-        seedData.SeedAsync().GetAwaiter().GetResult();
+        /*var seedData = new Seeder(postInTagContext, tagGrpcService, postGrpcService, logger);
+        seedData.SeedAsync().GetAwaiter().GetResult();*/
 
         return host;
     }
