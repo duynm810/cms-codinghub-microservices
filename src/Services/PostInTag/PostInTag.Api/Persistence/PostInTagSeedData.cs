@@ -10,7 +10,7 @@ namespace PostInTag.Api.Persistence;
 
 public static class PostInTagSeedData
 {
-    public static IHost SeedData(this IHost host)
+    public static IHost MigrateDatabase(this IHost host)
     {
         using var scope = host.Services.CreateScope();
 
