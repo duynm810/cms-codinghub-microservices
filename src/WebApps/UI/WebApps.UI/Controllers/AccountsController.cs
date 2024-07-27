@@ -214,8 +214,6 @@ public class AccountsController(
             {
                 Categories = categories
             };
-
-            ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
             
             return View(items);
         }
@@ -280,9 +278,7 @@ public class AccountsController(
                 Post = response.Data,
                 Categories = categories
             };
-
-            ViewData["ServerUrl"] = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}";
-                
+            
             return View(items);
         }
         catch (Exception e)

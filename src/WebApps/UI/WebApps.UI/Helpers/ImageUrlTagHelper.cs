@@ -13,7 +13,9 @@ public class ImageUrlTagHelper(IOptions<ApiSettings> apiSettings) : TagHelper
     
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var fullUrl = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Src}";
+        var fullUrl = !string.IsNullOrEmpty(_apiSettings.Port)
+            ? $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Src}" 
+            : $"{_apiSettings.ServerUrl}/{Src}";
 
         output.TagName = "img"; // Replace <image-url> with <img> tag
         output.Attributes.SetAttribute("src", fullUrl);
