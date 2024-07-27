@@ -13,7 +13,9 @@ public class BackgroundImageTagHelper(IOptions<ApiSettings> apiSettings) : TagHe
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var fullUrl = $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Thumbnail}";
+        var fullUrl = !string.IsNullOrEmpty(_apiSettings.Port)
+            ? $"{_apiSettings.ServerUrl}:{_apiSettings.Port}/{Thumbnail}" 
+            : $"{_apiSettings.ServerUrl}/{Thumbnail}";
 
         if (output.Attributes.TryGetAttribute("style", out var styleAttribute))
         {

@@ -12,11 +12,8 @@ namespace WebApps.UI.Controllers;
 public class HomeController(
     IAggregatorApiClient aggregatorApiClient,
     IPostApiClient postApiClient,
-    IOptions<ApiSettings> apiSettings,
     IRazorRenderViewService razorRenderViewService, ILogger logger) : BaseController(logger)
 {
-    private readonly ApiSettings _apiSettings = apiSettings.Value;
-    
     public async Task<IActionResult> Index(int page = 1)
     {
         try
