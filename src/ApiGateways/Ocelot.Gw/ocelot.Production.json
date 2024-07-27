@@ -1,0 +1,1151 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "https://apigw-coding-hub.azurewebsites.net"
+  },
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/{userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/me",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/users/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}/change-password",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/change-password",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/users/{userId}/update-avatar",
+      "UpstreamHttpMethod": [ "PUT" ],
+      "DownstreamPathTemplate": "/api/users/{userId}/update-avatar",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "identity-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "identity-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "category-service",
+      "Key": "categories"
+    },
+    {
+      "UpstreamPathTemplate": "/categories",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/categories",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/categories/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/categories/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/categories/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/categories/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "category-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "category-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts",
+      "UpstreamHttpMethod": [
+        "GET",
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/featured",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/featured",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service",
+      "Key": "featured-posts"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/pinned",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/pinned",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service",
+      "Key": "pinned-posts"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/most-commented",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/most-commented",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service",
+      "Key": "most-commented-posts"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/most-liked",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/most-liked",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service",
+      "Key": "most-liked-posts"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/detail/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/detail/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/{id}",
+      "UpstreamHttpMethod": [
+        "PUT",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/posts/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/update-thumbnail/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/update-thumbnail/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/latest/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/latest/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-category/{categorySlug}/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-tag/{tagSlug}/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-tag/{tagSlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-series/{seriesSlug}/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-series/{seriesSlug}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-author/{authorId}/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-author/{authorId}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-current-user/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/by-non-static-page-category",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/by-non-static-page-category",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/activity-logs/{postId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/posts/activity-logs/{postId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/approve/{id}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/approve/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/submit-for-approval/{id}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/submit-for-approval/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/reject/{id}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/posts/reject/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/toggle-pin-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-pin-status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/posts/toggle-featured-status/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/posts/toggle-featured-status/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/series/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/series/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/series/paging",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/series/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-in-series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-series/{postId}/manage-series",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-series/{postId}/manage-series",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-in-series-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-series-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "tag-service",
+      "Key": "tags"
+    },
+    {
+      "UpstreamPathTemplate": "/tags",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/tags",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/by-slug/{slug}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-slug/{slug}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/by-name/{name}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/by-name/{name}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/suggest",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/suggest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "tag-service",
+      "Key": "suggest-tags"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/tags/{id}",
+      "UpstreamHttpMethod": [
+        "PUT"
+      ],
+      "DownstreamPathTemplate": "/api/tags/{id}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/post-in-tag",
+      "UpstreamHttpMethod": [
+        "POST",
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/post-in-tag",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "post-in-tag-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "post-in-tag-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "comment-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/by-post/{postId}",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/by-post/{postId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "comment-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/like/{commentId}",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/like/{commentId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "comment-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/reply",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/comments/reply",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "comment-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "comment-service"
+    },
+    {
+      "UpstreamPathTemplate": "/comments/latest",
+      "UpstreamHttpMethod": [
+        "GET"
+      ],
+      "DownstreamPathTemplate": "/api/comments/latest",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "comment-coding-hub.azurewebsites.net"
+        }
+      ],
+      "SwaggerKey": "comment-service",
+      "Key": "latest-comments"
+    },
+    {
+      "UpstreamPathTemplate": "/media/upload-image",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/media/upload-image",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "media-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/delete-image/{imagePath}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/delete-image/{imagePath}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "media-coding-hub.azurewebsites.net"
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/images/{everything}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/media/images/{everything}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "media-coding-hub.azurewebsites.net"
+        }
+      ]
+    }
+  ],
+  "Aggregates": [
+    {
+      "RouteKeys": [
+        "featured-posts",
+        "most-liked-posts",
+        "pinned-posts",
+        "suggest-tags"
+      ],
+      "UpstreamPathTemplate": "/dashboard",
+      "Aggregator": "DashboardAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "categories",
+        "tags"
+      ],
+      "UpstreamPathTemplate": "/footer",
+      "Aggregator": "FooterAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    },
+    {
+      "RouteKeys": [
+        "most-commented-posts",
+        "latest-comments"
+      ],
+      "UpstreamPathTemplate": "/side-bar",
+      "Aggregator": "SidebarAggregator",
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Aggregators"
+      }
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "ocelot",
+      "TransformByOcelotConfig": false,
+      "Config": [
+        {
+          "Name": "Ocelot.Gw",
+          "Version": "1.0",
+          "Url": "https://apigw-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "identity-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Identity.Api",
+          "Version": "1.0",
+          "Url": "https://identity-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "category-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Category.Api",
+          "Version": "1.0",
+          "Url": "https://category-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "post-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Post.Api",
+          "Version": "1.0",
+          "Url": "https://post-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "series-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Series.Api",
+          "Version": "1.0",
+          "Url": "https://series-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "post-in-series-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "PostInSeries.Api",
+          "Version": "1.0",
+          "Url": "https://post-in-series-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Tag.Api",
+          "Version": "1.0",
+          "Url": "https://tag-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "post-in-tag-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "PostInTag.Api",
+          "Version": "1.0",
+          "Url": "https://post-in-tag-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "comment-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Comment.Api",
+          "Version": "1.0",
+          "Url": "https://comment-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "media-service",
+      "TransformByOcelotConfig": true,
+      "Config": [
+        {
+          "Name": "Media.Api",
+          "Version": "1.0",
+          "Url": "https://media-coding-hub.azurewebsites.net/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}

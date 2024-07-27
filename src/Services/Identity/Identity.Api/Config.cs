@@ -81,6 +81,7 @@ public static class Config
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://apigw-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://post-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
@@ -111,6 +112,7 @@ public static class Config
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
                     "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://apigw-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://identity-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://category-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
                     "https://post-coding-hub.azurewebsites.net/swagger/oauth2-redirect.html",
@@ -141,13 +143,14 @@ public static class Config
                     "http://localhost:6008",
                     "http://localhost:6009",
                     "http://localhost:6011",
+                    "https://apigw-coding-hub.azurewebsites.net",
                     "https://identity-coding-hub.azurewebsites.net",
                     "https://category-coding-hub.azurewebsites.net",
                     "https://post-coding-hub.azurewebsites.net",
                     "https://series-coding-hub.azurewebsites.net",
                     "https://post-in-series-coding-hub.azurewebsites.net",
                     "https://tag-coding-hub.azurewebsites.net",
-                    "https://post-in-tag-coding-hub.azurewebsites.net",
+                    "https://post-in-tag-coding-hub.azurewebsites.net"
                 },
                 AllowedScopes =
                 {
@@ -211,12 +214,14 @@ public static class Config
                 RedirectUris = new List<string>
                 {
                     "http://localhost:5300/signin-oidc",
-                    "http://localhost:6300/signin-oidc"
+                    "http://localhost:6300/signin-oidc",
+                    "https://codinghub.azurewebsites.net/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
                     "http://localhost:5300/signout-callback-oidc",
-                    "http://localhost:6300/signout-callback-oidc"
+                    "http://localhost:6300/signout-callback-oidc",
+                    "https://codinghub.azurewebsites.net/signout-callback-oidc"
                 },
                 AllowedScopes = new List<string>
                 {
