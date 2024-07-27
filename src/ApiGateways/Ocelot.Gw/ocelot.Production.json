@@ -7,7 +7,7 @@
       "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamPathTemplate": "/api/users",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -23,7 +23,7 @@
       "UpstreamPathTemplate": "/users/{userId}",
       "UpstreamHttpMethod": [ "PUT", "DELETE", "POST" ],
       "DownstreamPathTemplate": "/api/users/{userId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -39,7 +39,7 @@
       "UpstreamPathTemplate": "/users",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/users",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -55,7 +55,7 @@
       "UpstreamPathTemplate": "/users/{userId}",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/users/{userId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -71,7 +71,7 @@
       "UpstreamPathTemplate": "/users/me",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/api/users/me",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -87,7 +87,7 @@
       "UpstreamPathTemplate": "/users/{userId}/change-password",
       "UpstreamHttpMethod": [ "POST" ],
       "DownstreamPathTemplate": "/api/users/{userId}/change-password",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -103,7 +103,7 @@
       "UpstreamPathTemplate": "/users/{userId}/update-avatar",
       "UpstreamHttpMethod": [ "PUT" ],
       "DownstreamPathTemplate": "/api/users/{userId}/update-avatar",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "identity-coding-hub.azurewebsites.net"
@@ -121,7 +121,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/categories",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -137,7 +137,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/categories",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -155,7 +155,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/categories/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -169,7 +169,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/categories/by-slug/{slug}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -183,7 +183,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/categories/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -201,7 +201,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/categories/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "category-coding-hub.azurewebsites.net"
@@ -220,7 +220,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -238,7 +238,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/featured",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -253,7 +253,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/pinned",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -268,7 +268,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/most-commented",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -283,7 +283,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/most-liked",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -298,7 +298,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -312,7 +312,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/slug/{slug}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -330,7 +330,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/detail/by-slug/{slug}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -345,7 +345,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/posts/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -363,7 +363,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/posts/update-thumbnail/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -381,7 +381,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -395,7 +395,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/latest/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -409,7 +409,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-category/{categorySlug}/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -423,7 +423,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-tag/{tagSlug}/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -437,7 +437,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-series/{seriesSlug}/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -451,7 +451,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-author/{authorId}/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -465,7 +465,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/by-current-user/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -483,7 +483,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/by-non-static-page-category",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -497,7 +497,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/posts/activity-logs/{postId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -515,7 +515,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/approve/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -533,7 +533,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/submit-for-approval/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -551,7 +551,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/posts/reject/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -569,7 +569,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/posts/toggle-pin-status/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -587,7 +587,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/posts/toggle-featured-status/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-coding-hub.azurewebsites.net"
@@ -605,7 +605,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/series",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -624,7 +624,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/series",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -642,7 +642,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/series/by-slug/{slug}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -660,7 +660,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/series/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -678,7 +678,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/series/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -696,7 +696,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/series/paging",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "series-coding-hub.azurewebsites.net"
@@ -715,7 +715,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/post-in-series",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-in-series-coding-hub.azurewebsites.net"
@@ -733,7 +733,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/post-in-series/{postId}/manage-series",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-in-series-coding-hub.azurewebsites.net"
@@ -751,7 +751,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/tags",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -767,7 +767,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/tags",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -785,7 +785,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/tags/by-slug/{slug}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -799,7 +799,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/tags/by-name/{name}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -813,7 +813,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/tags/suggest",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -828,7 +828,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/tags/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -846,7 +846,7 @@
         "PUT"
       ],
       "DownstreamPathTemplate": "/api/tags/{id}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "tag-coding-hub.azurewebsites.net"
@@ -865,7 +865,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/post-in-tag",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "post-in-tag-coding-hub.azurewebsites.net"
@@ -883,7 +883,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/comments",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "comment-coding-hub.azurewebsites.net"
@@ -897,7 +897,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/comments/by-post/{postId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "comment-coding-hub.azurewebsites.net"
@@ -911,7 +911,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/comments/like/{commentId}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "comment-coding-hub.azurewebsites.net"
@@ -925,7 +925,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/comments/reply",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "comment-coding-hub.azurewebsites.net"
@@ -939,7 +939,7 @@
         "GET"
       ],
       "DownstreamPathTemplate": "/api/comments/latest",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "comment-coding-hub.azurewebsites.net"
@@ -954,7 +954,7 @@
         "POST"
       ],
       "DownstreamPathTemplate": "/api/media/upload-image",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "media-coding-hub.azurewebsites.net"
@@ -972,7 +972,7 @@
         "DELETE"
       ],
       "DownstreamPathTemplate": "/api/media/delete-image/{imagePath}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "media-coding-hub.azurewebsites.net"
@@ -988,7 +988,7 @@
       "UpstreamPathTemplate": "/media/images/{everything}",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/media/images/{everything}",
-      "DownstreamScheme": "http",
+      "DownstreamScheme": "https",
       "DownstreamHostAndPorts": [
         {
           "Host": "media-coding-hub.azurewebsites.net"
@@ -1147,5 +1147,12 @@
         }
       ]
     }
-  ]
+  ],
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning",
+      "Ocelot": "Debug"
+    }
+  }
 }
