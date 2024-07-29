@@ -741,3 +741,40 @@ input[type="file"] {
     border: 0;
     margin-bottom: 1rem;
 }
+
+.ql-code-block-container {
+    background-color: #282c34;
+    color: #abb2bf;
+    padding: 1em;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    overflow: auto;
+    margin-bottom: 1em;
+}
+
+.ql-code-block {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+}
+
+.entry-main-content .ql-code-block-container .ql-ui,
+.ql-code-block-container .nice-select.ql-ui {
+    display: none;
+}
+
+.entry-main-content .ql-code-block-container .nice-select .list {
+    display: none;
+}
+
+.entry-main-content .ql-code-block-container .nice-select .current {
+    display: none;
+}
+
+#editor {
+    height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
