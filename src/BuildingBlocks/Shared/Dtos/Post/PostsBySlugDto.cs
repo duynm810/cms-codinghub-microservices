@@ -4,5 +4,5 @@ public class PostsBySlugDto
 {
     public PostDto Detail { get; set; } = default!;
 
-    public IEnumerable<PostDto> RelatedPosts { get; set; } = default!;
+    public List<PostDto> RelatedPosts { get; set; } = [];
 }
