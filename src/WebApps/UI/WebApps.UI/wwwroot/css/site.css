@@ -562,8 +562,7 @@ a.close.disabled {
 
 .ql-editor {
     background-color: white;
-    min-height: 200px;
-    max-height: 400px;
+    min-height: 300px;
     overflow-y: auto; 
 }
 
@@ -769,12 +768,4 @@ input[type="file"] {
 
 .entry-main-content .ql-code-block-container .nice-select .current {
     display: none;
-}
-
-#editor {
-    height: 400px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    white-space: pre-wrap;
-    word-wrap: break-word;
 }

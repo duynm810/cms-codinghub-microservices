@@ -36,9 +36,9 @@
                     // Wait for the image to finish uploading before allowing submission (Đợi hình ảnh upload xong mới cho phép submit)
                     await controller.waitForUploadCompletion();
                 }
-                
-                // Set content data from quill editor (Gán nội dung được nhập từ quill editor vào content)
-                document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
+
+                const content = quill.root.innerHTML;
+                document.querySelector('input[name="Content"]').value = he.encode(content);
 
                 const tagsData = window.getTagsData();
                 document.getElementById('tagsData').value = JSON.stringify(tagsData);
