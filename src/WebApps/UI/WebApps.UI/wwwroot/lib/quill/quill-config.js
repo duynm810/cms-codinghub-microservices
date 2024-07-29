@@ -63,8 +63,13 @@ document.addEventListener('DOMContentLoaded', function () {
         
         //#region SET DATA
 
+        // Get content data from database
         const contentFromServer = document.getElementById('editor').getAttribute('data-content');
-        quill.root.innerHTML = contentFromServer || '';
+        
+        // Decode the content using he library
+        const decodedContent = he.decode(contentFromServer);
+
+        quill.clipboard.dangerouslyPasteHTML(decodedContent);
         
         //#endregion
         

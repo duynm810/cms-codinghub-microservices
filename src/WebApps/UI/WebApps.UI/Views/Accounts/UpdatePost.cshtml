@@ -116,7 +116,7 @@
             const form = document.getElementById('frm-update-post');
 
             const content = quill.root.innerHTML;
-            document.querySelector('input[name="Content"]').value = content;
+            document.querySelector('input[name="Content"]').value = he.encode(content);
 
             const tagsData = window.getTagsData();
 
