@@ -135,7 +135,10 @@
         </div>
         <!--related posts-->
         <div class="related-posts">
-            @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
+            @if (Model.Posts.RelatedPosts.Count != 0)
+            {
+                @await Html.PartialAsync("Partials/Posts/_RelatedPosts")
+            }
         </div>
 
         <!--More posts-->
