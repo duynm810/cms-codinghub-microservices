@@ -178,6 +178,11 @@ public class PostRepository(PostContext dbContext, IUnitOfWork<PostContext> unit
             .Take(count * 2)
             .ToListAsync();
 
+        if (relatedPosts.Count == 0)
+        {
+            return new List<PostBase>();
+        }
+
         var finalRelatedPosts = relatedPosts
             .GroupBy(x => x.Id)
             .Select(g => g.First())
