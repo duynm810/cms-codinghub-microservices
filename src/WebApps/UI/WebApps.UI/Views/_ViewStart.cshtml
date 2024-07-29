@@ -5,7 +5,7 @@
 }
 
 @{
-    var server = Configuration["ApiSettings:Port"];
+    var server = Configuration["ApiSettings:ServerUrl"];
     var port = Configuration["ApiSettings:Port"];
     var serverUrl = !string.IsNullOrEmpty(port) ? $"{server}:{port}" : $"{server}";
     

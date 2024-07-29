@@ -215,12 +215,6 @@ public class AccountsController(
                 Categories = categories
             };
 
-            var serverUrl = !string.IsNullOrEmpty(_apiSettings.Port)
-                ? $"{_apiSettings.ServerUrl}:{_apiSettings.Port}" 
-                : $"{_apiSettings.ServerUrl}";
-            
-            ViewData["ServerUrl"] = serverUrl;
-            
             return View(items);
         }
         catch (Exception e)
@@ -285,12 +279,6 @@ public class AccountsController(
                 Categories = categories
             };
 
-            var serverUrl = !string.IsNullOrEmpty(_apiSettings.Port)
-                ? $"{_apiSettings.ServerUrl}:{_apiSettings.Port}" 
-                : $"{_apiSettings.ServerUrl}";
-            
-            ViewData["ServerUrl"] = serverUrl;
-                
             return View(items);
         }
         catch (Exception e)
