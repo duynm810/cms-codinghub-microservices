@@ -1,5 +1,6 @@
 using Hangfire.Api.Filters;
 using HealthChecks.UI.Client;
+using Infrastructure.Extensions;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Shared.Constants;
 using Shared.Settings;
@@ -15,15 +16,18 @@ public static class ApplicationExtensions
             app.UseHttpsRedirection();
         }
 
-        // Configure the HTTP request pipeline.
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
+        if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
         {
-            c.DocumentTitle = $"{SwaggerConsts.HangfireApi} Documentation";
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.HangfireApi} v1");
-            c.DisplayOperationId(); // Show function name in swagger
-            c.DisplayRequestDuration();
-        });
+            // Configure the HTTP request pipeline.
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = $"{SwaggerConsts.HangfireApi} Documentation";
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.HangfireApi} v1");
+                c.DisplayOperationId(); // Show function name in swagger
+                c.DisplayRequestDuration();
+            });
+        }
 
         // Enables routing in the application.
         app.UseRouting();

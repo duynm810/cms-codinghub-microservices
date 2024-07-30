@@ -1,3 +1,4 @@
+using Infrastructure.Extensions;
 using Infrastructure.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,7 @@ builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
