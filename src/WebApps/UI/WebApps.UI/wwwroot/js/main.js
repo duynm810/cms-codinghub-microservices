@@ -244,7 +244,7 @@
             animation: 'fade', // Fade, slide, none
             animationInSpeed: 200, // Animation in speed (ms)
             animationOutSpeed: 200, // Animation out speed (ms)
-            scrollText: '<i class="elegant-icon arrow_up"></i>', // Text for element
+            scrollText: '<i class="fas fa-arrow-up"></i>', // Text for element
             activeOverlay: false, // Set CSS color to display scrollUp active point, e.g '#00FFFF'
         });
     };

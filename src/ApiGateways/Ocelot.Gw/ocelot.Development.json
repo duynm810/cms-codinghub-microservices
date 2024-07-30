@@ -520,6 +520,10 @@
           "Port": 5004
         }
       ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Posts"
+      },
       "SwaggerKey": "post-service"
     },
     {

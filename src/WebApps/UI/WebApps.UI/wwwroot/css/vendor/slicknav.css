@@ -61,7 +61,7 @@ div.slicknav_collapsed .menu-icon-inner:after{-webkit-transform:rotate(45deg) tr
 .slicknav_nav .slicknav_arrow{float:right;}
 .slicknav_nav .slicknav_row:hover,
 .slicknav_nav .slicknav_row:hover .slicknav_arrow{border-radius:0;background-color:#F79960;background-color:transparent;color:#000;}
-.slicknav_btn{cursor:pointer;position:relative;z-index:99;border:none;top:5px;background:rgb(255,255,255) none repeat scroll 0% 0%;border-radius:3px;padding:10px;margin-left:-10px;float:left;line-height:1;}
+.slicknav_btn{cursor:pointer;position:relative;z-index:99;border:none;top:5px;background:rgb(255,255,255) none repeat scroll 0% 0%;border-radius:3px;padding:8px;margin-left:-10px;float:left;line-height:1;}
 .slicknav_btn i{font-size:22px;}
 .slicknav_menu .slicknav_icon{position:relative;margin:0;padding:0;}
 .slicknav_nav .slicknav_arrow{float:right;font-size:22px;position:absolute;top:-8px;right:10px;}

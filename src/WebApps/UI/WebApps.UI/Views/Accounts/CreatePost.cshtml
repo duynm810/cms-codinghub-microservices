@@ -1,7 +1,11 @@
 @model CreatePostViewModel
 @{
+    ViewData["Title"] = "Create Post - Coding Hub";
     ViewData["ShowBottom"] = false;
     ViewData["MainClass"] = "bg-grey pb-30"; // Set custom class for main in Layout
+}
+
+@{
     var categories = Model.Categories;
 }
 

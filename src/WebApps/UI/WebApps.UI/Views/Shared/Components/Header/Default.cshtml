@@ -1,5 +1,3 @@
-@using Microsoft.AspNetCore.Mvc.TagHelpers
-@using Shared.Extensions
 @model HeaderViewModel
 @{
     var categories = Model.Categories.ToList();
@@ -8,12 +6,12 @@
 <div class="header-top">
     <div class="container">
         <div class="row pt-20 pb-20">
-            <div class="col-md-3 col-xs-6">
+            <div class="col-6 col-md-3">
                 <a href="/">
-                    <img class="logo" src="~/imgs/theme/logo.png" alt="">
+                    <img class="logo" src="~/imgs/theme/logo.svg" alt="">
                 </a>
             </div>
-            <div class="col-md-9 col-xs-6 text-end header-top-right ">
+            <div class="col-6 col-md-9 text-end d-flex align-items-center justify-content-end">
                 <button class="search-icon d-none d-md-inline">
                     <span class="mr-15 text-muted font-small"><i class="elegant-icon icon_search mr-5"></i>Search</span>
                 </button>
