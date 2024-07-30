@@ -6,6 +6,10 @@
     var authorUrl = "/author/" + detail.User.UserName;
 }
 
+@{
+    ViewData["Title"] = $"{detail.Title} | Coding Hub";
+}
+
 @section scripts
 {
     <script src="~/lib/mustache.js/mustache.min.js"></script>

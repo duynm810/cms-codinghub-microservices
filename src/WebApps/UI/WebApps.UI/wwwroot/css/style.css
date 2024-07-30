@@ -1158,12 +1158,36 @@ h1.page-404 {
 		left: 0;
 		top: -4px;
 	}
+
+	.row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+	}
+
+	.logo {
+		max-width: 100px; /* Adjust as needed */
+	}
+
+	.vertical-divider {
+		display: none;
+	}
 }
 @media (min-width: 768px) {
 	.vertical-divider > [class*="col-"]:nth-child(n + 2)::after {
 		width: 1px;
 		height: auto;
 		left: -1px;
+	}
+
+	.header-top-right {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
+
+	.vertical-divider {
+		display: inline;
 	}
 }
 .divider-wave,

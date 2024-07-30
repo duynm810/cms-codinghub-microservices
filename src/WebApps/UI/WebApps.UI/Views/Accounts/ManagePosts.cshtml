@@ -1,6 +1,10 @@
 @model ManagePostsViewModel
 @{
+    ViewData["Title"] = "Manage Posts - Coding Hub";
     ViewData["ShowBottom"] = false;
+}
+
+@{
     var posts = Model.Posts;
     var user = User;
     var isAdmin = ClaimsPrincipalExtensions.IsInRole(user, UserRolesConsts.Administrator);

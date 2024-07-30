@@ -4,6 +4,10 @@
     var authorUrl = "/author/" + data.User.UserName;
 }
 
+@{
+    ViewData["Title"] = $"{data.User.UserName} | Coding Hub";
+}
+
 <div class="container">
     <div class="row">
         <div class="col-12">
