@@ -769,3 +769,9 @@ input[type="file"] {
 .entry-main-content .ql-code-block-container .nice-select .current {
     display: none;
 }
+
+.ql-editor pre,
+.ql-editor .ql-code-block {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}

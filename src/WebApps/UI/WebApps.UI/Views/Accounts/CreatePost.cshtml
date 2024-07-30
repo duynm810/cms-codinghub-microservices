@@ -37,7 +37,10 @@
                     await controller.waitForUploadCompletion();
                 }
 
-                const content = quill.root.innerHTML;
+                window.removeLanguageDropdowns();
+
+                let content = quill.root.innerHTML;
+                content = window.preserveIndentation(content);
                 document.querySelector('input[name="Content"]').value = he.encode(content);
 
                 const tagsData = window.getTagsData();
