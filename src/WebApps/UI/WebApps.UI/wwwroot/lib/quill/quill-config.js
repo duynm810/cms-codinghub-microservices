@@ -203,6 +203,26 @@ document.addEventListener('DOMContentLoaded', function () {
             const extension = type.split('/')[1];
             return `${randomString}.${extension}`;
         }
+
+        window.removeLanguageDropdowns = function() {
+            const quillEditorContent = document.querySelector('.ql-editor');
+            const selects = quillEditorContent.querySelectorAll('select.ql-ui');
+            selects.forEach(select => select.remove());
+        }
+
+        window.preserveIndentation = function(content) {
+            const container = document.createElement('div');
+            container.innerHTML = content;
+
+            const codeBlocks = container.querySelectorAll('.ql-code-block');
+            codeBlocks.forEach(block => {
+                block.innerHTML = block.innerHTML
+                    .replace(/ {2}/g, ' &nbsp;&nbsp;')
+                    .replace(/\n/g, '<br>');
+            });
+
+            return container.innerHTML;
+        }
         
         //#endregion
 
