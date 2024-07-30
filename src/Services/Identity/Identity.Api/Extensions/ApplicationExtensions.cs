@@ -1,5 +1,6 @@
 using HealthChecks.UI.Client;
 using IdentityServer4.AccessTokenValidation;
+using Infrastructure.Extensions;
 using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Serilog;
@@ -11,22 +12,22 @@ public static class ApplicationExtensions
 {
     public static void ConfigurePipeline(this WebApplication app)
     {
-        if (app.Environment.IsDevelopment())
+        if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
         {
             app.UseDeveloperExceptionPage();
+            
+            // Configure the HTTP request pipeline.
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
+                c.OAuthClientId("coding_hub_microservices_swagger");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
+                c.DisplayOperationId(); // Show function name in swagger
+                c.DisplayRequestDuration();
+            });
         }
-
-        // Configure the HTTP request pipeline.
-        app.UseSwagger();
-        app.UseSwaggerUI(c =>
-        {
-            c.DocumentTitle = $"{SwaggerConsts.IdentityApi} Documentation";
-            c.OAuthClientId("coding_hub_microservices_swagger");
-            c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{SwaggerConsts.IdentityApi} v1");
-            c.DisplayOperationId(); // Show function name in swagger
-            c.DisplayRequestDuration();
-        });
-
+        
         app.UseMiddleware<ErrorWrappingMiddleware>();
 
         app.UseSerilogRequestLogging();

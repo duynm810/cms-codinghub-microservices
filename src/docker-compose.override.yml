@@ -132,8 +132,7 @@ services:
     container_name: kibana
     environment:
       - 'ELASTICSEARCH_URL=http://elasticsearch:9200'
-      - >-
-        ELASTICSEARCH_SERVICE_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYV90b2tlbjpXZFF0Wm5tM1JyQ1hoYUNRb1ZTdXlB
+      - ELASTICSEARCH_SERVICE_TOKEN=AAEAAWVsYXN0aWMva2liYW5hL2tpYmFuYV90b2tlbjpXZFF0Wm5tM1JyQ1hoYUNRb1ZTdXlB
     depends_on:
       - elasticsearch
     ports:
