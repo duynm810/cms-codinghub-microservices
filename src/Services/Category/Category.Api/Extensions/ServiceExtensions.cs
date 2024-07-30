@@ -131,10 +131,6 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(CacheSettings)} is not configured properly");
         
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
         services.AddHealthChecks()
             .AddMySql(connectionString: databaseSettings.ConnectionString,
                 name: "MySQL Health",

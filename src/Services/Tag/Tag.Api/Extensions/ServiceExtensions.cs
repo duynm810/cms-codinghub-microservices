@@ -145,11 +145,7 @@ public static class ServiceExtensions
         var cacheSettings = services.GetOptions<CacheSettings>(nameof(CacheSettings)) ??
                             throw new ArgumentNullException(
                                 $"{nameof(CacheSettings)} is not configured properly");
-
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
+        
         services.AddHealthChecks()
             .AddMySql(connectionString: databaseSettings.ConnectionString,
                 name: "MySQL Health",
@@ -158,12 +154,7 @@ public static class ServiceExtensions
             .AddRedis(cacheSettings.ConnectionString,
                 name: "Redis Health",
                 failureStatus: HealthStatus.Degraded,
-                tags: new[] { "cache", "redis" })
-            .AddElasticsearch(
-                elasticsearchConfigurations.Uri,
-                name: "Elasticsearch Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });
+                tags: new[] { "cache", "redis" });
         ;
     }
 }

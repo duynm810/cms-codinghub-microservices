@@ -104,19 +104,10 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(HangfireSettings)} is not configured properly");
         
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
         services.AddHealthChecks()
             .AddMongoDb(hangfireSettings.Storage.ConnectionString,
                 name: "MongoDb Health",
                 failureStatus: HealthStatus.Degraded,
-                tags: new[] { "db", "mongo" })
-            .AddElasticsearch(
-                elasticsearchConfigurations.Uri,
-                name: "Elasticsearch Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });
+                tags: new[] { "db", "mongo" });
     }
 }
