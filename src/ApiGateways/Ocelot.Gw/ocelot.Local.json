@@ -1070,7 +1070,7 @@
       "UpstreamPathTemplate": "/dashboard",
       "Aggregator": "DashboardAggregator",
       "FileCacheOptions": {
-        "TtlSeconds": 30,
+        "TtlSeconds": 60,
         "Region": "Aggregators"
       }
     },
@@ -1082,7 +1082,7 @@
       "UpstreamPathTemplate": "/footer",
       "Aggregator": "FooterAggregator",
       "FileCacheOptions": {
-        "TtlSeconds": 30,
+        "TtlSeconds": 60,
         "Region": "Aggregators"
       }
     },
@@ -1094,7 +1094,7 @@
       "UpstreamPathTemplate": "/side-bar",
       "Aggregator": "SidebarAggregator",
       "FileCacheOptions": {
-        "TtlSeconds": 30,
+        "TtlSeconds": 60,
         "Region": "Aggregators"
       }
     }
