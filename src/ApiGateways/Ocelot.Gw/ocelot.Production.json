@@ -489,6 +489,10 @@
           "Host": "post-coding-hub.azurewebsites.net"
         }
       ],
+      "FileCacheOptions": {
+        "TtlSeconds": 30,
+        "Region": "Posts"
+      },
       "SwaggerKey": "post-service"
     },
     {
