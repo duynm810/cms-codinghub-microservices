@@ -42,7 +42,7 @@ public static class UserSeedData
         
         CreateUser(scope, "Duy", "Nguyen", "82 Vo Van Ngan, Binh Tho ward, Thu Duc city",
             Guid.NewGuid().ToString(), "duynguyen123@","duynguyen810",
-            UserRolesConsts.Author,  "nguyenminhduy8101996@gmail.com");
+            UserRolesConsts.Administrator,  "nguyenminhduy8101996@gmail.com");
     }
 
     private static void CreateUser(IServiceScope scope, string firstName, string lastName,
