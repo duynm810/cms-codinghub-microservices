@@ -469,7 +469,7 @@ sup {
 	pointer-events: none;
 }
 .text-limit-2-row {
-	overflow: hidden !important;
+	/*overflow: hidden !important;*/
 	display: -webkit-box !important;
 	-webkit-line-clamp: 2 !important;
 	-webkit-box-orient: vertical;
