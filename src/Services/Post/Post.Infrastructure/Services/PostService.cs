@@ -13,7 +13,7 @@ public class PostService(ICategoryGrpcClient categoryGrpcClient, IMapper mapper)
     public async Task<List<PostDto>> EnrichPostsWithCategories(IEnumerable<PostBase> postList, CancellationToken cancellationToken = default)
     {
         var categoryIds = postList.Select(p => p.CategoryId).Distinct().ToList();
-        var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds).ConfigureAwait(false);
+        var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
         var postDtos = mapper.Map<List<PostDto>>(postList);
         var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
@@ -34,7 +34,7 @@ public class PostService(ICategoryGrpcClient categoryGrpcClient, IMapper mapper)
         if (pagedPosts is { Items: not null })
         {
             var categoryIds = pagedPosts.Items.Select(p => p.CategoryId).Distinct().ToList();
-            var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds).ConfigureAwait(false);
+            var categories = await categoryGrpcClient.GetCategoriesByIds(categoryIds);
 
             var postDtos = mapper.Map<List<PostDto>>(pagedPosts.Items);
             var categoryDictionary = categories.ToDictionary(c => c.Id, c => c);
