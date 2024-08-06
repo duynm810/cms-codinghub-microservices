@@ -219,7 +219,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'DatabaseSettings__ConnectionString=Server=postdb;Database=post_service_db;User Id=admin;Password=admin1234;'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__IdentityUrl=http://identity.grpc:6101'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
@@ -273,7 +273,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Port=5432;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
       - 'GrpcSettings__PostUrl=http://post.grpc:6103'
@@ -325,7 +325,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Port=5432;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
       - 'GrpcSettings__PostUrl=http://post.grpc:6103'
@@ -462,7 +462,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'DatabaseSettings__ConnectionString=Server=postdb;Database=post_service_db;User Id=admin;Password=admin1234;'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
@@ -492,7 +492,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Port=5432;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
