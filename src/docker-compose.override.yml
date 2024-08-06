@@ -142,6 +142,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://apigw.ocelot'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - category.api
       - tag.api
@@ -160,6 +168,13 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=sqlserver'
+      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;Connect Timeout=30000;'
+      - 'IdentityServer__BaseUrl=http://localhost:6002'
+      - 'IdentityServer__IssuerUri=http://localhost:6002'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - identitydb
     ports:
@@ -170,6 +185,19 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=mysql'
+      - 'DatabaseSettings__ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__PostUrl=http://post.grpc:6103'
+      - 'ApiConfigurations__ApiTitle=Category Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://category.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - categorydb
     ports:
@@ -180,6 +208,27 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__IdentityUrl=http://identity.grpc:6101'
+      - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
+      - 'GrpcSettings__SeriesUrl=http://series.grpc:6104'
+      - 'GrpcSettings__PostInSeriesUrl=http://post-in-series.grpc:6105'
+      - 'GrpcSettings__TagUrl=http://tag.grpc:6106'
+      - 'GrpcSettings__PostInTagUrl=http://post-in-tag.grpc:6107'
+      - 'ApiConfigurations__ApiTitle=Post Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://post.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=PostService'
+      - 'EmailTemplateSettings__TemplateDirectory=Templates'
     depends_on:
       - postdb
       - rabbitmq
@@ -191,6 +240,18 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=sqlserver'
+      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30000;'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'ApiConfigurations__ApiTitle=Series Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://series.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - seriesdb
     ports:
@@ -201,6 +262,23 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Port=5432;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
+      - 'GrpcSettings__PostUrl=http://post.grpc:6103'
+      - 'GrpcSettings__SeriesUrl=http://series.grpc:6104'
+      - 'ApiConfigurations__ApiTitle=Post In Series API'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://post-in-series.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=PostInSeriesService'
     depends_on:
       - post-in-series-db
     ports:
@@ -211,6 +289,21 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=mysql'
+      - 'DatabaseSettings__ConnectionString=Server=tagdb;Database=tag_service_db;Uid=root;Pwd=Passw0rd!'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__PostInTagUrl=http://post-in-tag.grpc:6107'
+      - 'ApiConfigurations__ApiTitle=Tag Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://tag.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=TagService'
     depends_on:
       - tagdb
     ports:
@@ -221,6 +314,23 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Port=5432;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
+      - 'GrpcSettings__PostUrl=http://post.grpc:6103'
+      - 'GrpcSettings__TagUrl=http://tag.grpc:6106'
+      - 'ApiConfigurations__ApiTitle=Post In Tag Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://post-in-tag.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=PostInTagService'
     depends_on:
       - post-in-tag-db
     ports:
@@ -231,6 +341,23 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'MongoDbSettings__DbProvider=mongodb'
+      - 'MongoDbSettings__ConnectionString=mongodb://admin:admin@commentdb'
+      - 'MongoDbSettings__DatabaseName=comment_service_db'
+      - 'CacheSettings__ConnectionString=redis:6379'
+      - 'GrpcSettings__IdentityUrl=http://identity.grpc:6101'
+      - 'GrpcSettings__PostUrl=http://post.grpc:6103'
+      - 'ApiConfigurations__ApiTitle=Comment Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://comment.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=CommentService'
     depends_on:
       - commentdb
     ports:
@@ -241,6 +368,26 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'HangfireSettings__Route=/jobs'
+      - 'HangfireSettings__ServerName=Hangfire Api'
+      - 'HangfireSettings__Dashboard__AppPath=/'
+      - 'HangfireSettings__Dashboard__StartsPollingInterval=2000'
+      - 'HangfireSettings__Dashboard__DashboardTitle=Jobs'
+      - 'HangfireSettings__Storage__DbProvider=mongodb'
+      - 'HangfireSettings__Storage__ConnectionString=mongodb://admin:admin@hangfiredb/hangfire-webapi?authSource=admin'
+      - 'SmtpEmailSettings__DisplayName=Coding-hub Microservice'
+      - 'SmtpEmailSettings__EnableVerification=false'
+      - 'SmtpEmailSettings__From=nguyenminhduy8101996@gmail.com'
+      - 'SmtpEmailSettings__SmtpServer=smtp.gmail.com'
+      - 'SmtpEmailSettings__UseSsl=true'
+      - 'SmtpEmailSettings__Port=465'
+      - 'SmtpEmailSettings__Username=nguyenminhduy8101996@gmail.com'
+      - 'SmtpEmailSettings__Password=cmuaydptrmonoxvv'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
+      - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
+      - 'EventBusSettings__ServiceName=BackgroundJobs'
     depends_on:
       - hangfiredb
       - rabbitmq
@@ -252,6 +399,18 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'MediaSettings__AllowImageFileTypes=jpg,jpeg,png,gif'
+      - 'MediaSettings__ImageFolder=media'
+      - 'MediaSettings__NoImage=/images/no-image.png'
+      - 'ApiConfigurations__ApiTitle=Media Api'
+      - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
+      - 'ApiConfigurations__ApiVersion=v1'
+      - 'ApiConfigurations__ApiBaseUrl=http://media.api'
+      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IssuerUri=http://identity.api'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     ports:
       - '6011:80'
     restart: always
@@ -262,6 +421,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=sqlserver'
+      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;Connect Timeout=30000;'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - identitydb
     ports:
@@ -272,6 +436,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=mysql'
+      - 'DatabaseSettings__ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!;'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - categorydb
     ports:
@@ -282,6 +451,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=postdb;Port=5432;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - postdb
     ports:
@@ -292,6 +466,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=sqlserver'
+      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - seriesdb
     ports:
@@ -302,6 +481,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Port=5432;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - post-in-series-db
     ports:
@@ -312,6 +496,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=mysql'
+      - 'DatabaseSettings__ConnectionString=Server=tagdb;Database=tag_service_db;Uid=root;Pwd=Passw0rd!;'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - tagdb
     ports:
@@ -322,6 +511,11 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'DatabaseSettings__DbProvider=postgresql'
+      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     depends_on:
       - post-in-tag-db
     ports:
@@ -332,6 +526,45 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'HealthChecks-UI__HealthChecks__0__Name=Identity Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__0__Uri=http://identity.api/hc'
+      - 'HealthChecks-UI__HealthChecks__1__Name=Category Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__1__Uri=http://category.api/hc'
+      - 'HealthChecks-UI__HealthChecks__2__Name=Post Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__2__Uri=http://post.api/hc'
+      - 'HealthChecks-UI__HealthChecks__3__Name=Series Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__3__Uri=http://series.api/hc'
+      - 'HealthChecks-UI__HealthChecks__4__Name=Post In Series Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__4__Uri=http://post-in-series.api/hc'
+      - 'HealthChecks-UI__HealthChecks__5__Name=Tag Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__5__Uri=http://tag.api/hc'
+      - 'HealthChecks-UI__HealthChecks__6__Name=Post In Tag Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__6__Uri=http://post-in-tag.api/hc'
+      - 'HealthChecks-UI__HealthChecks__7__Name=Comment Api Health Check'
+      - 'HealthChecks-UI__HealthChecks__7__Uri=http://comment.api/hc'
+      - 'HealthChecks-UI__HealthChecks__8__Name=Scheduled Job Health Check'
+      - 'HealthChecks-UI__HealthChecks__8__Uri=http://hangfire.api/hc'
+      - 'HealthChecks-UI__HealthChecks__9__Name=Identity Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__9__Uri=http://identity.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__10__Name=Category Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__10__Uri=http://category.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__11__Name=Post Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__11__Uri=http://post.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__12__Name=Series Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__12__Uri=http://series.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__13__Name=Post In Series Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__13__Uri=http://post-in-series.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__14__Name=Tag Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__14__Uri=http://tag.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__15__Name=Post In Tag Grpc Health Check'
+      - 'HealthChecks-UI__HealthChecks__15__Uri=http://post-in-tag.grpc/hc'
+      - 'HealthChecks-UI__HealthChecks__16__Name=Web UI Health Check'
+      - 'HealthChecks-UI__HealthChecks__16__Uri=http://ui/hc'
+      - 'HealthChecks-UI__EvaluationTimeOnSeconds=10'
+      - 'HealthChecks-UI__MinimumSecondBetweenFailureNotifications=60'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     ports:
       - '6200:80'
   ui:
@@ -339,5 +572,14 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
+      - 'ApiSettings__ServerUrl=http://apigw.ocelot'
+      - 'ApiSettings__Port=6001'
+      - 'IdentityServerSettings__AuthorityUrl=http://localhost:6002'
+      - 'IdentityServerSettings__IssuerUri=http://identity.api'
+      - 'IdentityServerSettings__ClientId=coding_hub_microservices_mvc'
+      - 'IdentityServerSettings__ClientSecret=mvc-client-secret'
+      - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
+      - 'ElasticConfigurations__Username=elastic'
+      - 'ElasticConfigurations__Password=admin'
     ports:
       - '6300:80'
