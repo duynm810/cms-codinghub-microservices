@@ -80,7 +80,9 @@ public static class Config
                     "http://localhost:6007swagger/oauth2-redirect.html",
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6011/swagger/oauth2-redirect.html"
+                    "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://localhost:7001/swagger/oauth2-redirect.html",
+                    "https://localhost:7002/swagger/oauth2-redirect.html",
                 },
                 PostLogoutRedirectUris = new List<string>()
                 {
@@ -103,7 +105,9 @@ public static class Config
                     "http://localhost:6007swagger/oauth2-redirect.html",
                     "http://localhost:6008/swagger/oauth2-redirect.html",
                     "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6011/swagger/oauth2-redirect.html"
+                    "http://localhost:6011/swagger/oauth2-redirect.html",
+                    "https://localhost:7001/swagger/oauth2-redirect.html",
+                    "https://localhost:7002/swagger/oauth2-redirect.html"
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
@@ -126,7 +130,9 @@ public static class Config
                     "http://localhost:6007",
                     "http://localhost:6008",
                     "http://localhost:6009",
-                    "http://localhost:6011"
+                    "http://localhost:6011",
+                    "https://localhost:7001",
+                    "https://localhost:7002"
                 },
                 AllowedScopes =
                 {
@@ -190,12 +196,14 @@ public static class Config
                 RedirectUris = new List<string>
                 {
                     "http://localhost:5300/signin-oidc",
-                    "http://localhost:6300/signin-oidc"
+                    "http://localhost:6300/signin-oidc",
+                    "https://localhost:7300/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
                     "http://localhost:5300/signout-callback-oidc",
-                    "http://localhost:6300/signout-callback-oidc"
+                    "http://localhost:6300/signout-callback-oidc",
+                    "https://localhost:7300/signout-callback-oidc"
                 },
                 AllowedScopes = new List<string>
                 {
