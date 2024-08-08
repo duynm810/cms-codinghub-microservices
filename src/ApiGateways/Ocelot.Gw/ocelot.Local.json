@@ -10,8 +10,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -27,8 +27,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -44,8 +44,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -61,8 +61,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -78,8 +78,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -95,8 +95,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -112,8 +112,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6002
+          "Host": "identity.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -131,8 +131,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "category-service",
@@ -148,8 +148,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -167,8 +167,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "category-service"
@@ -182,8 +182,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "category-service"
@@ -197,8 +197,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -216,8 +216,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6003
+          "Host": "category.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -236,8 +236,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -255,8 +255,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service",
@@ -271,8 +271,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service",
@@ -287,8 +287,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service",
@@ -303,8 +303,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service",
@@ -319,8 +319,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -334,8 +334,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -353,8 +353,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -369,8 +369,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -388,8 +388,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -407,8 +407,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -422,8 +422,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -437,8 +437,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -452,8 +452,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -467,8 +467,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -482,8 +482,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "post-service"
@@ -497,8 +497,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -516,8 +516,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "FileCacheOptions": {
@@ -535,8 +535,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -554,8 +554,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -573,8 +573,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -592,8 +592,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -611,8 +611,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -630,8 +630,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6004
+          "Host": "post.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -649,8 +649,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -669,8 +669,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -688,8 +688,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -707,8 +707,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -726,8 +726,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -745,8 +745,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6005
+          "Host": "series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -765,8 +765,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6006
+          "Host": "post-in-series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -784,8 +784,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6006
+          "Host": "post-in-series.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -803,8 +803,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "tag-service",
@@ -820,8 +820,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -839,8 +839,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "tag-service"
@@ -854,8 +854,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "tag-service"
@@ -869,8 +869,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "tag-service",
@@ -885,8 +885,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -904,8 +904,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6007
+          "Host": "tag.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -924,8 +924,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6008
+          "Host": "post-in-tag.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -943,8 +943,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6009
+          "Host": "comment.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "comment-service"
@@ -958,8 +958,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6009
+          "Host": "comment.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "comment-service"
@@ -973,8 +973,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6009
+          "Host": "comment.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "comment-service"
@@ -988,8 +988,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6009
+          "Host": "comment.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "comment-service"
@@ -1003,8 +1003,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6009
+          "Host": "comment.api",
+          "Port": 80
         }
       ],
       "SwaggerKey": "comment-service",
@@ -1019,8 +1019,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6011
+          "Host": "media.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -1038,8 +1038,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6011
+          "Host": "media.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -1057,8 +1057,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "host.docker.internal",
-          "Port": 6011
+          "Host": "media.api",
+          "Port": 80
         }
       ]
     }
