@@ -1,0 +1,2 @@
+CREATE DATABASE IF NOT EXISTS category_service_db;
+CREATE DATABASE IF NOT EXISTS tag_service_db;
