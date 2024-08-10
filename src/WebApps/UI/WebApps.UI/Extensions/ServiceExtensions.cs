@@ -28,7 +28,7 @@ public static class ServiceExtensions
     /// <param name="services">The IServiceCollection to add services to.</param>
     /// <param name="environment">Get current environment</param>
     /// <param name="configuration">The configuration to be used by the services.</param>
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         // Register app configuration settings
         services.AddConfigurationSettings(configuration);
@@ -113,14 +113,14 @@ public static class ServiceExtensions
         }
     }
 
-    private static void AddHttpClientServices(this IServiceCollection services, IHostEnvironment environment)
+    private static void AddHttpClientServices(this IServiceCollection services, IWebHostEnvironment environment)
     {
         var apiSettings = services.GetOptions<ApiSettings>(nameof(ApiSettings)) ??
                           throw new ArgumentNullException(
                               $"{nameof(ApiSettings)} is not configured properly");
         
         // Configure BaseAddress based on the environment
-        var baseAddress = environment.IsDevelopment() 
+        var baseAddress = environment.IsDevelopment() || environment.IsLocal()
             ? $"{apiSettings.ServerUrl}:{apiSettings.Port}" 
             : apiSettings.ServerUrl;
 
