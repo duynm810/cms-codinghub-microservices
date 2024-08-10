@@ -65,12 +65,20 @@ public static class ServiceExtensions
 
         services.AddCors(options =>
         {
-            options.AddPolicy("CorsPolicy", buider =>
+            options.AddPolicy("CorsPolicy", builder =>
             {
-                if (origins != null)
-                    buider.WithOrigins(origins)
+                if (!string.IsNullOrEmpty(origins))
+                {
+                    builder.WithOrigins(origins.Split(','))
                         .AllowAnyHeader()
                         .AllowAnyMethod();
+                }
+                else
+                {
+                    builder.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                }
             });
         });
     }
