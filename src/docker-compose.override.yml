@@ -1,67 +1,35 @@
 services:
-  categorydb:
-    container_name: categorydb
+  mysqldb:
+    container_name: mysqldb
     environment:
-      MYSQL_ROOT_PASSWORD: Passw0rd!
-      MYSQL_DATABASE: category_service_db
-    restart: always
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     volumes:
       - 'mysql_data:/var/lib/mysql'
+      - './mysql_db_init.sql:/docker-entrypoint-initdb.d/mysql_db_init.sql'
     ports:
       - '3307:3306'
-  postdb:
-    container_name: postdb
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=post_service_db
     restart: always
+  postgresdb:
+    container_name: postgresdb
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - 'postgres_data:/var/lib/postgresql/data'
+      - './postgres_db_init.sh:/docker-entrypoint-initdb.d/postgres_db_init.sh'
     ports:
       - '5433:5432'
-    volumes:
-      - 'post_postgres_data:/var/lib/postgresql/data'
+    restart: always
   seriesdb:
     container_name: seriesdb
     environment:
-      SA_PASSWORD: Passw0rd!
+      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
       ACCEPT_EULA: 'Y'
     volumes:
       - 'series_sqlserver_data:/var/opt/mssql'
-    restart: always
     ports:
       - '1435:1433'
-  post-in-series-db:
-    container_name: post-in-series-db
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=post_in_series_service_db
     restart: always
-    ports:
-      - '5434:5432'
-    volumes:
-      - 'post_in_series_postgres_data:/var/lib/postgresql/data'
-  tagdb:
-    container_name: tagdb
-    environment:
-      MYSQL_ROOT_PASSWORD: Passw0rd!
-      MYSQL_DATABASE: tag_service_db
-    restart: always
-    volumes:
-      - 'tag_mysql_data:/var/lib/mysql'
-    ports:
-      - '3308:3306'
-  post-in-tag-db:
-    container_name: post-in-tag-db
-    environment:
-      - POSTGRES_USER=admin
-      - POSTGRES_PASSWORD=admin1234
-      - POSTGRES_DB=post_in_tag_service_db
-    restart: always
-    ports:
-      - '5435:5432'
-    volumes:
-      - 'post_in_tag_postgres_data:/var/lib/postgresql/data'
   commentdb:
     container_name: commentdb
     ports:
@@ -85,7 +53,7 @@ services:
   identitydb:
     container_name: identitydb
     environment:
-      SA_PASSWORD: Passw0rd!
+      SA_PASSWORD: ${MSSQL_SA_PASSWORD}
       ACCEPT_EULA: 'Y'
     volumes:
       - 'identity_sqlserver_data:/var/opt/mssql'
@@ -176,7 +144,7 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
       - 'ASPNETCORE_URLS=http://+:80;https://+:443'
       - 'DatabaseSettings__DbProvider=sqlserver'
-      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;Connect Timeout=30000;'
+      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Connect Timeout=30000;'
       - 'IdentityServer__BaseUrl=http://localhost:6002'
       - 'IdentityServer__IssuerUri=http://localhost:6002'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
@@ -196,7 +164,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
-      - 'DatabaseSettings__ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!'
+      - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=category_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__PostUrl=http://post.grpc:6103'
       - 'ApiConfigurations__ApiTitle=Category Api'
@@ -209,7 +177,7 @@ services:
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - categorydb
+      - mysqldb
     ports:
       - '6003:80'
     restart: always
@@ -219,7 +187,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=postdb;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__IdentityUrl=http://identity.grpc:6101'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
@@ -240,7 +208,7 @@ services:
       - 'EventBusSettings__ServiceName=PostService'
       - 'EmailTemplateSettings__TemplateDirectory=Templates'
     depends_on:
-      - postdb
+      - postgresdb
       - rabbitmq
     ports:
       - '6004:80'
@@ -251,7 +219,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
-      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30000;'
+      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30000;'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'ApiConfigurations__ApiTitle=Series Api'
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
@@ -273,7 +241,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_series_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
       - 'GrpcSettings__PostUrl=http://post.grpc:6103'
@@ -290,7 +258,7 @@ services:
       - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
       - 'EventBusSettings__ServiceName=PostInSeriesService'
     depends_on:
-      - post-in-series-db
+      - postgresdb
     ports:
       - '6006:80'
     restart: always
@@ -300,7 +268,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
-      - 'DatabaseSettings__ConnectionString=Server=tagdb;Database=tag_service_db;Uid=root;Pwd=Passw0rd!'
+      - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=tag_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__PostInTagUrl=http://post-in-tag.grpc:6107'
       - 'ApiConfigurations__ApiTitle=Tag Api'
@@ -315,7 +283,7 @@ services:
       - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
       - 'EventBusSettings__ServiceName=TagService'
     depends_on:
-      - tagdb
+      - mysqldb
     ports:
       - '6007:80'
     restart: always
@@ -325,7 +293,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_tag_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'CacheSettings__ConnectionString=redis:6379'
       - 'GrpcSettings__CategoryUrl=http://category.grpc:6102'
       - 'GrpcSettings__PostUrl=http://post.grpc:6103'
@@ -342,7 +310,7 @@ services:
       - 'EventBusSettings__HostAddress=amqp://guest:guest@rabbitmq:5672'
       - 'EventBusSettings__ServiceName=PostInTagService'
     depends_on:
-      - post-in-tag-db
+      - postgresdb
     ports:
       - '6008:80'
     restart: always
@@ -432,7 +400,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
-      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=sa;Password=Passw0rd!;TrustServerCertificate=True;Connect Timeout=30000;'
+      - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Connect Timeout=30000;'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
@@ -447,12 +415,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
-      - 'DatabaseSettings__ConnectionString=Server=categorydb;Database=category_service_db;Uid=root;Pwd=Passw0rd!;'
+      - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=category_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - categorydb
+      - mysqldb
     ports:
       - '6102:80'
     restart: always
@@ -462,12 +430,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=postdb;Database=post_service_db;User Id=admin;Password=admin1234;'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - postdb
+      - postgresdb
     ports:
       - '6013:80'
     restart: always
@@ -477,7 +445,7 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
-      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=sa;Password=Passw0rd!;Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;'
+      - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
@@ -492,12 +460,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-series-db;Database=post_in_series_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_series_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - post-in-series-db
+      - postgresdb
     ports:
       - '6105:80'
     restart: always
@@ -507,12 +475,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
-      - 'DatabaseSettings__ConnectionString=Server=tagdb;Database=tag_service_db;Uid=root;Pwd=Passw0rd!;'
+      - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=tag_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - tagdb
+      - mysqldb
     ports:
       - '6106:80'
     restart: always
@@ -522,12 +490,12 @@ services:
       - ASPNETCORE_ENVIRONMENT=Local
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
-      - 'DatabaseSettings__ConnectionString=Server=post-in-tag-db;Database=post_in_tag_service_db;User Id=admin;Password=admin1234'
+      - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_tag_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
     depends_on:
-      - post-in-tag-db
+      - postgresdb
     ports:
       - '6107:80'
     restart: always

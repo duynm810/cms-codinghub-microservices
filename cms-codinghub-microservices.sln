@@ -40,6 +40,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "solution items", "solution 
 		src\docker-compose.yml = src\docker-compose.yml
 		global.json = global.json
 		README.md = README.md
+		src\mysql_db_init.sql = src\mysql_db_init.sql
+		src\postgres_db_init.sh = src\postgres_db_init.sh
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApps.HealthCheck", "src\WebApps\HealthCheck\WebApps.HealthCheck\WebApps.HealthCheck.csproj", "{6E789577-FE07-462B-8492-883FEC438F2A}"
