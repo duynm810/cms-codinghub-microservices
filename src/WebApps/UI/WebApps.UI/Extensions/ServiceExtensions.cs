@@ -120,9 +120,7 @@ public static class ServiceExtensions
                               $"{nameof(ApiSettings)} is not configured properly");
         
         // Configure BaseAddress based on the environment
-        var baseAddress = environment.IsDevelopment() || environment.IsLocal()
-            ? $"{apiSettings.ServerUrl}:{apiSettings.Port}" 
-            : apiSettings.ServerUrl;
+        var baseAddress = apiSettings.ServerUrl;
 
         services.AddHttpClient("OcelotApiGw", client => { client.BaseAddress = new Uri(baseAddress); })
             .UseCircuitBreakerPolicy();
