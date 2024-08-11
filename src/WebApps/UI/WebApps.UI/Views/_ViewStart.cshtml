@@ -6,8 +6,6 @@
 
 @{
     var server = Configuration["ApiSettings:ServerUrl"];
-    var port = Configuration["ApiSettings:Port"];
-    var serverUrl = !string.IsNullOrEmpty(port) ? $"{server}:{port}" : $"{server}";
-    
+    var serverUrl = $"{server}";
     ViewBag.ServerUrl = serverUrl;
 }
