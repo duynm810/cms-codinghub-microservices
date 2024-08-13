@@ -15,7 +15,7 @@ public static class ApplicationExtensions
             app.UseHsts();
         }
 
-        if (app.Environment.IsProduction())
+        if (app.Environment.IsProduction() || app.Environment.IsStaging())
         {
             app.UseHttpsRedirection();
         }
