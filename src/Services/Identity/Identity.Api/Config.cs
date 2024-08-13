@@ -75,10 +75,6 @@ public static class Config
                 {
                     "https://codinghub.io.vn/signout-callback-oidc"
                 },
-                AllowedCorsOrigins = new List<string>
-                {
-                    "https://codinghub.io.vn"
-                },
                 AllowedScopes = new List<string>
                 {
                     IdentityServerConstants.StandardScopes.OpenId,
