@@ -196,7 +196,7 @@ public static class ServiceExtensions
             .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
             {
                 options.Authority = identityServerSettings.AuthorityUrl;
-                options.RequireHttpsMetadata = true;
+                options.RequireHttpsMetadata = false;
                 options.GetClaimsFromUserInfoEndpoint = true;
                 options.MetadataAddress =
                     $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
@@ -226,7 +226,6 @@ public static class ServiceExtensions
                         // Intercept the redirection so the browser navigates to the right URL in your host
                         context.ProtocolMessage.IssuerAddress =
                             $"{identityServerSettings.AuthorityUrl}/connect/authorize";
-                        Console.WriteLine("Redirecting to Identity Provider: " + context.ProtocolMessage.IssuerAddress);
                         return Task.CompletedTask;
                     },
                     OnRedirectToIdentityProviderForSignOut = context =>
@@ -234,7 +233,6 @@ public static class ServiceExtensions
                         // Intercept the redirection so the browser navigates to the right URL in your host
                         context.ProtocolMessage.IssuerAddress =
                             $"{identityServerSettings.AuthorityUrl}/connect/endsession";
-                        Console.WriteLine("Redirecting to Identity Provider for SignOut: " + context.ProtocolMessage.IssuerAddress);
                         return Task.CompletedTask;
                     },
                     OnTokenValidated = x =>
@@ -243,27 +241,22 @@ public static class ServiceExtensions
                         var accessToken = x.TokenEndpointResponse?.AccessToken;
                         var refreshToken = x.TokenEndpointResponse?.RefreshToken;
 
-                        if (accessToken != null && refreshToken != null)
-                        {
-                            identity.AddClaims(new[]
-                            {
-                                new Claim("access_token", accessToken),
-                                new Claim("refresh_token", refreshToken)
-                            });
+                        if (accessToken == null || refreshToken == null)
+                            return Task.CompletedTask;
 
-                            if (x.Properties != null)
-                            {
-                                x.Properties.IsPersistent = true;
-                                var jwtToken = new JwtSecurityToken(accessToken);
-                                x.Properties.ExpiresUtc = jwtToken.ValidTo;
-                            }
-
-                            Console.WriteLine("Token has been validated successfully.");
-                        }
-                        else
+                        identity.AddClaims(new[]
                         {
-                            Console.WriteLine("Token validation failed: AccessToken or RefreshToken is null.");
-                        }
+                            new Claim("access_token", accessToken),
+                            new Claim("refresh_token", refreshToken)
+                        });
+
+                        if (x.Properties == null)
+                            return Task.CompletedTask;
+
+                        x.Properties.IsPersistent = true;
+
+                        var jwtToken = new JwtSecurityToken(accessToken);
+                        x.Properties.ExpiresUtc = jwtToken.ValidTo;
 
                         return Task.CompletedTask;
                     }
