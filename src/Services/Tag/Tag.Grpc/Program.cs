@@ -33,7 +33,7 @@ try
         }
 
         // Config local(docker) environment (Cấu hình môi trường docker)
-        if (builder.Environment.IsLocal())
+        if (builder.Environment.IsLocal() || builder.Environment.IsStaging())
         {
             // Configure health checks to use port 80 with HTTP/1. (Cấu hình health checks sử dụng cổng 80 với HTTP/1.)
             options.ListenAnyIP(80, listenOptions => listenOptions.Protocols = HttpProtocols.Http1);

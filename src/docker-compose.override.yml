@@ -109,9 +109,7 @@ services:
     container_name: apigw.ocelot
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
+      - 'ASPNETCORE_URLS=http://+:80'
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://apigw.ocelot'
@@ -120,8 +118,6 @@ services:
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     depends_on:
       - category.api
       - tag.api
@@ -134,15 +130,12 @@ services:
       - identity.api
     ports:
       - '6001:80'
-      - '7001:443'
     restart: always
   identity.api:
     container_name: identity.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
+      - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
       - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Connect Timeout=30000;'
       - 'IdentityServer__BaseUrl=http://localhost:6002'
@@ -150,13 +143,10 @@ services:
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     depends_on:
       - identitydb
     ports:
       - '6002:80'
-      - '7002:443'
     restart: always
   category.api:
     container_name: category.api
@@ -549,9 +539,7 @@ services:
     container_name: ui
     environment:
       - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
+      - 'ASPNETCORE_URLS=http://+:80'
       - 'ApiSettings__ServerUrl=http://apigw.ocelot'
       - 'IdentityServerSettings__AuthorityUrl=http://localhost:6002'
       - 'IdentityServerSettings__IssuerUri=http://identity.api'
@@ -560,9 +548,6 @@ services:
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     ports:
       - '6300:80'
-      - '7300:443'
     restart: on-failure
