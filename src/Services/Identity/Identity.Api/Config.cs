@@ -53,132 +53,6 @@ public static class Config
         {
             new()
             {
-                ClientName = "Coding Hub Microservices Swagger Client",
-                ClientId = "coding_hub_microservices_swagger",
-                AllowedGrantTypes = GrantTypes.Implicit,
-                AllowAccessTokensViaBrowser = true,
-                RequireConsent = false,
-                AccessTokenLifetime = 60 * 60 * 2,
-                RedirectUris = new List<string>()
-                {
-                    "http://localhost:5001/swagger/oauth2-redirect.html",
-                    "http://localhost:5002/swagger/oauth2-redirect.html",
-                    "http://localhost:5003/swagger/oauth2-redirect.html",
-                    "http://localhost:5004/swagger/oauth2-redirect.html",
-                    "http://localhost:5005/swagger/oauth2-redirect.html",
-                    "http://localhost:5006/swagger/oauth2-redirect.html",
-                    "http://localhost:5007swagger/oauth2-redirect.html",
-                    "http://localhost:5008/swagger/oauth2-redirect.html",
-                    "http://localhost:5009/swagger/oauth2-redirect.html",
-                    "http://localhost:5011/swagger/oauth2-redirect.html",
-                    "http://localhost:6001/swagger/oauth2-redirect.html",
-                    "http://localhost:6002/swagger/oauth2-redirect.html",
-                    "http://localhost:6003/swagger/oauth2-redirect.html",
-                    "http://localhost:6004/swagger/oauth2-redirect.html",
-                    "http://localhost:6005/swagger/oauth2-redirect.html",
-                    "http://localhost:6006/swagger/oauth2-redirect.html",
-                    "http://localhost:6007swagger/oauth2-redirect.html",
-                    "http://localhost:6008/swagger/oauth2-redirect.html",
-                    "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6011/swagger/oauth2-redirect.html",
-                    "https://localhost:7001/swagger/oauth2-redirect.html",
-                    "https://localhost:7002/swagger/oauth2-redirect.html",
-                },
-                PostLogoutRedirectUris = new List<string>()
-                {
-                    "http://localhost:5001/swagger/oauth2-redirect.html",
-                    "http://localhost:5002/swagger/oauth2-redirect.html",
-                    "http://localhost:5003/swagger/oauth2-redirect.html",
-                    "http://localhost:5004/swagger/oauth2-redirect.html",
-                    "http://localhost:5005/swagger/oauth2-redirect.html",
-                    "http://localhost:5006/swagger/oauth2-redirect.html",
-                    "http://localhost:5007swagger/oauth2-redirect.html",
-                    "http://localhost:5008/swagger/oauth2-redirect.html",
-                    "http://localhost:5009/swagger/oauth2-redirect.html",
-                    "http://localhost:5011/swagger/oauth2-redirect.html",
-                    "http://localhost:6001/swagger/oauth2-redirect.html",
-                    "http://localhost:6002/swagger/oauth2-redirect.html",
-                    "http://localhost:6003/swagger/oauth2-redirect.html",
-                    "http://localhost:6004/swagger/oauth2-redirect.html",
-                    "http://localhost:6005/swagger/oauth2-redirect.html",
-                    "http://localhost:6006/swagger/oauth2-redirect.html",
-                    "http://localhost:6007swagger/oauth2-redirect.html",
-                    "http://localhost:6008/swagger/oauth2-redirect.html",
-                    "http://localhost:6009/swagger/oauth2-redirect.html",
-                    "http://localhost:6011/swagger/oauth2-redirect.html",
-                    "https://localhost:7001/swagger/oauth2-redirect.html",
-                    "https://localhost:7002/swagger/oauth2-redirect.html"
-                },
-                AllowedCorsOrigins = new List<string>()
-                {
-                    "http://localhost:5001",
-                    "http://localhost:5002",
-                    "http://localhost:5003",
-                    "http://localhost:5004",
-                    "http://localhost:5005",
-                    "http://localhost:5006",
-                    "http://localhost:5007",
-                    "http://localhost:5008",
-                    "http://localhost:5009",
-                    "http://localhost:5011",
-                    "http://localhost:6001",
-                    "http://localhost:6002",
-                    "http://localhost:6003",
-                    "http://localhost:6004",
-                    "http://localhost:6005",
-                    "http://localhost:6006",
-                    "http://localhost:6007",
-                    "http://localhost:6008",
-                    "http://localhost:6009",
-                    "http://localhost:6011",
-                    "https://localhost:7001",
-                    "https://localhost:7002"
-                },
-                AllowedScopes =
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    "coding_hub_microservices_api.read",
-                    "coding_hub_microservices_api.write",
-                    "roles"
-                }
-            },
-            new()
-            {
-                ClientName = "Coding Hub Microservices Postman Client",
-                ClientId = "coding_hub_microservices_postman",
-                Enabled = true,
-                ClientUri = null,
-                RequireClientSecret = true,
-                RequireConsent = false,
-                AccessTokenLifetime = 60 * 60 * 2,
-                AllowOfflineAccess = true,
-                ClientSecrets = new[]
-                {
-                    new Secret("SuperStrongSecret".Sha512())
-                },
-                AllowedGrantTypes = new[]
-                {
-                    GrantType.ClientCredentials,
-                    GrantType.ResourceOwnerPassword
-                },
-                RedirectUris = new List<string>
-                {
-                    "https://www.getpostman.com/oauth2/callback"
-                },
-                AllowedScopes =
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    "coding_hub_microservices_api.read",
-                    "coding_hub_microservices_api.write",
-                    "roles",
-                }
-            },
-            new()
-            {
                 ClientId = "coding_hub_microservices_mvc",
                 ClientName = "Coding Hub Microservices MVC Client",
                 AllowedGrantTypes = GrantTypes.Code,
@@ -195,15 +69,11 @@ public static class Config
                 },
                 RedirectUris = new List<string>
                 {
-                    "http://localhost:5300/signin-oidc",
-                    "http://localhost:6300/signin-oidc",
-                    "https://localhost:7300/signin-oidc"
+                    "https://www.codinghub.io.vn/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "http://localhost:5300/signout-callback-oidc",
-                    "http://localhost:6300/signout-callback-oidc",
-                    "https://localhost:7300/signout-callback-oidc"
+                    "https://www.codinghub.io.vn/signout-callback-oidc"
                 },
                 AllowedScopes = new List<string>
                 {

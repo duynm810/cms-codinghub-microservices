@@ -108,20 +108,16 @@ services:
   apigw.ocelot:
     container_name: apigw.ocelot
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - 'ASPNETCORE_URLS=http://+:80'
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://apigw.ocelot'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     depends_on:
       - category.api
       - tag.api
@@ -134,34 +130,28 @@ services:
       - identity.api
     ports:
       - '6001:80'
-      - '7001:443'
     restart: always
   identity.api:
     container_name: identity.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
       - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Connect Timeout=30000;'
-      - 'IdentityServer__BaseUrl=http://localhost:6002'
-      - 'IdentityServer__IssuerUri=http://localhost:6002'
+      - 'IdentityServer__BaseUrl=${IDENTITY_BASE_URL}'
+      - 'IdentityServer__IssuerUri=${IDENTITY_BASE_URL}'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     depends_on:
       - identitydb
     ports:
       - '6002:80'
-      - '7002:443'
     restart: always
   category.api:
     container_name: category.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
       - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=category_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
@@ -171,7 +161,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://category.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -184,7 +174,7 @@ services:
   post.api:
     container_name: post.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -199,7 +189,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://post.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -216,7 +206,7 @@ services:
   series.api:
     container_name: series.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
       - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30000;'
@@ -225,7 +215,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://series.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -238,7 +228,7 @@ services:
   post-in-series.api:
     container_name: post-in-series.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_series_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -250,7 +240,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://post-in-series.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -265,7 +255,7 @@ services:
   tag.api:
     container_name: tag.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
       - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=tag_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
@@ -275,7 +265,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://tag.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -290,7 +280,7 @@ services:
   post-in-tag.api:
     container_name: post-in-tag.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_tag_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -302,7 +292,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://post-in-tag.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -317,7 +307,7 @@ services:
   comment.api:
     container_name: comment.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'MongoDbSettings__DbProvider=mongodb'
       - 'MongoDbSettings__ConnectionString=mongodb://admin:admin@commentdb'
@@ -329,7 +319,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://comment.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -344,7 +334,7 @@ services:
   hangfire.api:
     container_name: hangfire.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'HangfireSettings__Route=/jobs'
       - 'HangfireSettings__ServerName=Hangfire Api'
@@ -375,7 +365,7 @@ services:
   media.api:
     container_name: media.api
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'MediaSettings__AllowImageFileTypes=jpg,jpeg,png,gif'
       - 'MediaSettings__ImageFolder=media'
@@ -384,7 +374,7 @@ services:
       - 'ApiConfigurations__ApiName=coding_hub_microservices_api'
       - 'ApiConfigurations__ApiVersion=v1'
       - 'ApiConfigurations__ApiBaseUrl=http://media.api'
-      - 'ApiConfigurations__IdentityBaseUrl=http://localhost:6002'
+      - 'ApiConfigurations__IdentityBaseUrl=${IDENTITY_BASE_URL}'
       - 'ApiConfigurations__IssuerUri=http://identity.api'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
@@ -397,7 +387,7 @@ services:
   identity.grpc:
     container_name: identity.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
       - 'DatabaseSettings__ConnectionString=Data Source=identitydb;Initial Catalog=identity_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};TrustServerCertificate=True;Connect Timeout=30000;'
@@ -412,7 +402,7 @@ services:
   category.grpc:
     container_name: category.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
       - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=category_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
@@ -427,7 +417,7 @@ services:
   post.grpc:
     container_name: post.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -442,7 +432,7 @@ services:
   series.grpc:
     container_name: series.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=sqlserver'
       - 'DatabaseSettings__ConnectionString=Data Source=seriesdb;Initial Catalog=series_service_db;User Id=${MSSQL_SA_USER};Password=${MSSQL_SA_PASSWORD};Multipleactiveresultsets=true;TrustServerCertificate=true;Connection Timeout=30;'
@@ -457,7 +447,7 @@ services:
   post-in-series.grpc:
     container_name: post-in-series.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_series_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -472,7 +462,7 @@ services:
   tag.grpc:
     container_name: tag.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=mysql'
       - 'DatabaseSettings__ConnectionString=Server=mysqldb;Database=tag_service_db;Uid=${MYSQL_ROOT_USER};Pwd=${MYSQL_ROOT_PASSWORD};'
@@ -487,7 +477,7 @@ services:
   post-in-tag.grpc:
     container_name: post-in-tag.grpc
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'DatabaseSettings__DbProvider=postgresql'
       - 'DatabaseSettings__ConnectionString=Server=postgresdb;Database=post_in_tag_service_db;User Id=${POSTGRES_USER};Password=${POSTGRES_PASSWORD};'
@@ -502,7 +492,7 @@ services:
   healthcheck:
     container_name: healthcheck
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
+      - ASPNETCORE_ENVIRONMENT=Staging
       - 'ASPNETCORE_URLS=http://+:80'
       - 'HealthChecks-UI__HealthChecks__0__Name=Identity Api Health Check'
       - 'HealthChecks-UI__HealthChecks__0__Uri=http://identity.api/hc'
@@ -548,21 +538,16 @@ services:
   ui:
     container_name: ui
     environment:
-      - ASPNETCORE_ENVIRONMENT=Local
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=password!
-      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
-      - 'ASPNETCORE_URLS=http://+:80;https://+:443'
-      - 'ApiSettings__ServerUrl=http://apigw.ocelot'
-      - 'IdentityServerSettings__AuthorityUrl=http://localhost:6002'
+      - ASPNETCORE_ENVIRONMENT=Staging
+      - 'ASPNETCORE_URLS=http://+:80'
+      - 'ApiSettings__ServerUrl=${API_GATEWAY_URL}'
+      - 'IdentityServerSettings__AuthorityUrl=${IDENTITY_BASE_URL}'
       - 'IdentityServerSettings__IssuerUri=http://identity.api'
       - 'IdentityServerSettings__ClientId=coding_hub_microservices_mvc'
       - 'IdentityServerSettings__ClientSecret=mvc-client-secret'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
-    volumes:
-      - ~/.aspnet/https:/https:ro
     ports:
       - '6300:80'
-      - '7300:443'
     restart: on-failure
