@@ -198,8 +198,8 @@ public static class ServiceExtensions
                 options.Authority = identityServerSettings.AuthorityUrl;
                 options.RequireHttpsMetadata = true;
                 options.GetClaimsFromUserInfoEndpoint = true;
-                /*options.MetadataAddress =
-                    $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration";*/ // Fix MVC client connect Identity server with docker
+                options.MetadataAddress =
+                    $"{identityServerSettings.IssuerUri}/.well-known/openid-configuration"; // Fix MVC client connect Identity server with docker
                 options.TokenValidationParameters.ValidIssuer = identityServerSettings.AuthorityUrl;
 
                 options.ClientId = identityServerSettings.ClientId;
