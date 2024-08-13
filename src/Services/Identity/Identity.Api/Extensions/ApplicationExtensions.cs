@@ -12,6 +12,11 @@ public static class ApplicationExtensions
 {
     public static void ConfigurePipeline(this WebApplication app)
     {
+        if (app.Environment.IsProduction() || app.Environment.IsStaging())
+        {
+            app.UseHttpsRedirection();
+        }
+        
         if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
         {
             app.UseDeveloperExceptionPage();
