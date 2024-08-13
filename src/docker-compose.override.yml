@@ -542,7 +542,7 @@ services:
       - 'ASPNETCORE_URLS=http://+:80'
       - 'ApiSettings__ServerUrl=${API_GATEWAY_URL}'
       - 'IdentityServerSettings__AuthorityUrl=${IDENTITY_BASE_URL}'
-      - 'IdentityServerSettings__IssuerUri=http://identity.api'
+      - 'IdentityServerSettings__IssuerUri=${IDENTITY_BASE_URL}'
       - 'IdentityServerSettings__ClientId=coding_hub_microservices_mvc'
       - 'IdentityServerSettings__ClientSecret=mvc-client-secret'
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
