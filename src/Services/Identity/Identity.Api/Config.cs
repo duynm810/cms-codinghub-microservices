@@ -53,39 +53,6 @@ public static class Config
         {
             new()
             {
-                ClientName = "Coding Hub Microservices Swagger Client",
-                ClientId = "coding_hub_microservices_swagger",
-                AllowedGrantTypes = GrantTypes.Implicit,
-                AllowAccessTokensViaBrowser = true,
-                RequireConsent = false,
-                AccessTokenLifetime = 60 * 60 * 2,
-                RedirectUris = new List<string>()
-                {
-                    "https://apigw.codinghub.io.vn/swagger/oauth2-redirect.html",
-                    "https://identity.codinghub.io.vn/swagger/oauth2-redirect.html"
-                },
-                PostLogoutRedirectUris = new List<string>()
-                {
-                    "https://apigw.codinghub.io.vn/swagger/oauth2-redirect.html",
-                    "https://identity.codinghub.io.vn/swagger/oauth2-redirect.html"
-                },
-                AllowedCorsOrigins = new List<string>()
-                {
-                    "https://apigw.codinghub.io.vn",
-                    "https://identity.codinghub.io.vn"
-                },
-                AllowedScopes =
-                {
-                    IdentityServerConstants.StandardScopes.OpenId,
-                    IdentityServerConstants.StandardScopes.Profile,
-                    IdentityServerConstants.StandardScopes.Email,
-                    "coding_hub_microservices_api.read",
-                    "coding_hub_microservices_api.write",
-                    "roles"
-                }
-            },
-            new()
-            {
                 ClientId = "coding_hub_microservices_mvc",
                 ClientName = "Coding Hub Microservices MVC Client",
                 AllowedGrantTypes = GrantTypes.Code,
