@@ -3,6 +3,7 @@ using IdentityServer4.AccessTokenValidation;
 using Infrastructure.Extensions;
 using Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 using Shared.Constants;
 
@@ -15,6 +16,16 @@ public static class ApplicationExtensions
         if (app.Environment.IsProduction() || app.Environment.IsStaging())
         {
             app.UseHttpsRedirection();
+            
+            var forwardedHeaderOptions = new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            };
+            
+            forwardedHeaderOptions.KnownNetworks.Clear(); // Để tránh các mạng nội bộ
+            forwardedHeaderOptions.KnownProxies.Clear();  // Để tránh các proxy cụ thể
+
+            app.UseForwardedHeaders(forwardedHeaderOptions);
         }
         
         if (app.Environment.IsDevelopment() || app.Environment.IsLocal())
