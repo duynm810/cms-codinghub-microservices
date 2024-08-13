@@ -223,6 +223,10 @@ public static class ServiceExtensions
                 {
                     OnRedirectToIdentityProvider = context =>
                     {
+                        // Log the IssuerAddress and RedirectUri
+                        Console.WriteLine($"[OnRedirectToIdentityProvider] Redirecting to: {context.ProtocolMessage.IssuerAddress}");
+                        Console.WriteLine($"[OnRedirectToIdentityProvider] RedirectUri: {context.ProtocolMessage.RedirectUri}");
+                        
                         // Intercept the redirection so the browser navigates to the right URL in your host
                         context.ProtocolMessage.IssuerAddress =
                             $"{identityServerSettings.AuthorityUrl}/connect/authorize";
@@ -230,6 +234,10 @@ public static class ServiceExtensions
                     },
                     OnRedirectToIdentityProviderForSignOut = context =>
                     {
+                        // Log the IssuerAddress and PostLogoutRedirectUri
+                        Console.WriteLine($"[OnRedirectToIdentityProviderForSignOut] Redirecting to: {context.ProtocolMessage.IssuerAddress}");
+                        Console.WriteLine($"[OnRedirectToIdentityProviderForSignOut] PostLogoutRedirectUri: {context.ProtocolMessage.PostLogoutRedirectUri}");
+                        
                         // Intercept the redirection so the browser navigates to the right URL in your host
                         context.ProtocolMessage.IssuerAddress =
                             $"{identityServerSettings.AuthorityUrl}/connect/endsession";
@@ -237,12 +245,17 @@ public static class ServiceExtensions
                     },
                     OnTokenValidated = x =>
                     {
+                        Console.WriteLine("[OnTokenValidated] Token validated successfully.");
+                        
                         var identity = (ClaimsIdentity)x.Principal?.Identity!;
                         var accessToken = x.TokenEndpointResponse?.AccessToken;
                         var refreshToken = x.TokenEndpointResponse?.RefreshToken;
 
                         if (accessToken == null || refreshToken == null)
                             return Task.CompletedTask;
+                        
+                        Console.WriteLine($"[OnTokenValidated] AccessToken: {accessToken}");
+                        Console.WriteLine($"[OnTokenValidated] RefreshToken: {refreshToken}");
 
                         identity.AddClaims(new[]
                         {
@@ -251,13 +264,27 @@ public static class ServiceExtensions
                         });
 
                         if (x.Properties == null)
+                        {
+                            Console.WriteLine("[OnTokenValidated] AuthenticationProperties is null.");
                             return Task.CompletedTask;
+                        }
 
                         x.Properties.IsPersistent = true;
 
                         var jwtToken = new JwtSecurityToken(accessToken);
                         x.Properties.ExpiresUtc = jwtToken.ValidTo;
 
+                        Console.WriteLine($"[OnTokenValidated] Token Expires at: {x.Properties.ExpiresUtc}");
+
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = x =>
+                    {
+                        // Log the exception message
+                        Console.WriteLine($"[OnAuthenticationFailed] Authentication failed: {x.Exception.Message}");
+
+                        x.HandleResponse();
+                        x.Response.Redirect("/Home/Error?message=" + x.Exception.Message);
                         return Task.CompletedTask;
                     }
                 };
