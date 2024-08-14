@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ['clean']
         ];
 
+        // Initialize Quill Editor
         window.quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
@@ -56,20 +57,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     userOnly: true, // Recommend to turn on this option
                 },
             },
-            placeholder: 'Compose an epic...'
+            placeholder: 'Compose an epic...',
+            clipboard: {
+                matchVisual: false // This helps with pasting content with inline styles
+            }
         });
         
         //#endregion
         
         //#region SET DATA
 
-        // Get content data from database
+        // Get content data from database (already encoded)
         const contentFromServer = document.getElementById('editor').getAttribute('data-content');
-        
-        // Decode the content using he library
+
+        // Decode the content using he library to handle special characters
         const decodedContent = he.decode(contentFromServer);
 
-        quill.clipboard.dangerouslyPasteHTML(decodedContent);
+        // Safely paste HTML content into the editor
+        if (decodedContent) {
+            quill.clipboard.dangerouslyPasteHTML(decodedContent);
+        }
         
         //#endregion
         
@@ -204,12 +211,14 @@ document.addEventListener('DOMContentLoaded', function () {
             return `${randomString}.${extension}`;
         }
 
+        // Function to remove language dropdowns from code blocks
         window.removeLanguageDropdowns = function() {
             const quillEditorContent = document.querySelector('.ql-editor');
             const selects = quillEditorContent.querySelectorAll('select.ql-ui');
             selects.forEach(select => select.remove());
         }
 
+        // Function to preserve indentation in code blocks
         window.preserveIndentation = function(content) {
             const container = document.createElement('div');
             container.innerHTML = content;
@@ -223,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             return container.innerHTML;
         }
-        
+
         //#endregion
 
         updateCurrentImages();
