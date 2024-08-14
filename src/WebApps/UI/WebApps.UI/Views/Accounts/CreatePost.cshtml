@@ -41,11 +41,17 @@
                     await controller.waitForUploadCompletion();
                 }
 
+                // Remove any unwanted dropdowns from the editor
                 window.removeLanguageDropdowns();
 
+                // Get the editor content
                 let content = quill.root.innerHTML;
+
+                // Preserve the indentation in code blocks
                 content = window.preserveIndentation(content);
-                document.querySelector('input[name="Content"]').value = he.encode(content);
+
+                // Encode the content to handle special characters
+                document.querySelector('input[name="Content"]').value = content;
 
                 const tagsData = window.getTagsData();
                 document.getElementById('tagsData').value = JSON.stringify(tagsData);

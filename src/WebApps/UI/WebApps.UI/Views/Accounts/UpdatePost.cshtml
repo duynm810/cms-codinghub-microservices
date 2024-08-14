@@ -123,7 +123,8 @@
 
             let content = quill.root.innerHTML;
             content = window.preserveIndentation(content);
-            document.querySelector('input[name="Content"]').value = he.encode(content);
+
+            document.querySelector('input[name="Content"]').value = quill.root.innerHTML;
 
             const tagsData = window.getTagsData();
 
@@ -231,7 +232,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
-                    <div id="editor" data-content='@Html.Raw(post.Content)'></div>
+                    <div id="editor" data-content='@Html.Encode(post.Content)'></div>
                     <input type="hidden" name="Content" id="content">
                 </div>
             </div>
