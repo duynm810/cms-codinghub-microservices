@@ -776,3 +776,10 @@ input[type="file"] {
     border: 0;
     margin-bottom: 1rem;
 }
+
+/*----------------------- Fix Error Quill Editor ----------------------*/
+.entry-main-content li[data-list="bullet"] {
+    list-style-type: disc !important; 
+    padding-left: 20px;
+    margin-left: 0;
+}
