@@ -1072,11 +1072,7 @@
         "suggest-tags"
       ],
       "UpstreamPathTemplate": "/dashboard",
-      "Aggregator": "DashboardAggregator",
-      "FileCacheOptions": {
-        "TtlSeconds": 60,
-        "Region": "Aggregators"
-      }
+      "Aggregator": "DashboardAggregator"
     },
     {
       "RouteKeys": [
@@ -1084,11 +1080,7 @@
         "tags"
       ],
       "UpstreamPathTemplate": "/footer",
-      "Aggregator": "FooterAggregator",
-      "FileCacheOptions": {
-        "TtlSeconds": 60,
-        "Region": "Aggregators"
-      }
+      "Aggregator": "FooterAggregator"
     },
     {
       "RouteKeys": [
@@ -1096,11 +1088,7 @@
         "latest-comments"
       ],
       "UpstreamPathTemplate": "/side-bar",
-      "Aggregator": "SidebarAggregator",
-      "FileCacheOptions": {
-        "TtlSeconds": 60,
-        "Region": "Aggregators"
-      }
+      "Aggregator": "SidebarAggregator"
     }
   ],
   "SwaggerEndPoints": [
