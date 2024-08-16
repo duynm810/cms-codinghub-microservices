@@ -88,10 +88,6 @@ public static class ServiceExtensions
                                throw new ArgumentNullException(
                                    $"{nameof(DatabaseSettings)} is not configured properly");
         
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
         services.AddGrpcHealthChecks()
             .AddSqlServer(databaseSettings.ConnectionString,
                 name: "SqlServer Health",
@@ -99,11 +95,6 @@ public static class ServiceExtensions
                 tags: new [] { "db", "sqlserver" })
             .AddCheck("gRPC Health", 
                 () => HealthCheckResult.Healthy(),
-                new[] { "grpc" })
-            .AddElasticsearch(
-                elasticsearchConfigurations.Uri,
-                name: "Elasticsearch Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });
+                new[] { "grpc" });
     }
 }

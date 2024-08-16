@@ -266,15 +266,6 @@ public static class ServiceExtensions
 
     private static void AddHealthCheckServices(this IServiceCollection services)
     {
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
-        services.AddHealthChecks()
-            .AddElasticsearch(
-                elasticsearchConfigurations.Uri,
-                name: "Elasticsearch Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });
+        services.AddHealthChecks();
     }
 }
