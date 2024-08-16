@@ -43,10 +43,6 @@ public static class ServiceExtensions
                             throw new ArgumentNullException(
                                 $"{nameof(CacheSettings)} is not configured properly");
         
-        var elasticsearchConfigurations = services.GetOptions<ElasticConfigurations>(nameof(ElasticConfigurations)) ??
-                                          throw new ArgumentNullException(
-                                              $"{nameof(ElasticConfigurations)} is not configured properly");
-
         services.AddHealthChecks()
             .AddNpgSql(databaseSettings.ConnectionString,
                 name: "PostgreSQL Health",
@@ -55,11 +51,6 @@ public static class ServiceExtensions
             .AddRedis(cacheSettings.ConnectionString,
                 name: "Redis Health",
                 failureStatus: HealthStatus.Degraded,
-                tags: new[] { "cache", "redis" })
-            .AddElasticsearch(
-                elasticsearchConfigurations.Uri,
-                name: "Elasticsearch Health",
-                failureStatus: HealthStatus.Degraded,
-                tags: new[] { "search", "elasticsearch" });
+                tags: new[] { "cache", "redis" });
     }
 }
