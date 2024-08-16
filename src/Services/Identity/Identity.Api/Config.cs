@@ -69,15 +69,15 @@ public static class Config
                 },
                 RedirectUris = new List<string>
                 {
-                    "https://codinghub.io.vn/signin-oidc"
+                    "https://codinghub.vn/signin-oidc"
                 },
                 PostLogoutRedirectUris = new List<string>
                 {
-                    "https://codinghub.io.vn/signout-callback-oidc"
+                    "https://codinghub.vn/signout-callback-oidc"
                 },
                 AllowedCorsOrigins = new List<string>()
                 {
-                    "https://codinghub.io.vn"
+                    "https://codinghub.vn"
                 },
                 AllowedScopes = new List<string>
                 {
