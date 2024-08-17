@@ -9,26 +9,6 @@ namespace Media.Api.Services;
 
 public class GoogleDriveService(ILogger logger) : IGoogleDriveService
 {
-    public DriveService GetService()
-    {
-        var credentialPath = Path.Combine(Directory.GetCurrentDirectory(), "Keys", "clean-carrier-432816-h3-b45ee5842fcc.json");
-
-        GoogleCredential credential;
-        using (var stream = new FileStream(credentialPath, FileMode.Open, FileAccess.Read))
-        {
-            credential = GoogleCredential.FromStream(stream)
-                .CreateScoped(DriveService.Scope.DriveFile);
-        }
-
-        var service = new DriveService(new BaseClientService.Initializer()
-        {
-            HttpClientInitializer = credential,
-            ApplicationName = "Coding Hub Microservices Web Application",
-        });
-
-        return service;
-    }
-
     public async Task<string> UploadFile(Stream fileStream, string fileName, string mimeType, string folderId)
     {
         var service = GetService();
@@ -133,4 +113,29 @@ public class GoogleDriveService(ILogger logger) : IGoogleDriveService
             throw;
         }
     }
+
+    #region HELPERS
+
+    private DriveService GetService()
+    {
+        var credentialPath = Path.Combine(Directory.GetCurrentDirectory(), "Keys", "clean-carrier-432816-h3-b45ee5842fcc.json");
+
+        GoogleCredential credential;
+        using (var stream = new FileStream(credentialPath, FileMode.Open, FileAccess.Read))
+        {
+            credential = GoogleCredential.FromStream(stream)
+                .CreateScoped(DriveService.Scope.DriveFile);
+        }
+
+        var service = new DriveService(new BaseClientService.Initializer()
+        {
+            HttpClientInitializer = credential,
+            ApplicationName = "Coding Hub Microservices Web Application",
+        });
+
+        return service;
+    }
+
+
+    #endregion
 }
