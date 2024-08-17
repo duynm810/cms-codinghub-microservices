@@ -33,9 +33,9 @@ public class MediaController(IMediaService mediaService) : ControllerBase
     }
 
     [HttpDelete("delete-image-from-google-drive/{imagePath}")]
-    public IActionResult DeleteImageFromGoogleDrive([FromRoute] string imagePath)
+    public async Task<IActionResult> DeleteImageFromGoogleDrive([FromRoute] string imagePath)
     {
-        var result = mediaService.DeleteImageFromGoogleDrive(imagePath);
+        var result = await mediaService.DeleteImageFromGoogleDrive(imagePath);
         return Ok(result);
     }
 }

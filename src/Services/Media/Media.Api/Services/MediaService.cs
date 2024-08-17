@@ -1,8 +1,6 @@
 using System.Net.Http.Headers;
-using Google.Apis.Drive.v3;
 using Media.Api.Dtos;
 using Media.Api.Services.Interfaces;
-using Microsoft.Extensions.Options;
 using Shared.Constants;
 using Shared.Responses;
 using Shared.Settings;
@@ -178,18 +176,17 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
         
         try
         {
-            logger.Information("BEGIN {MethodName} - Starting image upload to Google Drive for Type: {Type}", methodName, request.Type);
+            
+            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, request.Type);
 
-            // Check file is empty
             if (request.File == null || request.File.Length == 0)
             {
                 logger.Warning("Upload attempt with empty file.");
                 result.Messages.Add(ErrorMessagesConsts.Media.FileIsEmpty);
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
-                return result;   
+                return result;
             }
-            
-            // Extract and validate filename
+
             var filename = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName?.Trim('"');
             if (string.IsNullOrEmpty(filename))
             {
@@ -198,8 +195,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
-            
-            // Get format file
+
             var fileExtension = Path.GetExtension(filename).ToLower();
             if (!IsAllowedFileType(fileExtension))
             {
@@ -208,52 +204,23 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
                 result.Failure(StatusCodes.Status400BadRequest, result.Messages);
                 return result;
             }
-            
-            var service = googleDriveService.GetService();
-            
-            var folderId = string.Empty;
-            switch (request.Type)
-            {
-                case "posts":
-                    folderId = googleDriveSettings.PostsFolderId;
-                    break;
-                case "avatar":
-                    folderId = googleDriveSettings.AvatarsFolderId;
-                    break;
-            }
-            
-            var fileMetadata = new Google.Apis.Drive.v3.Data.File()
-            {
-                Name = filename,
-                Parents = new List<string> { folderId }
-            };
 
-            await using var stream = request.File.OpenReadStream();
-            var requestDrive = service.Files.Create(fileMetadata, stream, "image/jpeg");
-            requestDrive.Fields = "id";
-            
-            await requestDrive.UploadAsync();
-            
-            var file = requestDrive.ResponseBody;
-            if (file != null)
-            {
-                // Share public file just upload
-                var permission = new Google.Apis.Drive.v3.Data.Permission
-                {
-                    Role = "reader",
-                    Type = "anyone"
-                };
-                await service.Permissions.Create(permission, file.Id).ExecuteAsync();
+            var folderId = request.Type == "avatar"
+                ? googleDriveSettings.AvatarsFolderId
+                : googleDriveSettings.PostsFolderId;
 
-                // Create url for images just upload
-                var fileUrl = $"https://drive.google.com/uc?id={file.Id}";
+            try
+            {
+                var fileUrl = await googleDriveService.UploadFile(request.File.OpenReadStream(), filename, "image/jpeg", folderId);
                 result.Success(fileUrl);
-                logger.Information("Image uploaded successfully to Google Drive. File ID: {FileId}", file.Id);
+                logger.Information("END {MethodName} - Image uploaded and processed successfully for {Filename}.", methodName, filename);
             }
-            else
+            catch (Exception ex)
             {
-                result.Messages.Add("Failed to upload image to Google Drive.");
+                logger.Error("{MethodName} - Error during uploading file to Google Drive: {ErrorMessage}", methodName, ex.Message);
+                result.Messages.Add("An error occurred while uploading the file to Google Drive.");
                 result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+                return result;
             }
         }
         catch (Exception e)
@@ -266,9 +233,36 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
         return result;
     }
 
-    public ApiResult<bool> DeleteImageFromGoogleDrive(string fileId)
+    public async Task<ApiResult<bool>> DeleteImageFromGoogleDrive(string fileId)
     {
-        throw new NotImplementedException();
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(DeleteImage);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Deleting image with File ID: {FileId}", methodName, fileId);
+
+            var success = await googleDriveService.DeleteFile(fileId);
+
+            if (!success)
+            {
+                result.Messages.Add("File not found.");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+            }
+            else
+            {
+                result.Success(true);
+                logger.Information("END {MethodName} - Image deleted successfully.", methodName);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
     }
 
     #region HELPERS
