@@ -106,4 +106,31 @@ public class GoogleDriveService(ILogger logger) : IGoogleDriveService
             throw;
         }
     }
+    
+    public async Task<Stream?> GetFileStream(string fileId)
+    {
+        var service = GetService();
+        const string methodName = nameof(DeleteFile);
+        
+        try
+        {
+            var request = service.Files.Get(fileId);
+            var stream = new MemoryStream();
+            
+            await request.DownloadAsync(stream);
+            stream.Position = 0;
+
+            return stream;
+        }
+        catch (Google.GoogleApiException ex) when (ex.HttpStatusCode == HttpStatusCode.NotFound)
+        {
+            logger.Warning("File with ID: {FileId} not found on Google Drive", fileId);
+            return null;
+        }
+        catch (Exception ex)
+        {
+            logger.Error("{MethodName} - An error occurred while getting file stream for File ID: {FileId}. Error: {ErrorMessage}", methodName, fileId, ex.Message);
+            throw;
+        }
+    }
 }

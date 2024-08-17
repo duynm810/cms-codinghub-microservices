@@ -265,6 +265,26 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
         return result;
     }
 
+    public async Task<ApiResult<Stream>> GetImage(string fileId)
+    {
+        var result = new ApiResult<Stream>();
+        const string methodName = nameof(GetImage);
+        
+        try
+        {
+            var stream = await googleDriveService.GetFileStream(fileId);
+            result.Data = stream;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
     #region HELPERS
 
     /// <summary>

@@ -12,4 +12,6 @@ public interface IMediaService
     Task<ApiResult<string>> UploadImageToGoogleDrive(SingleFileDto request);
 
     Task<ApiResult<bool>> DeleteImageFromGoogleDrive(string fileId);
+
+    Task<ApiResult<Stream>> GetImage(string fileId);
 }

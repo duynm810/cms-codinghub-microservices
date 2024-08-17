@@ -38,4 +38,16 @@ public class MediaController(IMediaService mediaService) : ControllerBase
         var result = await mediaService.DeleteImageFromGoogleDrive(imagePath);
         return Ok(result);
     }
+    
+    [HttpGet("images/{fileId}")]
+    public async Task<IActionResult> GetImage(string fileId)
+    {
+        var result = await mediaService.GetImage(fileId);
+        if (result.Data == null)
+        {
+            return NotFound("File not found.");
+        }
+        
+        return File(result.Data, "image/jpeg");
+    }
 }
