@@ -783,4 +783,7 @@ fabric.properties
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 
+# Exclude all JSON files in the Keys folder
+Keys/*.json
+
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore,csharp,rider,visualstudio

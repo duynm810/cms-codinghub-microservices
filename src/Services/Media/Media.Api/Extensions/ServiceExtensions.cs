@@ -41,11 +41,18 @@ public static class ServiceExtensions
                                 $"{nameof(MediaSettings)} is not configured properly");
 
         services.AddSingleton(mediaSettings);
+        
+        var googleDriveSettings = configuration.GetSection(nameof(GoogleDriveSettings)).Get<GoogleDriveSettings>()
+                            ?? throw new ArgumentNullException(
+                                $"{nameof(GoogleDriveSettings)} is not configured properly");
+
+        services.AddSingleton(googleDriveSettings);
     }
 
     private static void AddRepositoryAndDomainServices(this IServiceCollection services)
     {
-        services.AddScoped<IMediaService, MediaService>();
+        services.AddScoped<IMediaService, MediaService>()
+            .AddScoped<IGoogleDriveService, GoogleDriveService>();
     }
 
     private static void AddAdditionalServices(this IServiceCollection services)
