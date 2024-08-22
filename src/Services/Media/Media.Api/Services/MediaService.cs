@@ -15,7 +15,7 @@ using ILogger = Serilog.ILogger;
 
 namespace Media.Api.Services;
 
-public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings mediaSettings, ILogger logger)
+public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveService googleDriveService, GoogleDriveSettings googleDriveSettings, MediaSettings mediaSettings, ILogger logger)
     : IMediaService
 {
     public async Task<ApiResult<string>> UploadImage(SingleFileDto request)
@@ -27,7 +27,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
         {
             logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, request.Type);
 
-            // Check file is empty (Kiểm tra tập tin rỗng)
+            // Check file is empty
             if (request.File == null || request.File.Length == 0)
             {
                 logger.Warning("Upload attempt with empty file.");
@@ -36,7 +36,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 return result;
             }
 
-            // Extract and validate filename (Xác thực tên tập tin)
+            // Extract and validate filename
             var filename = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName?.Trim('"');
             if (string.IsNullOrEmpty(filename))
             {
@@ -46,7 +46,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
                 return result;
             }
 
-            // Get format file (Lấy định dạng của tập tin)
+            // Get format file
             var fileExtension = Path.GetExtension(filename).ToLower();
             if (!IsAllowedFileType(fileExtension))
             {
@@ -87,7 +87,7 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
 
             try
             {
-                // Process the image (Xử lý hình ảnh)
+                // Process the image
                 /*await ProcessImage(request.File, filePath, fileExtension);*/
                 await using var fileStream = new FileStream(filePath, FileMode.Create);
                 await request.File.CopyToAsync(fileStream);
@@ -162,6 +162,122 @@ public class MediaService(IWebHostEnvironment hostEnvironment, MediaSettings med
         catch (Exception e)
         {
             logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<string>> UploadImageToGoogleDrive(SingleFileDto request)
+    {
+        var result = new ApiResult<string>();
+        const string methodName = nameof(UploadImageToGoogleDrive);
+        
+        try
+        {
+            
+            logger.Information("BEGIN {MethodName} - Starting image upload for Type: {Type}", methodName, request.Type);
+
+            if (request.File == null || request.File.Length == 0)
+            {
+                logger.Warning("Upload attempt with empty file.");
+                result.Messages.Add(ErrorMessagesConsts.Media.FileIsEmpty);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            var filename = ContentDispositionHeaderValue.Parse(request.File.ContentDisposition).FileName?.Trim('"');
+            if (string.IsNullOrEmpty(filename))
+            {
+                logger.Warning("Filename is empty after parsing.");
+                result.Messages.Add(ErrorMessagesConsts.Media.FileNameCannotBeEmpty);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            var fileExtension = Path.GetExtension(filename).ToLower();
+            if (!IsAllowedFileType(fileExtension))
+            {
+                logger.Warning("File extension {FileExtension} is not allowed.", fileExtension);
+                result.Messages.Add(ErrorMessagesConsts.Media.InvalidFileTypeOrName);
+                result.Failure(StatusCodes.Status400BadRequest, result.Messages);
+                return result;
+            }
+
+            var folderId = request.Type == "avatar"
+                ? googleDriveSettings.AvatarsFolderId
+                : googleDriveSettings.PostsFolderId;
+
+            try
+            {
+                var fileUrl = await googleDriveService.UploadFile(request.File.OpenReadStream(), filename, "image/jpeg", folderId);
+                result.Success(fileUrl);
+                logger.Information("END {MethodName} - Image uploaded and processed successfully for {Filename}.", methodName, filename);
+            }
+            catch (Exception ex)
+            {
+                logger.Error("{MethodName} - Error during uploading file to Google Drive: {ErrorMessage}", methodName, ex.Message);
+                result.Messages.Add("An error occurred while uploading the file to Google Drive.");
+                result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+                return result;
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<bool>> DeleteImageFromGoogleDrive(string fileId)
+    {
+        var result = new ApiResult<bool>();
+        const string methodName = nameof(DeleteImage);
+
+        try
+        {
+            logger.Information("BEGIN {MethodName} - Deleting image with File ID: {FileId}", methodName, fileId);
+
+            var success = await googleDriveService.DeleteFile(fileId);
+
+            if (!success)
+            {
+                result.Messages.Add("File not found.");
+                result.Failure(StatusCodes.Status404NotFound, result.Messages);
+            }
+            else
+            {
+                result.Success(true);
+                logger.Information("END {MethodName} - Image deleted successfully.", methodName);
+            }
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
+            result.Messages.AddRange(e.GetExceptionList());
+            result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
+        }
+
+        return result;
+    }
+
+    public async Task<ApiResult<Stream>> GetImage(string fileId)
+    {
+        var result = new ApiResult<Stream>();
+        const string methodName = nameof(GetImage);
+        
+        try
+        {
+            var stream = await googleDriveService.GetFileStream(fileId);
+            result.Data = stream;
+        }
+        catch (Exception e)
+        {
+            logger.Error("{MethodName}. Message: {ErrorMessage}", methodName, e.Message);
             result.Messages.AddRange(e.GetExceptionList());
             result.Failure(StatusCodes.Status500InternalServerError, result.Messages);
         }

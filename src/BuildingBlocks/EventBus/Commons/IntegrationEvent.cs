@@ -13,8 +13,8 @@ public record IntegrationEvent : IIntegrationEvent
     public Guid? CorrelationId { get; set; }
     
     public string SourceService { get; set; }
-    
-    public IntegrationEvent(string sourceService)
+
+    protected IntegrationEvent(string sourceService)
     {
         EventType = GetType().Name;
         SourceService = sourceService;

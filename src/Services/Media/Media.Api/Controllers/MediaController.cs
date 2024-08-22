@@ -8,7 +8,7 @@ namespace Media.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]
+/*[Authorize(IdentityServerAuthenticationDefaults.AuthenticationScheme)]*/
 public class MediaController(IMediaService mediaService) : ControllerBase
 {
     [HttpPost("upload-image")]
@@ -23,5 +23,31 @@ public class MediaController(IMediaService mediaService) : ControllerBase
     {
         var result = mediaService.DeleteImage(imagePath);
         return Ok(result);
+    }
+    
+    [HttpPost("upload-image-to-google-drive")]
+    public async Task<IActionResult> UploadImageToGoogleDrive([FromForm] SingleFileDto request)
+    {
+        var result = await mediaService.UploadImageToGoogleDrive(request);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-image-from-google-drive/{imagePath}")]
+    public async Task<IActionResult> DeleteImageFromGoogleDrive([FromRoute] string imagePath)
+    {
+        var result = await mediaService.DeleteImageFromGoogleDrive(imagePath);
+        return Ok(result);
+    }
+    
+    [HttpGet("images/{fileId}")]
+    public async Task<IActionResult> GetImage(string fileId)
+    {
+        var result = await mediaService.GetImage(fileId);
+        if (result.Data == null)
+        {
+            return NotFound("File not found.");
+        }
+        
+        return File(result.Data, "image/jpeg");
     }
 }

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "clean-carrier-432816-h3",
+  "private_key_id": "b45ee5842fcc1e74d5c969017451085b3831d8a5",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDODxToF2apFjyS\nkYJbsPN7X7NubVNK6LZUiuZefSubHj7i1rREbntmoePJXzARklQZQdlCqjUoZe7r\nkiY6Nl7iY3EVwHEyr4GnVEaYeGOMN8NDiRAIRpWnkWyxDIR/bBOHFrkSni83ynvl\njmTn09cxfd1E3pXM4767fTIepd2XO+cuV+y1KK4vyqsgKWAe5dGdk/myv137txTX\nUsZjXAP6/bAeK/b98m/lbPc2RMwzf3/roUQcdmVzWxMiIHgc34gsaJEmocz3+NgS\n5Ra602arqAS1pInlKxH4Q4qIoEk1AzvHXUQSrBirsNgVehaqU6ptZ8GlrV6D6ejw\nif7enR7VAgMBAAECggEAKjl58cNV1KFLYUdy/IIKqsXmGWNKtadxMWrTIRqqNFui\nzE3t27X+EH5tFIcubPNcy14sfJYvVWtp5Zjpv3UDxYVWF3x7VcUUHutMmhLVZ1bH\n6w9rmx6HrTJGIROtFQVbDQwReaiziU2zTMt8jurghnJBxMqNzNIAdCAIBLK9cS9F\nJgxnbfjQJ3SW1PQodsQTf2rlt6difEWdhgUR6NbangO//5apVr7fLpw4yOH3J8qL\ndDujlw2sDxb8kdLSrI+4lDYSWEbdm2PqRjLnk8ihMQ/9cO15Mxqqg1SaItzsfBwp\nyt2ekxlo886F8rWh4r6yFNUHn2rNCrU5tcjaMY5qMQKBgQD+WX5uEbpXsWMa7y8l\nAJVfanCn4DameGriE4H6SFYtjcHgf1sjNn7MpOgSx5zIBDAoYcffDdvj/LQbw/Ac\no95tFW6ntQqN8ywmYw8EeokyjKPr6+jfBs3eUC9RROBZjbGNDlpZWkvgAR4NTwJO\nvfBh3e6U03N1nmY7rv3fZ/Tc/QKBgQDPZV7692pyW6iSCiDVhrWWNX6DGReMsgvp\n8/wb0TK9fGQPrtqR0KemsXJ/vfh87m+3Bt5wrndfEdlJzD+UKrKQyuKlIGZJTE/q\n0xbDoj0WzKJHCQWxvTn41ti/0WvTYhwb80mEGkCsAmn3AWEJnXodNjYEynqPoGrN\nQJVgz8DcuQKBgQDhA1dAFNrfXYSpfVQdzghXYxjKyyZN21XjLxLb0ka7Ah+0dbaw\nzjMa5ACTLJhcsqfP8cEaaW5QoWzM62huTeImasF8CEOQFMLIKvZMJgNd/uG9gvR+\n6cwSkqlpoh8/2oRqn3n6dlGNmC934p/N/Wa9jdLVQsNwGHOk9UiO7a7IGQKBgD0R\nCyt4aHZtuK/vnYVh2dv1ul+dpsp9rnZfqe8C5R7YHppjkOX4ezTg8ObeJ+mZR3mr\n4xlotatflQxewKW/AL8TjjKy3ItelfV93CkUf0pUTL//zxZrskMr97xbTJV8QOyV\n8SKdnEdJmqvpUwpCvS8WxEca24Wo5Wm0R4evBIm5AoGBALDWGmqi8NF3ckpRgJJS\ncWJEAYmcoZW2oNluGy+P195RvI06MAi5Y+COsXekwUybYR2ZDhj0vAdiTcAXusIb\nqgU399kqItlXjc2mZw2t6P7BcSlL1kggJKaIhutX3ehNVCVYNCspCcX5Ys7FlWXE\noJefIUCU5TGpoeZW42r0l8OI\n-----END PRIVATE KEY-----\n",
+  "client_email": "coding-hub-microservices-drive@clean-carrier-432816-h3.iam.gserviceaccount.com",
+  "client_id": "103445513412505277198",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/coding-hub-microservices-drive%40clean-carrier-432816-h3.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

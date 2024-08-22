@@ -55,7 +55,8 @@ public class MappingProfile : Profile
                 Id = Guid.Parse(u.Id),
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                UserName = u.UserName
+                UserName = u.UserName,
+                AvatarUrl = u.AvatarUrl
             }).ToList());
     }
 }
