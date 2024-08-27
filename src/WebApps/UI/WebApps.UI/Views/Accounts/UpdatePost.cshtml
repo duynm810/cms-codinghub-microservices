@@ -73,7 +73,7 @@
                     async () => {
                         const thumbnailFileId = document.getElementById('thumbnailFileId').value;
                         if (thumbnailFileId) {
-                            const deleteSuccess = await controller.deleteImage(thumbnailFileId);
+                            const deleteSuccess = await controller.deleteImageFromGoogleDrive(thumbnailFileId);
                             if (deleteSuccess) {
                                 const postId = document.getElementById('postId').value;
                                 if (postId) {

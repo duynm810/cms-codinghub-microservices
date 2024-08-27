@@ -14,7 +14,7 @@ public static class RouteMap
 
         app.MapControllerRoute(
             "update_post_view",
-            "accounts/update-post",
+            "accounts/update-post/{slug}",
             new { controller = "Accounts", action = "UpdatePost" });
 
         app.MapControllerRoute(

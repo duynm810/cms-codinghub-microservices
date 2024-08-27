@@ -113,7 +113,7 @@
                             <i class="fa fa-history"></i>
                         </span>
                     </button>
-                    <button type="button" class="btn btn-update" aria-label="Update" data-slug="@item.Slug" data-url="@updatePostUrl" onclick="updatePost(this)">
+                    <button type="button" class="btn btn-update" aria-label="Update" onclick="location.href='@Url.Action("UpdatePost", "Accounts", new { slug = item.Slug })'">
                         <span aria-hidden="true">
                             <i class="fa fa-edit"></i>
                         </span>

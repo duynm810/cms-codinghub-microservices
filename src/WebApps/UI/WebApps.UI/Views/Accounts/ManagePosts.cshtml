@@ -219,12 +219,6 @@
                 }
             });
         }
-        
-        function updatePost(button) {
-            let slug = button.getAttribute('data-slug');
-            let urlTemplate = button.getAttribute('data-url');
-            window.location.href = urlTemplate.replace('__slug__', encodeURIComponent(slug));
-        }
 
         function deletePost(button) {
             const postId = button.getAttribute('data-id');

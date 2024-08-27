@@ -259,7 +259,7 @@ public class AccountsController(
     }
 
     [HttpGet]
-    public async Task<IActionResult> UpdatePost([FromQuery] string slug)
+    public async Task<IActionResult> UpdatePost([FromRoute] string slug)
     {
         const string methodName = nameof(UpdatePost);
 
