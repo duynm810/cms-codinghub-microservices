@@ -129,10 +129,12 @@ const accountsController = function (formId) {
                         'Yes, delete it',
                         'Cancel',
                         async () => {
-                            const thumbnailUrl = document.getElementById('thumbnailUrl').value;
-                            if (thumbnailUrl) {
+                            //const thumbnailUrl = document.getElementById('thumbnailUrl').value;
+                            const thumbnailElement = document.getElementById('thumbnailUrl');
+                            const fileId = thumbnailElement.getAttribute('data-file-id'); // Lấy fileId đã lưu
+                            if (fileId) {
                                 //await this.deleteImage(thumbnailUrl);
-                                await this.deleteImageFromGoogleDrive(thumbnailUrl);
+                                await this.deleteImageFromGoogleDrive(fileId);
                             }
 
                             fileList.value = '';
@@ -201,6 +203,8 @@ const accountsController = function (formId) {
                 const fileId = uploadResult.data;
 
                 console.log('File uploaded successfully, fileId:', fileId);
+
+                document.getElementById('thumbnailUrl').setAttribute('data-file-id', fileId);
             } catch (error) {
                 showErrorNotification(`Error uploading file: ${error.message}`);
             }
