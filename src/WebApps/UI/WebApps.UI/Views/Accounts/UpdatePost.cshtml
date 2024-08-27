@@ -30,11 +30,11 @@
             window.loadExistingTags(existingTags);
         });
 
-        const thumbnailUrl = document.getElementById("thumbnailUrl").value;
+        const thumbnailFileId = document.getElementById("thumbnailFileId").value;
 
         // Display uploaded images when loading the update page (Hiển thị hình ảnh đã upload khi tải trang cập nhật)
-        if (thumbnailUrl) {
-            displayUploadedFile(thumbnailUrl);
+        if (thumbnailFileId) {
+            displayUploadedFile(thumbnailFileId);
         }
 
         function displayUploadedFile(url) {
@@ -71,9 +71,9 @@
                     'Yes, delete it',
                     'Cancel',
                     async () => {
-                        const thumbnailUrl = document.getElementById('thumbnailUrl').value;
-                        if (thumbnailUrl) {
-                            const deleteSuccess = await controller.deleteImage(thumbnailUrl);
+                        const thumbnailFileId = document.getElementById('thumbnailFileId').value;
+                        if (thumbnailFileId) {
+                            const deleteSuccess = await controller.deleteImage(thumbnailFileId);
                             if (deleteSuccess) {
                                 const postId = document.getElementById('postId').value;
                                 if (postId) {
@@ -82,7 +82,7 @@
 
                                 fileList.value = '';
                                 fileList.innerHTML = '';
-                                document.getElementById('thumbnailUrl').value = ''; // Xóa URL hình ảnh khi xóa file
+                                document.getElementById('thumbnailFileId').value = ''; // Xóa URL hình ảnh khi xóa file
                             } else {
                                 this.showErrorNotification('Failed to delete image.');
                             }
@@ -138,7 +138,7 @@
                 Slug: formData.get('Slug'),
                 Content: content,
                 Summary: formData.get('Summary'),
-                Thumbnail: formData.get('Thumbnail'),
+                ThumbnailFileId: formData.get('ThumbnailFileId'),
                 SeoDescription: formData.get('SeoDescription'),
                 Source: formData.get('Source'),
                 CategoryId: formData.get('CategoryId'),
@@ -291,7 +291,7 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" name="Thumbnail" id="thumbnailUrl" value="@post.Thumbnail"/>
+        <input type="hidden" name="ThumbnailFileId" id="thumbnailFileId" value="@post.ThumbnailFileId"/>
         <div class="row">
             <div class="col-md-12 text-center">
                 <button type="button" class="button button-contactForm btn-block" onclick="submitUpdatePostForm()" id="submit-button" disabled>Submit</button>

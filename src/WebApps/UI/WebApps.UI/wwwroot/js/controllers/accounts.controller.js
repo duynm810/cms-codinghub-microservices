@@ -129,17 +129,15 @@ const accountsController = function (formId) {
                         'Yes, delete it',
                         'Cancel',
                         async () => {
-                            //const thumbnailUrl = document.getElementById('thumbnailUrl').value;
-                            const thumbnailElement = document.getElementById('thumbnailUrl');
+                            const thumbnailElement = document.getElementById('thumbnailFileId');
                             const fileId = thumbnailElement.getAttribute('data-file-id'); // Lấy fileId đã lưu
                             if (fileId) {
-                                //await this.deleteImage(thumbnailUrl);
                                 await this.deleteImageFromGoogleDrive(fileId);
                             }
 
                             fileList.value = '';
                             fileList.innerHTML = '';
-                            document.getElementById('thumbnailUrl').value = ''; // Delete image URL when deleting file
+                            document.getElementById('thumbnailFileId').value = ''; // Delete image URL when deleting file
                         }
                     );
                 });
@@ -153,33 +151,6 @@ const accountsController = function (formId) {
 
             //await this.uploadFiles(files);
             await this.uploadFileToGoogleDrive(files);
-        }
-
-        this.uploadFiles = async (files) => {
-            const formData = new FormData();
-            formData.append('file', files[0]);
-            formData.append('type', 'posts');
-
-            try {
-                const response = await fetch('/media/upload-image', {
-                    method: 'POST',
-                    body: formData
-                });
-
-                const responseBody = await response.text();
-                if (!response.ok) {
-                    showErrorNotification(`Upload failed with status: ${response.status}, error: ${responseBody}`);
-                    return;
-                }
-
-                const result = JSON.parse(responseBody);
-                console.log(result);
-
-                // Update the hidden input with the URL of the uploaded file
-                document.getElementById('thumbnailUrl').value = result.data;
-            } catch (error) {
-                showErrorNotification(`Error uploading file: ${error.message}`);
-            }
         }
         
         this.uploadFileToGoogleDrive = async (files) => {
@@ -204,29 +175,10 @@ const accountsController = function (formId) {
 
                 console.log('File uploaded successfully, fileId:', fileId);
 
-                document.getElementById('thumbnailUrl').setAttribute('data-file-id', fileId);
+                document.getElementById('thumbnailFileId').setAttribute('data-file-id', fileId);
+                document.getElementById('thumbnailFileId').value = fileId;
             } catch (error) {
                 showErrorNotification(`Error uploading file: ${error.message}`);
-            }
-        }
-
-        this.deleteImage = async (imagePath) => {
-            try {
-                const response = await $.ajax({
-                    url: `/media/delete-image/${encodeURIComponent(imagePath)}`,
-                    method: 'DELETE'
-                });
-
-                if (!response.isSuccess) {
-                    showErrorNotification(`Delete failed with status: ${response.status}`);
-                    return false;
-                }
-
-                console.log(`Image deleted successfully: ${imagePath}`);
-                return response.data;
-            } catch (error) {
-                showErrorNotification(`Error deleting file: ${error.message}`);
-                return false;
             }
         }
         
@@ -251,8 +203,8 @@ const accountsController = function (formId) {
         }
         
         this.waitForUploadCompletion = async () => {
-            const thumbnailUrl = document.getElementById('thumbnailUrl');
-            while (!thumbnailUrl.value) {
+            const thumbnailFileId = document.getElementById('thumbnailFileId');
+            while (!thumbnailFileId.value) {
                 await new Promise(resolve => setTimeout(resolve, 100));
             }
         }

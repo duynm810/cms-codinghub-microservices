@@ -36,6 +36,11 @@ public class PostDto
     /// URL ảnh thu nhỏ đại diện cho bài viết
     /// </summary>
     public string? Thumbnail { get; set; }
+    
+    /// <summary>
+    /// ID của tệp Google Drive
+    /// </summary>
+    public string? ThumbnailFileId { get; set; }
 
     /// <summary>
     /// Mô tả SEO, dùng cho meta description
