@@ -1049,6 +1049,44 @@
       "SwaggerKey": "media-service"
     },
     {
+      "UpstreamPathTemplate": "/media/upload-image-to-google-drive",
+      "UpstreamHttpMethod": [
+        "POST"
+      ],
+      "DownstreamPathTemplate": "/api/media/upload-image-to-google-drive",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/delete-image-from-google-drive/{fileId}",
+      "UpstreamHttpMethod": [
+        "DELETE"
+      ],
+      "DownstreamPathTemplate": "/api/media/delete-image-from-google-drive/{fileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
       "UpstreamPathTemplate": "/media/images/{everything}",
       "UpstreamHttpMethod": [ "GET" ],
       "DownstreamPathTemplate": "/media/images/{everything}",
@@ -1058,7 +1096,11 @@
           "Host": "localhost",
           "Port": 5011
         }
-      ]
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 300,
+        "Region": "images-cache"
+      }
     }
   ],
   "Aggregates": [

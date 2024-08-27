@@ -13,6 +13,8 @@ public class CreateOrUpdateCommand
     public string? Summary { get; set; }
 
     public string? Thumbnail { get; set; }
+    
+    public string? ThumbnailFileId { get; set; }
 
     public string? SeoDescription { get; set; }
 

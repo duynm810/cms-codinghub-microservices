@@ -48,7 +48,7 @@ public class GoogleDriveService(ILogger logger) : IGoogleDriveService
             await service.Permissions.Create(permission, file.Id).ExecuteAsync();
             logger.Information("{MethodName} - File {FileName} is now publicly accessible.", methodName, fileName);
 
-            return $"https://drive.google.com/uc?id={file.Id}";
+            return file.Id;
         }
         catch (Exception e)
         {

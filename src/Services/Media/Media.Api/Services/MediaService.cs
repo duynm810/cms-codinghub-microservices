@@ -211,8 +211,8 @@ public class MediaService(IWebHostEnvironment hostEnvironment, IGoogleDriveServi
 
             try
             {
-                var fileUrl = await googleDriveService.UploadFile(request.File.OpenReadStream(), filename, "image/jpeg", folderId);
-                result.Success(fileUrl);
+                var fileId = await googleDriveService.UploadFile(request.File.OpenReadStream(), filename, "image/jpeg", folderId);
+                result.Success(fileId);
                 logger.Information("END {MethodName} - Image uploaded and processed successfully for {Filename}.", methodName, filename);
             }
             catch (Exception ex)

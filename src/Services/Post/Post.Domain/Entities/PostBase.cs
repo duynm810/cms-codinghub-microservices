@@ -41,6 +41,12 @@ public class PostBase : EntityAuditBase<Guid>
     /// </summary>
     [MaxLength(500)]
     public string? Thumbnail { get; set; }
+    
+    /// <summary>
+    /// ID của tệp Google Drive
+    /// </summary>
+    [MaxLength(100)]
+    public string? ThumbnailFileId { get; set; }
 
     /// <summary>
     /// Mô tả SEO, dùng cho meta description
