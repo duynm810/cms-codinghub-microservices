@@ -389,6 +389,8 @@ services:
       - 'ElasticConfigurations__Uri=http://elasticsearch:9200'
       - 'ElasticConfigurations__Username=elastic'
       - 'ElasticConfigurations__Password=admin'
+      - 'GoogleDriveSettings__PostsFolderId=185jhuJxxF1wb1BctQgouzYyzcNP1BNi9'
+      - 'GoogleDriveSettings__AvatarsFolderId=1ODXHfxUq9ESY20iNeR5nzndQ26VhvsF2'
     ports:
       - '6011:80'
     restart: always

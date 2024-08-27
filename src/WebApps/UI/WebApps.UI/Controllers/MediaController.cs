@@ -20,4 +20,25 @@ public class MediaController(IMediaApiClient mediaApiClient) : ControllerBase
         var result = await mediaApiClient.DeleteImage(imagePath);
         return Ok(result);
     }
+    
+    [HttpPost("upload-image-from-google-drive")]
+    public async Task<IActionResult> UploadImageToGoogleDrive([FromForm] IFormFile file, [FromForm] string type)
+    {
+        var result = await mediaApiClient.UploadImageToGoogleDrive(file, type);
+        return Ok(result);
+    }
+
+    [HttpDelete("delete-image-from-google-drive/{fileId}")]
+    public async Task<IActionResult> DeleteImageFromGoogleDrive([FromRoute] string fileId)
+    {
+        var result = await mediaApiClient.DeleteImageFromGoogleDrive(fileId);
+        return Ok(result);
+    }
+    
+    [HttpGet("get-image")]
+    public async Task<IActionResult> GetImage([FromRoute] string fileId)
+    {
+        var result = await mediaApiClient.GetImage(fileId);
+        return Ok(result);
+    }
 }
