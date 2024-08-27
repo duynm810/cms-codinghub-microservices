@@ -9,11 +9,11 @@ public class BackgroundImageTagHelper(IOptions<ApiSettings> apiSettings) : TagHe
 {
     private readonly ApiSettings _apiSettings = apiSettings.Value;
     
-    public string? ThumbnailFileId { get; set; }
+    public string? Thumbnail { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        var fullUrl = $"{_apiSettings.ServerUrl}/{ThumbnailFileId}";
+        var fullUrl = $"{_apiSettings.ServerUrl}/media/get-image/{Thumbnail}";
 
         if (output.Attributes.TryGetAttribute("style", out var styleAttribute))
         {

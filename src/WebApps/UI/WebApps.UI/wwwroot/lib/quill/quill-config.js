@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             // Chèn URL ảnh từ server vào editor
                             const range = quill.getSelection();
-                            quill.insertEmbed(range.index, 'image', `${serverUrl}/${imageUrl}`);
+                            quill.insertEmbed(range.index, 'image', `${serverUrl}/media/get-image/${imageUrl}`);
                             updateCurrentImages();
                         },
                         error: function (xhr, status, error) {
