@@ -39,8 +39,8 @@ public class MediaController(IMediaService mediaService) : ControllerBase
         return Ok(result);
     }
     
-    [HttpGet("images/{fileId}")]
-    public async Task<IActionResult> GetImage(string fileId)
+    [HttpGet("get-image/{fileId}")]
+    public async Task<IActionResult> GetImage([FromRoute] string fileId)
     {
         var result = await mediaService.GetImage(fileId);
         if (result.Data == null)

@@ -1057,8 +1057,8 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5011
+          "Host": "media.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
@@ -1076,12 +1076,33 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5011
+          "Host": "media.api",
+          "Port": 80
         }
       ],
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/get-image/{fileId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/media/get-image/{fileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "media.api",
+          "Port": 80
+        }
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 300,
+        "Region": "images-cache"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
@@ -1093,14 +1114,10 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "localhost",
-          "Port": 5011
+          "Host": "media.api",
+          "Port": 80
         }
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 300,
-        "Region": "images-cache"
-      }
+      ]
     }
   ],
   "Aggregates": [

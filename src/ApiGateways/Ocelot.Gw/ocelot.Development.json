@@ -1062,7 +1062,7 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKey": null,
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
@@ -1081,7 +1081,28 @@
         }
       ],
       "AuthenticationOptions": {
-        "AuthenticationProviderKey": "Bearer",
+        "AuthenticationProviderKey": null,
+        "AllowedScopes": []
+      },
+      "SwaggerKey": "media-service"
+    },
+    {
+      "UpstreamPathTemplate": "/media/get-image/{fileId}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/api/media/get-image/{fileId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5011
+        }
+      ],
+      "FileCacheOptions": {
+        "TtlSeconds": 300,
+        "Region": "images-cache"
+      },
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": null,
         "AllowedScopes": []
       },
       "SwaggerKey": "media-service"
@@ -1096,11 +1117,7 @@
           "Host": "localhost",
           "Port": 5011
         }
-      ],
-      "FileCacheOptions": {
-        "TtlSeconds": 300,
-        "Region": "images-cache"
-      }
+      ]
     }
   ],
   "Aggregates": [
