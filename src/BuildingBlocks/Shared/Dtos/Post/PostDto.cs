@@ -31,11 +31,6 @@ public class PostDto
     /// Mô tả ngắn gọn bài viết
     /// </summary>
     public string? Summary { get; set; }
-
-    /// <summary>
-    /// URL ảnh thu nhỏ đại diện cho bài viết
-    /// </summary>
-    public string? Thumbnail { get; set; }
     
     /// <summary>
     /// ID của tệp Google Drive

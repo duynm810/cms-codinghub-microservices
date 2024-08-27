@@ -37,12 +37,6 @@ public class PostBase : EntityAuditBase<Guid>
     public string? Summary { get; set; }
 
     /// <summary>
-    /// URL ảnh thu nhỏ đại diện cho bài viết
-    /// </summary>
-    [MaxLength(500)]
-    public string? Thumbnail { get; set; }
-    
-    /// <summary>
     /// ID của tệp Google Drive
     /// </summary>
     [MaxLength(100)]

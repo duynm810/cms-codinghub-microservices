@@ -49,7 +49,7 @@ public class GetPostsByNonStaticPageCategoryQueryHandler(
                         Id = post.Id,
                         Title = post.Title,
                         Slug = post.Slug,
-                        Thumbnail = post.Thumbnail,
+                        ThumbnailFileId = post.ThumbnailFileId,
                         PublishedDate = post.PublishedDate,
                         ViewCount = post.ViewCount
                     }).ToList();

@@ -35,8 +35,6 @@ public class UpdateThumbnailCommandHandler(
             }
 
             // Update the thumbnail
-            post.Thumbnail = command.Thumbnail;
-            
             post.ThumbnailFileId = command.ThumbnailFileId;
 
             await postRepository.UpdatePost(post);

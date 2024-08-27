@@ -12,8 +12,6 @@ public class SeriesDto
 
     public string? SeoDescription { get; set; }
 
-    public string? Thumbnail { set; get; }
-
     public string? Content { get; set; }
 
     public Guid AuthorUserId { get; set; }
