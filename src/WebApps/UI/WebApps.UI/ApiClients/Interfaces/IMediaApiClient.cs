@@ -11,6 +11,4 @@ public interface IMediaApiClient
     Task<ApiResult<bool>> DeleteImage(string imagePath);
     
     Task<ApiResult<bool>> DeleteImageFromGoogleDrive(string fileId);
-    
-    Task<ApiResult<string>> GetImage(string fileId);
 }

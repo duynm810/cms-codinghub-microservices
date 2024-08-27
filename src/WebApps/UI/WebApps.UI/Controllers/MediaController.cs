@@ -34,11 +34,4 @@ public class MediaController(IMediaApiClient mediaApiClient) : ControllerBase
         var result = await mediaApiClient.DeleteImageFromGoogleDrive(fileId);
         return Ok(result);
     }
-    
-    [HttpGet("get-image")]
-    public async Task<IActionResult> GetImage([FromRoute] string fileId)
-    {
-        var result = await mediaApiClient.GetImage(fileId);
-        return Ok(result);
-    }
 }

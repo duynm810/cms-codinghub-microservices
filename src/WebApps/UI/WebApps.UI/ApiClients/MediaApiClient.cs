@@ -138,9 +138,4 @@ public class MediaApiClient(IBaseApiClient baseApiClient, ISerializeService seri
     {
         return await baseApiClient.DeleteAsync<bool>($"media/delete-image-from-google-drive/{fileId}", true);
     }
-
-    public async Task<ApiResult<string>> GetImage(string fileId)
-    {
-        return await baseApiClient.GetAsync<string>($"media/get-image/{fileId}");
-    }
 }

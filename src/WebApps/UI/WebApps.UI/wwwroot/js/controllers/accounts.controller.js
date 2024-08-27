@@ -131,7 +131,8 @@ const accountsController = function (formId) {
                         async () => {
                             const thumbnailUrl = document.getElementById('thumbnailUrl').value;
                             if (thumbnailUrl) {
-                                await this.deleteImage(thumbnailUrl);
+                                //await this.deleteImage(thumbnailUrl);
+                                await this.deleteImageFromGoogleDrive(thumbnailUrl);
                             }
 
                             fileList.value = '';
@@ -148,7 +149,8 @@ const accountsController = function (formId) {
                 fileList.appendChild(fileItem);
             });
 
-            await this.uploadFiles(files);
+            //await this.uploadFiles(files);
+            await this.uploadFileToGoogleDrive(files);
         }
 
         this.uploadFiles = async (files) => {
@@ -177,6 +179,32 @@ const accountsController = function (formId) {
                 showErrorNotification(`Error uploading file: ${error.message}`);
             }
         }
+        
+        this.uploadFileToGoogleDrive = async (files) => {
+            const formData = new FormData();
+            formData.append('file', files[0]);
+            formData.append('type', 'posts');
+
+            try {
+                const response = await fetch('/media/upload-image-from-google-drive', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const responseBody = await response.text();
+                if (!response.ok) {
+                    showErrorNotification(`Upload failed with status: ${response.status}, error: ${responseBody}`);
+                    return;
+                }
+
+                const uploadResult = JSON.parse(responseBody);
+                const fileId = uploadResult.data;
+
+                console.log('File uploaded successfully, fileId:', fileId);
+            } catch (error) {
+                showErrorNotification(`Error uploading file: ${error.message}`);
+            }
+        }
 
         this.deleteImage = async (imagePath) => {
             try {
@@ -191,6 +219,26 @@ const accountsController = function (formId) {
                 }
 
                 console.log(`Image deleted successfully: ${imagePath}`);
+                return response.data;
+            } catch (error) {
+                showErrorNotification(`Error deleting file: ${error.message}`);
+                return false;
+            }
+        }
+        
+        this.deleteImageFromGoogleDrive = async (fileId) => {
+            try {
+                const response = await $.ajax({
+                    url: `/media/delete-image-from-google-drive/${fileId}`,
+                    method: 'DELETE'
+                });
+
+                if (!response.isSuccess) {
+                    showErrorNotification(`Delete failed with status: ${response.status}`);
+                    return false;
+                }
+
+                console.log(`Image deleted successfully: ${fileId}`);
                 return response.data;
             } catch (error) {
                 showErrorNotification(`Error deleting file: ${error.message}`);
