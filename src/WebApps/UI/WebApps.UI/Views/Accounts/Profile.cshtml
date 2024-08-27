@@ -74,7 +74,7 @@
 
                 try {
                     const uploadResult = await $.ajax({
-                        url: '/media/upload-image',
+                        url: '/media/upload-image-from-google-drive',
                         type: 'POST',
                         data: formData,
                         contentType: false,
@@ -90,7 +90,7 @@
                             data: JSON.stringify({ avatarUrl: imageUrl })
                         });
 
-                        const avatarUrl = `${serverUrl}/${updateResult.user.avatarUrl}`;
+                        const avatarUrl = `${serverUrl}/media/get-image/${updateResult.user.avatarUrl}`;
                         let avatarElement = document.getElementById('userAvatar');
                         if (avatarElement) {
                             avatarElement.src = avatarUrl;
