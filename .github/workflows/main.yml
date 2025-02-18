@@ -1,0 +1,93 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - duynm810-patch-1
+
+####################################
+# 1. Generate Timestamp (dùng cho tag)
+####################################
+jobs:
+  generate-timestamp:
+    runs-on: ubuntu-latest
+    outputs:
+      timestamp: ${{ steps.gen_timestamp.outputs.timestamp }}
+    steps:
+      - name: Generate Timestamp
+        id: gen_timestamp
+        run: echo "timestamp=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+
+####################################
+# 2. Define Services (tạo danh sách services)
+####################################
+  set-services-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Define Service Matrix
+        id: set-matrix
+        run: |
+          MATRIX_JSON=$(cat <<EOF | jq -c .
+          {
+            "include": [
+              {"name": "category-api", "dockerfile": "src/Services/Category/Category.Api/Dockerfile", "deployment": "deployment/kubernetes/category-api-deployment.yaml", "filterKey": "category-api"},
+              {"name": "portfolio-api", "dockerfile": "src/Services/Portfolio/Portfolio.Api/Dockerfile", "deployment": "deployment/kubernetes/portfolio-api-deployment.yaml", "filterKey": "portfolio-api"},
+              {"name": "ocelot-gateway", "dockerfile": "src/ApiGateways/Ocelot.Gw/Dockerfile", "deployment": "deployment/kubernetes/ocelot-gateway-deployment.yaml", "filterKey": "ocelot-gateway"},
+              {"name": "web-portal", "dockerfile": "src/WebApps/UI/Portal.Web/Dockerfile", "deployment": "deployment/kubernetes/web-portal-deployment.yaml", "filterKey": "web-portal"}
+            ]
+          }
+          EOF
+          )
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
+
+####################################
+# 3. Checkout & Filter (lấy code và xác định thay đổi)
+####################################
+  checkout-and-filter:
+    runs-on: ubuntu-latest
+    needs: [set-services-matrix]
+    outputs:
+      changed: ${{ steps.filter.outputs }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Filter Changes
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            category-api: ['src/Services/Category/Category.Api/**', 'src/BuildingBlocks/**', 'deployment/kubernetes/category-api-deployment.yaml']
+            portfolio-api: ['src/Services/Portfolio/Portfolio.Api/**', 'src/BuildingBlocks/**', 'deployment/kubernetes/portfolio-api-deployment.yaml']
+            ocelot-gateway: ['src/ApiGateways/Ocelot.Gw/**', 'src/BuildingBlocks/**', 'deployment/kubernetes/ocelot-gateway-deployment.yaml']
+            web-portal: ['src/WebApps/UI/Portal.Web/**', 'src/BuildingBlocks/**', 'deployment/kubernetes/web-portal-deployment.yaml']
+
+####################################
+# 4. Test & Build (chạy test, build Docker image và push lên registry)
+####################################
+  test-and-build:
+    needs: [checkout-and-filter, set-services-matrix, generate-timestamp]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.set-services-matrix.outputs.matrix) }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Skip if no changes in ${{ matrix.name }}
+        if: ${{ needs.checkout-and-filter.outputs.changed[matrix.filterKey] != 'true' }}
+        run: echo "No changes in ${{ matrix.name }}. Skipping tests and build."
+
+      - name: Run Tests for ${{ matrix.name }}
+        if: ${{ needs.checkout-and-filter.outputs.changed[matrix.filterKey] == 'true' }}
+        run: |
+          echo "Running tests for ${{ matrix.name }}..."
+          # Thêm lệnh test cụ thể của bạn, ví dụ:
+          # dotnet test
+          # npm test
